@@ -31,11 +31,7 @@ proc peek(c: context, offset: int): char =
   return c.source[c.index + offset]
 
 proc skip_comment(c: var context): bool =
-  if peek(c) == '/' and peek(c, 1) == '/':
-    while peek(c) notin {'\n', '\0'}:
-      c.index += 1
-    return true
-  if peek(c) == ';':
+  if peek(c) == ';' or (peek(c) == '/' and peek(c, 1) == '/'):
     while peek(c) notin {'\n', '\0'}:
       c.index += 1
     return true
@@ -85,7 +81,9 @@ proc `$`(exp: expression): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
-    of exp_operand: return $char(ord('a') + exp.index)
+    of exp_operand: 
+      if exp.index == IP: return "IP"
+      return $char(ord('a') + exp.index)
     of exp_operation: return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
 proc get_term(c: var context, operand_count: int): expression =
@@ -218,7 +216,6 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       skip_whitespaces(c)
 
       var bits: string
-      var wildcards: string
 
       while peek(c) in {'0','1'}:
         bits.add(peek(c))

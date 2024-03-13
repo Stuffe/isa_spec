@@ -1,4 +1,4 @@
-import tables, std/setutils, parseUtils, strutils, bitops
+import tables
 
 type field_value* = object
   name*: string
