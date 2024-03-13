@@ -94,7 +94,7 @@ proc get_term(c: var context, operand_count: int): expression =
     let operand = peek(c, 1)
     if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return fail()
     c.index += 2
-    if peek(c) == 'p':
+    if operand == 'i' and peek(c) == 'p':
       c.index += 1
       return expression(exp_kind: exp_operand, index: IP)
 
@@ -275,7 +275,8 @@ proc parse_asm_spec*(source: string): spec_parse_result =
         c.index += 1
         let field_name = get_string(c)
 
-        assert field_name != ""
+        if field_name == "":
+          return error("Was expecting a field name here.")
 
         var found = false
 
