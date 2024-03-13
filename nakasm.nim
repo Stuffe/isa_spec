@@ -54,9 +54,8 @@ proc skip_newlines(c: var context) =
 
 proc matches(c: var context, value: string): bool =
   for i in 0..value.high:
-    let ch = peek(c, i)
-    if ch == '\0':     return false
-    if ch != value[i]: return false
+    if peek(c, i) != value[i]: 
+      return false
   c.index += value.len
   return true
 
@@ -197,14 +196,14 @@ proc parse_asm_spec*(source: string): spec_parse_result =
   skip_newlines(c)
 
   if not matches(c, "[fields]"):
-    return error("Was expecting the [fields] header here.")
+    return error("Was expecting the [fields] header here")
 
   skip_newlines(c)
 
   while matches(c, "field"):
     skip_whitespaces(c)
     var field_type_name = get_string(c)
-    if field_type_name == "": return error("Expected a name for the field type.")
+    if field_type_name == "": return error("Expected a name for the field type")
     skip_whitespaces(c)
 
     var new_field_type = field_type(name: field_type_name)
@@ -222,15 +221,15 @@ proc parse_asm_spec*(source: string): spec_parse_result =
         c.index += 1
      
       if bits.len == 0:
-        return error("Expected a bit pattern for " & field_name & ".")
+        return error("Expected a bit pattern for " & field_name)
       if bits.len > 64:
-        return error("Only up to 64 bit field lengths supported.")
+        return error("Only up to 64 bit field lengths supported")
       
       if new_field_type.bit_length == 0:
         new_field_type.bit_length = bits.len
       else:
         if new_field_type.bit_length != bits.len:
-          return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $new_field_type.bit_length & ".")
+          return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $new_field_type.bit_length)
 
       var bit_value = 0
       assert parseBin(bits, bit_value) == new_field_type.bit_length
@@ -241,7 +240,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       skip_whitespaces(c)
 
     if new_field_type.fields.len == 0:
-      return error("Expected field values.")
+      return error("Expected field values")
 
     if new_field_type.name == "register":
       result.spec.field_types[FIELD_REG] = new_field_type
@@ -258,7 +257,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       c.index += 1
 
   if not matches(c, "[instructions]"):
-    return error("Was expecting the [instructions] header here.")
+    return error("Was expecting the [instructions] header here")
 
   skip_newlines(c)
 
@@ -273,7 +272,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
         let field_name = get_string(c)
 
         if field_name == "":
-          return error("Was expecting a field name here.")
+          return error("Was expecting a field name here")
 
         var found = false
 
@@ -284,15 +283,15 @@ proc parse_asm_spec*(source: string): spec_parse_result =
             break
         
         if not found:
-          return error("Field name '" & field_name & "' not defined.")
+          return error("Field name '" & field_name & "' not defined")
 
         new_instruction.string_parts.add(get_string_part(c))
 
       if new_instruction.fields.len == 0 and new_instruction.string_parts.len == 1 and new_instruction.string_parts[0] == "":
-        return error("Could not read this.")
+        return error("Could not read this")
 
       if peek(c) != '\n':
-        return error("Was expecting a newline here.")
+        return error("Was expecting a newline here")
 
       c.index += 1
 
@@ -307,9 +306,9 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
         if virt_op.exp_kind == exp_fail:
           if instruction_name == "":
-            return error("Could not read virtual operand " & $count & ".")
+            return error("Could not read virtual operand " & $count)
           else:
-            return error("Could not read virtual operand " & $count & " for instruction " & instruction_name & ".")
+            return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
         count += 1
         skip_newlines(c)
     
@@ -339,16 +338,16 @@ proc parse_asm_spec*(source: string): spec_parse_result =
             let field_index = ord(peek(c)) - ord('a')
 
             if field_index > new_instruction.fields.len:
-              return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len) & ".")
+              return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
             let field_real_index = field_index + FIELD_REG + 1
             new_instruction.bit_types.add(field_real_index)
 
         c.index += 1
       
       if new_instruction.bit_types.len ==  0:
-        return error("Instruction '" & instruction_name & "' is missing the bit field definition.")
+        return error("Instruction '" & instruction_name & "' is missing the bit field definition")
       if new_instruction.bit_types.len mod 8 != 0:
-        return error("Instruction '" & instruction_name & "' is not a multiple of 8.")
+        return error("Instruction '" & instruction_name & "' is not a multiple of 8")
       
       discard parseBin(pattern, new_instruction.fixed_pattern)
       discard parseBin(wildcard_mask, new_instruction.wildcard_mask)
@@ -356,7 +355,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       skip_whitespaces(c)
 
       if peek(c) != '\n':
-        return error("Was expecting a newline here.")
+        return error("Was expecting a newline here")
       c.index += 1
 
     block get_description:
@@ -486,7 +485,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
             break
         
         if not found:
-          return error("Definition value must be either a number or a register.")
+          return error("Definition value must be either a number or a register")
 
       skip_newlines(c)
       continue
@@ -516,7 +515,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
               # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
               let label_name = get_string(c)
               if label_name == "":
-                return error("Was expecting a label name here.")
+                return error("Was expecting a label name here")
 
               jump_patches.add(jump_patch(
                 label: label_name,
@@ -565,7 +564,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
                 of FIELD_REG: assert false
                 else:
                   let index = bit_type - FIXED_FIELDS_LEN
-                  if index > fields.high: return error("There is no operand $" & $char(ord('a') + index) & ".")
+                  if index > fields.high: return error("There is no operand $" & $char(ord('a') + index))
 
                   used_fields.incl(index.uint8)
 
@@ -611,18 +610,18 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     if not instruction_found:
       if max_fields_matched != -1:
-        return error("Value $" & $char(ord('a') + max_fields_matched) & " doesn't fit in field.")
+        return error("Value $" & $char(ord('a') + max_fields_matched) & " doesn't fit in field")
       if max_fields_matched == -1:
-        return error("Could not parse this instruction.")
+        return error("Could not parse this instruction")
       if best_candidate.string_parts[0] == "":
-        return error("Field " & $(max_fields_matched + 1) & " did not match.")
-      return error("Field " & $(max_fields_matched + 1) & " did not match for instruction " & best_candidate.string_parts[0] & ".")
+        return error("Field " & $(max_fields_matched + 1) & " did not match")
+      return error("Field " & $(max_fields_matched + 1) & " did not match for instruction " & best_candidate.string_parts[0])
 
     skip_whitespaces(c)
 
     if peek(c) notin {'\n', '\0'}:
       echo dbg(c)
-      return error("Was expecting the instruction to end here.")
+      return error("Was expecting the instruction to end here")
 
     skip_newlines(c)
 
@@ -631,7 +630,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
   for patch in jump_patches:
     if patch.label notin labels:
-      return error("No label with the name '" & patch.label & "' declared.", patch.index)
+      return error("No label with the name '" & patch.label & "' declared", patch.index)
 
     var value = cast[ptr uint64](addr result.byte_code[patch.byte_offset])[]
     var label_offset = labels[patch.label]
