@@ -348,11 +348,12 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       if new_instruction.bit_types.len ==  0:
         return error("Instruction '" & instruction_name & "' is missing the bit field definition.")
       if new_instruction.bit_types.len mod 8 != 0:
-        echo dbg(c)
         return error("Instruction '" & instruction_name & "' is not a multiple of 8.")
       
       discard parseBin(pattern, new_instruction.fixed_pattern)
       discard parseBin(wildcard_mask, new_instruction.wildcard_mask)
+
+      skip_whitespaces(c)
 
       if peek(c) != '\n':
         return error("Was expecting a newline here.")
