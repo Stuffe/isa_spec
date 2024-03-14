@@ -99,9 +99,18 @@ proc `$`(exp: expression): string =
         return $exp.lhs & ":" & pattern
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
+proc get_expression(c: var context, operand_count: int): expression
+
 proc get_term(c: var context, operand_count: int): expression =
 
-  if peek(c) == '$':
+  if peek(c) == '(':
+    c.index += 1
+    result = get_expression(c, operand_count)
+    skip_whitespaces(c)
+    assert peek(c) == ')', "Was expecting an ending parenthesis here. (TODO, make this a normal error)"
+    c.index += 1
+
+  elif peek(c) == '$':
     let operand = peek(c, 1)
     if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return fail()
     c.index += 2
