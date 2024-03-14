@@ -370,7 +370,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
             if field_index > new_instruction.fields.len:
               return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
-            let field_real_index = field_index + FIELD_REG + 1
+            let field_real_index = field_index + FIXED_FIELDS_LEN
             new_instruction.bit_types.add(field_real_index)
 
         c.index += 1
@@ -436,6 +436,36 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     case field:
       of FIELD_IMM:
+        if peek(c) == '0':
+          var value = 0'u64
+          if peek(c, 1) == 'x':
+            c.index += 2
+            var field_string: string
+            while peek(c) in setutils.toSet("0123456789abcdef"):
+              field_string.add(peek(c))
+              c.index += 1
+            try: value = fromHex[uint64]("0x" & field_string)
+            except CatchableError: return FAIL
+            return (true, value)
+          if peek(c, 1) == 'o':
+            c.index += 2
+            var field_string: string
+            while peek(c) in setutils.toSet("01234567"):
+              field_string.add(peek(c))
+              c.index += 1
+            try: value = fromOct[uint64]("0o" & field_string)
+            except CatchableError: return FAIL
+            return (true, value)
+          if peek(c, 1) == 'b':
+            c.index += 2
+            var field_string: string
+            while peek(c) in setutils.toSet("01"):
+              field_string.add(peek(c))
+              c.index += 1
+            try: value = fromBin[uint64]("0b" & field_string)
+            except CatchableError: return FAIL
+            return (true, value)
+
         let number = get_number(c)
         if number != "":
           result = (true, cast[uint64](parseInt(number)))
@@ -445,21 +475,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
         if field_string in number_defines:
           return (true, number_defines[field_string])
-        if field_string.len > 2:
-          var value = 0'u64
-          if field_string[0..1] == "0x":
-            try: value = fromHex[uint64](field_string)
-            except CatchableError: return FAIL
-            return (true, value)
-          elif field_string[0..1] == "0o":
-            try: value = fromOct[uint64](field_string)
-            except CatchableError: return FAIL
-            return (true, value)
-          elif field_string[0..1] == "0b":
-            try: value = fromBin[uint64](field_string)
-            except CatchableError: return FAIL
-            return (true, value)
-        
+       
       of FIELD_LABEL: assert false
 
       else:
@@ -647,16 +663,18 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
         mnemonic = get_string(c)
 
       if mnemonic == "":
+        if field_too_large != -1:
+          return error("Immediate " & $(field_too_large+1) & " doesn't fit in field")
         if max_fields_matched != -1: 
-          return error("Value $" & $char(ord('a') + max_fields_matched) & " doesn't fit in field")
-        else:
-          return error("Could not parse this instruction")
+          return error("Operand " & $(max_fields_matched+1) & " does not match")
+        return error("Could not parse this instruction")
 
       else:
+        if field_too_large != -1:
+          return error("Immediate " & $(field_too_large+1) & " doesn't fit in field for '" & mnemonic & "'")
         if max_fields_matched != -1: 
-          return error("Value $" & $char(ord('a') + max_fields_matched) & " does not fit in field for '" & mnemonic & "'")
-        else:
-          return error("No instruction using the mnemonic '" & mnemonic & "' exists")
+          return error("Operand " & $(max_fields_matched+1) & " does not match for '" & mnemonic & "'")
+        return error("No instruction using the mnemonic '" & mnemonic & "' exists")
 
     skip_whitespaces(c)
 
