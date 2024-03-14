@@ -7,6 +7,7 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "rel_jump": test(result: @[0'u8, 1]),
   "numbers": test(result: @[0'u8, 15, 15]),
   "define": test(result: @[3'u8]),
   "evaluator": test(result: @[0'u8, 1, 255, 7, 5, 0, 0]),
@@ -24,17 +25,17 @@ for name, test in TESTS:
   let spec_result = parse_asm_spec(spec_source)
 
   if spec_result.error != test.spec_error:
-    echo "'" & name & "/test.spec' error: " & spec_result.error
+    echo "\u001b[31m'" & name & "/test.spec' error\u001b[0m: " & spec_result.error
     continue
 
   let asm_source = readFile("tests/" & name & "/test.asm")
   let asm_result = assemble(spec_result.spec, asm_source)
 
   if asm_result.error != test.asm_error:
-    echo "'" & name & "/test.asm' error: " & asm_result.error
+    echo "\u001b[31m'" & name & "/test.asm' error\u001b[0m: " & asm_result.error
     continue
   if asm_result.byte_code != test.result:
-    echo "'" & name & "/test.asm' error\nGot:      " & $asm_result.byte_code & "\nExpected: " & $test.result
+    echo "\u001b[31m'" & name & "/test.asm' error\u001b[0m\nGot:      " & $asm_result.byte_code & "\nExpected: " & $test.result
     continue
 
-  echo "Test '" & name & "' passed."
+  echo "\u001b[32mTest '" & name & "' passed.\u001b[0m"

@@ -190,18 +190,21 @@ proc eval(input: expression, operands: seq[uint64], ip: uint64): uint64 =
       if input.index == IP: return ip
       return operands[input.index]
     of exp_operation:
+      let lhs = eval(input.lhs, operands, ip)
+      let rhs = eval(input.rhs, operands, ip)
+
       case input.op_kind:
-        of op_add: return eval(input.lhs, operands, ip) +   eval(input.rhs, operands, ip)
-        of op_sub: return eval(input.lhs, operands, ip) -   eval(input.rhs, operands, ip)
-        of op_mul: return eval(input.lhs, operands, ip) *   eval(input.rhs, operands, ip)
-        of op_div: return eval(input.lhs, operands, ip) div eval(input.rhs, operands, ip)
-        of op_mod: return eval(input.lhs, operands, ip) mod eval(input.rhs, operands, ip)
-        of op_and: return eval(input.lhs, operands, ip) and eval(input.rhs, operands, ip)
-        of op_or:  return eval(input.lhs, operands, ip) or  eval(input.rhs, operands, ip)
-        of op_xor: return eval(input.lhs, operands, ip) xor eval(input.rhs, operands, ip)
-        of op_lsl: return eval(input.lhs, operands, ip) shl eval(input.rhs, operands, ip)
-        of op_lsr: return eval(input.lhs, operands, ip) shr eval(input.rhs, operands, ip)
-        of op_asr: return asr(eval(input.lhs, operands, ip), eval(input.rhs, operands, ip))
+        of op_add: return lhs +   rhs
+        of op_sub: return lhs -   rhs
+        of op_mul: return lhs *   rhs
+        of op_div: return lhs div rhs
+        of op_mod: return lhs mod rhs
+        of op_and: return lhs and rhs
+        of op_or:  return lhs or  rhs
+        of op_xor: return lhs xor rhs
+        of op_lsl: return lhs shl rhs
+        of op_lsr: return lhs shr rhs
+        of op_asr: return asr(lhs, rhs)
 
 
 proc parse_asm_spec*(source: string): spec_parse_result =
@@ -402,6 +405,9 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
+proc insert_instruction(byte_code: var seq[uint8], c: context) =
+  discard
+
 proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
   var c = context(
     source: source & '\0',
@@ -492,6 +498,89 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     return FAIL
 
+  proc assemble_instruction(c: var context, byte_code: var seq[uint8], instruction: instruction, byte_code_offset: int, create_jump_patches = false) =
+    let instruction_start = c.index
+    var fields: seq[uint64]
+    discard matches(c, instruction.string_parts[0])
+    
+    for i in 0..instruction.fields.len - 1:
+
+      if instruction.fields[i] == FIELD_LABEL:
+        # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
+        let label_name = get_string(c)
+
+        if create_jump_patches:
+          jump_patches.add(jump_patch(
+            label: label_name,
+            byte_offset: byte_code_offset,
+            instruction: instruction,
+            index: instruction_start,
+          ))
+          fields.add(0)
+        else:
+          fields.add(labels[label_name])
+        continue
+      
+      let (match, value) = get_operand(c, instruction.fields[i])
+
+      fields.add(value)
+      
+      discard matches(c, instruction.string_parts[i + 1])
+
+    var values = [0'u64, 0]
+    block generate_fields:
+      for virtual_field in instruction.virtual_fields:
+        let new_field = eval(virtual_field, fields, byte_code_offset.uint64)
+        fields.add(new_field)
+
+      var used_fields: set[uint8]
+
+      var i = instruction.bit_types.high
+      while i >= 0:
+        let bit_type = instruction.bit_types[i]
+        let bit_index = i mod 64
+        let int_index = i div 64
+
+        case bit_type:
+          of FIELD_ZERO: discard
+          of FIELD_ONE: setBit[uint64](values[int_index], bit_index)
+          of FIELD_WILDCARD: discard
+          of FIELD_IMM: assert false
+          of FIELD_LABEL: assert false
+          of FIELD_REG: assert false
+          else:
+            let index = bit_type - FIXED_FIELDS_LEN
+
+            used_fields.incl(index.uint8)
+
+            let bit = (fields[index] and 1)
+            if bit == 1:
+              setBit[uint64](values[int_index], bit_index)
+            fields[index] = asr(fields[index], 1)
+
+        i -= 1
+
+    var width_left = instruction.bit_types.len
+    var value_index = 0
+
+    var o = 0
+    while width_left > 0:
+      var value = values[value_index]
+      let max_width = min(64, width_left)
+      value_index += 1
+      width_left -= 64
+
+      value = reverseBits(value)
+      value = value shr (64 - max_width)
+
+      var shift_count = max_width div 8 - 1
+      var shift_by    = max_width - 8
+
+      for i in 0..shift_count:
+        byte_code[byte_code_offset + o] = cast[uint8](value shr shift_by)
+        o += 1
+        shift_by -= 8
+
   skip_newlines(c)
 
   var fields: seq[uint64]
@@ -547,6 +636,8 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
     var max_fields_matched = -1
     
     var instr: instruction
+    var values = [0'u64, 0]
+
     block find_instruction:
       for instruction in asm_spec.instructions:
         fields.setLen(0)
@@ -565,12 +656,6 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
               if label_name == "":
                 return error("Was expecting a label name here")
 
-              jump_patches.add(jump_patch(
-                label: label_name,
-                byte_offset: result.byte_code.len,
-                instruction: instruction,
-                index: c.index,
-              ))
               fields.add(0)
               continue
             
@@ -589,10 +674,10 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
           instr = instruction
 
-          var values = [0'u64, 0]
+          values = [0'u64, 0]
           block generate_fields:
             for virtual_field in instr.virtual_fields:
-              let new_field = eval(virtual_field, fields, result.byte_code.len.uint64)
+              let new_field = eval(virtual_field, fields, 0)
               fields.add(new_field)
 
             var used_fields: set[uint8]
@@ -603,23 +688,16 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
               let bit_index = i mod 64
               let int_index = i div 64
 
-              case bit_type:
-                of FIELD_ZERO: discard
-                of FIELD_ONE: setBit[uint64](values[int_index], bit_index)
-                of FIELD_WILDCARD: discard
-                of FIELD_IMM: assert false
-                of FIELD_LABEL: assert false
-                of FIELD_REG: assert false
-                else:
-                  let index = bit_type - FIXED_FIELDS_LEN
-                  if index > fields.high: return error("There is no operand $" & $char(ord('a') + index))
+              if bit_type >= FIXED_FIELDS_LEN:
+                let index = bit_type - FIXED_FIELDS_LEN
+                if index > fields.high: return error("There is no operand $" & $char(ord('a') + index))
 
-                  used_fields.incl(index.uint8)
+                used_fields.incl(index.uint8)
 
-                  let bit = (fields[index] and 1)
-                  if bit == 1:
-                    setBit[uint64](values[int_index], bit_index)
-                  fields[index] = asr(fields[index], 1)
+                let bit = (fields[index] and 1)
+                if bit == 1:
+                  setBit[uint64](values[int_index], bit_index)
+                fields[index] = asr(fields[index], 1)
 
               i -= 1
 
@@ -629,29 +707,6 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
                 best_candidate = instruction
                 field_too_large = i
                 break test
-
-          block emit:
-
-            result.line_to_byte.add(result.byte_code.len)
-
-            var width_left = instr.bit_types.len
-            var value_index = 0
-
-            while width_left > 0:
-              var value = values[value_index]
-              let max_width = min(64, width_left)
-              value_index += 1
-              width_left -= 64
-
-              value = reverseBits(value)
-              value = value shr (64 - max_width)
-
-              var shift_count = max_width div 8 - 1
-              var shift_by    = max_width - 8
-
-              for i in 0..shift_count:
-                result.byte_code.add(cast[uint8](value shr shift_by))
-                shift_by -= 8
 
           instruction_found = true
           break find_instruction
@@ -676,6 +731,16 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
           return error("Operand " & $(max_fields_matched+1) & " does not match for '" & mnemonic & "'")
         return error("No instruction using the mnemonic '" & mnemonic & "' exists")
 
+    block emit:
+
+      result.line_to_byte.add(result.byte_code.len)
+      let byte_code_offset = result.byte_code.len
+      let instruction_length = instr.bit_types.len div 8
+      result.byte_code.setLen(result.byte_code.len + instruction_length)
+
+      c.index = start_index
+      assemble_instruction(c, result.byte_code, instr, byte_code_offset, create_jump_patches = true)
+
     skip_whitespaces(c)
 
     if peek(c) notin {'\n', '\0'}:
@@ -683,32 +748,11 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     skip_newlines(c)
 
-  # Add 7 bytes of padding so we can deal with labels using 64 bit values
-  result.byte_code.setLen(result.byte_code.len + 7)
-
   for patch in jump_patches:
     if patch.label notin labels:
       return error("No label with the name '" & patch.label & "' declared", patch.index)
 
-    var value = cast[ptr uint64](addr result.byte_code[patch.byte_offset])[]
-    var label_offset = labels[patch.label]
+    c.index = patch.index
+    assemble_instruction(c, result.byte_code, patch.instruction, patch.byte_offset)
 
-    let instruction = patch.instruction
-    var i = instruction.bit_types.len
-
-    while i > 0:
-      i -= 1
-      let field_index = instruction.bit_types[i] - FIXED_FIELDS_LEN
-      if field_index < 0: continue
-      if field_index > instruction.fields.high: continue # Field index is higher when using virtual fields
-      if instruction.fields[field_index] == FIELD_LABEL:
-        let bit = (label_offset and 1)
-        if bit == 1:
-          setBit[uint64](value, instruction.bit_types.high - i)
-        label_offset = label_offset shr 1
-
-    cast[ptr uint64](addr result.byte_code[patch.byte_offset])[] = value
-
-  # Get rid of padding
-  result.byte_code.setLen(result.byte_code.len - 7)
 
