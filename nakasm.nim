@@ -323,12 +323,19 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
-  proc get_string_part(c: var context): string =
+  proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
+    var this_part: string
     while peek(c) notin {'$', '\0', '\n'}:
       let char = peek(c)
-      if char notin {'\r', '\t'}:
-        result.add(char)
+      if char notin {'\r', '\t', ' '}:
+        this_part.add(char)
+      elif this_part != "":
+        syntax_parts.add(this_part)
+        this_part = ""
       c.index += 1
+
+    if this_part != "":
+      syntax_parts.add(this_part)
 
   skip_newlines(c)
 
@@ -336,7 +343,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
     var new_instruction: instruction
 
     block syntax:
-      new_instruction.string_parts.add(get_string_part(c))
+      add_string_syntax(c, new_instruction.syntax)
 
       while peek(c) == '$':
         c.index += 1
@@ -351,22 +358,20 @@ proc parse_asm_spec*(source: string): spec_parse_result =
           if field_name == field.name:
             found = true
             new_instruction.fields.add(i)
+            new_instruction.syntax.add("")
             break
         
         if not found:
           return error("Field name '" & field_name & "' not defined")
 
-        new_instruction.string_parts.add(get_string_part(c))
-
-      if new_instruction.fields.len == 0 and new_instruction.string_parts.len == 1 and new_instruction.string_parts[0] == "":
-        return error("Could not read this")
+        add_string_syntax(c, new_instruction.syntax)
 
       if peek(c) != '\n':
         return error("Was expecting a newline here")
 
       c.index += 1
 
-    let instruction_name = new_instruction.string_parts[0].strip()
+    let instruction_name = new_instruction.syntax[0]
     
     block virtual_field:
       var count = 1
@@ -538,9 +543,14 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
   proc assemble_instruction(c: var context, byte_code: var seq[uint8], instruction: instruction, byte_code_offset: int, create_jump_patches = false) =
     let instruction_start = c.index
     var fields: seq[uint64]
-    discard matches(c, instruction.string_parts[0])
     
-    for i in 0..instruction.fields.len - 1:
+    var i = 0
+    for syntax in instruction.syntax:
+
+      if syntax != "":
+        discard matches(c, syntax)
+        skip_whitespaces(c)
+        continue
 
       if instruction.fields[i] == FIELD_LABEL:
         # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
@@ -557,12 +567,11 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
         else:
           fields.add(labels[label_name])
         continue
-      
+
       let (match, value) = get_operand(c, instruction.fields[i])
 
       fields.add(value)
-      
-      discard matches(c, instruction.string_parts[i + 1])
+      i += 1
 
     var values = [0'u64, 0]
     block generate_fields:
@@ -681,11 +690,15 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
         c.index = start_index
 
         block test:
-          
-          if not matches(c, instruction.string_parts[0]):
-            break test
-          
-          for i in 0..instruction.fields.len - 1:
+                    
+          var i = 0
+          for syntax in instruction.syntax:
+
+            if syntax != "":
+              if not matches(c, syntax):
+                break test
+              skip_whitespaces(c)
+              continue
 
             if instruction.fields[i] == FIELD_LABEL:
               # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
@@ -705,9 +718,8 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
               break test
 
             fields.add(value)
-            
-            if not matches(c, instruction.string_parts[i + 1]):
-              break test
+
+            i += 1
 
           instr = instruction
 

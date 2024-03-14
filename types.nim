@@ -44,7 +44,7 @@ type expression* = ref object
       rhs*: expression
 
 type instruction* = object
-  string_parts*: seq[string]
+  syntax*: seq[string]
   fields*: seq[int]
   virtual_fields*: seq[expression]
   bit_types*: seq[int]
