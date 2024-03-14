@@ -87,7 +87,17 @@ proc `$`(exp: expression): string =
     of exp_operand: 
       if exp.index == IP: return "IP"
       return $char(ord('a') + exp.index)
-    of exp_operation: return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
+    of exp_operation: 
+      if exp.op_kind == op_byte_swizzle:
+        var pattern: string
+        var value = exp.rhs.value
+        for i in 0..7:
+          let val = cast[uint8](value)
+          if val == 0xff: break
+          pattern.add(char(ord('a') + val))
+          value = value shr 8
+        return $exp.lhs & ":" & pattern
+      return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
 proc get_term(c: var context, operand_count: int): expression =
 
@@ -102,13 +112,28 @@ proc get_term(c: var context, operand_count: int): expression =
     let operand_index = ord(operand) - ord('a')
     if operand_index < 0 or operand_index > operand_count: return fail()
 
-    return expression(exp_kind: exp_operand, index: operand_index)
+    result = expression(exp_kind: exp_operand, index: operand_index)
   
-  let number = get_number(c)
-  if number.len == 0: 
-    return fail()
+  else:
+    let number = get_number(c)
+    if number.len == 0: 
+      return fail()
 
-  return expression(exp_kind: exp_number, value: cast[uint64](parseInt(number)))
+    result = expression(exp_kind: exp_number, value: cast[uint64](parseInt(number)))
+
+  if peek(c) == ':':
+    c.index += 1
+    var order = [0xff'u8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]
+    var i = 0
+    while i < 8:
+      let index = "abcdefgh".find(peek(c))
+      if index == -1: break
+      c.index += 1
+      order[i] = index.uint8
+      i += 1
+
+    let rhs = expression(exp_kind: exp_number, value: cast[ptr uint64](addr order[0])[])
+    result = expression(exp_kind: exp_operation, op_kind: op_byte_swizzle, lhs: result, rhs: rhs)
 
 proc get_greedy_group(c: var context, operand_count: int): expression =
 
@@ -205,7 +230,19 @@ proc eval(input: expression, operands: seq[uint64], ip: uint64): uint64 =
         of op_lsl: return lhs shl rhs
         of op_lsr: return lhs shr rhs
         of op_asr: return asr(lhs, rhs)
+        of op_byte_swizzle:
 
+          var order: seq[uint8]
+          var value = rhs
+          for i in 0..7:
+            let val = cast[uint8](value)
+            if val == 0xff: break
+            order.add(val)
+            value = value shr 8
+
+          let l = order.high
+          for i, place in order:
+            result = result or ((lhs shr (8 * i)) and 0xff) shl ((l - i) * 8)
 
 proc parse_asm_spec*(source: string): spec_parse_result =
 

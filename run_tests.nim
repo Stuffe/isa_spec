@@ -7,13 +7,14 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "arithmetic": test(result: @[12'u8, 4, 3, 2, 1]),
+  "fancy_syntax": test(result: @[17'u8]),
   "rel_jump": test(result: @[0'u8, 1]),
   "numbers": test(result: @[0'u8, 15, 15]),
   "define": test(result: @[3'u8]),
   "evaluator": test(result: @[0'u8, 1, 255, 7, 5, 0, 0]),
   "basics": test(result: @[138'u8, 3, 38]),
   "rel_arithmetic": test(result: @[0'u8, 0, 0, 3]),
-  "arithmetic": test(result: @[12'u8]),
   "imm_overload": test(result: @[1'u8, 64]),
   "large": test(result: @[0'u8, 1, 2, 3, 4, 5, 6, 7]),
   "oversized": test(result: @[0'u8, 1, 2, 3, 4, 5, 6, 7, 8]),

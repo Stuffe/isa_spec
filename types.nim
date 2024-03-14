@@ -27,6 +27,7 @@ type op_kind* = enum
   op_lsl
   op_lsr
   op_asr
+  op_byte_swizzle
 
 const OP_INDEXES* = ["+", "-", "*", "/", "%", "and", "or", "xor", "lsl", "lsr", "asr"]
 
