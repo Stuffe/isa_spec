@@ -232,7 +232,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
           return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $new_field_type.bit_length)
 
       var bit_value = 0
-      assert parseBin(bits, bit_value) == new_field_type.bit_length
+      discard parseBin(bits, bit_value)
       new_field_type.fields.add(field_value(
         name: field_name,
         value: cast[uint64](bit_value),
@@ -316,7 +316,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       var pattern: string
       var wildcard_mask: string
 
-      while peek(c) in setutils.toSet("01?abcdefghijklmnopqrstuvwxyz_"):
+      while peek(c) in setutils.toSet("01?abcdefghijklmnopqrstuvwxyz "):
         case peek(c):
           of '0':
             pattern.add('0')
@@ -326,7 +326,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
             pattern.add('1')
             wildcard_mask.add('1')
             new_instruction.bit_types.add(FIELD_ONE)
-          of '_':
+          of ' ':
             discard
           of '?':
             pattern.add('0')

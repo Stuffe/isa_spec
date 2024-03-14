@@ -7,5 +7,5 @@ load $imm
 0000aaaa
 
 load $imm
-00000001_aaaaaaaa
+00000001 aaaaaaaa
 
