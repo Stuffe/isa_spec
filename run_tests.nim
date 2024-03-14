@@ -7,6 +7,7 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "define": test(result: @[0'u8, 1, 255, 7, 5, 0, 0]),
   "evaluator": test(result: @[0'u8, 1, 255, 7, 5, 0, 0]),
   "basics": test(result: @[138'u8, 3, 38]),
   "rel_arithmetic": test(result: @[0'u8, 0, 0, 3]),

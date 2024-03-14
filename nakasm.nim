@@ -234,7 +234,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
   skip_newlines(c)
 
-  while matches(c, "field"):
+  while not matches(c, "[instructions]"):
     skip_whitespaces(c)
     var field_type_name = get_string(c)
     if field_type_name == "": return error("Expected a name for the field type")
@@ -289,9 +289,6 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       if char notin {'\r', '\t'}:
         result.add(char)
       c.index += 1
-
-  if not matches(c, "[instructions]"):
-    return error("Was expecting the [instructions] header here")
 
   skip_newlines(c)
 
@@ -429,8 +426,9 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
   
   var labels: Table[string, uint64]
   var number_defines: Table[string, uint64]
-  var register_defines: Table[string, uint64]
   var jump_patches: seq[jump_patch]
+  var field_defines: seq[Table[string, uint64]]
+  field_defines.setLen(asm_spec.field_types.len)
 
   proc get_operand(c: var context, field: int): (bool, uint64) =
 
@@ -467,8 +465,8 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
       else:
         let field_string = get_string(c)
 
-        if field == FIELD_REG and field_string in register_defines:
-          return (true, register_defines[field_string])
+        if field_string in field_defines[field]:
+          return (true, field_defines[field][field_string])
 
         for field_value in asm_spec.field_types[field].fields:
           if field_value.name == field_string:
@@ -509,12 +507,14 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
       else:
         let define_value = get_string(c)
         var found = false
-        for i, field in asm_spec.field_types[FIELD_REG].fields:
-          if field.name == define_value:
-            register_defines[definition_name] = field.value
-            result.register_definitions[i] = definition_name
-            found = true
-            break
+        for field_id, field_type in asm_spec.field_types:
+          for i, field in field_type.fields:
+            if field.name == define_value:
+              field_defines[field_id][definition_name] = field.value
+              if field_id == FIELD_REG:
+                result.register_definitions[i] = definition_name
+              found = true
+              break
         
         if not found:
           return error("Definition value must be either a number or a register")
