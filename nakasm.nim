@@ -62,6 +62,8 @@ proc matches(c: var context, value: string): bool =
 proc get_string(c: var context): string =
   if peek(c) notin STRING_FIRST: 
     return
+  result.add(peek(c))
+  c.index += 1
   while peek(c) in STRING_NEXT:
     result.add(peek(c))
     c.index += 1
@@ -69,6 +71,8 @@ proc get_string(c: var context): string =
 proc get_number(c: var context): string =
   if peek(c) notin NUMBER_FIRST:
     return
+  result.add(peek(c))
+  c.index += 1
   while peek(c) in NUMBER_NEXT:
     result.add(peek(c))
     c.index += 1
@@ -106,7 +110,7 @@ proc get_term(c: var context, operand_count: int): expression =
 
   return expression(exp_kind: exp_number, value: cast[uint64](parseInt(number)))
 
-proc get_expression(c: var context, operand_count: int): expression =
+proc get_greedy_group(c: var context, operand_count: int): expression =
 
   skip_whitespaces(c)
 
@@ -123,7 +127,7 @@ proc get_expression(c: var context, operand_count: int): expression =
 
     var next_token: string
     
-    while peek(c) in setutils.toSet("+-*/%xandolsr"):
+    while peek(c) in setutils.toSet("*/%"):
       next_token.add(peek(c))
       c.index += 1
 
@@ -134,19 +138,49 @@ proc get_expression(c: var context, operand_count: int): expression =
 
     let op = op_kind(op_index)
 
-    if op notin {op_mul, op_div, op_mod}:
-      let next = get_expression(c, operand_count)
-      if next.exp_kind == exp_fail: 
-        c.index = start_index
-        return fail()
-      return expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: next)
+    let rhs = get_term(c, operand_count)
+    if rhs.exp_kind == exp_fail:
+      c.index = start_index
+      return fail()
+    exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
-    else:
-      let next = get_term(c, operand_count)
-      if next.exp_kind == exp_fail:
-        c.index = start_index
-        return fail()
-      exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: next)
+
+proc get_expression(c: var context, operand_count: int): expression =
+
+  skip_whitespaces(c)
+
+  var exp = get_greedy_group(c, operand_count)
+
+  if exp.exp_kind == exp_fail: 
+    return fail()
+
+  while true:
+
+    skip_whitespaces(c)
+
+    let start_index = c.index
+
+    var next_token: string
+    
+    while peek(c) in setutils.toSet("+-xandolsr"):
+      next_token.add(peek(c))
+      c.index += 1
+
+    let op_index = OP_INDEXES.find(next_token)
+
+    if op_index == -1: return exp
+    skip_whitespaces(c)
+
+    let op = op_kind(op_index)
+
+    let rhs = get_greedy_group(c, operand_count)
+    if rhs.exp_kind == exp_fail:
+      c.index = start_index
+      return fail()
+    exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
+
+proc asr(a: uint64, b: uint64): uint64 =
+  return cast[uint64](cast[int](a) shr cast[int](b))
 
 proc eval(input: expression, operands: seq[uint64], ip: uint64): uint64 =
   case input.exp_kind:
@@ -167,7 +201,7 @@ proc eval(input: expression, operands: seq[uint64], ip: uint64): uint64 =
         of op_xor: return eval(input.lhs, operands, ip) xor eval(input.rhs, operands, ip)
         of op_lsl: return eval(input.lhs, operands, ip) shl eval(input.rhs, operands, ip)
         of op_lsr: return eval(input.lhs, operands, ip) shr eval(input.rhs, operands, ip)
-        of op_asr: return cast[uint64](cast[int](eval(input.lhs, operands, ip)) shr cast[int](eval(input.rhs, operands, ip)))
+        of op_asr: return asr(eval(input.lhs, operands, ip), eval(input.rhs, operands, ip))
 
 
 proc parse_asm_spec*(source: string): spec_parse_result =
@@ -440,8 +474,6 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
           if field_value.name == field_string:
             var value = field_value.value
             # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
-            #value = reverseBits(value)
-            #value = value shr (64 - definition.field_types[field].bit_length)
             return (true, value)
 
     return FAIL
@@ -508,7 +540,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
           
           if not matches(c, instruction.string_parts[0]):
             break test
-
+          
           for i in 0..instruction.fields.len - 1:
 
             if instruction.fields[i] == FIELD_LABEL:
@@ -571,13 +603,13 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
                   let bit = (fields[index] and 1)
                   if bit == 1:
                     setBit[uint64](values[int_index], bit_index)
-                  fields[index] = fields[index] shr 1
+                  fields[index] = asr(fields[index], 1)
 
               i -= 1
 
             for i, field in fields:
               if i.uint8 notin used_fields: continue
-              if field != 0:
+              if field != 0 and field != uint64.high: # high for sign extended
                 best_candidate = instruction
                 field_too_large = i
                 break test
@@ -609,18 +641,26 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
           break find_instruction
 
     if not instruction_found:
-      if max_fields_matched != -1:
-        return error("Value $" & $char(ord('a') + max_fields_matched) & " doesn't fit in field")
-      if max_fields_matched == -1:
-        return error("Could not parse this instruction")
-      if best_candidate.string_parts[0] == "":
-        return error("Field " & $(max_fields_matched + 1) & " did not match")
-      return error("Field " & $(max_fields_matched + 1) & " did not match for instruction " & best_candidate.string_parts[0])
+      c.index = start_index
+      var mnemonic: string
+      if c.index != 0 and peek(c, -1) == '\n':
+        mnemonic = get_string(c)
+
+      if mnemonic == "":
+        if max_fields_matched != -1: 
+          return error("Value $" & $char(ord('a') + max_fields_matched) & " doesn't fit in field")
+        else:
+          return error("Could not parse this instruction")
+
+      else:
+        if max_fields_matched != -1: 
+          return error("Value $" & $char(ord('a') + max_fields_matched) & " does not fit in field for '" & mnemonic & "'")
+        else:
+          return error("No instruction using the mnemonic '" & mnemonic & "' exists")
 
     skip_whitespaces(c)
 
     if peek(c) notin {'\n', '\0'}:
-      echo dbg(c)
       return error("Was expecting the instruction to end here")
 
     skip_newlines(c)
@@ -642,6 +682,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
       i -= 1
       let field_index = instruction.bit_types[i] - FIXED_FIELDS_LEN
       if field_index < 0: continue
+      if field_index > instruction.fields.high: continue # Field index is higher when using virtual fields
       if instruction.fields[field_index] == FIELD_LABEL:
         let bit = (label_offset and 1)
         if bit == 1:
