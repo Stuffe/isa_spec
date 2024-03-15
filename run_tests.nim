@@ -7,10 +7,10 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "arithmetic": test(result: @[12'u8, 4, 3, 2, 1]),
   "etca": test(),
   "fancy_syntax": test(result: @[17'u8, 5]),
   "parenthesis": test(result: @[5'u8, 3, 2, 1]),
-  "arithmetic": test(result: @[12'u8, 4, 3, 2, 1]),
   "rel_jump": test(result: @[0'u8, 1]),
   "numbers": test(result: @[0'u8, 15, 15]),
   "define": test(result: @[3'u8]),

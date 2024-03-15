@@ -52,11 +52,12 @@ proc skip_newlines(c: var context) =
   if skip_comment(c):
     skip_newlines(c)
 
-proc matches(c: var context, value: string): bool =
+proc matches(c: var context, value: string, increment = true): bool =
   for i in 0..value.high:
     if peek(c, i) != value[i]: 
       return false
-  c.index += value.len
+  if increment:
+    c.index += value.len
   return true
 
 proc get_string(c: var context): string =
@@ -278,60 +279,59 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
   skip_newlines(c)
 
-  if not matches(c, "[fields]"):
-    return error("Was expecting the [fields] header here")
-
-  skip_newlines(c)
-
-  while not matches(c, "[instructions]"):
-    skip_whitespaces(c)
-    var field_type_name = get_string(c)
-    if field_type_name == "": return error("Expected a name for the field type")
-    skip_whitespaces(c)
-
-    var new_field_type = field_type(name: field_type_name)
-
-    while peek(c) == '\n':
-      c.index += 1
-      let field_name = get_string(c)
-      if field_name == "": break
-      skip_whitespaces(c)
-
-      var bits: string
-
-      while peek(c) in {'0','1'}:
-        bits.add(peek(c))
-        c.index += 1
-     
-      if bits.len == 0:
-        return error("Expected a bit pattern for " & field_name)
-      if bits.len > 64:
-        return error("Only up to 64 bit field lengths supported")
-      
-      if new_field_type.bit_length == 0:
-        new_field_type.bit_length = bits.len
-      else:
-        if new_field_type.bit_length != bits.len:
-          return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $new_field_type.bit_length)
-
-      var bit_value = 0
-      discard parseBin(bits, bit_value)
-      new_field_type.fields.add(field_value(
-        name: field_name,
-        value: cast[uint64](bit_value),
-      ))
-      skip_whitespaces(c)
-
-    if new_field_type.fields.len == 0:
-      return error("Expected field values")
-
-    if new_field_type.name == "register":
-      result.spec.field_types[FIELD_REG] = new_field_type
-    else:
-      result.spec.field_types.add(new_field_type)
+  if matches(c, "[fields]"):
 
     skip_newlines(c)
 
+    while not matches(c, "[instructions]", increment = false):
+      skip_whitespaces(c)
+      var field_type_name = get_string(c)
+      if field_type_name == "": return error("Expected a name for the field type")
+      skip_whitespaces(c)
+
+      var new_field_type = field_type(name: field_type_name)
+
+      while peek(c) == '\n':
+        c.index += 1
+        let field_name = get_string(c)
+        if field_name == "": break
+        skip_whitespaces(c)
+
+        var bits: string
+
+        while peek(c) in {'0','1'}:
+          bits.add(peek(c))
+          c.index += 1
+      
+        if bits.len == 0:
+          return error("Expected a bit pattern for " & field_name)
+        if bits.len > 64:
+          return error("Only up to 64 bit field lengths supported")
+        
+        if new_field_type.bit_length == 0:
+          new_field_type.bit_length = bits.len
+        else:
+          if new_field_type.bit_length != bits.len:
+            return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $new_field_type.bit_length)
+
+        var bit_value = 0
+        discard parseBin(bits, bit_value)
+        new_field_type.fields.add(field_value(
+          name: field_name,
+          value: cast[uint64](bit_value),
+        ))
+        skip_whitespaces(c)
+
+      if new_field_type.fields.len == 0:
+        return error("Expected field values")
+
+      if new_field_type.name == "register":
+        result.spec.field_types[FIELD_REG] = new_field_type
+      else:
+        result.spec.field_types.add(new_field_type)
+
+      skip_newlines(c)
+  
   proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
     var this_part: string
     while peek(c) notin {'$', '\0', '\n'}:
@@ -345,6 +345,9 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     if this_part != "":
       syntax_parts.add(this_part)
+
+  if not matches(c, "[instructions]"):
+    return error("Was expecting the [instructions] header here")
 
   skip_newlines(c)
 
