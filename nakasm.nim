@@ -422,7 +422,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
             wildcard_mask.add('0')
             let field_index = ord(peek(c)) - ord('a')
 
-            if field_index > new_instruction.fields.len:
+            if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
               return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
             let field_real_index = field_index + FIXED_FIELDS_LEN
             new_instruction.bit_types.add(field_real_index)

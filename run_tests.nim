@@ -7,6 +7,7 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "etca": test(),
   "fancy_syntax": test(result: @[17'u8, 5]),
   "parenthesis": test(result: @[5'u8, 3, 2, 1]),
   "arithmetic": test(result: @[12'u8, 4, 3, 2, 1]),
