@@ -557,6 +557,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
     for syntax in instruction.syntax:
 
       if syntax != "":
+        skip_whitespaces(c)
         discard matches(c, syntax)
         skip_whitespaces(c)
         continue
@@ -704,6 +705,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
           for syntax in instruction.syntax:
 
             if syntax != "":
+              skip_whitespaces(c)
               if not matches(c, syntax):
                 break test
               skip_whitespaces(c)
