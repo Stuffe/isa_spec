@@ -1,13 +1,6 @@
   
 import tables, std/setutils, parseUtils, strutils, bitops
-import types
-
-
-const STRING_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
-const STRING_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
-const NUMBER_FIRST = setutils.toSet("0123456789-")
-const NUMBER_NEXT  = setutils.toSet("0123456789")
-const IP           = int.high
+import types, parse, expressions
 
 const FIELD_ZERO       = 0
 const FIELD_ONE        = 1
@@ -17,249 +10,9 @@ const FIELD_LABEL      = 4
 const FIELD_REG        = 5
 const FIXED_FIELDS_LEN = 6
 
-type context = object
-  source: string
-  index: int
-
-proc dbg(c: context): string =
-  return "\u001b[31m" & c.source[0..c.index - 1] & "\u001b[0m" & c.source[c.index..^1]
-
-proc peek(c: context): char =
-  return c.source[c.index]
-
-proc peek(c: context, offset: int): char =
-  return c.source[c.index + offset]
-
-proc skip_comment(c: var context): bool =
-  if peek(c) == ';' or (peek(c) == '/' and peek(c, 1) == '/'):
-    while peek(c) notin {'\n', '\0'}:
-      c.index += 1
-    return true
-  if peek(c) == '/' and peek(c, 1) == '*':
-    while peek(c) != '\0' and (peek(c) != '*' or peek(c, 1) != '/'):
-      c.index += 1
-    return true
-
-proc skip_whitespaces(c: var context) =
-  while peek(c) in {' ', '\t', '\r'}:
-    c.index += 1
-  if skip_comment(c):
-    skip_whitespaces(c)
-
-proc skip_newlines(c: var context) =
-  while c.source[c.index] in {' ', '\r', '\n', '\t'}:
-    c.index += 1
-  if skip_comment(c):
-    skip_newlines(c)
-
-proc matches(c: var context, value: string, increment = true): bool =
-  for i in 0..value.high:
-    if peek(c, i) != value[i]: 
-      return false
-  if increment:
-    c.index += value.len
-  return true
-
-proc get_string(c: var context): string =
-  if peek(c) notin STRING_FIRST: 
-    return
-  result.add(peek(c))
-  c.index += 1
-  while peek(c) in STRING_NEXT:
-    result.add(peek(c))
-    c.index += 1
-
-proc get_number(c: var context): string =
-  if peek(c) notin NUMBER_FIRST:
-    return
-  result.add(peek(c))
-  c.index += 1
-  while peek(c) in NUMBER_NEXT:
-    result.add(peek(c))
-    c.index += 1
-
-proc fail(): expression =
-  return expression(exp_kind: exp_fail)
-
-proc `$`(exp: expression): string =
-  case exp.exp_kind:
-    of exp_fail: return "FAIL"
-    of exp_number: return $exp.value
-    of exp_operand: 
-      if exp.index == IP: return "IP"
-      return $char(ord('a') + exp.index)
-    of exp_operation: 
-      if exp.op_kind == op_byte_swizzle:
-        var pattern: string
-        var value = exp.rhs.value
-        for i in 0..7:
-          let val = cast[uint8](value)
-          if val == 0xff: break
-          pattern.add(char(ord('a') + val))
-          value = value shr 8
-        return $exp.lhs & ":" & pattern
-      return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
-
-proc get_expression(c: var context, operand_count: int): expression
-
-proc get_term(c: var context, operand_count: int): expression =
-
-  if peek(c) == '(':
-    c.index += 1
-    result = get_expression(c, operand_count)
-    skip_whitespaces(c)
-    assert peek(c) == ')', "Was expecting an ending parenthesis here. (TODO, make this a normal error)"
-    c.index += 1
-
-  elif peek(c) == '$':
-    let operand = peek(c, 1)
-    if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return fail()
-    c.index += 2
-    if operand == 'i' and peek(c) == 'p':
-      c.index += 1
-      return expression(exp_kind: exp_operand, index: IP)
-
-    let operand_index = ord(operand) - ord('a')
-    if operand_index < 0 or operand_index > operand_count: return fail()
-
-    result = expression(exp_kind: exp_operand, index: operand_index)
-  
-  else:
-    let number = get_number(c)
-    if number.len == 0: 
-      return fail()
-
-    result = expression(exp_kind: exp_number, value: cast[uint64](parseInt(number)))
-
-  if peek(c) == ':':
-    c.index += 1
-    var order = [0xff'u8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]
-    var i = 0
-    while i < 8:
-      let index = "abcdefgh".find(peek(c))
-      if index == -1: break
-      c.index += 1
-      order[i] = index.uint8
-      i += 1
-
-    let rhs = expression(exp_kind: exp_number, value: cast[ptr uint64](addr order[0])[])
-    result = expression(exp_kind: exp_operation, op_kind: op_byte_swizzle, lhs: result, rhs: rhs)
-
-proc get_greedy_group(c: var context, operand_count: int): expression =
-
-  skip_whitespaces(c)
-
-  var exp = get_term(c, operand_count)
-
-  if exp.exp_kind == exp_fail: 
-    return fail()
-
-  while true:
-
-    skip_whitespaces(c)
-
-    let start_index = c.index
-
-    var next_token: string
-    
-    while peek(c) in setutils.toSet("*/%"):
-      next_token.add(peek(c))
-      c.index += 1
-
-    let op_index = OP_INDEXES.find(next_token)
-
-    if op_index == -1: return exp
-    skip_whitespaces(c)
-
-    let op = op_kind(op_index)
-
-    let rhs = get_term(c, operand_count)
-    if rhs.exp_kind == exp_fail:
-      c.index = start_index
-      return fail()
-    exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
-
-
-proc get_expression(c: var context, operand_count: int): expression =
-
-  skip_whitespaces(c)
-
-  var exp = get_greedy_group(c, operand_count)
-
-  if exp.exp_kind == exp_fail: 
-    return fail()
-
-  while true:
-
-    skip_whitespaces(c)
-
-    let start_index = c.index
-
-    var next_token: string
-    
-    while peek(c) in setutils.toSet("+-xandolsr"):
-      next_token.add(peek(c))
-      c.index += 1
-
-    let op_index = OP_INDEXES.find(next_token)
-
-    if op_index == -1: return exp
-    skip_whitespaces(c)
-
-    let op = op_kind(op_index)
-
-    let rhs = get_greedy_group(c, operand_count)
-    if rhs.exp_kind == exp_fail:
-      c.index = start_index
-      return fail()
-    exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
-
-proc asr(a: uint64, b: uint64): uint64 =
-  return cast[uint64](cast[int](a) shr cast[int](b))
-
-proc eval(input: expression, operands: seq[uint64], ip: uint64): uint64 =
-  case input.exp_kind:
-    of exp_fail: assert false
-    of exp_number: return input.value
-    of exp_operand: 
-      if input.index == IP: return ip
-      return operands[input.index]
-    of exp_operation:
-      let lhs = eval(input.lhs, operands, ip)
-      let rhs = eval(input.rhs, operands, ip)
-
-      case input.op_kind:
-        of op_add: return lhs +   rhs
-        of op_sub: return lhs -   rhs
-        of op_mul: return lhs *   rhs
-        of op_div: return lhs div rhs
-        of op_mod: return lhs mod rhs
-        of op_and: return lhs and rhs
-        of op_or:  return lhs or  rhs
-        of op_xor: return lhs xor rhs
-        of op_lsl: return lhs shl rhs
-        of op_lsr: return lhs shr rhs
-        of op_asr: return asr(lhs, rhs)
-        of op_byte_swizzle:
-
-          var order: seq[uint8]
-          var value = rhs
-          for i in 0..7:
-            let val = cast[uint8](value)
-            if val == 0xff: break
-            order.add(val)
-            value = value shr 8
-
-          let l = order.high
-          for i, place in order:
-            result = result or ((lhs shr (8 * i)) and 0xff) shl ((l - i) * 8)
-
 proc parse_asm_spec*(source: string): spec_parse_result =
 
-  var c = context(
-    source: source & '\0',
-    index: 0,
-  )
+  var c = new_context(source)
 
   proc error(input: string): spec_parse_result =
     var line = 1
@@ -459,14 +212,8 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
-proc insert_instruction(byte_code: var seq[uint8], c: context) =
-  discard
-
 proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
-  var c = context(
-    source: source & '\0',
-    index: 0,
-  )
+  var c = new_context(source)
 
   proc error(input: string, error_index = -1): assembly_result =
     var idx = error_index
@@ -504,8 +251,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
             while peek(c) in setutils.toSet("0123456789abcdef"):
               field_string.add(peek(c))
               c.index += 1
-            try: value = fromHex[uint64]("0x" & field_string)
-            except CatchableError: return FAIL
+            value = fromHex[uint64]("0x" & field_string)
             return (true, value)
           if peek(c, 1) == 'o':
             c.index += 2
@@ -513,8 +259,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
             while peek(c) in setutils.toSet("01234567"):
               field_string.add(peek(c))
               c.index += 1
-            try: value = fromOct[uint64]("0o" & field_string)
-            except CatchableError: return FAIL
+            value = fromOct[uint64]("0o" & field_string)
             return (true, value)
           if peek(c, 1) == 'b':
             c.index += 2
@@ -522,8 +267,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
             while peek(c) in setutils.toSet("01"):
               field_string.add(peek(c))
               c.index += 1
-            try: value = fromBin[uint64]("0b" & field_string)
-            except CatchableError: return FAIL
+            value = fromBin[uint64]("0b" & field_string)
             return (true, value)
 
         let number = get_number(c)
@@ -653,13 +397,15 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
     let special_test = get_string(c)
 
     if special_test != "" and peek(c) == ':':
+      if special_test in labels:
+        return error("Label " & special_test & " is already declared")
       labels[special_test] = result.byte_code.len.uint64
       c.index += 1
       skip_newlines(c)
 
       continue
     
-    elif special_test == "define":
+    elif special_test == "set":
       skip_whitespaces(c)
       let definition_name = get_string(c)
       skip_whitespaces(c)
@@ -715,7 +461,6 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
               continue
 
             if instruction.fields[i] == FIELD_LABEL:
-              # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
               let label_name = get_string(c)
               if label_name == "":
                 return error("Was expecting a label name here")

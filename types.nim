@@ -68,3 +68,5 @@ type assembly_result* = object
   error_line*: int
   register_definitions*: Table[int, string]
 
+proc asr*(a: uint64, b: uint64): uint64 =
+  return cast[uint64](cast[int](a) shr cast[int](b))

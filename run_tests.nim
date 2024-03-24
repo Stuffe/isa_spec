@@ -13,7 +13,7 @@ const TESTS = {
   "parenthesis": test(result: @[5'u8, 3, 2, 1]),
   "rel_jump": test(result: @[0'u8, 1]),
   "numbers": test(result: @[0'u8, 15, 15]),
-  "define": test(result: @[3'u8]),
+  "set": test(result: @[3'u8]),
   "evaluator": test(result: @[0'u8, 1, 255, 7, 5, 0, 0]),
   "basics": test(result: @[138'u8, 3, 38]),
   "rel_arithmetic": test(result: @[0'u8, 0, 0, 3]),
