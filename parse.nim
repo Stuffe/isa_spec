@@ -24,6 +24,10 @@ func peek*(c: context): char =
 func peek*(c: context, offset: int): char =
   return c.source[c.index + offset]
 
+func read*(c: var context): char =
+  result = c.source[c.index]
+  c.index += 1
+
 func skip_comment*(c: var context): bool =
   if peek(c) == ';' or (peek(c) == '/' and peek(c, 1) == '/'):
     while peek(c) notin {'\n', '\0'}:
@@ -41,7 +45,7 @@ func skip_whitespaces*(c: var context) =
     skip_whitespaces(c)
 
 func skip_newlines*(c: var context) =
-  while c.source[c.index] in {' ', '\r', '\n', '\t'}:
+  while peek(c) in {' ', '\r', '\n', '\t'}:
     c.index += 1
   if skip_comment(c):
     skip_newlines(c)
@@ -54,20 +58,21 @@ func matches*(c: var context, value: string, increment = true): bool =
     c.index += value.len
   return true
 
+func matches*(c: var context, value: char): bool =
+  if peek(c) == value:
+    c.index += 1
+    return true
+
 func get_string*(c: var context): string =
   if peek(c) notin STRING_FIRST: 
     return
-  result.add(peek(c))
-  c.index += 1
+  result.add(read(c))
   while peek(c) in STRING_NEXT:
-    result.add(peek(c))
-    c.index += 1
+    result.add(read(c))
 
 func get_number*(c: var context): string =
   if peek(c) notin NUMBER_FIRST:
     return
-  result.add(peek(c))
-  c.index += 1
+  result.add(read(c))
   while peek(c) in NUMBER_NEXT:
-    result.add(peek(c))
-    c.index += 1
+    result.add(read(c))

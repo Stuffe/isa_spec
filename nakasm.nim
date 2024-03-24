@@ -44,8 +44,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
       var new_field_type = field_type(name: field_type_name)
 
-      while peek(c) == '\n':
-        c.index += 1
+      while read(c) == '\n':
         let field_name = get_string(c)
         if field_name == "": break
         skip_whitespaces(c)
@@ -53,8 +52,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
         var bits: string
 
         while peek(c) in {'0','1'}:
-          bits.add(peek(c))
-          c.index += 1
+          bits.add(read(c))
       
         if bits.len == 0:
           return error("Expected a bit pattern for " & field_name)
@@ -88,13 +86,12 @@ proc parse_asm_spec*(source: string): spec_parse_result =
   proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
     var this_part: string
     while peek(c) notin {'$', '\0', '\n'}:
-      let char = peek(c)
+      let char = read(c)
       if char notin {'\r', '\t', ' '}:
         this_part.add(char)
       elif this_part != "":
         syntax_parts.add(this_part)
         this_part = ""
-      c.index += 1
 
     if this_part != "":
       syntax_parts.add(this_part)
@@ -110,8 +107,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
     block syntax:
       add_string_syntax(c, new_instruction.syntax)
 
-      while peek(c) == '$':
-        c.index += 1
+      while matches(c, '$'):
         let field_name = get_string(c)
 
         if field_name == "":
@@ -131,17 +127,14 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
         add_string_syntax(c, new_instruction.syntax)
 
-      if peek(c) != '\n':
+      if read(c) != '\n':
         return error("Was expecting a newline here")
-
-      c.index += 1
 
     let instruction_name = new_instruction.syntax[0]
     
     block virtual_field:
       var count = 1
-      while peek(c) == '=':
-        c.index += 1
+      while matches(c, '='):
         let virt_op = get_expression(c, new_instruction.fields.len + new_instruction.virtual_fields.len)
         new_instruction.virtual_fields.add(virt_op)
 
@@ -195,9 +188,8 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
       skip_whitespaces(c)
 
-      if peek(c) != '\n':
+      if read(c) != '\n':
         return error("Was expecting a newline here")
-      c.index += 1
 
     block get_description:
       var description: string
@@ -249,24 +241,21 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
             c.index += 2
             var field_string: string
             while peek(c) in setutils.toSet("0123456789abcdef"):
-              field_string.add(peek(c))
-              c.index += 1
+              field_string.add(read(c))
             value = fromHex[uint64]("0x" & field_string)
             return (true, value)
           if peek(c, 1) == 'o':
             c.index += 2
             var field_string: string
             while peek(c) in setutils.toSet("01234567"):
-              field_string.add(peek(c))
-              c.index += 1
+              field_string.add(read(c))
             value = fromOct[uint64]("0o" & field_string)
             return (true, value)
           if peek(c, 1) == 'b':
             c.index += 2
             var field_string: string
             while peek(c) in setutils.toSet("01"):
-              field_string.add(peek(c))
-              c.index += 1
+              field_string.add(read(c))
             value = fromBin[uint64]("0b" & field_string)
             return (true, value)
 

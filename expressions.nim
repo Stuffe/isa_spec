@@ -26,15 +26,13 @@ func get_expression*(c: var context, operand_count: int): expression
 
 func get_term(c: var context, operand_count: int): expression =
 
-  if peek(c) == '(':
+  if matches(c, '('):
     let start = c.index
-    c.index += 1
     result = get_expression(c, operand_count)
     skip_whitespaces(c)
-    if peek(c) != ')':
+    if read(c) != ')':
       c.index = start
       return expression(exp_kind: exp_fail)
-    c.index += 1
 
   elif peek(c) == '$':
     let operand = peek(c, 1)
@@ -56,8 +54,7 @@ func get_term(c: var context, operand_count: int): expression =
 
     result = expression(exp_kind: exp_number, value: cast[uint64](parseInt(number)))
 
-  if peek(c) == ':':
-    c.index += 1
+  if matches(c, ':'):
     var order = [0xff'u8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]
     var i = 0
     while i < 8:
@@ -123,8 +120,7 @@ func get_expression*(c: var context, operand_count: int): expression =
     var next_token: string
     
     while peek(c) in setutils.toSet("+-xandolsr"):
-      next_token.add(peek(c))
-      c.index += 1
+      next_token.add(read(c))
 
     let op_index = OP_INDEXES.find(next_token)
 
