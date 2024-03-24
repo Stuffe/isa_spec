@@ -1,4 +1,4 @@
-import std/setutils
+import std/setutils, strutils
 
 type context* = object
   source*: string
@@ -76,3 +76,22 @@ func get_number*(c: var context): string =
   result.add(read(c))
   while peek(c) in NUMBER_NEXT:
     result.add(read(c))
+
+func get_line_number*(c: context, byte_index = -1): int =
+  var idx = byte_index
+  if byte_index == -1:
+    idx = c.index
+  var line = 1
+  for i in 0..idx - 1:
+    if c.source[i] == '\n':
+      line += 1
+  return line
+
+func get_size*(c: var context): int =
+  if peek(c) != '\\' or peek(c, 1) != 'U': return
+  c.index += 2
+  let number = get_number(c)
+  if number == "":
+    c.index -= 2
+    return
+  return parseInt(number)

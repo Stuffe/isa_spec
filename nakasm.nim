@@ -1,5 +1,5 @@
   
-import tables, std/setutils, parseUtils, strutils, bitops
+import tables, std/setutils, parseUtils, strutils, bitops, os, pathnorm
 import types, parse, expressions
 
 const FIELD_ZERO       = 0
@@ -15,11 +15,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
   var c = new_context(source)
 
   proc error(input: string): spec_parse_result =
-    var line = 1
-    for i in 0..c.index - 1:
-      if c.source[i] == '\n':
-        line += 1
-    return spec_parse_result(error: input, error_line: line)
+    return spec_parse_result(error: input, error_line: get_line_number(c))
 
   result.spec.field_types = @[
     field_type(name: "0"),
@@ -204,30 +200,51 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
-proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
-  var c = new_context(source)
+proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result
 
-  proc error(input: string, error_index = -1): assembly_result =
-    var idx = error_index
-    if error_index == -1:
-      idx = c.index
-    var line = 1
-    for i in 0..idx - 1:
-      if c.source[i] == '\n':
-        line += 1
-    return assembly_result(error: input, error_line: line)
+proc assemble_file*(path: string, asm_spec: assembly_spec, already_included = newSeq[string]()): assembly_result =
+  let normal_path = normalizePath(path.replace('\\', '/'))
+  
+  if normal_path in already_included:
+    return assembly_result(error: "Recursive inclusion of: " & normal_path)
+  
+  var already_included_new = already_included
+  already_included_new.add(normal_path)
+
+  if not fileExists(normal_path):
+    return assembly_result(error: "File does not exist: " & normal_path)
+
+  return assemble(normal_path, asm_spec, readFile(normal_path), already_included_new)
+
+proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result =
+
+  let normal_path = normalizePath(path.replace('\\', '/'))
+
+  var res = assembly_result()
+  
+  var c = new_context(source)
 
   type jump_patch = object
     label: string
     byte_offset: int
     instruction: instruction
     index: int
+
+  type value = object
+    public: bool
+    value: uint64
   
-  var labels: Table[string, uint64]
-  var number_defines: Table[string, uint64]
+  var labels: Table[string, value]
+  var number_defines: Table[string, value]
+  var field_defines: seq[Table[string, value]]
   var jump_patches: seq[jump_patch]
-  var field_defines: seq[Table[string, uint64]]
   field_defines.setLen(asm_spec.field_types.len)
+
+  proc error(input: string, error_index = -1): assembly_result =
+    res.error = input
+    res.error_line = get_line_number(c, error_index)
+    res.error_file = normal_path
+    return res
 
   proc get_operand(c: var context, field: int): (bool, uint64) =
 
@@ -267,7 +284,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
         let field_string = get_string(c)
 
         if field_string in number_defines:
-          return (true, number_defines[field_string])
+          return (true, number_defines[field_string].value)
        
       of FIELD_LABEL: assert false
 
@@ -275,7 +292,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
         let field_string = get_string(c)
 
         if field_string in field_defines[field]:
-          return (true, field_defines[field][field_string])
+          return (true, field_defines[field][field_string].value)
 
         for field_value in asm_spec.field_types[field].fields:
           if field_value.name == field_string:
@@ -311,7 +328,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
           ))
           fields.add(0)
         else:
-          fields.add(labels[label_name])
+          fields.add(labels[label_name].value)
         continue
 
       let (match, value) = get_operand(c, instruction.fields[i])
@@ -383,12 +400,80 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     let start_index = c.index
 
-    let special_test = get_string(c)
+    let number = get_number(c)
 
-    if special_test != "" and peek(c) == ':':
+    if number != "":
+      let size = get_size(c)
+      if size == 0:
+        return error("Expected a size after the number, like " & number & "\\U64")
+
+      if size notin [8, 16, 32, 64]:
+        return error("Only 8, 16, 32 and 64 bits are supported for now")
+
+      var i = size div 8
+      var value = parseInt(number)
+
+      while i > 0:
+        res.byte_code.add(cast[uint8](value))
+        value = value shr 8
+        i -= 1
+
+      skip_newlines(c)
+
+      continue
+
+    if peek(c) in {'"', '\''}:
+      let char = read(c)
+      # TODO escape
+      var literal: string
+      while peek(c) notin {char, '\0'}:
+        literal.add(read(c))
+
+      if read(c) == '\0':
+        return error("Missing closing " & $char & " character")
+
+      for i in 0..literal.high:
+        res.byte_code.add(cast[uint8](ord(literal[i])))
+
+      skip_newlines(c)
+
+      continue
+
+    var special_test = get_string(c)
+
+    var public: bool
+    if special_test == "pub":
+      public = true
+      skip_whitespaces(c)
+      special_test = get_string(c)
+
+    if special_test == "include":
+      skip_whitespaces(c)
+      if read(c) != '"':
+        return error("Expected a string after the keyword 'include'")
+      let file = get_string(c).replace("\\", "/") & ".asm"
+
+      if read(c) != '"':
+        return error("Expected a string after the keyword 'include'")
+
+      var i = normal_path.high
+      while i > 0 and normal_path[i] != '/':
+        i -= 1
+
+      let include_res = assemble_file(normal_path[0..i] & file, asm_spec)
+      if include_res.error != "":
+        return include_res
+
+      res.byte_code.add(include_res.byte_code)
+
+      skip_newlines(c)
+      continue
+
+    elif special_test != "" and peek(c) == ':':
       if special_test in labels:
         return error("Label " & special_test & " is already declared")
-      labels[special_test] = result.byte_code.len.uint64
+      labels[special_test] = value(public: public, value: res.byte_code.len.uint64)
+      res.label_names.add(special_test)
       c.index += 1
       skip_newlines(c)
 
@@ -409,20 +494,20 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
       let number = get_number(c)
       if number != "":
-        number_defines[definition_name] = cast[uint64](parseInt(number))
-        result.number_defines.add(definition_name)
+        number_defines[definition_name] = value(public: public, value: cast[uint64](parseInt(number)))
+        if FIELD_IMM notin res.field_definitions:
+          res.field_definitions[FIELD_IMM] = @[]
+        res.field_definitions[FIELD_IMM].add(definition_name)
 
       else:
         let define_value = get_string(c)
         var found = false
         for field_id, field_type in asm_spec.field_types:
+          res.field_definitions[field_id] = @[]
           for i, field in field_type.fields:
             if field.name == define_value:
-              field_defines[field_id][definition_name] = field.value
-              if field_id == FIELD_REG:
-                result.register_definitions[i] = definition_name
-              else:
-                result.field_defines.add(definition_name)
+              field_defines[field_id][definition_name] = value(public: public, value: field.value)
+              res.field_definitions[field_id].add(definition_name)
               found = true
               break
         
@@ -434,7 +519,10 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     else:
       c.index = start_index
-    
+
+    if public:
+      return error("Only labels and 'set' values can be public")
+
     var instruction_found = false
     var best_candidate: instruction
     var field_too_large = -1
@@ -541,13 +629,13 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
 
     block emit:
 
-      result.line_to_byte.add(result.byte_code.len)
-      let byte_code_offset = result.byte_code.len
+      #res.line_to_byte.add(res.byte_code.len)
+      let byte_code_offset = res.byte_code.len
       let instruction_length = instr.bit_types.len div 8
-      result.byte_code.setLen(result.byte_code.len + instruction_length)
+      res.byte_code.setLen(res.byte_code.len + instruction_length)
 
       c.index = start_index
-      assemble_instruction(c, result.byte_code, instr, byte_code_offset, create_jump_patches = true)
+      assemble_instruction(c, res.byte_code, instr, byte_code_offset, create_jump_patches = true)
 
     skip_whitespaces(c)
 
@@ -561,6 +649,7 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
       return error("No label with the name '" & patch.label & "' declared", patch.index)
 
     c.index = patch.index
-    assemble_instruction(c, result.byte_code, patch.instruction, patch.byte_offset)
+    assemble_instruction(c, res.byte_code, patch.instruction, patch.byte_offset)
 
+  return res
 

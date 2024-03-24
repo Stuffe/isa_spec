@@ -63,12 +63,12 @@ type spec_parse_result* = object
 
 type assembly_result* = object
   byte_code*: seq[uint8]
-  line_to_byte*: seq[int]
+  #line_to_byte*: seq[int]
   error*: string
   error_line*: int
-  register_definitions*: Table[int, string]
+  error_file*: string
+  field_definitions*: OrderedTable[int, seq[string]]
   number_defines*: seq[string]
-  field_defines*: seq[string]
   label_names*: seq[string]
 
 proc asr*(a: uint64, b: uint64): uint64 =

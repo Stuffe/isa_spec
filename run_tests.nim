@@ -7,6 +7,8 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "include": test(result: @[1'u8]),
+  "literals": test(result: @[1'u8, 2, 0, 97, 98, 99]),
   "arithmetic": test(result: @[12'u8, 4, 3, 2, 1]),
   "etca": test(),
   "fancy_syntax": test(result: @[17'u8, 5]),
@@ -32,13 +34,13 @@ for name, test in TESTS:
     continue
 
   let asm_source = readFile("tests/" & name & "/test.asm")
-  let asm_result = assemble(spec_result.spec, asm_source)
+  let asm_result = assemble("tests/" & name & "/test.asm", spec_result.spec, asm_source)
 
   if asm_result.error != test.asm_error:
-    echo "\u001b[31m'" & name & "/test.asm' error\u001b[0m: " & asm_result.error
+    echo "\u001b[31m'" & asm_result.error_file & "' error\u001b[0m: " & asm_result.error
     continue
   if asm_result.byte_code != test.result:
-    echo "\u001b[31m'" & name & "/test.asm' error\u001b[0m\nGot:      " & $asm_result.byte_code & "\nExpected: " & $test.result
+    echo "\u001b[31m'" & asm_result.error_file & "' error\u001b[0m\nGot:      " & $asm_result.byte_code & "\nExpected: " & $test.result
     continue
 
   echo "\u001b[32mTest '" & name & "' passed.\u001b[0m"
