@@ -397,11 +397,20 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
     elif special_test == "set":
       skip_whitespaces(c)
       let definition_name = get_string(c)
+      if definition_name in number_defines:
+        return error(definition_name & " is already declared")
+
+      for _, field_type in asm_spec.field_types:
+        for _, field in field_type.fields:
+          if field.name == definition_name:
+            return error(definition_name & " is already declared")
+
       skip_whitespaces(c)
 
       let number = get_number(c)
       if number != "":
         number_defines[definition_name] = cast[uint64](parseInt(number))
+        result.number_defines.add(definition_name)
 
       else:
         let define_value = get_string(c)
@@ -412,6 +421,8 @@ proc assemble*(asm_spec: assembly_spec, source: string): assembly_result =
               field_defines[field_id][definition_name] = field.value
               if field_id == FIELD_REG:
                 result.register_definitions[i] = definition_name
+              else:
+                result.field_defines.add(definition_name)
               found = true
               break
         

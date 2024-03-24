@@ -67,6 +67,9 @@ type assembly_result* = object
   error*: string
   error_line*: int
   register_definitions*: Table[int, string]
+  number_defines*: seq[string]
+  field_defines*: seq[string]
+  label_names*: seq[string]
 
 proc asr*(a: uint64, b: uint64): uint64 =
   return cast[uint64](cast[int](a) shr cast[int](b))
