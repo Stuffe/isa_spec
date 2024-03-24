@@ -3,7 +3,7 @@ import types, parse
 
 const IP = int.high
 
-proc `$`*(exp: expression): string =
+func `$`*(exp: expression): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
@@ -22,15 +22,18 @@ proc `$`*(exp: expression): string =
         return $exp.lhs & ":" & pattern
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
-proc get_expression*(c: var context, operand_count: int): expression
+func get_expression*(c: var context, operand_count: int): expression
 
-proc get_term(c: var context, operand_count: int): expression =
+func get_term(c: var context, operand_count: int): expression =
 
   if peek(c) == '(':
+    let start = c.index
     c.index += 1
     result = get_expression(c, operand_count)
     skip_whitespaces(c)
-    assert peek(c) == ')', "Was expecting an ending parenthesis here. (TODO, make this a normal error)"
+    if peek(c) != ')':
+      c.index = start
+      return expression(exp_kind: exp_fail)
     c.index += 1
 
   elif peek(c) == '$':
@@ -67,7 +70,7 @@ proc get_term(c: var context, operand_count: int): expression =
     let rhs = expression(exp_kind: exp_number, value: cast[ptr uint64](addr order[0])[])
     result = expression(exp_kind: exp_operation, op_kind: op_byte_swizzle, lhs: result, rhs: rhs)
 
-proc get_greedy_group(c: var context, operand_count: int): expression =
+func get_greedy_group(c: var context, operand_count: int): expression =
 
   skip_whitespaces(c)
 
@@ -102,7 +105,7 @@ proc get_greedy_group(c: var context, operand_count: int): expression =
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
-proc get_expression*(c: var context, operand_count: int): expression =
+func get_expression*(c: var context, operand_count: int): expression =
 
   skip_whitespaces(c)
 
@@ -136,7 +139,7 @@ proc get_expression*(c: var context, operand_count: int): expression =
       return expression(exp_kind: exp_fail)
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
-proc eval*(input: expression, operands: seq[uint64], ip: uint64): uint64 =
+func eval*(input: expression, operands: seq[uint64], ip: uint64): uint64 =
   case input.exp_kind:
     of exp_fail: assert false
     of exp_number: return input.value

@@ -9,22 +9,22 @@ const STRING_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
 const NUMBER_FIRST = setutils.toSet("0123456789-")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 
-proc new_context*(source: string): context =
+func new_context*(source: string): context =
   return context(
     source: source & '\0',
     index: 0,
   )
 
-proc dbg*(c: context): string =
+func dbg*(c: context): string =
   return "\u001b[31m" & c.source[0..c.index - 1] & "\u001b[0m" & c.source[c.index..^1]
 
-proc peek*(c: context): char =
+func peek*(c: context): char =
   return c.source[c.index]
 
-proc peek*(c: context, offset: int): char =
+func peek*(c: context, offset: int): char =
   return c.source[c.index + offset]
 
-proc skip_comment*(c: var context): bool =
+func skip_comment*(c: var context): bool =
   if peek(c) == ';' or (peek(c) == '/' and peek(c, 1) == '/'):
     while peek(c) notin {'\n', '\0'}:
       c.index += 1
@@ -34,19 +34,19 @@ proc skip_comment*(c: var context): bool =
       c.index += 1
     return true
 
-proc skip_whitespaces*(c: var context) =
+func skip_whitespaces*(c: var context) =
   while peek(c) in {' ', '\t', '\r'}:
     c.index += 1
   if skip_comment(c):
     skip_whitespaces(c)
 
-proc skip_newlines*(c: var context) =
+func skip_newlines*(c: var context) =
   while c.source[c.index] in {' ', '\r', '\n', '\t'}:
     c.index += 1
   if skip_comment(c):
     skip_newlines(c)
 
-proc matches*(c: var context, value: string, increment = true): bool =
+func matches*(c: var context, value: string, increment = true): bool =
   for i in 0..value.high:
     if peek(c, i) != value[i]: 
       return false
@@ -54,7 +54,7 @@ proc matches*(c: var context, value: string, increment = true): bool =
     c.index += value.len
   return true
 
-proc get_string*(c: var context): string =
+func get_string*(c: var context): string =
   if peek(c) notin STRING_FIRST: 
     return
   result.add(peek(c))
@@ -63,7 +63,7 @@ proc get_string*(c: var context): string =
     result.add(peek(c))
     c.index += 1
 
-proc get_number*(c: var context): string =
+func get_number*(c: var context): string =
   if peek(c) notin NUMBER_FIRST:
     return
   result.add(peek(c))
