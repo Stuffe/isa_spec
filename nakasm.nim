@@ -83,11 +83,13 @@ proc parse_asm_spec*(source: string): spec_parse_result =
     var this_part: string
     while peek(c) notin {'$', '\0', '\n'}:
       let char = read(c)
-      if char notin {'\r', '\t', ' '}:
+      if char in {'\r', '\t', ' '}:
+        if this_part != "":
+          syntax_parts.add(this_part)
+          this_part = ""
+        syntax_parts.add(" ")
+      else:
         this_part.add(char)
-      elif this_part != "":
-        syntax_parts.add(this_part)
-        this_part = ""
 
     if this_part != "":
       syntax_parts.add(this_part)
@@ -200,7 +202,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
-func assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result
+proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result
 
 func assemble_file*(path: string, asm_spec: assembly_spec, already_included = newSeq[string]()): assembly_result =
   let normal_path = normalizePath(path.replace('\\', '/'))
@@ -218,7 +220,7 @@ func assemble_file*(path: string, asm_spec: assembly_spec, already_included = ne
     let source = readFile(normal_path)
     return assemble(normal_path, asm_spec, source, already_included_new)
 
-func assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result =
+proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
   let normal_path = normalizePath(path.replace('\\', '/'))
 
@@ -311,10 +313,12 @@ func assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
     var i = 0
     for syntax in instruction.syntax:
 
+      if syntax == " ":
+        skip_whitespaces(c)
+        continue
+
       if syntax != "":
-        skip_whitespaces(c)
         discard matches(c, syntax)
-        skip_whitespaces(c)
         continue
 
       if instruction.fields[i] == FIELD_LABEL:
@@ -548,11 +552,13 @@ func assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
           var i = 0
           for syntax in instruction.syntax:
 
-            if syntax != "":
+            if syntax == " ":
               skip_whitespaces(c)
+              continue
+
+            if syntax != "":
               if not matches(c, syntax):
                 break test
-              skip_whitespaces(c)
               continue
 
             if instruction.fields[i] == FIELD_LABEL:
@@ -632,6 +638,7 @@ func assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
           return error("Immediate " & $(field_too_large+1) & " doesn't fit in field for '" & mnemonic & "'")
         if max_fields_matched != -1: 
           return error("Operand " & $(max_fields_matched+1) & " does not match for '" & mnemonic & "'")
+        
         return error("No instruction using the mnemonic '" & mnemonic & "' exists")
 
     block emit:
