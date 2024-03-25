@@ -200,9 +200,9 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
-proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result
+func assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result
 
-proc assemble_file*(path: string, asm_spec: assembly_spec, already_included = newSeq[string]()): assembly_result =
+func assemble_file*(path: string, asm_spec: assembly_spec, already_included = newSeq[string]()): assembly_result =
   let normal_path = normalizePath(path.replace('\\', '/'))
   
   if normal_path in already_included:
@@ -214,9 +214,11 @@ proc assemble_file*(path: string, asm_spec: assembly_spec, already_included = ne
   if not fileExists(normal_path):
     return assembly_result(error: "File does not exist: " & normal_path)
 
-  return assemble(normal_path, asm_spec, readFile(normal_path), already_included_new)
+  {.noSideEffect.}:
+    let source = readFile(normal_path)
+    return assemble(normal_path, asm_spec, source, already_included_new)
 
-proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result =
+func assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
   let normal_path = normalizePath(path.replace('\\', '/'))
 
@@ -451,7 +453,12 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       skip_whitespaces(c)
       if read(c) != '"':
         return error("Expected a string after the keyword 'include'")
-      let file = get_string(c).replace("\\", "/") & ".asm"
+      
+      var file: string
+      while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"):
+        file.add(read(c))
+
+      file = file.replace("\\", "/") & ".asm"
 
       if read(c) != '"':
         return error("Expected a string after the keyword 'include'")
