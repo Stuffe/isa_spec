@@ -10,7 +10,7 @@ const TESTS = {
   "fancy_syntax": test(result: @[17'u8, 5]),
   "arithmetic": test(result: @[12'u8, 4, 3, 2, 1]),
   "include": test(result: @[1'u8]),
-  "literals": test(result: @[1'u8, 2, 0, 97, 98, 99]),
+  "literals": test(result: @[1'u8, 0, 2, 97, 98, 99]),
   "etca": test(),
   "parenthesis": test(result: @[5'u8, 3, 2, 1]),
   "rel_jump": test(result: @[0'u8, 1]),

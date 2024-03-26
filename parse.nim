@@ -71,11 +71,40 @@ func get_string*(c: var context): string =
     result.add(read(c))
 
 func get_number*(c: var context): string =
+  if peek(c) == '0':
+    var value = 0'u64
+    if peek(c, 1) == 'x':
+      c.index += 2
+      result = "0x"
+      while peek(c) in setutils.toSet("0123456789abcdef"):
+        result.add(read(c))
+      return result
+    if peek(c, 1) == 'o':
+      c.index += 2
+      result = "0o"
+      while peek(c) in setutils.toSet("01234567"):
+        result.add(read(c))
+      return result
+    if peek(c, 1) == 'b':
+      c.index += 2
+      result = "0b"
+      while peek(c) in setutils.toSet("01"):
+        result.add(read(c))
+      return result
+
   if peek(c) notin NUMBER_FIRST:
     return
   result.add(read(c))
   while peek(c) in NUMBER_NEXT:
     result.add(read(c))
+
+func parse_number*(input: string): uint64 =
+  if input.len < 2: return cast[uint64](parseInt(input))
+  case input[1]:
+    of 'x': return fromHex[uint64](input)
+    of 'o': return fromOct[uint64](input)
+    of 'b': return fromBin[uint64](input)
+    else:   return cast[uint64](parseInt(input))
 
 func get_line_number*(c: context, byte_index = -1): int =
   var idx = byte_index

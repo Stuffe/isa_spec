@@ -7,8 +7,7 @@ const FIELD_ONE        = 1
 const FIELD_WILDCARD   = 2
 const FIELD_IMM        = 3
 const FIELD_LABEL      = 4
-const FIELD_REG        = 5
-const FIXED_FIELDS_LEN = 6
+const FIXED_FIELDS_LEN = 5
 
 proc parse_asm_spec*(source: string): spec_parse_result =
 
@@ -23,7 +22,6 @@ proc parse_asm_spec*(source: string): spec_parse_result =
     field_type(name: "?"),
     field_type(name: "imm"),
     field_type(name: "label8"),
-    field_type(name: "register"),
   ]
 
   skip_newlines(c)
@@ -72,10 +70,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       if new_field_type.fields.len == 0:
         return error("Expected field values")
 
-      if new_field_type.name == "register":
-        result.spec.field_types[FIELD_REG] = new_field_type
-      else:
-        result.spec.field_types.add(new_field_type)
+      result.spec.field_types.add(new_field_type)
 
       skip_newlines(c)
   
@@ -256,33 +251,9 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
 
     case field:
       of FIELD_IMM:
-        if peek(c) == '0':
-          var value = 0'u64
-          if peek(c, 1) == 'x':
-            c.index += 2
-            var field_string: string
-            while peek(c) in setutils.toSet("0123456789abcdef"):
-              field_string.add(read(c))
-            value = fromHex[uint64]("0x" & field_string)
-            return (true, value)
-          if peek(c, 1) == 'o':
-            c.index += 2
-            var field_string: string
-            while peek(c) in setutils.toSet("01234567"):
-              field_string.add(read(c))
-            value = fromOct[uint64]("0o" & field_string)
-            return (true, value)
-          if peek(c, 1) == 'b':
-            c.index += 2
-            var field_string: string
-            while peek(c) in setutils.toSet("01"):
-              field_string.add(read(c))
-            value = fromBin[uint64]("0b" & field_string)
-            return (true, value)
-
         let number = get_number(c)
         if number != "":
-          result = (true, cast[uint64](parseInt(number)))
+          result = (true, parse_number(number))
           return result
 
         let field_string = get_string(c)
@@ -362,7 +333,6 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
           of FIELD_WILDCARD: discard
           of FIELD_IMM: assert false
           of FIELD_LABEL: assert false
-          of FIELD_REG: assert false
           else:
             let index = bit_type - FIXED_FIELDS_LEN
 
@@ -416,12 +386,13 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       if size notin [8, 16, 32, 64]:
         return error("Only 8, 16, 32 and 64 bits are supported for now")
 
+      let mask = uint64.high shr (64 - size)
       var i = size div 8
-      var value = parseInt(number)
+      var value = parse_number(number) and mask
 
       while i > 0:
-        res.byte_code.add(cast[uint8](value))
-        value = value shr 8
+        res.byte_code.add(cast[uint8](value shr (size - 8)))
+        value = value shl 8
         i -= 1
 
       skip_newlines(c)
@@ -505,7 +476,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
 
       let number = get_number(c)
       if number != "":
-        number_defines[definition_name] = value(public: public, value: cast[uint64](parseInt(number)))
+        number_defines[definition_name] = value(public: public, value: parse_number(number))
         if FIELD_IMM notin res.field_definitions:
           res.field_definitions[FIELD_IMM] = @[]
         res.field_definitions[FIELD_IMM].add(definition_name)
