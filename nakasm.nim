@@ -219,7 +219,18 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
 
   let normal_path = normalizePath(path.replace('\\', '/'))
 
-  var res = assembly_result()
+  var res = assembly_result(line_to_byte: @[0])
+
+  proc skip_newlines(c: var context) =
+    # Shadows parse.skip_newlines()
+    assert false, "Use skip_record_newlines() for assembling, as we need to record machine code offsets"
+
+  proc skip_and_record_newlines(c: var context) =
+    while peek(c) in {' ', '\r', '\n', '\t'}:
+      if read(c) == '\n':
+        res.line_to_byte.add(res.machine_code.len)
+    if skip_comment(c):
+      skip_and_record_newlines(c)
   
   var c = new_context(source)
 
@@ -277,7 +288,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
 
     return FAIL
 
-  proc assemble_instruction(c: var context, byte_code: var seq[uint8], instruction: instruction, byte_code_offset: int, create_jump_patches = false) =
+  proc assemble_instruction(c: var context, byte_code: var seq[uint8], instruction: instruction, machine_code_offset: int, create_jump_patches = false) =
     let instruction_start = c.index
     var fields: seq[uint64]
     
@@ -299,7 +310,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
         if create_jump_patches:
           jump_patches.add(jump_patch(
             label: label_name,
-            byte_offset: byte_code_offset,
+            byte_offset: machine_code_offset,
             instruction: instruction,
             index: instruction_start,
           ))
@@ -316,7 +327,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
     var values = [0'u64, 0]
     block generate_fields:
       for virtual_field in instruction.virtual_fields:
-        let new_field = eval(virtual_field, fields, byte_code_offset.uint64)
+        let new_field = eval(virtual_field, fields, machine_code_offset.uint64)
         fields.add(new_field)
 
       var used_fields: set[uint8]
@@ -362,17 +373,17 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       var shift_by    = max_width - 8
 
       for i in 0..shift_count:
-        byte_code[byte_code_offset + o] = cast[uint8](value shr shift_by)
+        byte_code[machine_code_offset + o] = cast[uint8](value shr shift_by)
         o += 1
         shift_by -= 8
 
-  skip_newlines(c)
+  skip_and_record_newlines(c)
 
   var fields: seq[uint64]
 
   while peek(c) != '\0':
 
-    skip_newlines(c)
+    skip_and_record_newlines(c)
 
     let start_index = c.index
 
@@ -391,11 +402,11 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       var value = parse_number(number) and mask
 
       while i > 0:
-        res.byte_code.add(cast[uint8](value shr (size - 8)))
+        res.machine_code.add(cast[uint8](value shr (size - 8)))
         value = value shl 8
         i -= 1
 
-      skip_newlines(c)
+      skip_and_record_newlines(c)
 
       continue
 
@@ -410,9 +421,9 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
         return error("Missing closing " & $char & " character")
 
       for i in 0..literal.high:
-        res.byte_code.add(cast[uint8](ord(literal[i])))
+        res.machine_code.add(cast[uint8](ord(literal[i])))
 
-      skip_newlines(c)
+      skip_and_record_newlines(c)
 
       continue
 
@@ -446,18 +457,18 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       if include_res.error != "":
         return include_res
 
-      res.byte_code.add(include_res.byte_code)
+      res.machine_code.add(include_res.machine_code)
 
-      skip_newlines(c)
+      skip_and_record_newlines(c)
       continue
 
     elif special_test != "" and peek(c) == ':':
       if special_test in labels:
         return error("Label " & special_test & " is already declared")
-      labels[special_test] = value(public: public, value: res.byte_code.len.uint64)
+      labels[special_test] = value(public: public, value: res.machine_code.len.uint64)
       res.label_names.add(special_test)
       c.index += 1
-      skip_newlines(c)
+      skip_and_record_newlines(c)
 
       continue
     
@@ -496,7 +507,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
         if not found:
           return error("Definition value must be either a number or a register")
 
-      skip_newlines(c)
+      skip_and_record_newlines(c)
       continue
 
     else:
@@ -614,27 +625,26 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
 
     block emit:
 
-      #res.line_to_byte.add(res.byte_code.len)
-      let byte_code_offset = res.byte_code.len
+      let machine_code_offset = res.machine_code.len
       let instruction_length = instr.bit_types.len div 8
-      res.byte_code.setLen(res.byte_code.len + instruction_length)
+      res.machine_code.setLen(res.machine_code.len + instruction_length)
 
       c.index = start_index
-      assemble_instruction(c, res.byte_code, instr, byte_code_offset, create_jump_patches = true)
+      assemble_instruction(c, res.machine_code, instr, machine_code_offset, create_jump_patches = true)
 
     skip_whitespaces(c)
 
     if peek(c) notin {'\n', '\0'}:
       return error("Was expecting the instruction to end here")
 
-    skip_newlines(c)
+    skip_and_record_newlines(c)
 
   for patch in jump_patches:
     if patch.label notin labels:
       return error("No label with the name '" & patch.label & "' declared", patch.index)
 
     c.index = patch.index
-    assemble_instruction(c, res.byte_code, patch.instruction, patch.byte_offset)
+    assemble_instruction(c, res.machine_code, patch.instruction, patch.byte_offset)
 
   return res
 

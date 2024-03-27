@@ -39,8 +39,9 @@ for name, test in TESTS:
   if asm_result.error != test.asm_error:
     echo "\u001b[31m'" & asm_result.error_file & "' error\u001b[0m: " & asm_result.error
     continue
-  if asm_result.byte_code != test.result:
-    echo "\u001b[31m'" & asm_result.error_file & "' error\u001b[0m\nGot:      " & $asm_result.byte_code & "\nExpected: " & $test.result
+  if asm_result.machine_code != test.result:
+    echo "\u001b[31m'" & asm_result.error_file & "' error\u001b[0m\nGot:      " & $asm_result.machine_code & "\nExpected: " & $test.result
     continue
 
   echo "\u001b[32mTest '" & name & "' passed.\u001b[0m"
+  

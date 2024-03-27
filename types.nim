@@ -62,8 +62,8 @@ type spec_parse_result* = object
   spec*: assembly_spec
 
 type assembly_result* = object
-  byte_code*: seq[uint8]
-  #line_to_byte*: seq[int]
+  machine_code*: seq[uint8]
+  line_to_byte*: seq[int]
   error*: string
   error_line*: int
   error_file*: string
