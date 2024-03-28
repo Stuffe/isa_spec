@@ -2,7 +2,7 @@
 [instructions]
 
 test $imm
-= $a lsl 2
+= $a << 2
 bbbbbbbb
 
 swizzle $imm

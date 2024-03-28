@@ -84,7 +84,7 @@ func get_greedy_group(c: var context, operand_count: int): expression =
 
     var next_token: string
     
-    while peek(c) in setutils.toSet("*/%"):
+    while peek(c) in GREEDY_CHARS:
       next_token.add(peek(c))
       c.index += 1
 
@@ -119,7 +119,7 @@ func get_expression*(c: var context, operand_count: int): expression =
 
     var next_token: string
     
-    while peek(c) in setutils.toSet("+-xandolsr"):
+    while peek(c) in LAZY_CHARS:
       next_token.add(read(c))
 
     let op_index = OP_INDEXES.find(next_token)

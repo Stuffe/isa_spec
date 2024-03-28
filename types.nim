@@ -1,4 +1,4 @@
-import tables
+import tables, std/setutils
 
 type field_value* = object
   name*: string
@@ -29,7 +29,9 @@ type op_kind* = enum
   op_asr
   op_byte_swizzle
 
-const OP_INDEXES* = ["+", "-", "*", "/", "%", "and", "or", "xor", "lsl", "lsr", "asr"]
+const OP_INDEXES* = ["+", "-", "*", "/", "%", "&&", "||", "^", "<<", ">>>", ">>"]
+const GREEDY_CHARS* = setutils.toSet("*/%")
+const LAZY_CHARS* = setutils.toSet("+-<>|!&")
 
 type expression* = ref object
   case exp_kind*: exp_kind
