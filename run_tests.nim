@@ -1,5 +1,5 @@
 import tables
-import nakasm
+import isa_spec
 
 type test = object
   spec_error: string

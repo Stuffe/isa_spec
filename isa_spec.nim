@@ -19,7 +19,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
   result.spec.field_types = @[
     field_type(name: "0"),
     field_type(name: "1"),
-    field_type(name: "?"),
+    field_type(name: "x"),
     field_type(name: "imm"),
     field_type(name: "label8"),
   ]
@@ -143,7 +143,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       var pattern: string
       var wildcard_mask: string
 
-      while peek(c) in setutils.toSet("01?abcdefghijklmnopqrstuvwxyz "):
+      while peek(c) in setutils.toSet("01?abcdefghijklmnopqrstuvw "):
         case peek(c):
           of '0':
             pattern.add('0')
@@ -155,7 +155,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
             new_instruction.bit_types.add(FIELD_ONE)
           of ' ':
             discard
-          of '?':
+          of 'x':
             pattern.add('0')
             wildcard_mask.add('0')
             new_instruction.bit_types.add(FIELD_WILDCARD)
