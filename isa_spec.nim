@@ -36,41 +36,63 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       if field_type_name == "": return error("Expected a name for the field type")
       skip_whitespaces(c)
 
-      var new_field_type = field_type(name: field_type_name)
+      var new_field_types: Table[string, field_type] #(name: field_type_name)
+#      var new_field_type = field_type(name: field_type_name)
+      var bit_length = 0
 
-      while read(c) == '\n':
-        let field_name = get_string(c)
-        if field_name == "": break
-        skip_whitespaces(c)
+      block outer:
+        while read(c) == '\n':
 
-        var bits: string
+          var first = true
+          while first or peek(c) == ',':
+            
+            if first:
+              first = false
+            else:
+              c.index += 1
+              skip_whitespaces(c)
 
-        while peek(c) in {'0','1'}:
-          bits.add(read(c))
-      
-        if bits.len == 0:
-          return error("Expected a bit pattern for " & field_name)
-        if bits.len > 64:
-          return error("Only up to 64 bit field lengths supported")
-        
-        if new_field_type.bit_length == 0:
-          new_field_type.bit_length = bits.len
-        else:
-          if new_field_type.bit_length != bits.len:
-            return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $new_field_type.bit_length)
+            let field_name = get_string(c)
+            if field_name == "": break outer
+            skip_whitespaces(c)
 
-        var bit_value = 0
-        discard parseBin(bits, bit_value)
-        new_field_type.fields.add(field_value(
-          name: field_name,
-          value: cast[uint64](bit_value),
-        ))
-        skip_whitespaces(c)
+            var bits: string
 
-      if new_field_type.fields.len == 0:
+            while peek(c) in {'0','1'}:
+              bits.add(read(c))
+          
+            if bits.len == 0:
+              return error("Expected a bit pattern for " & field_name)
+            if bits.len > 64:
+              return error("Only up to 64 bit field lengths supported")
+            
+            if bit_length == 0:
+              bit_length = bits.len
+            else:
+              if bit_length != bits.len:
+                return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $bit_length)
+
+            var bit_value = 0
+            discard parseBin(bits, bit_value)
+
+            skip_whitespaces(c)
+            let bit_width = get_number(c)
+
+            let real_name = field_type_name & bit_width
+            
+            if real_name notin new_field_types:
+              new_field_types[real_name] = field_type(name: real_name, bit_length: bit_length)
+              
+            new_field_types[real_name].fields.add(field_value(
+              name: field_name,
+              value: cast[uint64](bit_value),
+            ))
+
+      if new_field_types.len == 0:
         return error("Expected field values")
 
-      result.spec.field_types.add(new_field_type)
+      for name, field_type in new_field_types:
+        result.spec.field_types.add(field_type)
 
       skip_newlines(c)
   

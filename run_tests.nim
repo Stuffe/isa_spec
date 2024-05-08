@@ -7,8 +7,10 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
-  "arithmetic": test(result: @[12'u8, 4, 3, 2, 1, 3]),
+  "synonyms": test(result: @[0'u8, 1]),
+  "basics": test(result: @[138'u8, 3, 38]),
   "fancy_syntax": test(result: @[17'u8, 5]),
+  "arithmetic": test(result: @[12'u8, 4, 3, 2, 1, 3]),
   "include": test(result: @[1'u8]),
   "literals": test(result: @[1'u8, 0, 2, 97, 98, 99]),
   "etca": test(),
@@ -17,7 +19,6 @@ const TESTS = {
   "numbers": test(result: @[0'u8, 15, 15]),
   "set": test(result: @[3'u8]),
   "evaluator": test(result: @[0'u8, 1, 255, 7, 5, 0, 0]),
-  "basics": test(result: @[138'u8, 3, 38]),
   "rel_arithmetic": test(result: @[0'u8, 0, 0, 3]),
   "imm_overload": test(result: @[1'u8, 64]),
   "large": test(result: @[0'u8, 1, 2, 3, 4, 5, 6, 7]),

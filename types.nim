@@ -1,10 +1,17 @@
 import tables, std/setutils
 
+type register_kind* = enum
+  field
+  scalar_int
+  scalar_float
+  vector
+
 type field_value* = object
   name*: string
   value*: uint64
 
 type field_type* = object
+  register_kind: register_kind
   name*: string
   bit_length*: int
   fields*: seq[field_value]
