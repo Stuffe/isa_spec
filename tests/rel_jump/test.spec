@@ -2,6 +2,6 @@
 
 [instructions]
 jmp %label8
-=  %a - %ip
+=  %a - $
 bbbbbbbb
 jump to %a.

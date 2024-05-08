@@ -1,14 +1,14 @@
 import std/setutils, strutils
 import types, parse
 
-const IP = int.high
+const CURRENT_ADDRESS = int.high
 
 func `$`*(exp: expression): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
     of exp_operand: 
-      if exp.index == IP: return "IP"
+      if exp.index == CURRENT_ADDRESS: return "CURRENT_ADDRESS"
       return $char(ord('a') + exp.index)
     of exp_operation: 
       if exp.op_kind == op_byte_swizzle:
@@ -34,13 +34,14 @@ func get_term(c: var context, operand_count: int): expression =
       c.index = start
       return expression(exp_kind: exp_fail)
 
+  elif peek(c) == '$':
+    c.index += 1
+    return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
+
   elif peek(c) == '%':
     let operand = peek(c, 1)
     if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return expression(exp_kind: exp_fail)
     c.index += 2
-    if operand == 'i' and peek(c) == 'p':
-      c.index += 1
-      return expression(exp_kind: exp_operand, index: IP)
 
     let operand_index = ord(operand) - ord('a')
     if operand_index < 0 or operand_index > operand_count: return expression(exp_kind: exp_fail)
@@ -140,7 +141,7 @@ func eval*(input: expression, operands: seq[uint64], ip: uint64): uint64 =
     of exp_fail: assert false
     of exp_number: return input.value
     of exp_operand: 
-      if input.index == IP: return ip
+      if input.index == CURRENT_ADDRESS: return ip
       return operands[input.index]
     of exp_operation:
       let lhs = eval(input.lhs, operands, ip)
