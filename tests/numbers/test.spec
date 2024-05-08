@@ -3,5 +3,5 @@
 
 [instructions]
 
-load $imm
+load %imm
 0000aaaa

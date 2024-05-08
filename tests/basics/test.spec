@@ -12,15 +12,15 @@ io 110
  
 [instructions] 
  
-mov $register, $register
+mov %register, %register
 10aaabbb
-Move $b to $a.
+Move %b to %a.
  
-load $imm
+load %imm
 00aaaaaa
-Store $a in r0.
+Store %a in r0.
  
-jmp $label8
+jmp %label8
 00aaaaaa
-Store $a in r0.
+Store %a in r0.
 

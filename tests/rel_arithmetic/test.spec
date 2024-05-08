@@ -4,7 +4,7 @@
 [instructions]
 
 load ip
-= $ip
+= %ip
 aaaaaaaa
 
 nop

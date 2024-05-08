@@ -1,10 +1,10 @@
 
 [instructions]
 
-test $imm
-= $a << 2
+test %imm
+= %a << 2
 bbbbbbbb
 
-swizzle $imm
-= $a:dcba
+swizzle %imm
+= %a:dcba
 bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb

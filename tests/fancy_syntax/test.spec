@@ -8,8 +8,8 @@ a 000
 
 [instructions]
 
-mov [$shift * $register], $imm
+mov [%shift * %register], %imm
 aabbbccc
 
-mov [$imm], $imm
+mov [%imm], %imm
 aaaabbbb

@@ -76,7 +76,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
   
   proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
     var this_part: string
-    while peek(c) notin {'$', '\0', '\n'}:
+    while peek(c) notin {'%', '\0', '\n'}:
       let char = read(c)
       if char in {'\r', '\t', ' '}:
         if this_part != "":
@@ -100,7 +100,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
     block syntax:
       add_string_syntax(c, new_instruction.syntax)
 
-      while matches(c, '$'):
+      while matches(c, '%'):
         let field_name = get_string(c)
 
         if field_name == "":

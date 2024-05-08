@@ -3,9 +3,9 @@
 
 [instructions]
 
-load $imm
+load %imm
 0000aaaa
 
-load $imm
+load %imm
 00000001 aaaaaaaa
 

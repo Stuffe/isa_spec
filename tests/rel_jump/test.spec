@@ -1,7 +1,7 @@
 [fields]
 
 [instructions]
-jmp $label8
-=  $a - $ip
+jmp %label8
+=  %a - %ip
 bbbbbbbb
-jump to $a.
+jump to %a.

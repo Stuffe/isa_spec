@@ -34,7 +34,7 @@ func get_term(c: var context, operand_count: int): expression =
       c.index = start
       return expression(exp_kind: exp_fail)
 
-  elif peek(c) == '$':
+  elif peek(c) == '%':
     let operand = peek(c, 1)
     if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return expression(exp_kind: exp_fail)
     c.index += 2
@@ -84,7 +84,7 @@ func get_greedy_group(c: var context, operand_count: int): expression =
 
     var next_token: string
     
-    while peek(c) in GREEDY_CHARS:
+    while peek(c) in GREEDY_CHARS and peek(c, 1) == ' ': # The '%' in '%reg' is not an operator!
       next_token.add(peek(c))
       c.index += 1
 
