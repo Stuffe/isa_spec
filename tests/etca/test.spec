@@ -71,235 +71,235 @@ addq %register_qword, %register_qword
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize]
-00000000 aaa00010 ?????bbb
+00000000 aaa00010 xxxxxbbb
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize]
-00010000 aaa00010 ?????bbb
+00010000 aaa00010 xxxxxbbb
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize]
-00100000 aaa00010 ?????bbb
+00100000 aaa00010 xxxxxbbb
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize]
-00110000 aaa00010 ?????bbb
+00110000 aaa00010 xxxxxbbb
 add {b} to {a}.
 
 addh [%register_nosize], %register_hword
-00000000 bbb00011 ?????aaa
+00000000 bbb00011 xxxxxaaa
 add {b} to {a}.
 
 addx [%register_nosize], %register_xword
-00010000 bbb00011 ?????aaa
+00010000 bbb00011 xxxxxaaa
 add {b} to {a}.
 
 addd [%register_nosize], %register_dword
-00100000 bbb00011 ?????aaa
+00100000 bbb00011 xxxxxaaa
 add {b} to {a}.
 
 addq [%register_nosize], %register_qword
-00110000 bbb00011 ?????aaa
+00110000 bbb00011 xxxxxaaa
 add {b} to {a}.
 
 addh %register_hword, [%imm]
 = %b:ba
-00000000 aaa00110 ???????? cccccccc cccccccc
+00000000 aaa00110 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addx %register_xword, [%imm]
 = %b:ba
-00010000 aaa00110 ???????? cccccccc cccccccc
+00010000 aaa00110 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addd %register_dword, [%imm]
 = %b:ba
-00100000 aaa00110 ???????? cccccccc cccccccc
+00100000 aaa00110 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addq %register_qword, [%imm]
 = %b:ba
-00110000 aaa00110 ???????? cccccccc cccccccc
+00110000 aaa00110 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addh [%imm], %register_hword
 = %a:ba
-00000000 bbb00111 ???????? cccccccc cccccccc
+00000000 bbb00111 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addx [%imm], %register_xword
 = %a:ba
-00010000 bbb00111 ???????? cccccccc cccccccc
+00010000 bbb00111 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addd [%imm], %register_dword
 = %a:ba
-00100000 bbb00111 ???????? cccccccc cccccccc
+00100000 bbb00111 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addq [%imm], %register_qword
 = %a:ba
-00110000 bbb00111 ???????? cccccccc cccccccc
+00110000 bbb00111 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000000 aaa01010 ?????bbb dddddddd
+00000000 aaa01010 xxxxxbbb dddddddd
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010000 aaa01010 ?????bbb dddddddd
+00010000 aaa01010 xxxxxbbb dddddddd
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100000 aaa01010 ?????bbb dddddddd
+00100000 aaa01010 xxxxxbbb dddddddd
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110000 aaa01010 ?????bbb dddddddd
+00110000 aaa01010 xxxxxbbb dddddddd
 add {b} to {a}.
 
 addh [%register_nosize + %imm], %register_hword
 = %b:a
-00000000 ccc01011 ?????aaa dddddddd
+00000000 ccc01011 xxxxxaaa dddddddd
 add {b} to {a}.
 
 addx [%register_nosize + %imm], %register_xword
 = %b:a
-00010000 ccc01011 ?????aaa dddddddd
+00010000 ccc01011 xxxxxaaa dddddddd
 add {b} to {a}.
 
 addd [%register_nosize + %imm], %register_dword
 = %b:a
-00100000 ccc01011 ?????aaa dddddddd
+00100000 ccc01011 xxxxxaaa dddddddd
 add {b} to {a}.
 
 addq [%register_nosize + %imm], %register_qword
 = %b:a
-00110000 ccc01011 ?????aaa dddddddd
+00110000 ccc01011 xxxxxaaa dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000000 aaa01110 ?????bbb dddddddd dddddddd
+00000000 aaa01110 xxxxxbbb dddddddd dddddddd
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010000 aaa01110 ?????bbb dddddddd dddddddd
+00010000 aaa01110 xxxxxbbb dddddddd dddddddd
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100000 aaa01110 ?????bbb dddddddd dddddddd
+00100000 aaa01110 xxxxxbbb dddddddd dddddddd
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110000 aaa01110 ?????bbb dddddddd dddddddd
+00110000 aaa01110 xxxxxbbb dddddddd dddddddd
 add {b} to {a}.
 
 addh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000000 ccc01111 ?????aaa dddddddd dddddddd
+00000000 ccc01111 xxxxxaaa dddddddd dddddddd
 add {b} to {a}.
 
 addx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010000 ccc01111 ?????aaa dddddddd dddddddd
+00010000 ccc01111 xxxxxaaa dddddddd dddddddd
 add {b} to {a}.
 
 addd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100000 ccc01111 ?????aaa dddddddd dddddddd
+00100000 ccc01111 xxxxxaaa dddddddd dddddddd
 add {b} to {a}.
 
 addq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110000 ccc01111 ?????aaa dddddddd dddddddd
+00110000 ccc01111 xxxxxaaa dddddddd dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000000 aaa10010 00bbb??? dddddddd
+00000000 aaa10010 00bbbxxx dddddddd
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010000 aaa10010 00bbb??? dddddddd
+00010000 aaa10010 00bbbxxx dddddddd
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100000 aaa10010 00bbb??? dddddddd
+00100000 aaa10010 00bbbxxx dddddddd
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110000 aaa10010 00bbb??? dddddddd
+00110000 aaa10010 00bbbxxx dddddddd
 add {b} to {a}.
 
 addh [%register_nosize + %imm], %register_hword
 = %b:a
-00000000 ccc10011 00aaa??? dddddddd
+00000000 ccc10011 00aaaxxx dddddddd
 add {b} to {a}.
 
 addx [%register_nosize + %imm], %register_xword
 = %b:a
-00010000 ccc10011 00aaa??? dddddddd
+00010000 ccc10011 00aaaxxx dddddddd
 add {b} to {a}.
 
 addd [%register_nosize + %imm], %register_dword
 = %b:a
-00100000 ccc10011 00aaa??? dddddddd
+00100000 ccc10011 00aaaxxx dddddddd
 add {b} to {a}.
 
 addq [%register_nosize + %imm], %register_qword
 = %b:a
-00110000 ccc10011 00aaa??? dddddddd
+00110000 ccc10011 00aaaxxx dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000000 aaa10010 00bbb??? dddddddd dddddddd
+00000000 aaa10010 00bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010000 aaa10010 00bbb??? dddddddd dddddddd
+00010000 aaa10010 00bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100000 aaa10010 00bbb??? dddddddd dddddddd
+00100000 aaa10010 00bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110000 aaa10010 00bbb??? dddddddd dddddddd
+00110000 aaa10010 00bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000000 ccc10011 00aaa??? dddddddd dddddddd
+00000000 ccc10011 00aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010000 ccc10011 00aaa??? dddddddd dddddddd
+00010000 ccc10011 00aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100000 ccc10011 00aaa??? dddddddd dddddddd
+00100000 ccc10011 00aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110000 ccc10011 00aaa??? dddddddd dddddddd
+00110000 ccc10011 00aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -384,82 +384,82 @@ add {b} to {a}.
 
 addh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000000 aaa10010 01bbb??? dddddddd
+00000000 aaa10010 01bbbxxx dddddddd
 add {b} to {a}.
 
 addx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010000 aaa10010 01bbb??? dddddddd
+00010000 aaa10010 01bbbxxx dddddddd
 add {b} to {a}.
 
 addd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100000 aaa10010 01bbb??? dddddddd
+00100000 aaa10010 01bbbxxx dddddddd
 add {b} to {a}.
 
 addq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110000 aaa10010 01bbb??? dddddddd
+00110000 aaa10010 01bbbxxx dddddddd
 add {b} to {a}.
 
 addh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000000 ccc10011 01aaa??? dddddddd
+00000000 ccc10011 01aaaxxx dddddddd
 add {b} to {a}.
 
 addx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010000 ccc10011 01aaa??? dddddddd
+00010000 ccc10011 01aaaxxx dddddddd
 add {b} to {a}.
 
 addd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100000 ccc10011 01aaa??? dddddddd
+00100000 ccc10011 01aaaxxx dddddddd
 add {b} to {a}.
 
 addq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110000 ccc10011 01aaa??? dddddddd
+00110000 ccc10011 01aaaxxx dddddddd
 add {b} to {a}.
 
 addh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000000 aaa10010 01bbb??? dddddddd dddddddd
+00000000 aaa10010 01bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010000 aaa10010 01bbb??? dddddddd dddddddd
+00010000 aaa10010 01bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100000 aaa10010 01bbb??? dddddddd dddddddd
+00100000 aaa10010 01bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110000 aaa10010 01bbb??? dddddddd dddddddd
+00110000 aaa10010 01bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000000 ccc10011 01aaa??? dddddddd dddddddd
+00000000 ccc10011 01aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010000 ccc10011 01aaa??? dddddddd dddddddd
+00010000 ccc10011 01aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100000 ccc10011 01aaa??? dddddddd dddddddd
+00100000 ccc10011 01aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110000 ccc10011 01aaa??? dddddddd dddddddd
+00110000 ccc10011 01aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -544,82 +544,82 @@ add {b} to {a}.
 
 addh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000000 aaa10010 10bbb??? dddddddd
+00000000 aaa10010 10bbbxxx dddddddd
 add {b} to {a}.
 
 addx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010000 aaa10010 10bbb??? dddddddd
+00010000 aaa10010 10bbbxxx dddddddd
 add {b} to {a}.
 
 addd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100000 aaa10010 10bbb??? dddddddd
+00100000 aaa10010 10bbbxxx dddddddd
 add {b} to {a}.
 
 addq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110000 aaa10010 10bbb??? dddddddd
+00110000 aaa10010 10bbbxxx dddddddd
 add {b} to {a}.
 
 addh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000000 ccc10011 10aaa??? dddddddd
+00000000 ccc10011 10aaaxxx dddddddd
 add {b} to {a}.
 
 addx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010000 ccc10011 10aaa??? dddddddd
+00010000 ccc10011 10aaaxxx dddddddd
 add {b} to {a}.
 
 addd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100000 ccc10011 10aaa??? dddddddd
+00100000 ccc10011 10aaaxxx dddddddd
 add {b} to {a}.
 
 addq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110000 ccc10011 10aaa??? dddddddd
+00110000 ccc10011 10aaaxxx dddddddd
 add {b} to {a}.
 
 addh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000000 aaa10010 10bbb??? dddddddd dddddddd
+00000000 aaa10010 10bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010000 aaa10010 10bbb??? dddddddd dddddddd
+00010000 aaa10010 10bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100000 aaa10010 10bbb??? dddddddd dddddddd
+00100000 aaa10010 10bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110000 aaa10010 10bbb??? dddddddd dddddddd
+00110000 aaa10010 10bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000000 ccc10011 10aaa??? dddddddd dddddddd
+00000000 ccc10011 10aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010000 ccc10011 10aaa??? dddddddd dddddddd
+00010000 ccc10011 10aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100000 ccc10011 10aaa??? dddddddd dddddddd
+00100000 ccc10011 10aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110000 ccc10011 10aaa??? dddddddd dddddddd
+00110000 ccc10011 10aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -704,82 +704,82 @@ add {b} to {a}.
 
 addh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000000 aaa10010 11bbb??? dddddddd
+00000000 aaa10010 11bbbxxx dddddddd
 add {b} to {a}.
 
 addx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010000 aaa10010 11bbb??? dddddddd
+00010000 aaa10010 11bbbxxx dddddddd
 add {b} to {a}.
 
 addd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100000 aaa10010 11bbb??? dddddddd
+00100000 aaa10010 11bbbxxx dddddddd
 add {b} to {a}.
 
 addq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110000 aaa10010 11bbb??? dddddddd
+00110000 aaa10010 11bbbxxx dddddddd
 add {b} to {a}.
 
 addh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000000 ccc10011 11aaa??? dddddddd
+00000000 ccc10011 11aaaxxx dddddddd
 add {b} to {a}.
 
 addx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010000 ccc10011 11aaa??? dddddddd
+00010000 ccc10011 11aaaxxx dddddddd
 add {b} to {a}.
 
 addd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100000 ccc10011 11aaa??? dddddddd
+00100000 ccc10011 11aaaxxx dddddddd
 add {b} to {a}.
 
 addq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110000 ccc10011 11aaa??? dddddddd
+00110000 ccc10011 11aaaxxx dddddddd
 add {b} to {a}.
 
 addh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000000 aaa10010 11bbb??? dddddddd dddddddd
+00000000 aaa10010 11bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010000 aaa10010 11bbb??? dddddddd dddddddd
+00010000 aaa10010 11bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100000 aaa10010 11bbb??? dddddddd dddddddd
+00100000 aaa10010 11bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110000 aaa10010 11bbb??? dddddddd dddddddd
+00110000 aaa10010 11bbbxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000000 ccc10011 11aaa??? dddddddd dddddddd
+00000000 ccc10011 11aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010000 ccc10011 11aaa??? dddddddd dddddddd
+00010000 ccc10011 11aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100000 ccc10011 11aaa??? dddddddd dddddddd
+00100000 ccc10011 11aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110000 ccc10011 11aaa??? dddddddd dddddddd
+00110000 ccc10011 11aaaxxx dddddddd dddddddd
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -905,185 +905,185 @@ add {b} to {a}.
 addh [%imm], %imm
 = %a:ba
 = %b:a
-00000000 00100001 ???????? cccccccc cccccccc dddddddd
+00000000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 add {b} to {a}.
 
 addx [%imm], %imm
 = %a:ba
 = %b:a
-00010000 00100001 ???????? cccccccc cccccccc dddddddd
+00010000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 add {b} to {a}.
 
 addd [%imm], %imm
 = %a:ba
 = %b:a
-00100000 00100001 ???????? cccccccc cccccccc dddddddd
+00100000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 add {b} to {a}.
 
 addq [%imm], %imm
 = %a:ba
 = %b:a
-00110000 00100001 ???????? cccccccc cccccccc dddddddd
+00110000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 add {b} to {a}.
 
 addh [%imm], %imm
 = %a:ba
 = %b:a
-00000000 00100101 ???????? cccccccc cccccccc dddddddd
+00000000 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 add {b} to {a}.
 
 addx [%imm], %imm
 = %a:ba
 = %b:ba
-00010000 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010000 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 add {b} to {a}.
 
 addd [%imm], %imm
 = %a:ba
 = %b:dcba
-00100000 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100000 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 add {b} to {a}.
 
 addq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110000 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110000 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 add {b} to {a}.
 
 addh [%register_nosize], %imm
 = %b:a
-00000000 01000001 ?????aaa cccccccc
+00000000 01000001 xxxxxaaa cccccccc
 add {b} to {a}.
 
 addx [%register_nosize], %imm
 = %b:a
-00010000 01000001 ?????aaa cccccccc
+00010000 01000001 xxxxxaaa cccccccc
 add {b} to {a}.
 
 addd [%register_nosize], %imm
 = %b:a
-00100000 01000001 ?????aaa cccccccc
+00100000 01000001 xxxxxaaa cccccccc
 add {b} to {a}.
 
 addq [%register_nosize], %imm
 = %b:a
-00110000 01000001 ?????aaa cccccccc
+00110000 01000001 xxxxxaaa cccccccc
 add {b} to {a}.
 
 addh [%register_nosize], %imm
 = %b:a
-00000000 01000101 ?????aaa cccccccc
+00000000 01000101 xxxxxaaa cccccccc
 add {b} to {a}.
 
 addx [%register_nosize], %imm
 = %b:ba
-00010000 01000101 ?????aaa cccccccc cccccccc
+00010000 01000101 xxxxxaaa cccccccc cccccccc
 add {b} to {a}.
 
 addd [%register_nosize], %imm
 = %b:dcba
-00100000 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100000 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 add {b} to {a}.
 
 addq [%register_nosize], %imm
 = %b:hgfedcba
-00110000 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110000 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 add {b} to {a}.
 
 addh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-add {b} to {a}.
-
-addx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010000 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-add {b} to {a}.
-
-addd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100000 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-add {b} to {a}.
-
-addq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110000 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-add {b} to {a}.
-
-addh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-add {b} to {a}.
-
-addx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-add {b} to {a}.
-
-addd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-add {b} to {a}.
-
-addq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-add {b} to {a}.
-
-addh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000000 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010000 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100000 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110000 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+add {b} to {a}.
+
+addh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+add {b} to {a}.
+
+addx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+add {b} to {a}.
+
+addd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+add {b} to {a}.
+
+addq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+add {b} to {a}.
+
+addh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+add {b} to {a}.
+
+addx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+add {b} to {a}.
+
+addd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+add {b} to {a}.
+
+addq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addh [%register_nosize + %register_nosize], %imm
@@ -1177,49 +1177,49 @@ add {b} to {a}.
 addh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010000 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100000 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110000 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addh [%register_nosize + 2 * %register_nosize], %imm
@@ -1313,49 +1313,49 @@ add {b} to {a}.
 addh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010000 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100000 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110000 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addh [%register_nosize + 4 * %register_nosize], %imm
@@ -1449,49 +1449,49 @@ add {b} to {a}.
 addh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000000 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 add {b} to {a}.
 
 addx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010000 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100000 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110000 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 add {b} to {a}.
 
 addh [%register_nosize + 8 * %register_nosize], %imm
@@ -1584,170 +1584,170 @@ add {b} to {a}.
 
 addh %register_hword, [ip + %imm]
 = %b:a
-00000000 aaa10001 ???????? cccccccc
+00000000 aaa10001 xxxxxxxx cccccccc
 add {b} to {a}.
 
 addx %register_xword, [ip + %imm]
 = %b:a
-00010000 aaa10001 ???????? cccccccc
+00010000 aaa10001 xxxxxxxx cccccccc
 add {b} to {a}.
 
 addd %register_dword, [ip + %imm]
 = %b:a
-00100000 aaa10001 ???????? cccccccc
+00100000 aaa10001 xxxxxxxx cccccccc
 add {b} to {a}.
 
 addq %register_qword, [ip + %imm]
 = %b:a
-00110000 aaa10001 ???????? cccccccc
+00110000 aaa10001 xxxxxxxx cccccccc
 add {b} to {a}.
 
 addh %register_hword, [ip + %imm]
 = %b:ba
-00000000 aaa10001 ???????? cccccccc cccccccc
+00000000 aaa10001 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addx %register_xword, [ip + %imm]
 = %b:ba
-00010000 aaa10001 ???????? cccccccc cccccccc
+00010000 aaa10001 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addd %register_dword, [ip + %imm]
 = %b:ba
-00100000 aaa10001 ???????? cccccccc cccccccc
+00100000 aaa10001 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addq %register_qword, [ip + %imm]
 = %b:ba
-00110000 aaa10001 ???????? cccccccc cccccccc
+00110000 aaa10001 xxxxxxxx cccccccc cccccccc
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize, %register_nosize]
-00000000 aaa11001 00ccc???
+00000000 aaa11001 00cccxxx
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize, %register_nosize]
-00010000 aaa11001 00ccc???
+00010000 aaa11001 00cccxxx
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize, %register_nosize]
-00100000 aaa11001 00ccc???
+00100000 aaa11001 00cccxxx
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize, %register_nosize]
-00110000 aaa11001 00ccc???
+00110000 aaa11001 00cccxxx
 add {b} to {a}.
 
 addh [%register_nosize, %register_nosize], %register_hword
-00000000 ccc11101 00bbb???
+00000000 ccc11101 00bbbxxx
 add {b} to {a}.
 
 addx [%register_nosize, %register_nosize], %register_xword
-00010000 ccc11101 00bbb???
+00010000 ccc11101 00bbbxxx
 add {b} to {a}.
 
 addd [%register_nosize, %register_nosize], %register_dword
-00100000 ccc11101 00bbb???
+00100000 ccc11101 00bbbxxx
 add {b} to {a}.
 
 addq [%register_nosize, %register_nosize], %register_qword
-00110000 ccc11101 00bbb???
+00110000 ccc11101 00bbbxxx
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000000 aaa11001 01ccc???
+00000000 aaa11001 01cccxxx
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010000 aaa11001 01ccc???
+00010000 aaa11001 01cccxxx
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize, 2 * %register_nosize]
-00100000 aaa11001 01ccc???
+00100000 aaa11001 01cccxxx
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110000 aaa11001 01ccc???
+00110000 aaa11001 01cccxxx
 add {b} to {a}.
 
 addh [%register_nosize, 2 * %register_nosize], %register_hword
-00000000 ccc11101 01bbb???
+00000000 ccc11101 01bbbxxx
 add {b} to {a}.
 
 addx [%register_nosize, 2 * %register_nosize], %register_xword
-00010000 ccc11101 01bbb???
+00010000 ccc11101 01bbbxxx
 add {b} to {a}.
 
 addd [%register_nosize, 2 * %register_nosize], %register_dword
-00100000 ccc11101 01bbb???
+00100000 ccc11101 01bbbxxx
 add {b} to {a}.
 
 addq [%register_nosize, 2 * %register_nosize], %register_qword
-00110000 ccc11101 01bbb???
+00110000 ccc11101 01bbbxxx
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000000 aaa11001 10ccc???
+00000000 aaa11001 10cccxxx
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010000 aaa11001 10ccc???
+00010000 aaa11001 10cccxxx
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize, 4 * %register_nosize]
-00100000 aaa11001 10ccc???
+00100000 aaa11001 10cccxxx
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110000 aaa11001 10ccc???
+00110000 aaa11001 10cccxxx
 add {b} to {a}.
 
 addh [%register_nosize, 4 * %register_nosize], %register_hword
-00000000 ccc11101 10bbb???
+00000000 ccc11101 10bbbxxx
 add {b} to {a}.
 
 addx [%register_nosize, 4 * %register_nosize], %register_xword
-00010000 ccc11101 10bbb???
+00010000 ccc11101 10bbbxxx
 add {b} to {a}.
 
 addd [%register_nosize, 4 * %register_nosize], %register_dword
-00100000 ccc11101 10bbb???
+00100000 ccc11101 10bbbxxx
 add {b} to {a}.
 
 addq [%register_nosize, 4 * %register_nosize], %register_qword
-00110000 ccc11101 10bbb???
+00110000 ccc11101 10bbbxxx
 add {b} to {a}.
 
 addh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000000 aaa11001 11ccc???
+00000000 aaa11001 11cccxxx
 add {b} to {a}.
 
 addx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010000 aaa11001 11ccc???
+00010000 aaa11001 11cccxxx
 add {b} to {a}.
 
 addd %register_dword, [%register_nosize, 8 * %register_nosize]
-00100000 aaa11001 11ccc???
+00100000 aaa11001 11cccxxx
 add {b} to {a}.
 
 addq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110000 aaa11001 11ccc???
+00110000 aaa11001 11cccxxx
 add {b} to {a}.
 
 addh [%register_nosize, 8 * %register_nosize], %register_hword
-00000000 ccc11101 11bbb???
+00000000 ccc11101 11bbbxxx
 add {b} to {a}.
 
 addx [%register_nosize, 8 * %register_nosize], %register_xword
-00010000 ccc11101 11bbb???
+00010000 ccc11101 11bbbxxx
 add {b} to {a}.
 
 addd [%register_nosize, 8 * %register_nosize], %register_dword
-00100000 ccc11101 11bbb???
+00100000 ccc11101 11bbbxxx
 add {b} to {a}.
 
 addq [%register_nosize, 8 * %register_nosize], %register_qword
-00110000 ccc11101 11bbb???
+00110000 ccc11101 11bbbxxx
 add {b} to {a}.
 
 addh %register_hword, %imm
@@ -1783,235 +1783,235 @@ subq %register_qword, %register_qword
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize]
-00000001 aaa00010 ?????bbb
+00000001 aaa00010 xxxxxbbb
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize]
-00010001 aaa00010 ?????bbb
+00010001 aaa00010 xxxxxbbb
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize]
-00100001 aaa00010 ?????bbb
+00100001 aaa00010 xxxxxbbb
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize]
-00110001 aaa00010 ?????bbb
+00110001 aaa00010 xxxxxbbb
 subtract {b} from {a}.
 
 subh [%register_nosize], %register_hword
-00000001 bbb00011 ?????aaa
+00000001 bbb00011 xxxxxaaa
 subtract {b} from {a}.
 
 subx [%register_nosize], %register_xword
-00010001 bbb00011 ?????aaa
+00010001 bbb00011 xxxxxaaa
 subtract {b} from {a}.
 
 subd [%register_nosize], %register_dword
-00100001 bbb00011 ?????aaa
+00100001 bbb00011 xxxxxaaa
 subtract {b} from {a}.
 
 subq [%register_nosize], %register_qword
-00110001 bbb00011 ?????aaa
+00110001 bbb00011 xxxxxaaa
 subtract {b} from {a}.
 
 subh %register_hword, [%imm]
 = %b:ba
-00000001 aaa00110 ???????? cccccccc cccccccc
+00000001 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subx %register_xword, [%imm]
 = %b:ba
-00010001 aaa00110 ???????? cccccccc cccccccc
+00010001 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subd %register_dword, [%imm]
 = %b:ba
-00100001 aaa00110 ???????? cccccccc cccccccc
+00100001 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subq %register_qword, [%imm]
 = %b:ba
-00110001 aaa00110 ???????? cccccccc cccccccc
+00110001 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subh [%imm], %register_hword
 = %a:ba
-00000001 bbb00111 ???????? cccccccc cccccccc
+00000001 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subx [%imm], %register_xword
 = %a:ba
-00010001 bbb00111 ???????? cccccccc cccccccc
+00010001 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subd [%imm], %register_dword
 = %a:ba
-00100001 bbb00111 ???????? cccccccc cccccccc
+00100001 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subq [%imm], %register_qword
 = %a:ba
-00110001 bbb00111 ???????? cccccccc cccccccc
+00110001 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000001 aaa01010 ?????bbb dddddddd
+00000001 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010001 aaa01010 ?????bbb dddddddd
+00010001 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100001 aaa01010 ?????bbb dddddddd
+00100001 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110001 aaa01010 ?????bbb dddddddd
+00110001 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}.
 
 subh [%register_nosize + %imm], %register_hword
 = %b:a
-00000001 ccc01011 ?????aaa dddddddd
+00000001 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}.
 
 subx [%register_nosize + %imm], %register_xword
 = %b:a
-00010001 ccc01011 ?????aaa dddddddd
+00010001 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}.
 
 subd [%register_nosize + %imm], %register_dword
 = %b:a
-00100001 ccc01011 ?????aaa dddddddd
+00100001 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}.
 
 subq [%register_nosize + %imm], %register_qword
 = %b:a
-00110001 ccc01011 ?????aaa dddddddd
+00110001 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000001 aaa01110 ?????bbb dddddddd dddddddd
+00000001 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010001 aaa01110 ?????bbb dddddddd dddddddd
+00010001 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100001 aaa01110 ?????bbb dddddddd dddddddd
+00100001 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110001 aaa01110 ?????bbb dddddddd dddddddd
+00110001 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}.
 
 subh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000001 ccc01111 ?????aaa dddddddd dddddddd
+00000001 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}.
 
 subx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010001 ccc01111 ?????aaa dddddddd dddddddd
+00010001 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}.
 
 subd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100001 ccc01111 ?????aaa dddddddd dddddddd
+00100001 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}.
 
 subq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110001 ccc01111 ?????aaa dddddddd dddddddd
+00110001 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000001 aaa10010 00bbb??? dddddddd
+00000001 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010001 aaa10010 00bbb??? dddddddd
+00010001 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100001 aaa10010 00bbb??? dddddddd
+00100001 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110001 aaa10010 00bbb??? dddddddd
+00110001 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}.
 
 subh [%register_nosize + %imm], %register_hword
 = %b:a
-00000001 ccc10011 00aaa??? dddddddd
+00000001 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}.
 
 subx [%register_nosize + %imm], %register_xword
 = %b:a
-00010001 ccc10011 00aaa??? dddddddd
+00010001 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}.
 
 subd [%register_nosize + %imm], %register_dword
 = %b:a
-00100001 ccc10011 00aaa??? dddddddd
+00100001 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}.
 
 subq [%register_nosize + %imm], %register_qword
 = %b:a
-00110001 ccc10011 00aaa??? dddddddd
+00110001 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000001 aaa10010 00bbb??? dddddddd dddddddd
+00000001 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010001 aaa10010 00bbb??? dddddddd dddddddd
+00010001 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100001 aaa10010 00bbb??? dddddddd dddddddd
+00100001 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110001 aaa10010 00bbb??? dddddddd dddddddd
+00110001 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000001 ccc10011 00aaa??? dddddddd dddddddd
+00000001 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010001 ccc10011 00aaa??? dddddddd dddddddd
+00010001 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100001 ccc10011 00aaa??? dddddddd dddddddd
+00100001 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110001 ccc10011 00aaa??? dddddddd dddddddd
+00110001 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -2096,82 +2096,82 @@ subtract {b} from {a}.
 
 subh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000001 aaa10010 01bbb??? dddddddd
+00000001 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010001 aaa10010 01bbb??? dddddddd
+00010001 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100001 aaa10010 01bbb??? dddddddd
+00100001 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110001 aaa10010 01bbb??? dddddddd
+00110001 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}.
 
 subh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000001 ccc10011 01aaa??? dddddddd
+00000001 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}.
 
 subx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010001 ccc10011 01aaa??? dddddddd
+00010001 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}.
 
 subd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100001 ccc10011 01aaa??? dddddddd
+00100001 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}.
 
 subq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110001 ccc10011 01aaa??? dddddddd
+00110001 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000001 aaa10010 01bbb??? dddddddd dddddddd
+00000001 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010001 aaa10010 01bbb??? dddddddd dddddddd
+00010001 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100001 aaa10010 01bbb??? dddddddd dddddddd
+00100001 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110001 aaa10010 01bbb??? dddddddd dddddddd
+00110001 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000001 ccc10011 01aaa??? dddddddd dddddddd
+00000001 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010001 ccc10011 01aaa??? dddddddd dddddddd
+00010001 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100001 ccc10011 01aaa??? dddddddd dddddddd
+00100001 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110001 ccc10011 01aaa??? dddddddd dddddddd
+00110001 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -2256,82 +2256,82 @@ subtract {b} from {a}.
 
 subh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000001 aaa10010 10bbb??? dddddddd
+00000001 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010001 aaa10010 10bbb??? dddddddd
+00010001 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100001 aaa10010 10bbb??? dddddddd
+00100001 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110001 aaa10010 10bbb??? dddddddd
+00110001 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}.
 
 subh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000001 ccc10011 10aaa??? dddddddd
+00000001 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}.
 
 subx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010001 ccc10011 10aaa??? dddddddd
+00010001 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}.
 
 subd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100001 ccc10011 10aaa??? dddddddd
+00100001 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}.
 
 subq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110001 ccc10011 10aaa??? dddddddd
+00110001 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000001 aaa10010 10bbb??? dddddddd dddddddd
+00000001 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010001 aaa10010 10bbb??? dddddddd dddddddd
+00010001 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100001 aaa10010 10bbb??? dddddddd dddddddd
+00100001 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110001 aaa10010 10bbb??? dddddddd dddddddd
+00110001 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000001 ccc10011 10aaa??? dddddddd dddddddd
+00000001 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010001 ccc10011 10aaa??? dddddddd dddddddd
+00010001 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100001 ccc10011 10aaa??? dddddddd dddddddd
+00100001 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110001 ccc10011 10aaa??? dddddddd dddddddd
+00110001 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -2416,82 +2416,82 @@ subtract {b} from {a}.
 
 subh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000001 aaa10010 11bbb??? dddddddd
+00000001 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010001 aaa10010 11bbb??? dddddddd
+00010001 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100001 aaa10010 11bbb??? dddddddd
+00100001 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110001 aaa10010 11bbb??? dddddddd
+00110001 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}.
 
 subh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000001 ccc10011 11aaa??? dddddddd
+00000001 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}.
 
 subx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010001 ccc10011 11aaa??? dddddddd
+00010001 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}.
 
 subd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100001 ccc10011 11aaa??? dddddddd
+00100001 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}.
 
 subq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110001 ccc10011 11aaa??? dddddddd
+00110001 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000001 aaa10010 11bbb??? dddddddd dddddddd
+00000001 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010001 aaa10010 11bbb??? dddddddd dddddddd
+00010001 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100001 aaa10010 11bbb??? dddddddd dddddddd
+00100001 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110001 aaa10010 11bbb??? dddddddd dddddddd
+00110001 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000001 ccc10011 11aaa??? dddddddd dddddddd
+00000001 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010001 ccc10011 11aaa??? dddddddd dddddddd
+00010001 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100001 ccc10011 11aaa??? dddddddd dddddddd
+00100001 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110001 ccc10011 11aaa??? dddddddd dddddddd
+00110001 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -2617,185 +2617,185 @@ subtract {b} from {a}.
 subh [%imm], %imm
 = %a:ba
 = %b:a
-00000001 00100001 ???????? cccccccc cccccccc dddddddd
+00000001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}.
 
 subx [%imm], %imm
 = %a:ba
 = %b:a
-00010001 00100001 ???????? cccccccc cccccccc dddddddd
+00010001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}.
 
 subd [%imm], %imm
 = %a:ba
 = %b:a
-00100001 00100001 ???????? cccccccc cccccccc dddddddd
+00100001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}.
 
 subq [%imm], %imm
 = %a:ba
 = %b:a
-00110001 00100001 ???????? cccccccc cccccccc dddddddd
+00110001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}.
 
 subh [%imm], %imm
 = %a:ba
 = %b:a
-00000001 00100101 ???????? cccccccc cccccccc dddddddd
+00000001 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}.
 
 subx [%imm], %imm
 = %a:ba
 = %b:ba
-00010001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 subtract {b} from {a}.
 
 subd [%imm], %imm
 = %a:ba
 = %b:dcba
-00100001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 subtract {b} from {a}.
 
 subq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 subtract {b} from {a}.
 
 subh [%register_nosize], %imm
 = %b:a
-00000001 01000001 ?????aaa cccccccc
+00000001 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}.
 
 subx [%register_nosize], %imm
 = %b:a
-00010001 01000001 ?????aaa cccccccc
+00010001 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}.
 
 subd [%register_nosize], %imm
 = %b:a
-00100001 01000001 ?????aaa cccccccc
+00100001 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}.
 
 subq [%register_nosize], %imm
 = %b:a
-00110001 01000001 ?????aaa cccccccc
+00110001 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}.
 
 subh [%register_nosize], %imm
 = %b:a
-00000001 01000101 ?????aaa cccccccc
+00000001 01000101 xxxxxaaa cccccccc
 subtract {b} from {a}.
 
 subx [%register_nosize], %imm
 = %b:ba
-00010001 01000101 ?????aaa cccccccc cccccccc
+00010001 01000101 xxxxxaaa cccccccc cccccccc
 subtract {b} from {a}.
 
 subd [%register_nosize], %imm
 = %b:dcba
-00100001 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100001 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 subtract {b} from {a}.
 
 subq [%register_nosize], %imm
 = %b:hgfedcba
-00110001 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110001 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 subtract {b} from {a}.
 
 subh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-subtract {b} from {a}.
-
-subx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-subtract {b} from {a}.
-
-subd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-subtract {b} from {a}.
-
-subq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-subtract {b} from {a}.
-
-subh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}.
-
-subx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}.
-
-subd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}.
-
-subq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}.
-
-subh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000001 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+subtract {b} from {a}.
+
+subh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}.
+
+subx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}.
+
+subd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}.
+
+subq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}.
+
+subh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}.
+
+subx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+subtract {b} from {a}.
+
+subd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+subtract {b} from {a}.
+
+subq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subh [%register_nosize + %register_nosize], %imm
@@ -2889,49 +2889,49 @@ subtract {b} from {a}.
 subh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subh [%register_nosize + 2 * %register_nosize], %imm
@@ -3025,49 +3025,49 @@ subtract {b} from {a}.
 subh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subh [%register_nosize + 4 * %register_nosize], %imm
@@ -3161,49 +3161,49 @@ subtract {b} from {a}.
 subh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000001 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}.
 
 subx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}.
 
 subh [%register_nosize + 8 * %register_nosize], %imm
@@ -3296,170 +3296,170 @@ subtract {b} from {a}.
 
 subh %register_hword, [ip + %imm]
 = %b:a
-00000001 aaa10001 ???????? cccccccc
+00000001 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}.
 
 subx %register_xword, [ip + %imm]
 = %b:a
-00010001 aaa10001 ???????? cccccccc
+00010001 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}.
 
 subd %register_dword, [ip + %imm]
 = %b:a
-00100001 aaa10001 ???????? cccccccc
+00100001 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}.
 
 subq %register_qword, [ip + %imm]
 = %b:a
-00110001 aaa10001 ???????? cccccccc
+00110001 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}.
 
 subh %register_hword, [ip + %imm]
 = %b:ba
-00000001 aaa10001 ???????? cccccccc cccccccc
+00000001 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subx %register_xword, [ip + %imm]
 = %b:ba
-00010001 aaa10001 ???????? cccccccc cccccccc
+00010001 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subd %register_dword, [ip + %imm]
 = %b:ba
-00100001 aaa10001 ???????? cccccccc cccccccc
+00100001 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subq %register_qword, [ip + %imm]
 = %b:ba
-00110001 aaa10001 ???????? cccccccc cccccccc
+00110001 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize, %register_nosize]
-00000001 aaa11001 00ccc???
+00000001 aaa11001 00cccxxx
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize, %register_nosize]
-00010001 aaa11001 00ccc???
+00010001 aaa11001 00cccxxx
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize, %register_nosize]
-00100001 aaa11001 00ccc???
+00100001 aaa11001 00cccxxx
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize, %register_nosize]
-00110001 aaa11001 00ccc???
+00110001 aaa11001 00cccxxx
 subtract {b} from {a}.
 
 subh [%register_nosize, %register_nosize], %register_hword
-00000001 ccc11101 00bbb???
+00000001 ccc11101 00bbbxxx
 subtract {b} from {a}.
 
 subx [%register_nosize, %register_nosize], %register_xword
-00010001 ccc11101 00bbb???
+00010001 ccc11101 00bbbxxx
 subtract {b} from {a}.
 
 subd [%register_nosize, %register_nosize], %register_dword
-00100001 ccc11101 00bbb???
+00100001 ccc11101 00bbbxxx
 subtract {b} from {a}.
 
 subq [%register_nosize, %register_nosize], %register_qword
-00110001 ccc11101 00bbb???
+00110001 ccc11101 00bbbxxx
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000001 aaa11001 01ccc???
+00000001 aaa11001 01cccxxx
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010001 aaa11001 01ccc???
+00010001 aaa11001 01cccxxx
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize, 2 * %register_nosize]
-00100001 aaa11001 01ccc???
+00100001 aaa11001 01cccxxx
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110001 aaa11001 01ccc???
+00110001 aaa11001 01cccxxx
 subtract {b} from {a}.
 
 subh [%register_nosize, 2 * %register_nosize], %register_hword
-00000001 ccc11101 01bbb???
+00000001 ccc11101 01bbbxxx
 subtract {b} from {a}.
 
 subx [%register_nosize, 2 * %register_nosize], %register_xword
-00010001 ccc11101 01bbb???
+00010001 ccc11101 01bbbxxx
 subtract {b} from {a}.
 
 subd [%register_nosize, 2 * %register_nosize], %register_dword
-00100001 ccc11101 01bbb???
+00100001 ccc11101 01bbbxxx
 subtract {b} from {a}.
 
 subq [%register_nosize, 2 * %register_nosize], %register_qword
-00110001 ccc11101 01bbb???
+00110001 ccc11101 01bbbxxx
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000001 aaa11001 10ccc???
+00000001 aaa11001 10cccxxx
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010001 aaa11001 10ccc???
+00010001 aaa11001 10cccxxx
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize, 4 * %register_nosize]
-00100001 aaa11001 10ccc???
+00100001 aaa11001 10cccxxx
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110001 aaa11001 10ccc???
+00110001 aaa11001 10cccxxx
 subtract {b} from {a}.
 
 subh [%register_nosize, 4 * %register_nosize], %register_hword
-00000001 ccc11101 10bbb???
+00000001 ccc11101 10bbbxxx
 subtract {b} from {a}.
 
 subx [%register_nosize, 4 * %register_nosize], %register_xword
-00010001 ccc11101 10bbb???
+00010001 ccc11101 10bbbxxx
 subtract {b} from {a}.
 
 subd [%register_nosize, 4 * %register_nosize], %register_dword
-00100001 ccc11101 10bbb???
+00100001 ccc11101 10bbbxxx
 subtract {b} from {a}.
 
 subq [%register_nosize, 4 * %register_nosize], %register_qword
-00110001 ccc11101 10bbb???
+00110001 ccc11101 10bbbxxx
 subtract {b} from {a}.
 
 subh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000001 aaa11001 11ccc???
+00000001 aaa11001 11cccxxx
 subtract {b} from {a}.
 
 subx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010001 aaa11001 11ccc???
+00010001 aaa11001 11cccxxx
 subtract {b} from {a}.
 
 subd %register_dword, [%register_nosize, 8 * %register_nosize]
-00100001 aaa11001 11ccc???
+00100001 aaa11001 11cccxxx
 subtract {b} from {a}.
 
 subq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110001 aaa11001 11ccc???
+00110001 aaa11001 11cccxxx
 subtract {b} from {a}.
 
 subh [%register_nosize, 8 * %register_nosize], %register_hword
-00000001 ccc11101 11bbb???
+00000001 ccc11101 11bbbxxx
 subtract {b} from {a}.
 
 subx [%register_nosize, 8 * %register_nosize], %register_xword
-00010001 ccc11101 11bbb???
+00010001 ccc11101 11bbbxxx
 subtract {b} from {a}.
 
 subd [%register_nosize, 8 * %register_nosize], %register_dword
-00100001 ccc11101 11bbb???
+00100001 ccc11101 11bbbxxx
 subtract {b} from {a}.
 
 subq [%register_nosize, 8 * %register_nosize], %register_qword
-00110001 ccc11101 11bbb???
+00110001 ccc11101 11bbbxxx
 subtract {b} from {a}.
 
 subh %register_hword, %imm
@@ -3495,235 +3495,235 @@ rsubq %register_qword, %register_qword
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize]
-00000010 aaa00010 ?????bbb
+00000010 aaa00010 xxxxxbbb
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize]
-00010010 aaa00010 ?????bbb
+00010010 aaa00010 xxxxxbbb
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize]
-00100010 aaa00010 ?????bbb
+00100010 aaa00010 xxxxxbbb
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize]
-00110010 aaa00010 ?????bbb
+00110010 aaa00010 xxxxxbbb
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize], %register_hword
-00000010 bbb00011 ?????aaa
+00000010 bbb00011 xxxxxaaa
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize], %register_xword
-00010010 bbb00011 ?????aaa
+00010010 bbb00011 xxxxxaaa
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize], %register_dword
-00100010 bbb00011 ?????aaa
+00100010 bbb00011 xxxxxaaa
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize], %register_qword
-00110010 bbb00011 ?????aaa
+00110010 bbb00011 xxxxxaaa
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%imm]
 = %b:ba
-00000010 aaa00110 ???????? cccccccc cccccccc
+00000010 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%imm]
 = %b:ba
-00010010 aaa00110 ???????? cccccccc cccccccc
+00010010 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%imm]
 = %b:ba
-00100010 aaa00110 ???????? cccccccc cccccccc
+00100010 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%imm]
 = %b:ba
-00110010 aaa00110 ???????? cccccccc cccccccc
+00110010 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%imm], %register_hword
 = %a:ba
-00000010 bbb00111 ???????? cccccccc cccccccc
+00000010 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%imm], %register_xword
 = %a:ba
-00010010 bbb00111 ???????? cccccccc cccccccc
+00010010 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%imm], %register_dword
 = %a:ba
-00100010 bbb00111 ???????? cccccccc cccccccc
+00100010 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%imm], %register_qword
 = %a:ba
-00110010 bbb00111 ???????? cccccccc cccccccc
+00110010 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000010 aaa01010 ?????bbb dddddddd
+00000010 aaa01010 xxxxxbbb dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010010 aaa01010 ?????bbb dddddddd
+00010010 aaa01010 xxxxxbbb dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100010 aaa01010 ?????bbb dddddddd
+00100010 aaa01010 xxxxxbbb dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110010 aaa01010 ?????bbb dddddddd
+00110010 aaa01010 xxxxxbbb dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %imm], %register_hword
 = %b:a
-00000010 ccc01011 ?????aaa dddddddd
+00000010 ccc01011 xxxxxaaa dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize + %imm], %register_xword
 = %b:a
-00010010 ccc01011 ?????aaa dddddddd
+00010010 ccc01011 xxxxxaaa dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize + %imm], %register_dword
 = %b:a
-00100010 ccc01011 ?????aaa dddddddd
+00100010 ccc01011 xxxxxaaa dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize + %imm], %register_qword
 = %b:a
-00110010 ccc01011 ?????aaa dddddddd
+00110010 ccc01011 xxxxxaaa dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000010 aaa01110 ?????bbb dddddddd dddddddd
+00000010 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010010 aaa01110 ?????bbb dddddddd dddddddd
+00010010 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100010 aaa01110 ?????bbb dddddddd dddddddd
+00100010 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110010 aaa01110 ?????bbb dddddddd dddddddd
+00110010 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000010 ccc01111 ?????aaa dddddddd dddddddd
+00000010 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010010 ccc01111 ?????aaa dddddddd dddddddd
+00010010 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100010 ccc01111 ?????aaa dddddddd dddddddd
+00100010 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110010 ccc01111 ?????aaa dddddddd dddddddd
+00110010 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000010 aaa10010 00bbb??? dddddddd
+00000010 aaa10010 00bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010010 aaa10010 00bbb??? dddddddd
+00010010 aaa10010 00bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100010 aaa10010 00bbb??? dddddddd
+00100010 aaa10010 00bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110010 aaa10010 00bbb??? dddddddd
+00110010 aaa10010 00bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %imm], %register_hword
 = %b:a
-00000010 ccc10011 00aaa??? dddddddd
+00000010 ccc10011 00aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize + %imm], %register_xword
 = %b:a
-00010010 ccc10011 00aaa??? dddddddd
+00010010 ccc10011 00aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize + %imm], %register_dword
 = %b:a
-00100010 ccc10011 00aaa??? dddddddd
+00100010 ccc10011 00aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize + %imm], %register_qword
 = %b:a
-00110010 ccc10011 00aaa??? dddddddd
+00110010 ccc10011 00aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000010 aaa10010 00bbb??? dddddddd dddddddd
+00000010 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010010 aaa10010 00bbb??? dddddddd dddddddd
+00010010 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100010 aaa10010 00bbb??? dddddddd dddddddd
+00100010 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110010 aaa10010 00bbb??? dddddddd dddddddd
+00110010 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000010 ccc10011 00aaa??? dddddddd dddddddd
+00000010 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010010 ccc10011 00aaa??? dddddddd dddddddd
+00010010 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100010 ccc10011 00aaa??? dddddddd dddddddd
+00100010 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110010 ccc10011 00aaa??? dddddddd dddddddd
+00110010 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -3808,82 +3808,82 @@ subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000010 aaa10010 01bbb??? dddddddd
+00000010 aaa10010 01bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010010 aaa10010 01bbb??? dddddddd
+00010010 aaa10010 01bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100010 aaa10010 01bbb??? dddddddd
+00100010 aaa10010 01bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110010 aaa10010 01bbb??? dddddddd
+00110010 aaa10010 01bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000010 ccc10011 01aaa??? dddddddd
+00000010 ccc10011 01aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010010 ccc10011 01aaa??? dddddddd
+00010010 ccc10011 01aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100010 ccc10011 01aaa??? dddddddd
+00100010 ccc10011 01aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110010 ccc10011 01aaa??? dddddddd
+00110010 ccc10011 01aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000010 aaa10010 01bbb??? dddddddd dddddddd
+00000010 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010010 aaa10010 01bbb??? dddddddd dddddddd
+00010010 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100010 aaa10010 01bbb??? dddddddd dddddddd
+00100010 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110010 aaa10010 01bbb??? dddddddd dddddddd
+00110010 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000010 ccc10011 01aaa??? dddddddd dddddddd
+00000010 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010010 ccc10011 01aaa??? dddddddd dddddddd
+00010010 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100010 ccc10011 01aaa??? dddddddd dddddddd
+00100010 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110010 ccc10011 01aaa??? dddddddd dddddddd
+00110010 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -3968,82 +3968,82 @@ subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000010 aaa10010 10bbb??? dddddddd
+00000010 aaa10010 10bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010010 aaa10010 10bbb??? dddddddd
+00010010 aaa10010 10bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100010 aaa10010 10bbb??? dddddddd
+00100010 aaa10010 10bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110010 aaa10010 10bbb??? dddddddd
+00110010 aaa10010 10bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000010 ccc10011 10aaa??? dddddddd
+00000010 ccc10011 10aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010010 ccc10011 10aaa??? dddddddd
+00010010 ccc10011 10aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100010 ccc10011 10aaa??? dddddddd
+00100010 ccc10011 10aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110010 ccc10011 10aaa??? dddddddd
+00110010 ccc10011 10aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000010 aaa10010 10bbb??? dddddddd dddddddd
+00000010 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010010 aaa10010 10bbb??? dddddddd dddddddd
+00010010 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100010 aaa10010 10bbb??? dddddddd dddddddd
+00100010 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110010 aaa10010 10bbb??? dddddddd dddddddd
+00110010 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000010 ccc10011 10aaa??? dddddddd dddddddd
+00000010 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010010 ccc10011 10aaa??? dddddddd dddddddd
+00010010 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100010 ccc10011 10aaa??? dddddddd dddddddd
+00100010 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110010 ccc10011 10aaa??? dddddddd dddddddd
+00110010 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -4128,82 +4128,82 @@ subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000010 aaa10010 11bbb??? dddddddd
+00000010 aaa10010 11bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010010 aaa10010 11bbb??? dddddddd
+00010010 aaa10010 11bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100010 aaa10010 11bbb??? dddddddd
+00100010 aaa10010 11bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110010 aaa10010 11bbb??? dddddddd
+00110010 aaa10010 11bbbxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000010 ccc10011 11aaa??? dddddddd
+00000010 ccc10011 11aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010010 ccc10011 11aaa??? dddddddd
+00010010 ccc10011 11aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100010 ccc10011 11aaa??? dddddddd
+00100010 ccc10011 11aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110010 ccc10011 11aaa??? dddddddd
+00110010 ccc10011 11aaaxxx dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000010 aaa10010 11bbb??? dddddddd dddddddd
+00000010 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010010 aaa10010 11bbb??? dddddddd dddddddd
+00010010 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100010 aaa10010 11bbb??? dddddddd dddddddd
+00100010 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110010 aaa10010 11bbb??? dddddddd dddddddd
+00110010 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000010 ccc10011 11aaa??? dddddddd dddddddd
+00000010 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010010 ccc10011 11aaa??? dddddddd dddddddd
+00010010 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100010 ccc10011 11aaa??? dddddddd dddddddd
+00100010 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110010 ccc10011 11aaa??? dddddddd dddddddd
+00110010 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -4329,185 +4329,185 @@ subtract {a} from {b}, storing to {a}.
 rsubh [%imm], %imm
 = %a:ba
 = %b:a
-00000010 00100001 ???????? cccccccc cccccccc dddddddd
+00000010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%imm], %imm
 = %a:ba
 = %b:a
-00010010 00100001 ???????? cccccccc cccccccc dddddddd
+00010010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%imm], %imm
 = %a:ba
 = %b:a
-00100010 00100001 ???????? cccccccc cccccccc dddddddd
+00100010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%imm], %imm
 = %a:ba
 = %b:a
-00110010 00100001 ???????? cccccccc cccccccc dddddddd
+00110010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%imm], %imm
 = %a:ba
 = %b:a
-00000010 00100101 ???????? cccccccc cccccccc dddddddd
+00000010 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%imm], %imm
 = %a:ba
 = %b:ba
-00010010 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010010 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%imm], %imm
 = %a:ba
 = %b:dcba
-00100010 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100010 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110010 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110010 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize], %imm
 = %b:a
-00000010 01000001 ?????aaa cccccccc
+00000010 01000001 xxxxxaaa cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize], %imm
 = %b:a
-00010010 01000001 ?????aaa cccccccc
+00010010 01000001 xxxxxaaa cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize], %imm
 = %b:a
-00100010 01000001 ?????aaa cccccccc
+00100010 01000001 xxxxxaaa cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize], %imm
 = %b:a
-00110010 01000001 ?????aaa cccccccc
+00110010 01000001 xxxxxaaa cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize], %imm
 = %b:a
-00000010 01000101 ?????aaa cccccccc
+00000010 01000101 xxxxxaaa cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize], %imm
 = %b:ba
-00010010 01000101 ?????aaa cccccccc cccccccc
+00010010 01000101 xxxxxaaa cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize], %imm
 = %b:dcba
-00100010 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100010 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize], %imm
 = %b:hgfedcba
-00110010 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110010 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010010 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100010 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110010 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {a} from {b}, storing to {a}.
-
-rsubh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000010 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010010 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100010 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110010 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+subtract {a} from {b}, storing to {a}.
+
+rsubq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + %register_nosize], %imm
@@ -4601,49 +4601,49 @@ subtract {a} from {b}, storing to {a}.
 rsubh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010010 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100010 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110010 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + 2 * %register_nosize], %imm
@@ -4737,49 +4737,49 @@ subtract {a} from {b}, storing to {a}.
 rsubh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010010 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100010 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110010 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + 4 * %register_nosize], %imm
@@ -4873,49 +4873,49 @@ subtract {a} from {b}, storing to {a}.
 rsubh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000010 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010010 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100010 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110010 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize + 8 * %register_nosize], %imm
@@ -5008,170 +5008,170 @@ subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [ip + %imm]
 = %b:a
-00000010 aaa10001 ???????? cccccccc
+00000010 aaa10001 xxxxxxxx cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [ip + %imm]
 = %b:a
-00010010 aaa10001 ???????? cccccccc
+00010010 aaa10001 xxxxxxxx cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [ip + %imm]
 = %b:a
-00100010 aaa10001 ???????? cccccccc
+00100010 aaa10001 xxxxxxxx cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [ip + %imm]
 = %b:a
-00110010 aaa10001 ???????? cccccccc
+00110010 aaa10001 xxxxxxxx cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [ip + %imm]
 = %b:ba
-00000010 aaa10001 ???????? cccccccc cccccccc
+00000010 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [ip + %imm]
 = %b:ba
-00010010 aaa10001 ???????? cccccccc cccccccc
+00010010 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [ip + %imm]
 = %b:ba
-00100010 aaa10001 ???????? cccccccc cccccccc
+00100010 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [ip + %imm]
 = %b:ba
-00110010 aaa10001 ???????? cccccccc cccccccc
+00110010 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize, %register_nosize]
-00000010 aaa11001 00ccc???
+00000010 aaa11001 00cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize, %register_nosize]
-00010010 aaa11001 00ccc???
+00010010 aaa11001 00cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize, %register_nosize]
-00100010 aaa11001 00ccc???
+00100010 aaa11001 00cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize, %register_nosize]
-00110010 aaa11001 00ccc???
+00110010 aaa11001 00cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize, %register_nosize], %register_hword
-00000010 ccc11101 00bbb???
+00000010 ccc11101 00bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize, %register_nosize], %register_xword
-00010010 ccc11101 00bbb???
+00010010 ccc11101 00bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize, %register_nosize], %register_dword
-00100010 ccc11101 00bbb???
+00100010 ccc11101 00bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize, %register_nosize], %register_qword
-00110010 ccc11101 00bbb???
+00110010 ccc11101 00bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000010 aaa11001 01ccc???
+00000010 aaa11001 01cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010010 aaa11001 01ccc???
+00010010 aaa11001 01cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize, 2 * %register_nosize]
-00100010 aaa11001 01ccc???
+00100010 aaa11001 01cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110010 aaa11001 01ccc???
+00110010 aaa11001 01cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize, 2 * %register_nosize], %register_hword
-00000010 ccc11101 01bbb???
+00000010 ccc11101 01bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize, 2 * %register_nosize], %register_xword
-00010010 ccc11101 01bbb???
+00010010 ccc11101 01bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize, 2 * %register_nosize], %register_dword
-00100010 ccc11101 01bbb???
+00100010 ccc11101 01bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize, 2 * %register_nosize], %register_qword
-00110010 ccc11101 01bbb???
+00110010 ccc11101 01bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000010 aaa11001 10ccc???
+00000010 aaa11001 10cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010010 aaa11001 10ccc???
+00010010 aaa11001 10cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize, 4 * %register_nosize]
-00100010 aaa11001 10ccc???
+00100010 aaa11001 10cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110010 aaa11001 10ccc???
+00110010 aaa11001 10cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize, 4 * %register_nosize], %register_hword
-00000010 ccc11101 10bbb???
+00000010 ccc11101 10bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize, 4 * %register_nosize], %register_xword
-00010010 ccc11101 10bbb???
+00010010 ccc11101 10bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize, 4 * %register_nosize], %register_dword
-00100010 ccc11101 10bbb???
+00100010 ccc11101 10bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize, 4 * %register_nosize], %register_qword
-00110010 ccc11101 10bbb???
+00110010 ccc11101 10bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000010 aaa11001 11ccc???
+00000010 aaa11001 11cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010010 aaa11001 11ccc???
+00010010 aaa11001 11cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd %register_dword, [%register_nosize, 8 * %register_nosize]
-00100010 aaa11001 11ccc???
+00100010 aaa11001 11cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110010 aaa11001 11ccc???
+00110010 aaa11001 11cccxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh [%register_nosize, 8 * %register_nosize], %register_hword
-00000010 ccc11101 11bbb???
+00000010 ccc11101 11bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubx [%register_nosize, 8 * %register_nosize], %register_xword
-00010010 ccc11101 11bbb???
+00010010 ccc11101 11bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubd [%register_nosize, 8 * %register_nosize], %register_dword
-00100010 ccc11101 11bbb???
+00100010 ccc11101 11bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubq [%register_nosize, 8 * %register_nosize], %register_qword
-00110010 ccc11101 11bbb???
+00110010 ccc11101 11bbbxxx
 subtract {a} from {b}, storing to {a}.
 
 rsubh %register_hword, %imm
@@ -5207,235 +5207,235 @@ cmpq %register_qword, %register_qword
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize]
-00000011 aaa00010 ?????bbb
+00000011 aaa00010 xxxxxbbb
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize]
-00010011 aaa00010 ?????bbb
+00010011 aaa00010 xxxxxbbb
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize]
-00100011 aaa00010 ?????bbb
+00100011 aaa00010 xxxxxbbb
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize]
-00110011 aaa00010 ?????bbb
+00110011 aaa00010 xxxxxbbb
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize], %register_hword
-00000011 bbb00011 ?????aaa
+00000011 bbb00011 xxxxxaaa
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize], %register_xword
-00010011 bbb00011 ?????aaa
+00010011 bbb00011 xxxxxaaa
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize], %register_dword
-00100011 bbb00011 ?????aaa
+00100011 bbb00011 xxxxxaaa
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize], %register_qword
-00110011 bbb00011 ?????aaa
+00110011 bbb00011 xxxxxaaa
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%imm]
 = %b:ba
-00000011 aaa00110 ???????? cccccccc cccccccc
+00000011 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%imm]
 = %b:ba
-00010011 aaa00110 ???????? cccccccc cccccccc
+00010011 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%imm]
 = %b:ba
-00100011 aaa00110 ???????? cccccccc cccccccc
+00100011 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%imm]
 = %b:ba
-00110011 aaa00110 ???????? cccccccc cccccccc
+00110011 aaa00110 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmph [%imm], %register_hword
 = %a:ba
-00000011 bbb00111 ???????? cccccccc cccccccc
+00000011 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%imm], %register_xword
 = %a:ba
-00010011 bbb00111 ???????? cccccccc cccccccc
+00010011 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%imm], %register_dword
 = %a:ba
-00100011 bbb00111 ???????? cccccccc cccccccc
+00100011 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%imm], %register_qword
 = %a:ba
-00110011 bbb00111 ???????? cccccccc cccccccc
+00110011 bbb00111 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + %imm]
 = %c:a
-00000011 aaa01010 ?????bbb dddddddd
+00000011 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010011 aaa01010 ?????bbb dddddddd
+00010011 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100011 aaa01010 ?????bbb dddddddd
+00100011 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110011 aaa01010 ?????bbb dddddddd
+00110011 aaa01010 xxxxxbbb dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %imm], %register_hword
 = %b:a
-00000011 ccc01011 ?????aaa dddddddd
+00000011 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize + %imm], %register_xword
 = %b:a
-00010011 ccc01011 ?????aaa dddddddd
+00010011 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize + %imm], %register_dword
 = %b:a
-00100011 ccc01011 ?????aaa dddddddd
+00100011 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize + %imm], %register_qword
 = %b:a
-00110011 ccc01011 ?????aaa dddddddd
+00110011 ccc01011 xxxxxaaa dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000011 aaa01110 ?????bbb dddddddd dddddddd
+00000011 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010011 aaa01110 ?????bbb dddddddd dddddddd
+00010011 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100011 aaa01110 ?????bbb dddddddd dddddddd
+00100011 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110011 aaa01110 ?????bbb dddddddd dddddddd
+00110011 aaa01110 xxxxxbbb dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %imm], %register_hword
 = %b:ba
-00000011 ccc01111 ?????aaa dddddddd dddddddd
+00000011 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010011 ccc01111 ?????aaa dddddddd dddddddd
+00010011 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100011 ccc01111 ?????aaa dddddddd dddddddd
+00100011 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110011 ccc01111 ?????aaa dddddddd dddddddd
+00110011 ccc01111 xxxxxaaa dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + %imm]
 = %c:a
-00000011 aaa10010 00bbb??? dddddddd
+00000011 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010011 aaa10010 00bbb??? dddddddd
+00010011 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100011 aaa10010 00bbb??? dddddddd
+00100011 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110011 aaa10010 00bbb??? dddddddd
+00110011 aaa10010 00bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %imm], %register_hword
 = %b:a
-00000011 ccc10011 00aaa??? dddddddd
+00000011 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize + %imm], %register_xword
 = %b:a
-00010011 ccc10011 00aaa??? dddddddd
+00010011 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize + %imm], %register_dword
 = %b:a
-00100011 ccc10011 00aaa??? dddddddd
+00100011 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize + %imm], %register_qword
 = %b:a
-00110011 ccc10011 00aaa??? dddddddd
+00110011 ccc10011 00aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000011 aaa10010 00bbb??? dddddddd dddddddd
+00000011 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010011 aaa10010 00bbb??? dddddddd dddddddd
+00010011 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100011 aaa10010 00bbb??? dddddddd dddddddd
+00100011 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110011 aaa10010 00bbb??? dddddddd dddddddd
+00110011 aaa10010 00bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %imm], %register_hword
 = %b:ba
-00000011 ccc10011 00aaa??? dddddddd dddddddd
+00000011 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010011 ccc10011 00aaa??? dddddddd dddddddd
+00010011 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100011 ccc10011 00aaa??? dddddddd dddddddd
+00100011 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110011 ccc10011 00aaa??? dddddddd dddddddd
+00110011 ccc10011 00aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -5520,82 +5520,82 @@ subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000011 aaa10010 01bbb??? dddddddd
+00000011 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010011 aaa10010 01bbb??? dddddddd
+00010011 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100011 aaa10010 01bbb??? dddddddd
+00100011 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110011 aaa10010 01bbb??? dddddddd
+00110011 aaa10010 01bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000011 ccc10011 01aaa??? dddddddd
+00000011 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010011 ccc10011 01aaa??? dddddddd
+00010011 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100011 ccc10011 01aaa??? dddddddd
+00100011 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110011 ccc10011 01aaa??? dddddddd
+00110011 ccc10011 01aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000011 aaa10010 01bbb??? dddddddd dddddddd
+00000011 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010011 aaa10010 01bbb??? dddddddd dddddddd
+00010011 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100011 aaa10010 01bbb??? dddddddd dddddddd
+00100011 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110011 aaa10010 01bbb??? dddddddd dddddddd
+00110011 aaa10010 01bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000011 ccc10011 01aaa??? dddddddd dddddddd
+00000011 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010011 ccc10011 01aaa??? dddddddd dddddddd
+00010011 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100011 ccc10011 01aaa??? dddddddd dddddddd
+00100011 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110011 ccc10011 01aaa??? dddddddd dddddddd
+00110011 ccc10011 01aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -5680,82 +5680,82 @@ subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000011 aaa10010 10bbb??? dddddddd
+00000011 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010011 aaa10010 10bbb??? dddddddd
+00010011 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100011 aaa10010 10bbb??? dddddddd
+00100011 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110011 aaa10010 10bbb??? dddddddd
+00110011 aaa10010 10bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000011 ccc10011 10aaa??? dddddddd
+00000011 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010011 ccc10011 10aaa??? dddddddd
+00010011 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100011 ccc10011 10aaa??? dddddddd
+00100011 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110011 ccc10011 10aaa??? dddddddd
+00110011 ccc10011 10aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000011 aaa10010 10bbb??? dddddddd dddddddd
+00000011 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010011 aaa10010 10bbb??? dddddddd dddddddd
+00010011 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100011 aaa10010 10bbb??? dddddddd dddddddd
+00100011 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110011 aaa10010 10bbb??? dddddddd dddddddd
+00110011 aaa10010 10bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000011 ccc10011 10aaa??? dddddddd dddddddd
+00000011 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010011 ccc10011 10aaa??? dddddddd dddddddd
+00010011 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100011 ccc10011 10aaa??? dddddddd dddddddd
+00100011 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110011 ccc10011 10aaa??? dddddddd dddddddd
+00110011 ccc10011 10aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -5840,82 +5840,82 @@ subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000011 aaa10010 11bbb??? dddddddd
+00000011 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010011 aaa10010 11bbb??? dddddddd
+00010011 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100011 aaa10010 11bbb??? dddddddd
+00100011 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110011 aaa10010 11bbb??? dddddddd
+00110011 aaa10010 11bbbxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000011 ccc10011 11aaa??? dddddddd
+00000011 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010011 ccc10011 11aaa??? dddddddd
+00010011 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100011 ccc10011 11aaa??? dddddddd
+00100011 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110011 ccc10011 11aaa??? dddddddd
+00110011 ccc10011 11aaaxxx dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000011 aaa10010 11bbb??? dddddddd dddddddd
+00000011 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010011 aaa10010 11bbb??? dddddddd dddddddd
+00010011 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100011 aaa10010 11bbb??? dddddddd dddddddd
+00100011 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110011 aaa10010 11bbb??? dddddddd dddddddd
+00110011 aaa10010 11bbbxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000011 ccc10011 11aaa??? dddddddd dddddddd
+00000011 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010011 ccc10011 11aaa??? dddddddd dddddddd
+00010011 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100011 ccc10011 11aaa??? dddddddd dddddddd
+00100011 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110011 ccc10011 11aaa??? dddddddd dddddddd
+00110011 ccc10011 11aaaxxx dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -6041,185 +6041,185 @@ subtract {b} from {a}, throwing away the result.
 cmph [%imm], %imm
 = %a:ba
 = %b:a
-00000011 00100001 ???????? cccccccc cccccccc dddddddd
+00000011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%imm], %imm
 = %a:ba
 = %b:a
-00010011 00100001 ???????? cccccccc cccccccc dddddddd
+00010011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%imm], %imm
 = %a:ba
 = %b:a
-00100011 00100001 ???????? cccccccc cccccccc dddddddd
+00100011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%imm], %imm
 = %a:ba
 = %b:a
-00110011 00100001 ???????? cccccccc cccccccc dddddddd
+00110011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [%imm], %imm
 = %a:ba
 = %b:a
-00000011 00100101 ???????? cccccccc cccccccc dddddddd
+00000011 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%imm], %imm
 = %a:ba
 = %b:ba
-00010011 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010011 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%imm], %imm
 = %a:ba
 = %b:dcba
-00100011 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100011 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110011 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110011 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize], %imm
 = %b:a
-00000011 01000001 ?????aaa cccccccc
+00000011 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize], %imm
 = %b:a
-00010011 01000001 ?????aaa cccccccc
+00010011 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize], %imm
 = %b:a
-00100011 01000001 ?????aaa cccccccc
+00100011 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize], %imm
 = %b:a
-00110011 01000001 ?????aaa cccccccc
+00110011 01000001 xxxxxaaa cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize], %imm
 = %b:a
-00000011 01000101 ?????aaa cccccccc
+00000011 01000101 xxxxxaaa cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize], %imm
 = %b:ba
-00010011 01000101 ?????aaa cccccccc cccccccc
+00010011 01000101 xxxxxaaa cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize], %imm
 = %b:dcba
-00100011 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100011 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize], %imm
 = %b:hgfedcba
-00110011 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110011 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmpx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010011 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmpd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100011 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmpq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110011 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmph [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmpx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmpd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmpq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-subtract {b} from {a}, throwing away the result.
-
-cmph [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000011 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010011 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100011 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110011 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmph [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmpx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmpd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmpq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmph [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmpx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmpd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+subtract {b} from {a}, throwing away the result.
+
+cmpq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + %register_nosize], %imm
@@ -6313,49 +6313,49 @@ subtract {b} from {a}, throwing away the result.
 cmph [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010011 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100011 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110011 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + 2 * %register_nosize], %imm
@@ -6449,49 +6449,49 @@ subtract {b} from {a}, throwing away the result.
 cmph [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010011 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100011 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110011 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + 4 * %register_nosize], %imm
@@ -6585,49 +6585,49 @@ subtract {b} from {a}, throwing away the result.
 cmph [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000011 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010011 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100011 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmpq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110011 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize + 8 * %register_nosize], %imm
@@ -6720,170 +6720,170 @@ subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [ip + %imm]
 = %b:a
-00000011 aaa10001 ???????? cccccccc
+00000011 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [ip + %imm]
 = %b:a
-00010011 aaa10001 ???????? cccccccc
+00010011 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [ip + %imm]
 = %b:a
-00100011 aaa10001 ???????? cccccccc
+00100011 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [ip + %imm]
 = %b:a
-00110011 aaa10001 ???????? cccccccc
+00110011 aaa10001 xxxxxxxx cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [ip + %imm]
 = %b:ba
-00000011 aaa10001 ???????? cccccccc cccccccc
+00000011 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [ip + %imm]
 = %b:ba
-00010011 aaa10001 ???????? cccccccc cccccccc
+00010011 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [ip + %imm]
 = %b:ba
-00100011 aaa10001 ???????? cccccccc cccccccc
+00100011 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [ip + %imm]
 = %b:ba
-00110011 aaa10001 ???????? cccccccc cccccccc
+00110011 aaa10001 xxxxxxxx cccccccc cccccccc
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize, %register_nosize]
-00000011 aaa11001 00ccc???
+00000011 aaa11001 00cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize, %register_nosize]
-00010011 aaa11001 00ccc???
+00010011 aaa11001 00cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize, %register_nosize]
-00100011 aaa11001 00ccc???
+00100011 aaa11001 00cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize, %register_nosize]
-00110011 aaa11001 00ccc???
+00110011 aaa11001 00cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize, %register_nosize], %register_hword
-00000011 ccc11101 00bbb???
+00000011 ccc11101 00bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize, %register_nosize], %register_xword
-00010011 ccc11101 00bbb???
+00010011 ccc11101 00bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize, %register_nosize], %register_dword
-00100011 ccc11101 00bbb???
+00100011 ccc11101 00bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize, %register_nosize], %register_qword
-00110011 ccc11101 00bbb???
+00110011 ccc11101 00bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize, 2 * %register_nosize]
-00000011 aaa11001 01ccc???
+00000011 aaa11001 01cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010011 aaa11001 01ccc???
+00010011 aaa11001 01cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize, 2 * %register_nosize]
-00100011 aaa11001 01ccc???
+00100011 aaa11001 01cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110011 aaa11001 01ccc???
+00110011 aaa11001 01cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize, 2 * %register_nosize], %register_hword
-00000011 ccc11101 01bbb???
+00000011 ccc11101 01bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize, 2 * %register_nosize], %register_xword
-00010011 ccc11101 01bbb???
+00010011 ccc11101 01bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize, 2 * %register_nosize], %register_dword
-00100011 ccc11101 01bbb???
+00100011 ccc11101 01bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize, 2 * %register_nosize], %register_qword
-00110011 ccc11101 01bbb???
+00110011 ccc11101 01bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize, 4 * %register_nosize]
-00000011 aaa11001 10ccc???
+00000011 aaa11001 10cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010011 aaa11001 10ccc???
+00010011 aaa11001 10cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize, 4 * %register_nosize]
-00100011 aaa11001 10ccc???
+00100011 aaa11001 10cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110011 aaa11001 10ccc???
+00110011 aaa11001 10cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize, 4 * %register_nosize], %register_hword
-00000011 ccc11101 10bbb???
+00000011 ccc11101 10bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize, 4 * %register_nosize], %register_xword
-00010011 ccc11101 10bbb???
+00010011 ccc11101 10bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize, 4 * %register_nosize], %register_dword
-00100011 ccc11101 10bbb???
+00100011 ccc11101 10bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize, 4 * %register_nosize], %register_qword
-00110011 ccc11101 10bbb???
+00110011 ccc11101 10bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, [%register_nosize, 8 * %register_nosize]
-00000011 aaa11001 11ccc???
+00000011 aaa11001 11cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010011 aaa11001 11ccc???
+00010011 aaa11001 11cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd %register_dword, [%register_nosize, 8 * %register_nosize]
-00100011 aaa11001 11ccc???
+00100011 aaa11001 11cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110011 aaa11001 11ccc???
+00110011 aaa11001 11cccxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph [%register_nosize, 8 * %register_nosize], %register_hword
-00000011 ccc11101 11bbb???
+00000011 ccc11101 11bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpx [%register_nosize, 8 * %register_nosize], %register_xword
-00010011 ccc11101 11bbb???
+00010011 ccc11101 11bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpd [%register_nosize, 8 * %register_nosize], %register_dword
-00100011 ccc11101 11bbb???
+00100011 ccc11101 11bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmpq [%register_nosize, 8 * %register_nosize], %register_qword
-00110011 ccc11101 11bbb???
+00110011 ccc11101 11bbbxxx
 subtract {b} from {a}, throwing away the result.
 
 cmph %register_hword, %imm
@@ -6919,235 +6919,235 @@ orq %register_qword, %register_qword
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize]
-00000100 aaa00010 ?????bbb
+00000100 aaa00010 xxxxxbbb
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize]
-00010100 aaa00010 ?????bbb
+00010100 aaa00010 xxxxxbbb
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize]
-00100100 aaa00010 ?????bbb
+00100100 aaa00010 xxxxxbbb
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize]
-00110100 aaa00010 ?????bbb
+00110100 aaa00010 xxxxxbbb
 or {a} and {b}.
 
 orh [%register_nosize], %register_hword
-00000100 bbb00011 ?????aaa
+00000100 bbb00011 xxxxxaaa
 or {a} and {b}.
 
 orx [%register_nosize], %register_xword
-00010100 bbb00011 ?????aaa
+00010100 bbb00011 xxxxxaaa
 or {a} and {b}.
 
 ord [%register_nosize], %register_dword
-00100100 bbb00011 ?????aaa
+00100100 bbb00011 xxxxxaaa
 or {a} and {b}.
 
 orq [%register_nosize], %register_qword
-00110100 bbb00011 ?????aaa
+00110100 bbb00011 xxxxxaaa
 or {a} and {b}.
 
 orh %register_hword, [%imm]
 = %b:ba
-00000100 aaa00110 ???????? cccccccc cccccccc
+00000100 aaa00110 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orx %register_xword, [%imm]
 = %b:ba
-00010100 aaa00110 ???????? cccccccc cccccccc
+00010100 aaa00110 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 ord %register_dword, [%imm]
 = %b:ba
-00100100 aaa00110 ???????? cccccccc cccccccc
+00100100 aaa00110 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orq %register_qword, [%imm]
 = %b:ba
-00110100 aaa00110 ???????? cccccccc cccccccc
+00110100 aaa00110 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orh [%imm], %register_hword
 = %a:ba
-00000100 bbb00111 ???????? cccccccc cccccccc
+00000100 bbb00111 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orx [%imm], %register_xword
 = %a:ba
-00010100 bbb00111 ???????? cccccccc cccccccc
+00010100 bbb00111 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 ord [%imm], %register_dword
 = %a:ba
-00100100 bbb00111 ???????? cccccccc cccccccc
+00100100 bbb00111 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orq [%imm], %register_qword
 = %a:ba
-00110100 bbb00111 ???????? cccccccc cccccccc
+00110100 bbb00111 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000100 aaa01010 ?????bbb dddddddd
+00000100 aaa01010 xxxxxbbb dddddddd
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010100 aaa01010 ?????bbb dddddddd
+00010100 aaa01010 xxxxxbbb dddddddd
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize + %imm]
 = %c:a
-00100100 aaa01010 ?????bbb dddddddd
+00100100 aaa01010 xxxxxbbb dddddddd
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110100 aaa01010 ?????bbb dddddddd
+00110100 aaa01010 xxxxxbbb dddddddd
 or {a} and {b}.
 
 orh [%register_nosize + %imm], %register_hword
 = %b:a
-00000100 ccc01011 ?????aaa dddddddd
+00000100 ccc01011 xxxxxaaa dddddddd
 or {a} and {b}.
 
 orx [%register_nosize + %imm], %register_xword
 = %b:a
-00010100 ccc01011 ?????aaa dddddddd
+00010100 ccc01011 xxxxxaaa dddddddd
 or {a} and {b}.
 
 ord [%register_nosize + %imm], %register_dword
 = %b:a
-00100100 ccc01011 ?????aaa dddddddd
+00100100 ccc01011 xxxxxaaa dddddddd
 or {a} and {b}.
 
 orq [%register_nosize + %imm], %register_qword
 = %b:a
-00110100 ccc01011 ?????aaa dddddddd
+00110100 ccc01011 xxxxxaaa dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000100 aaa01110 ?????bbb dddddddd dddddddd
+00000100 aaa01110 xxxxxbbb dddddddd dddddddd
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010100 aaa01110 ?????bbb dddddddd dddddddd
+00010100 aaa01110 xxxxxbbb dddddddd dddddddd
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100100 aaa01110 ?????bbb dddddddd dddddddd
+00100100 aaa01110 xxxxxbbb dddddddd dddddddd
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110100 aaa01110 ?????bbb dddddddd dddddddd
+00110100 aaa01110 xxxxxbbb dddddddd dddddddd
 or {a} and {b}.
 
 orh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000100 ccc01111 ?????aaa dddddddd dddddddd
+00000100 ccc01111 xxxxxaaa dddddddd dddddddd
 or {a} and {b}.
 
 orx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010100 ccc01111 ?????aaa dddddddd dddddddd
+00010100 ccc01111 xxxxxaaa dddddddd dddddddd
 or {a} and {b}.
 
 ord [%register_nosize + %imm], %register_dword
 = %b:ba
-00100100 ccc01111 ?????aaa dddddddd dddddddd
+00100100 ccc01111 xxxxxaaa dddddddd dddddddd
 or {a} and {b}.
 
 orq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110100 ccc01111 ?????aaa dddddddd dddddddd
+00110100 ccc01111 xxxxxaaa dddddddd dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000100 aaa10010 00bbb??? dddddddd
+00000100 aaa10010 00bbbxxx dddddddd
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010100 aaa10010 00bbb??? dddddddd
+00010100 aaa10010 00bbbxxx dddddddd
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize + %imm]
 = %c:a
-00100100 aaa10010 00bbb??? dddddddd
+00100100 aaa10010 00bbbxxx dddddddd
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110100 aaa10010 00bbb??? dddddddd
+00110100 aaa10010 00bbbxxx dddddddd
 or {a} and {b}.
 
 orh [%register_nosize + %imm], %register_hword
 = %b:a
-00000100 ccc10011 00aaa??? dddddddd
+00000100 ccc10011 00aaaxxx dddddddd
 or {a} and {b}.
 
 orx [%register_nosize + %imm], %register_xword
 = %b:a
-00010100 ccc10011 00aaa??? dddddddd
+00010100 ccc10011 00aaaxxx dddddddd
 or {a} and {b}.
 
 ord [%register_nosize + %imm], %register_dword
 = %b:a
-00100100 ccc10011 00aaa??? dddddddd
+00100100 ccc10011 00aaaxxx dddddddd
 or {a} and {b}.
 
 orq [%register_nosize + %imm], %register_qword
 = %b:a
-00110100 ccc10011 00aaa??? dddddddd
+00110100 ccc10011 00aaaxxx dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000100 aaa10010 00bbb??? dddddddd dddddddd
+00000100 aaa10010 00bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010100 aaa10010 00bbb??? dddddddd dddddddd
+00010100 aaa10010 00bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100100 aaa10010 00bbb??? dddddddd dddddddd
+00100100 aaa10010 00bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110100 aaa10010 00bbb??? dddddddd dddddddd
+00110100 aaa10010 00bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000100 ccc10011 00aaa??? dddddddd dddddddd
+00000100 ccc10011 00aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010100 ccc10011 00aaa??? dddddddd dddddddd
+00010100 ccc10011 00aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord [%register_nosize + %imm], %register_dword
 = %b:ba
-00100100 ccc10011 00aaa??? dddddddd dddddddd
+00100100 ccc10011 00aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110100 ccc10011 00aaa??? dddddddd dddddddd
+00110100 ccc10011 00aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -7232,82 +7232,82 @@ or {a} and {b}.
 
 orh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000100 aaa10010 01bbb??? dddddddd
+00000100 aaa10010 01bbbxxx dddddddd
 or {a} and {b}.
 
 orx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010100 aaa10010 01bbb??? dddddddd
+00010100 aaa10010 01bbbxxx dddddddd
 or {a} and {b}.
 
 ord %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100100 aaa10010 01bbb??? dddddddd
+00100100 aaa10010 01bbbxxx dddddddd
 or {a} and {b}.
 
 orq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110100 aaa10010 01bbb??? dddddddd
+00110100 aaa10010 01bbbxxx dddddddd
 or {a} and {b}.
 
 orh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000100 ccc10011 01aaa??? dddddddd
+00000100 ccc10011 01aaaxxx dddddddd
 or {a} and {b}.
 
 orx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010100 ccc10011 01aaa??? dddddddd
+00010100 ccc10011 01aaaxxx dddddddd
 or {a} and {b}.
 
 ord [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100100 ccc10011 01aaa??? dddddddd
+00100100 ccc10011 01aaaxxx dddddddd
 or {a} and {b}.
 
 orq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110100 ccc10011 01aaa??? dddddddd
+00110100 ccc10011 01aaaxxx dddddddd
 or {a} and {b}.
 
 orh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000100 aaa10010 01bbb??? dddddddd dddddddd
+00000100 aaa10010 01bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010100 aaa10010 01bbb??? dddddddd dddddddd
+00010100 aaa10010 01bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100100 aaa10010 01bbb??? dddddddd dddddddd
+00100100 aaa10010 01bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110100 aaa10010 01bbb??? dddddddd dddddddd
+00110100 aaa10010 01bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000100 ccc10011 01aaa??? dddddddd dddddddd
+00000100 ccc10011 01aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010100 ccc10011 01aaa??? dddddddd dddddddd
+00010100 ccc10011 01aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100100 ccc10011 01aaa??? dddddddd dddddddd
+00100100 ccc10011 01aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110100 ccc10011 01aaa??? dddddddd dddddddd
+00110100 ccc10011 01aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -7392,82 +7392,82 @@ or {a} and {b}.
 
 orh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000100 aaa10010 10bbb??? dddddddd
+00000100 aaa10010 10bbbxxx dddddddd
 or {a} and {b}.
 
 orx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010100 aaa10010 10bbb??? dddddddd
+00010100 aaa10010 10bbbxxx dddddddd
 or {a} and {b}.
 
 ord %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100100 aaa10010 10bbb??? dddddddd
+00100100 aaa10010 10bbbxxx dddddddd
 or {a} and {b}.
 
 orq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110100 aaa10010 10bbb??? dddddddd
+00110100 aaa10010 10bbbxxx dddddddd
 or {a} and {b}.
 
 orh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000100 ccc10011 10aaa??? dddddddd
+00000100 ccc10011 10aaaxxx dddddddd
 or {a} and {b}.
 
 orx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010100 ccc10011 10aaa??? dddddddd
+00010100 ccc10011 10aaaxxx dddddddd
 or {a} and {b}.
 
 ord [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100100 ccc10011 10aaa??? dddddddd
+00100100 ccc10011 10aaaxxx dddddddd
 or {a} and {b}.
 
 orq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110100 ccc10011 10aaa??? dddddddd
+00110100 ccc10011 10aaaxxx dddddddd
 or {a} and {b}.
 
 orh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000100 aaa10010 10bbb??? dddddddd dddddddd
+00000100 aaa10010 10bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010100 aaa10010 10bbb??? dddddddd dddddddd
+00010100 aaa10010 10bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100100 aaa10010 10bbb??? dddddddd dddddddd
+00100100 aaa10010 10bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110100 aaa10010 10bbb??? dddddddd dddddddd
+00110100 aaa10010 10bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000100 ccc10011 10aaa??? dddddddd dddddddd
+00000100 ccc10011 10aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010100 ccc10011 10aaa??? dddddddd dddddddd
+00010100 ccc10011 10aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100100 ccc10011 10aaa??? dddddddd dddddddd
+00100100 ccc10011 10aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110100 ccc10011 10aaa??? dddddddd dddddddd
+00110100 ccc10011 10aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -7552,82 +7552,82 @@ or {a} and {b}.
 
 orh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000100 aaa10010 11bbb??? dddddddd
+00000100 aaa10010 11bbbxxx dddddddd
 or {a} and {b}.
 
 orx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010100 aaa10010 11bbb??? dddddddd
+00010100 aaa10010 11bbbxxx dddddddd
 or {a} and {b}.
 
 ord %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100100 aaa10010 11bbb??? dddddddd
+00100100 aaa10010 11bbbxxx dddddddd
 or {a} and {b}.
 
 orq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110100 aaa10010 11bbb??? dddddddd
+00110100 aaa10010 11bbbxxx dddddddd
 or {a} and {b}.
 
 orh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000100 ccc10011 11aaa??? dddddddd
+00000100 ccc10011 11aaaxxx dddddddd
 or {a} and {b}.
 
 orx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010100 ccc10011 11aaa??? dddddddd
+00010100 ccc10011 11aaaxxx dddddddd
 or {a} and {b}.
 
 ord [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100100 ccc10011 11aaa??? dddddddd
+00100100 ccc10011 11aaaxxx dddddddd
 or {a} and {b}.
 
 orq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110100 ccc10011 11aaa??? dddddddd
+00110100 ccc10011 11aaaxxx dddddddd
 or {a} and {b}.
 
 orh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000100 aaa10010 11bbb??? dddddddd dddddddd
+00000100 aaa10010 11bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010100 aaa10010 11bbb??? dddddddd dddddddd
+00010100 aaa10010 11bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100100 aaa10010 11bbb??? dddddddd dddddddd
+00100100 aaa10010 11bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110100 aaa10010 11bbb??? dddddddd dddddddd
+00110100 aaa10010 11bbbxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000100 ccc10011 11aaa??? dddddddd dddddddd
+00000100 ccc10011 11aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010100 ccc10011 11aaa??? dddddddd dddddddd
+00010100 ccc10011 11aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 ord [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100100 ccc10011 11aaa??? dddddddd dddddddd
+00100100 ccc10011 11aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110100 ccc10011 11aaa??? dddddddd dddddddd
+00110100 ccc10011 11aaaxxx dddddddd dddddddd
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -7753,185 +7753,185 @@ or {a} and {b}.
 orh [%imm], %imm
 = %a:ba
 = %b:a
-00000100 00100001 ???????? cccccccc cccccccc dddddddd
+00000100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 or {a} and {b}.
 
 orx [%imm], %imm
 = %a:ba
 = %b:a
-00010100 00100001 ???????? cccccccc cccccccc dddddddd
+00010100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 or {a} and {b}.
 
 ord [%imm], %imm
 = %a:ba
 = %b:a
-00100100 00100001 ???????? cccccccc cccccccc dddddddd
+00100100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 or {a} and {b}.
 
 orq [%imm], %imm
 = %a:ba
 = %b:a
-00110100 00100001 ???????? cccccccc cccccccc dddddddd
+00110100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 or {a} and {b}.
 
 orh [%imm], %imm
 = %a:ba
 = %b:a
-00000100 00100101 ???????? cccccccc cccccccc dddddddd
+00000100 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 or {a} and {b}.
 
 orx [%imm], %imm
 = %a:ba
 = %b:ba
-00010100 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010100 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 or {a} and {b}.
 
 ord [%imm], %imm
 = %a:ba
 = %b:dcba
-00100100 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100100 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 or {a} and {b}.
 
 orq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110100 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110100 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 or {a} and {b}.
 
 orh [%register_nosize], %imm
 = %b:a
-00000100 01000001 ?????aaa cccccccc
+00000100 01000001 xxxxxaaa cccccccc
 or {a} and {b}.
 
 orx [%register_nosize], %imm
 = %b:a
-00010100 01000001 ?????aaa cccccccc
+00010100 01000001 xxxxxaaa cccccccc
 or {a} and {b}.
 
 ord [%register_nosize], %imm
 = %b:a
-00100100 01000001 ?????aaa cccccccc
+00100100 01000001 xxxxxaaa cccccccc
 or {a} and {b}.
 
 orq [%register_nosize], %imm
 = %b:a
-00110100 01000001 ?????aaa cccccccc
+00110100 01000001 xxxxxaaa cccccccc
 or {a} and {b}.
 
 orh [%register_nosize], %imm
 = %b:a
-00000100 01000101 ?????aaa cccccccc
+00000100 01000101 xxxxxaaa cccccccc
 or {a} and {b}.
 
 orx [%register_nosize], %imm
 = %b:ba
-00010100 01000101 ?????aaa cccccccc cccccccc
+00010100 01000101 xxxxxaaa cccccccc cccccccc
 or {a} and {b}.
 
 ord [%register_nosize], %imm
 = %b:dcba
-00100100 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100100 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 or {a} and {b}.
 
 orq [%register_nosize], %imm
 = %b:hgfedcba
-00110100 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110100 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 or {a} and {b}.
 
 orh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 ord [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-or {a} and {b}.
-
-orx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010100 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-or {a} and {b}.
-
-ord [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100100 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-or {a} and {b}.
-
-orq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110100 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-or {a} and {b}.
-
-orh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-or {a} and {b}.
-
-orx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-or {a} and {b}.
-
-ord [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-or {a} and {b}.
-
-orq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-or {a} and {b}.
-
-orh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000100 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010100 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 or {a} and {b}.
 
 ord [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100100 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110100 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+or {a} and {b}.
+
+orh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+or {a} and {b}.
+
+orx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+or {a} and {b}.
+
+ord [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+or {a} and {b}.
+
+orq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+or {a} and {b}.
+
+orh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+or {a} and {b}.
+
+orx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+or {a} and {b}.
+
+ord [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+or {a} and {b}.
+
+orq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orh [%register_nosize + %register_nosize], %imm
@@ -8025,49 +8025,49 @@ or {a} and {b}.
 orh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 ord [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010100 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 or {a} and {b}.
 
 ord [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100100 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110100 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orh [%register_nosize + 2 * %register_nosize], %imm
@@ -8161,49 +8161,49 @@ or {a} and {b}.
 orh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 ord [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010100 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 or {a} and {b}.
 
 ord [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100100 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110100 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orh [%register_nosize + 4 * %register_nosize], %imm
@@ -8297,49 +8297,49 @@ or {a} and {b}.
 orh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 ord [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000100 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 or {a} and {b}.
 
 orx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010100 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 or {a} and {b}.
 
 ord [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100100 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110100 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 or {a} and {b}.
 
 orh [%register_nosize + 8 * %register_nosize], %imm
@@ -8432,170 +8432,170 @@ or {a} and {b}.
 
 orh %register_hword, [ip + %imm]
 = %b:a
-00000100 aaa10001 ???????? cccccccc
+00000100 aaa10001 xxxxxxxx cccccccc
 or {a} and {b}.
 
 orx %register_xword, [ip + %imm]
 = %b:a
-00010100 aaa10001 ???????? cccccccc
+00010100 aaa10001 xxxxxxxx cccccccc
 or {a} and {b}.
 
 ord %register_dword, [ip + %imm]
 = %b:a
-00100100 aaa10001 ???????? cccccccc
+00100100 aaa10001 xxxxxxxx cccccccc
 or {a} and {b}.
 
 orq %register_qword, [ip + %imm]
 = %b:a
-00110100 aaa10001 ???????? cccccccc
+00110100 aaa10001 xxxxxxxx cccccccc
 or {a} and {b}.
 
 orh %register_hword, [ip + %imm]
 = %b:ba
-00000100 aaa10001 ???????? cccccccc cccccccc
+00000100 aaa10001 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orx %register_xword, [ip + %imm]
 = %b:ba
-00010100 aaa10001 ???????? cccccccc cccccccc
+00010100 aaa10001 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 ord %register_dword, [ip + %imm]
 = %b:ba
-00100100 aaa10001 ???????? cccccccc cccccccc
+00100100 aaa10001 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orq %register_qword, [ip + %imm]
 = %b:ba
-00110100 aaa10001 ???????? cccccccc cccccccc
+00110100 aaa10001 xxxxxxxx cccccccc cccccccc
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize, %register_nosize]
-00000100 aaa11001 00ccc???
+00000100 aaa11001 00cccxxx
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize, %register_nosize]
-00010100 aaa11001 00ccc???
+00010100 aaa11001 00cccxxx
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize, %register_nosize]
-00100100 aaa11001 00ccc???
+00100100 aaa11001 00cccxxx
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize, %register_nosize]
-00110100 aaa11001 00ccc???
+00110100 aaa11001 00cccxxx
 or {a} and {b}.
 
 orh [%register_nosize, %register_nosize], %register_hword
-00000100 ccc11101 00bbb???
+00000100 ccc11101 00bbbxxx
 or {a} and {b}.
 
 orx [%register_nosize, %register_nosize], %register_xword
-00010100 ccc11101 00bbb???
+00010100 ccc11101 00bbbxxx
 or {a} and {b}.
 
 ord [%register_nosize, %register_nosize], %register_dword
-00100100 ccc11101 00bbb???
+00100100 ccc11101 00bbbxxx
 or {a} and {b}.
 
 orq [%register_nosize, %register_nosize], %register_qword
-00110100 ccc11101 00bbb???
+00110100 ccc11101 00bbbxxx
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000100 aaa11001 01ccc???
+00000100 aaa11001 01cccxxx
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010100 aaa11001 01ccc???
+00010100 aaa11001 01cccxxx
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize, 2 * %register_nosize]
-00100100 aaa11001 01ccc???
+00100100 aaa11001 01cccxxx
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110100 aaa11001 01ccc???
+00110100 aaa11001 01cccxxx
 or {a} and {b}.
 
 orh [%register_nosize, 2 * %register_nosize], %register_hword
-00000100 ccc11101 01bbb???
+00000100 ccc11101 01bbbxxx
 or {a} and {b}.
 
 orx [%register_nosize, 2 * %register_nosize], %register_xword
-00010100 ccc11101 01bbb???
+00010100 ccc11101 01bbbxxx
 or {a} and {b}.
 
 ord [%register_nosize, 2 * %register_nosize], %register_dword
-00100100 ccc11101 01bbb???
+00100100 ccc11101 01bbbxxx
 or {a} and {b}.
 
 orq [%register_nosize, 2 * %register_nosize], %register_qword
-00110100 ccc11101 01bbb???
+00110100 ccc11101 01bbbxxx
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000100 aaa11001 10ccc???
+00000100 aaa11001 10cccxxx
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010100 aaa11001 10ccc???
+00010100 aaa11001 10cccxxx
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize, 4 * %register_nosize]
-00100100 aaa11001 10ccc???
+00100100 aaa11001 10cccxxx
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110100 aaa11001 10ccc???
+00110100 aaa11001 10cccxxx
 or {a} and {b}.
 
 orh [%register_nosize, 4 * %register_nosize], %register_hword
-00000100 ccc11101 10bbb???
+00000100 ccc11101 10bbbxxx
 or {a} and {b}.
 
 orx [%register_nosize, 4 * %register_nosize], %register_xword
-00010100 ccc11101 10bbb???
+00010100 ccc11101 10bbbxxx
 or {a} and {b}.
 
 ord [%register_nosize, 4 * %register_nosize], %register_dword
-00100100 ccc11101 10bbb???
+00100100 ccc11101 10bbbxxx
 or {a} and {b}.
 
 orq [%register_nosize, 4 * %register_nosize], %register_qword
-00110100 ccc11101 10bbb???
+00110100 ccc11101 10bbbxxx
 or {a} and {b}.
 
 orh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000100 aaa11001 11ccc???
+00000100 aaa11001 11cccxxx
 or {a} and {b}.
 
 orx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010100 aaa11001 11ccc???
+00010100 aaa11001 11cccxxx
 or {a} and {b}.
 
 ord %register_dword, [%register_nosize, 8 * %register_nosize]
-00100100 aaa11001 11ccc???
+00100100 aaa11001 11cccxxx
 or {a} and {b}.
 
 orq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110100 aaa11001 11ccc???
+00110100 aaa11001 11cccxxx
 or {a} and {b}.
 
 orh [%register_nosize, 8 * %register_nosize], %register_hword
-00000100 ccc11101 11bbb???
+00000100 ccc11101 11bbbxxx
 or {a} and {b}.
 
 orx [%register_nosize, 8 * %register_nosize], %register_xword
-00010100 ccc11101 11bbb???
+00010100 ccc11101 11bbbxxx
 or {a} and {b}.
 
 ord [%register_nosize, 8 * %register_nosize], %register_dword
-00100100 ccc11101 11bbb???
+00100100 ccc11101 11bbbxxx
 or {a} and {b}.
 
 orq [%register_nosize, 8 * %register_nosize], %register_qword
-00110100 ccc11101 11bbb???
+00110100 ccc11101 11bbbxxx
 or {a} and {b}.
 
 orh %register_hword, %imm
@@ -8631,235 +8631,235 @@ xorq %register_qword, %register_qword
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize]
-00000101 aaa00010 ?????bbb
+00000101 aaa00010 xxxxxbbb
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize]
-00010101 aaa00010 ?????bbb
+00010101 aaa00010 xxxxxbbb
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize]
-00100101 aaa00010 ?????bbb
+00100101 aaa00010 xxxxxbbb
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize]
-00110101 aaa00010 ?????bbb
+00110101 aaa00010 xxxxxbbb
 xor {a} to {b}.
 
 xorh [%register_nosize], %register_hword
-00000101 bbb00011 ?????aaa
+00000101 bbb00011 xxxxxaaa
 xor {a} to {b}.
 
 xorx [%register_nosize], %register_xword
-00010101 bbb00011 ?????aaa
+00010101 bbb00011 xxxxxaaa
 xor {a} to {b}.
 
 xord [%register_nosize], %register_dword
-00100101 bbb00011 ?????aaa
+00100101 bbb00011 xxxxxaaa
 xor {a} to {b}.
 
 xorq [%register_nosize], %register_qword
-00110101 bbb00011 ?????aaa
+00110101 bbb00011 xxxxxaaa
 xor {a} to {b}.
 
 xorh %register_hword, [%imm]
 = %b:ba
-00000101 aaa00110 ???????? cccccccc cccccccc
+00000101 aaa00110 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorx %register_xword, [%imm]
 = %b:ba
-00010101 aaa00110 ???????? cccccccc cccccccc
+00010101 aaa00110 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xord %register_dword, [%imm]
 = %b:ba
-00100101 aaa00110 ???????? cccccccc cccccccc
+00100101 aaa00110 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorq %register_qword, [%imm]
 = %b:ba
-00110101 aaa00110 ???????? cccccccc cccccccc
+00110101 aaa00110 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorh [%imm], %register_hword
 = %a:ba
-00000101 bbb00111 ???????? cccccccc cccccccc
+00000101 bbb00111 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorx [%imm], %register_xword
 = %a:ba
-00010101 bbb00111 ???????? cccccccc cccccccc
+00010101 bbb00111 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xord [%imm], %register_dword
 = %a:ba
-00100101 bbb00111 ???????? cccccccc cccccccc
+00100101 bbb00111 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorq [%imm], %register_qword
 = %a:ba
-00110101 bbb00111 ???????? cccccccc cccccccc
+00110101 bbb00111 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000101 aaa01010 ?????bbb dddddddd
+00000101 aaa01010 xxxxxbbb dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010101 aaa01010 ?????bbb dddddddd
+00010101 aaa01010 xxxxxbbb dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize + %imm]
 = %c:a
-00100101 aaa01010 ?????bbb dddddddd
+00100101 aaa01010 xxxxxbbb dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110101 aaa01010 ?????bbb dddddddd
+00110101 aaa01010 xxxxxbbb dddddddd
 xor {a} to {b}.
 
 xorh [%register_nosize + %imm], %register_hword
 = %b:a
-00000101 ccc01011 ?????aaa dddddddd
+00000101 ccc01011 xxxxxaaa dddddddd
 xor {a} to {b}.
 
 xorx [%register_nosize + %imm], %register_xword
 = %b:a
-00010101 ccc01011 ?????aaa dddddddd
+00010101 ccc01011 xxxxxaaa dddddddd
 xor {a} to {b}.
 
 xord [%register_nosize + %imm], %register_dword
 = %b:a
-00100101 ccc01011 ?????aaa dddddddd
+00100101 ccc01011 xxxxxaaa dddddddd
 xor {a} to {b}.
 
 xorq [%register_nosize + %imm], %register_qword
 = %b:a
-00110101 ccc01011 ?????aaa dddddddd
+00110101 ccc01011 xxxxxaaa dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000101 aaa01110 ?????bbb dddddddd dddddddd
+00000101 aaa01110 xxxxxbbb dddddddd dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010101 aaa01110 ?????bbb dddddddd dddddddd
+00010101 aaa01110 xxxxxbbb dddddddd dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100101 aaa01110 ?????bbb dddddddd dddddddd
+00100101 aaa01110 xxxxxbbb dddddddd dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110101 aaa01110 ?????bbb dddddddd dddddddd
+00110101 aaa01110 xxxxxbbb dddddddd dddddddd
 xor {a} to {b}.
 
 xorh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000101 ccc01111 ?????aaa dddddddd dddddddd
+00000101 ccc01111 xxxxxaaa dddddddd dddddddd
 xor {a} to {b}.
 
 xorx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010101 ccc01111 ?????aaa dddddddd dddddddd
+00010101 ccc01111 xxxxxaaa dddddddd dddddddd
 xor {a} to {b}.
 
 xord [%register_nosize + %imm], %register_dword
 = %b:ba
-00100101 ccc01111 ?????aaa dddddddd dddddddd
+00100101 ccc01111 xxxxxaaa dddddddd dddddddd
 xor {a} to {b}.
 
 xorq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110101 ccc01111 ?????aaa dddddddd dddddddd
+00110101 ccc01111 xxxxxaaa dddddddd dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000101 aaa10010 00bbb??? dddddddd
+00000101 aaa10010 00bbbxxx dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010101 aaa10010 00bbb??? dddddddd
+00010101 aaa10010 00bbbxxx dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize + %imm]
 = %c:a
-00100101 aaa10010 00bbb??? dddddddd
+00100101 aaa10010 00bbbxxx dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110101 aaa10010 00bbb??? dddddddd
+00110101 aaa10010 00bbbxxx dddddddd
 xor {a} to {b}.
 
 xorh [%register_nosize + %imm], %register_hword
 = %b:a
-00000101 ccc10011 00aaa??? dddddddd
+00000101 ccc10011 00aaaxxx dddddddd
 xor {a} to {b}.
 
 xorx [%register_nosize + %imm], %register_xword
 = %b:a
-00010101 ccc10011 00aaa??? dddddddd
+00010101 ccc10011 00aaaxxx dddddddd
 xor {a} to {b}.
 
 xord [%register_nosize + %imm], %register_dword
 = %b:a
-00100101 ccc10011 00aaa??? dddddddd
+00100101 ccc10011 00aaaxxx dddddddd
 xor {a} to {b}.
 
 xorq [%register_nosize + %imm], %register_qword
 = %b:a
-00110101 ccc10011 00aaa??? dddddddd
+00110101 ccc10011 00aaaxxx dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000101 aaa10010 00bbb??? dddddddd dddddddd
+00000101 aaa10010 00bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010101 aaa10010 00bbb??? dddddddd dddddddd
+00010101 aaa10010 00bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100101 aaa10010 00bbb??? dddddddd dddddddd
+00100101 aaa10010 00bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110101 aaa10010 00bbb??? dddddddd dddddddd
+00110101 aaa10010 00bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000101 ccc10011 00aaa??? dddddddd dddddddd
+00000101 ccc10011 00aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010101 ccc10011 00aaa??? dddddddd dddddddd
+00010101 ccc10011 00aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord [%register_nosize + %imm], %register_dword
 = %b:ba
-00100101 ccc10011 00aaa??? dddddddd dddddddd
+00100101 ccc10011 00aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110101 ccc10011 00aaa??? dddddddd dddddddd
+00110101 ccc10011 00aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -8944,82 +8944,82 @@ xor {a} to {b}.
 
 xorh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000101 aaa10010 01bbb??? dddddddd
+00000101 aaa10010 01bbbxxx dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010101 aaa10010 01bbb??? dddddddd
+00010101 aaa10010 01bbbxxx dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100101 aaa10010 01bbb??? dddddddd
+00100101 aaa10010 01bbbxxx dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110101 aaa10010 01bbb??? dddddddd
+00110101 aaa10010 01bbbxxx dddddddd
 xor {a} to {b}.
 
 xorh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000101 ccc10011 01aaa??? dddddddd
+00000101 ccc10011 01aaaxxx dddddddd
 xor {a} to {b}.
 
 xorx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010101 ccc10011 01aaa??? dddddddd
+00010101 ccc10011 01aaaxxx dddddddd
 xor {a} to {b}.
 
 xord [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100101 ccc10011 01aaa??? dddddddd
+00100101 ccc10011 01aaaxxx dddddddd
 xor {a} to {b}.
 
 xorq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110101 ccc10011 01aaa??? dddddddd
+00110101 ccc10011 01aaaxxx dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000101 aaa10010 01bbb??? dddddddd dddddddd
+00000101 aaa10010 01bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010101 aaa10010 01bbb??? dddddddd dddddddd
+00010101 aaa10010 01bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100101 aaa10010 01bbb??? dddddddd dddddddd
+00100101 aaa10010 01bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110101 aaa10010 01bbb??? dddddddd dddddddd
+00110101 aaa10010 01bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000101 ccc10011 01aaa??? dddddddd dddddddd
+00000101 ccc10011 01aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010101 ccc10011 01aaa??? dddddddd dddddddd
+00010101 ccc10011 01aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100101 ccc10011 01aaa??? dddddddd dddddddd
+00100101 ccc10011 01aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110101 ccc10011 01aaa??? dddddddd dddddddd
+00110101 ccc10011 01aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -9104,82 +9104,82 @@ xor {a} to {b}.
 
 xorh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000101 aaa10010 10bbb??? dddddddd
+00000101 aaa10010 10bbbxxx dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010101 aaa10010 10bbb??? dddddddd
+00010101 aaa10010 10bbbxxx dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100101 aaa10010 10bbb??? dddddddd
+00100101 aaa10010 10bbbxxx dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110101 aaa10010 10bbb??? dddddddd
+00110101 aaa10010 10bbbxxx dddddddd
 xor {a} to {b}.
 
 xorh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000101 ccc10011 10aaa??? dddddddd
+00000101 ccc10011 10aaaxxx dddddddd
 xor {a} to {b}.
 
 xorx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010101 ccc10011 10aaa??? dddddddd
+00010101 ccc10011 10aaaxxx dddddddd
 xor {a} to {b}.
 
 xord [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100101 ccc10011 10aaa??? dddddddd
+00100101 ccc10011 10aaaxxx dddddddd
 xor {a} to {b}.
 
 xorq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110101 ccc10011 10aaa??? dddddddd
+00110101 ccc10011 10aaaxxx dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000101 aaa10010 10bbb??? dddddddd dddddddd
+00000101 aaa10010 10bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010101 aaa10010 10bbb??? dddddddd dddddddd
+00010101 aaa10010 10bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100101 aaa10010 10bbb??? dddddddd dddddddd
+00100101 aaa10010 10bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110101 aaa10010 10bbb??? dddddddd dddddddd
+00110101 aaa10010 10bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000101 ccc10011 10aaa??? dddddddd dddddddd
+00000101 ccc10011 10aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010101 ccc10011 10aaa??? dddddddd dddddddd
+00010101 ccc10011 10aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100101 ccc10011 10aaa??? dddddddd dddddddd
+00100101 ccc10011 10aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110101 ccc10011 10aaa??? dddddddd dddddddd
+00110101 ccc10011 10aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -9264,82 +9264,82 @@ xor {a} to {b}.
 
 xorh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000101 aaa10010 11bbb??? dddddddd
+00000101 aaa10010 11bbbxxx dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010101 aaa10010 11bbb??? dddddddd
+00010101 aaa10010 11bbbxxx dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100101 aaa10010 11bbb??? dddddddd
+00100101 aaa10010 11bbbxxx dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110101 aaa10010 11bbb??? dddddddd
+00110101 aaa10010 11bbbxxx dddddddd
 xor {a} to {b}.
 
 xorh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000101 ccc10011 11aaa??? dddddddd
+00000101 ccc10011 11aaaxxx dddddddd
 xor {a} to {b}.
 
 xorx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010101 ccc10011 11aaa??? dddddddd
+00010101 ccc10011 11aaaxxx dddddddd
 xor {a} to {b}.
 
 xord [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100101 ccc10011 11aaa??? dddddddd
+00100101 ccc10011 11aaaxxx dddddddd
 xor {a} to {b}.
 
 xorq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110101 ccc10011 11aaa??? dddddddd
+00110101 ccc10011 11aaaxxx dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000101 aaa10010 11bbb??? dddddddd dddddddd
+00000101 aaa10010 11bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010101 aaa10010 11bbb??? dddddddd dddddddd
+00010101 aaa10010 11bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100101 aaa10010 11bbb??? dddddddd dddddddd
+00100101 aaa10010 11bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110101 aaa10010 11bbb??? dddddddd dddddddd
+00110101 aaa10010 11bbbxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000101 ccc10011 11aaa??? dddddddd dddddddd
+00000101 ccc10011 11aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010101 ccc10011 11aaa??? dddddddd dddddddd
+00010101 ccc10011 11aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xord [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100101 ccc10011 11aaa??? dddddddd dddddddd
+00100101 ccc10011 11aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110101 ccc10011 11aaa??? dddddddd dddddddd
+00110101 ccc10011 11aaaxxx dddddddd dddddddd
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -9465,185 +9465,185 @@ xor {a} to {b}.
 xorh [%imm], %imm
 = %a:ba
 = %b:a
-00000101 00100001 ???????? cccccccc cccccccc dddddddd
+00000101 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 xor {a} to {b}.
 
 xorx [%imm], %imm
 = %a:ba
 = %b:a
-00010101 00100001 ???????? cccccccc cccccccc dddddddd
+00010101 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 xor {a} to {b}.
 
 xord [%imm], %imm
 = %a:ba
 = %b:a
-00100101 00100001 ???????? cccccccc cccccccc dddddddd
+00100101 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 xor {a} to {b}.
 
 xorq [%imm], %imm
 = %a:ba
 = %b:a
-00110101 00100001 ???????? cccccccc cccccccc dddddddd
+00110101 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 xor {a} to {b}.
 
 xorh [%imm], %imm
 = %a:ba
 = %b:a
-00000101 00100101 ???????? cccccccc cccccccc dddddddd
+00000101 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 xor {a} to {b}.
 
 xorx [%imm], %imm
 = %a:ba
 = %b:ba
-00010101 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010101 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 xor {a} to {b}.
 
 xord [%imm], %imm
 = %a:ba
 = %b:dcba
-00100101 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100101 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 xor {a} to {b}.
 
 xorq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110101 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110101 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 xor {a} to {b}.
 
 xorh [%register_nosize], %imm
 = %b:a
-00000101 01000001 ?????aaa cccccccc
+00000101 01000001 xxxxxaaa cccccccc
 xor {a} to {b}.
 
 xorx [%register_nosize], %imm
 = %b:a
-00010101 01000001 ?????aaa cccccccc
+00010101 01000001 xxxxxaaa cccccccc
 xor {a} to {b}.
 
 xord [%register_nosize], %imm
 = %b:a
-00100101 01000001 ?????aaa cccccccc
+00100101 01000001 xxxxxaaa cccccccc
 xor {a} to {b}.
 
 xorq [%register_nosize], %imm
 = %b:a
-00110101 01000001 ?????aaa cccccccc
+00110101 01000001 xxxxxaaa cccccccc
 xor {a} to {b}.
 
 xorh [%register_nosize], %imm
 = %b:a
-00000101 01000101 ?????aaa cccccccc
+00000101 01000101 xxxxxaaa cccccccc
 xor {a} to {b}.
 
 xorx [%register_nosize], %imm
 = %b:ba
-00010101 01000101 ?????aaa cccccccc cccccccc
+00010101 01000101 xxxxxaaa cccccccc cccccccc
 xor {a} to {b}.
 
 xord [%register_nosize], %imm
 = %b:dcba
-00100101 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100101 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 xor {a} to {b}.
 
 xorq [%register_nosize], %imm
 = %b:hgfedcba
-00110101 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110101 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 xor {a} to {b}.
 
 xorh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000101 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010101 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010101 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xord [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100101 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100101 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110101 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110101 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-xor {a} to {b}.
-
-xorx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010101 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-xor {a} to {b}.
-
-xord [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100101 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-xor {a} to {b}.
-
-xorq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110101 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-xor {a} to {b}.
-
-xorh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000101 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-xor {a} to {b}.
-
-xorx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010101 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-xor {a} to {b}.
-
-xord [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100101 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-xor {a} to {b}.
-
-xorq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110101 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-xor {a} to {b}.
-
-xorh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000101 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000101 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010101 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010101 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xord [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100101 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100101 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110101 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110101 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+xor {a} to {b}.
+
+xorh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000101 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+xor {a} to {b}.
+
+xorx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010101 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+xor {a} to {b}.
+
+xord [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100101 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+xor {a} to {b}.
+
+xorq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110101 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+xor {a} to {b}.
+
+xorh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000101 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+xor {a} to {b}.
+
+xorx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010101 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+xor {a} to {b}.
+
+xord [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100101 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+xor {a} to {b}.
+
+xorq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110101 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorh [%register_nosize + %register_nosize], %imm
@@ -9737,49 +9737,49 @@ xor {a} to {b}.
 xorh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000101 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010101 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010101 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xord [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100101 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100101 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110101 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110101 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000101 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010101 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010101 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xord [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100101 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100101 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110101 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110101 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorh [%register_nosize + 2 * %register_nosize], %imm
@@ -9873,49 +9873,49 @@ xor {a} to {b}.
 xorh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000101 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010101 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010101 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xord [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100101 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100101 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110101 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110101 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000101 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010101 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010101 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xord [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100101 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100101 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110101 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110101 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorh [%register_nosize + 4 * %register_nosize], %imm
@@ -10009,49 +10009,49 @@ xor {a} to {b}.
 xorh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000101 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010101 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010101 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xord [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100101 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100101 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110101 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110101 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000101 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000101 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 xor {a} to {b}.
 
 xorx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010101 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010101 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xord [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100101 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100101 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110101 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110101 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 xor {a} to {b}.
 
 xorh [%register_nosize + 8 * %register_nosize], %imm
@@ -10144,170 +10144,170 @@ xor {a} to {b}.
 
 xorh %register_hword, [ip + %imm]
 = %b:a
-00000101 aaa10001 ???????? cccccccc
+00000101 aaa10001 xxxxxxxx cccccccc
 xor {a} to {b}.
 
 xorx %register_xword, [ip + %imm]
 = %b:a
-00010101 aaa10001 ???????? cccccccc
+00010101 aaa10001 xxxxxxxx cccccccc
 xor {a} to {b}.
 
 xord %register_dword, [ip + %imm]
 = %b:a
-00100101 aaa10001 ???????? cccccccc
+00100101 aaa10001 xxxxxxxx cccccccc
 xor {a} to {b}.
 
 xorq %register_qword, [ip + %imm]
 = %b:a
-00110101 aaa10001 ???????? cccccccc
+00110101 aaa10001 xxxxxxxx cccccccc
 xor {a} to {b}.
 
 xorh %register_hword, [ip + %imm]
 = %b:ba
-00000101 aaa10001 ???????? cccccccc cccccccc
+00000101 aaa10001 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorx %register_xword, [ip + %imm]
 = %b:ba
-00010101 aaa10001 ???????? cccccccc cccccccc
+00010101 aaa10001 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xord %register_dword, [ip + %imm]
 = %b:ba
-00100101 aaa10001 ???????? cccccccc cccccccc
+00100101 aaa10001 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorq %register_qword, [ip + %imm]
 = %b:ba
-00110101 aaa10001 ???????? cccccccc cccccccc
+00110101 aaa10001 xxxxxxxx cccccccc cccccccc
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize, %register_nosize]
-00000101 aaa11001 00ccc???
+00000101 aaa11001 00cccxxx
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize, %register_nosize]
-00010101 aaa11001 00ccc???
+00010101 aaa11001 00cccxxx
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize, %register_nosize]
-00100101 aaa11001 00ccc???
+00100101 aaa11001 00cccxxx
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize, %register_nosize]
-00110101 aaa11001 00ccc???
+00110101 aaa11001 00cccxxx
 xor {a} to {b}.
 
 xorh [%register_nosize, %register_nosize], %register_hword
-00000101 ccc11101 00bbb???
+00000101 ccc11101 00bbbxxx
 xor {a} to {b}.
 
 xorx [%register_nosize, %register_nosize], %register_xword
-00010101 ccc11101 00bbb???
+00010101 ccc11101 00bbbxxx
 xor {a} to {b}.
 
 xord [%register_nosize, %register_nosize], %register_dword
-00100101 ccc11101 00bbb???
+00100101 ccc11101 00bbbxxx
 xor {a} to {b}.
 
 xorq [%register_nosize, %register_nosize], %register_qword
-00110101 ccc11101 00bbb???
+00110101 ccc11101 00bbbxxx
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000101 aaa11001 01ccc???
+00000101 aaa11001 01cccxxx
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010101 aaa11001 01ccc???
+00010101 aaa11001 01cccxxx
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize, 2 * %register_nosize]
-00100101 aaa11001 01ccc???
+00100101 aaa11001 01cccxxx
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110101 aaa11001 01ccc???
+00110101 aaa11001 01cccxxx
 xor {a} to {b}.
 
 xorh [%register_nosize, 2 * %register_nosize], %register_hword
-00000101 ccc11101 01bbb???
+00000101 ccc11101 01bbbxxx
 xor {a} to {b}.
 
 xorx [%register_nosize, 2 * %register_nosize], %register_xword
-00010101 ccc11101 01bbb???
+00010101 ccc11101 01bbbxxx
 xor {a} to {b}.
 
 xord [%register_nosize, 2 * %register_nosize], %register_dword
-00100101 ccc11101 01bbb???
+00100101 ccc11101 01bbbxxx
 xor {a} to {b}.
 
 xorq [%register_nosize, 2 * %register_nosize], %register_qword
-00110101 ccc11101 01bbb???
+00110101 ccc11101 01bbbxxx
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000101 aaa11001 10ccc???
+00000101 aaa11001 10cccxxx
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010101 aaa11001 10ccc???
+00010101 aaa11001 10cccxxx
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize, 4 * %register_nosize]
-00100101 aaa11001 10ccc???
+00100101 aaa11001 10cccxxx
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110101 aaa11001 10ccc???
+00110101 aaa11001 10cccxxx
 xor {a} to {b}.
 
 xorh [%register_nosize, 4 * %register_nosize], %register_hword
-00000101 ccc11101 10bbb???
+00000101 ccc11101 10bbbxxx
 xor {a} to {b}.
 
 xorx [%register_nosize, 4 * %register_nosize], %register_xword
-00010101 ccc11101 10bbb???
+00010101 ccc11101 10bbbxxx
 xor {a} to {b}.
 
 xord [%register_nosize, 4 * %register_nosize], %register_dword
-00100101 ccc11101 10bbb???
+00100101 ccc11101 10bbbxxx
 xor {a} to {b}.
 
 xorq [%register_nosize, 4 * %register_nosize], %register_qword
-00110101 ccc11101 10bbb???
+00110101 ccc11101 10bbbxxx
 xor {a} to {b}.
 
 xorh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000101 aaa11001 11ccc???
+00000101 aaa11001 11cccxxx
 xor {a} to {b}.
 
 xorx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010101 aaa11001 11ccc???
+00010101 aaa11001 11cccxxx
 xor {a} to {b}.
 
 xord %register_dword, [%register_nosize, 8 * %register_nosize]
-00100101 aaa11001 11ccc???
+00100101 aaa11001 11cccxxx
 xor {a} to {b}.
 
 xorq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110101 aaa11001 11ccc???
+00110101 aaa11001 11cccxxx
 xor {a} to {b}.
 
 xorh [%register_nosize, 8 * %register_nosize], %register_hword
-00000101 ccc11101 11bbb???
+00000101 ccc11101 11bbbxxx
 xor {a} to {b}.
 
 xorx [%register_nosize, 8 * %register_nosize], %register_xword
-00010101 ccc11101 11bbb???
+00010101 ccc11101 11bbbxxx
 xor {a} to {b}.
 
 xord [%register_nosize, 8 * %register_nosize], %register_dword
-00100101 ccc11101 11bbb???
+00100101 ccc11101 11bbbxxx
 xor {a} to {b}.
 
 xorq [%register_nosize, 8 * %register_nosize], %register_qword
-00110101 ccc11101 11bbb???
+00110101 ccc11101 11bbbxxx
 xor {a} to {b}.
 
 xorh %register_hword, %imm
@@ -10343,235 +10343,235 @@ andq %register_qword, %register_qword
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize]
-00000110 aaa00010 ?????bbb
+00000110 aaa00010 xxxxxbbb
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize]
-00010110 aaa00010 ?????bbb
+00010110 aaa00010 xxxxxbbb
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize]
-00100110 aaa00010 ?????bbb
+00100110 aaa00010 xxxxxbbb
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize]
-00110110 aaa00010 ?????bbb
+00110110 aaa00010 xxxxxbbb
 and {a} to {b}.
 
 andh [%register_nosize], %register_hword
-00000110 bbb00011 ?????aaa
+00000110 bbb00011 xxxxxaaa
 and {a} to {b}.
 
 andx [%register_nosize], %register_xword
-00010110 bbb00011 ?????aaa
+00010110 bbb00011 xxxxxaaa
 and {a} to {b}.
 
 andd [%register_nosize], %register_dword
-00100110 bbb00011 ?????aaa
+00100110 bbb00011 xxxxxaaa
 and {a} to {b}.
 
 andq [%register_nosize], %register_qword
-00110110 bbb00011 ?????aaa
+00110110 bbb00011 xxxxxaaa
 and {a} to {b}.
 
 andh %register_hword, [%imm]
 = %b:ba
-00000110 aaa00110 ???????? cccccccc cccccccc
+00000110 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andx %register_xword, [%imm]
 = %b:ba
-00010110 aaa00110 ???????? cccccccc cccccccc
+00010110 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andd %register_dword, [%imm]
 = %b:ba
-00100110 aaa00110 ???????? cccccccc cccccccc
+00100110 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andq %register_qword, [%imm]
 = %b:ba
-00110110 aaa00110 ???????? cccccccc cccccccc
+00110110 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andh [%imm], %register_hword
 = %a:ba
-00000110 bbb00111 ???????? cccccccc cccccccc
+00000110 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andx [%imm], %register_xword
 = %a:ba
-00010110 bbb00111 ???????? cccccccc cccccccc
+00010110 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andd [%imm], %register_dword
 = %a:ba
-00100110 bbb00111 ???????? cccccccc cccccccc
+00100110 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andq [%imm], %register_qword
 = %a:ba
-00110110 bbb00111 ???????? cccccccc cccccccc
+00110110 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000110 aaa01010 ?????bbb dddddddd
+00000110 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010110 aaa01010 ?????bbb dddddddd
+00010110 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100110 aaa01010 ?????bbb dddddddd
+00100110 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110110 aaa01010 ?????bbb dddddddd
+00110110 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}.
 
 andh [%register_nosize + %imm], %register_hword
 = %b:a
-00000110 ccc01011 ?????aaa dddddddd
+00000110 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}.
 
 andx [%register_nosize + %imm], %register_xword
 = %b:a
-00010110 ccc01011 ?????aaa dddddddd
+00010110 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}.
 
 andd [%register_nosize + %imm], %register_dword
 = %b:a
-00100110 ccc01011 ?????aaa dddddddd
+00100110 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}.
 
 andq [%register_nosize + %imm], %register_qword
 = %b:a
-00110110 ccc01011 ?????aaa dddddddd
+00110110 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000110 aaa01110 ?????bbb dddddddd dddddddd
+00000110 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010110 aaa01110 ?????bbb dddddddd dddddddd
+00010110 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100110 aaa01110 ?????bbb dddddddd dddddddd
+00100110 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110110 aaa01110 ?????bbb dddddddd dddddddd
+00110110 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}.
 
 andh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000110 ccc01111 ?????aaa dddddddd dddddddd
+00000110 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}.
 
 andx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010110 ccc01111 ?????aaa dddddddd dddddddd
+00010110 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}.
 
 andd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100110 ccc01111 ?????aaa dddddddd dddddddd
+00100110 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}.
 
 andq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110110 ccc01111 ?????aaa dddddddd dddddddd
+00110110 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000110 aaa10010 00bbb??? dddddddd
+00000110 aaa10010 00bbbxxx dddddddd
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010110 aaa10010 00bbb??? dddddddd
+00010110 aaa10010 00bbbxxx dddddddd
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100110 aaa10010 00bbb??? dddddddd
+00100110 aaa10010 00bbbxxx dddddddd
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110110 aaa10010 00bbb??? dddddddd
+00110110 aaa10010 00bbbxxx dddddddd
 and {a} to {b}.
 
 andh [%register_nosize + %imm], %register_hword
 = %b:a
-00000110 ccc10011 00aaa??? dddddddd
+00000110 ccc10011 00aaaxxx dddddddd
 and {a} to {b}.
 
 andx [%register_nosize + %imm], %register_xword
 = %b:a
-00010110 ccc10011 00aaa??? dddddddd
+00010110 ccc10011 00aaaxxx dddddddd
 and {a} to {b}.
 
 andd [%register_nosize + %imm], %register_dword
 = %b:a
-00100110 ccc10011 00aaa??? dddddddd
+00100110 ccc10011 00aaaxxx dddddddd
 and {a} to {b}.
 
 andq [%register_nosize + %imm], %register_qword
 = %b:a
-00110110 ccc10011 00aaa??? dddddddd
+00110110 ccc10011 00aaaxxx dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000110 aaa10010 00bbb??? dddddddd dddddddd
+00000110 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010110 aaa10010 00bbb??? dddddddd dddddddd
+00010110 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100110 aaa10010 00bbb??? dddddddd dddddddd
+00100110 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110110 aaa10010 00bbb??? dddddddd dddddddd
+00110110 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000110 ccc10011 00aaa??? dddddddd dddddddd
+00000110 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010110 ccc10011 00aaa??? dddddddd dddddddd
+00010110 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100110 ccc10011 00aaa??? dddddddd dddddddd
+00100110 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110110 ccc10011 00aaa??? dddddddd dddddddd
+00110110 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -10656,82 +10656,82 @@ and {a} to {b}.
 
 andh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000110 aaa10010 01bbb??? dddddddd
+00000110 aaa10010 01bbbxxx dddddddd
 and {a} to {b}.
 
 andx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010110 aaa10010 01bbb??? dddddddd
+00010110 aaa10010 01bbbxxx dddddddd
 and {a} to {b}.
 
 andd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100110 aaa10010 01bbb??? dddddddd
+00100110 aaa10010 01bbbxxx dddddddd
 and {a} to {b}.
 
 andq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110110 aaa10010 01bbb??? dddddddd
+00110110 aaa10010 01bbbxxx dddddddd
 and {a} to {b}.
 
 andh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000110 ccc10011 01aaa??? dddddddd
+00000110 ccc10011 01aaaxxx dddddddd
 and {a} to {b}.
 
 andx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010110 ccc10011 01aaa??? dddddddd
+00010110 ccc10011 01aaaxxx dddddddd
 and {a} to {b}.
 
 andd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100110 ccc10011 01aaa??? dddddddd
+00100110 ccc10011 01aaaxxx dddddddd
 and {a} to {b}.
 
 andq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110110 ccc10011 01aaa??? dddddddd
+00110110 ccc10011 01aaaxxx dddddddd
 and {a} to {b}.
 
 andh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000110 aaa10010 01bbb??? dddddddd dddddddd
+00000110 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010110 aaa10010 01bbb??? dddddddd dddddddd
+00010110 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100110 aaa10010 01bbb??? dddddddd dddddddd
+00100110 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110110 aaa10010 01bbb??? dddddddd dddddddd
+00110110 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000110 ccc10011 01aaa??? dddddddd dddddddd
+00000110 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010110 ccc10011 01aaa??? dddddddd dddddddd
+00010110 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100110 ccc10011 01aaa??? dddddddd dddddddd
+00100110 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110110 ccc10011 01aaa??? dddddddd dddddddd
+00110110 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -10816,82 +10816,82 @@ and {a} to {b}.
 
 andh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000110 aaa10010 10bbb??? dddddddd
+00000110 aaa10010 10bbbxxx dddddddd
 and {a} to {b}.
 
 andx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010110 aaa10010 10bbb??? dddddddd
+00010110 aaa10010 10bbbxxx dddddddd
 and {a} to {b}.
 
 andd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100110 aaa10010 10bbb??? dddddddd
+00100110 aaa10010 10bbbxxx dddddddd
 and {a} to {b}.
 
 andq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110110 aaa10010 10bbb??? dddddddd
+00110110 aaa10010 10bbbxxx dddddddd
 and {a} to {b}.
 
 andh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000110 ccc10011 10aaa??? dddddddd
+00000110 ccc10011 10aaaxxx dddddddd
 and {a} to {b}.
 
 andx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010110 ccc10011 10aaa??? dddddddd
+00010110 ccc10011 10aaaxxx dddddddd
 and {a} to {b}.
 
 andd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100110 ccc10011 10aaa??? dddddddd
+00100110 ccc10011 10aaaxxx dddddddd
 and {a} to {b}.
 
 andq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110110 ccc10011 10aaa??? dddddddd
+00110110 ccc10011 10aaaxxx dddddddd
 and {a} to {b}.
 
 andh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000110 aaa10010 10bbb??? dddddddd dddddddd
+00000110 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010110 aaa10010 10bbb??? dddddddd dddddddd
+00010110 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100110 aaa10010 10bbb??? dddddddd dddddddd
+00100110 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110110 aaa10010 10bbb??? dddddddd dddddddd
+00110110 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000110 ccc10011 10aaa??? dddddddd dddddddd
+00000110 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010110 ccc10011 10aaa??? dddddddd dddddddd
+00010110 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100110 ccc10011 10aaa??? dddddddd dddddddd
+00100110 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110110 ccc10011 10aaa??? dddddddd dddddddd
+00110110 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -10976,82 +10976,82 @@ and {a} to {b}.
 
 andh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000110 aaa10010 11bbb??? dddddddd
+00000110 aaa10010 11bbbxxx dddddddd
 and {a} to {b}.
 
 andx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010110 aaa10010 11bbb??? dddddddd
+00010110 aaa10010 11bbbxxx dddddddd
 and {a} to {b}.
 
 andd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100110 aaa10010 11bbb??? dddddddd
+00100110 aaa10010 11bbbxxx dddddddd
 and {a} to {b}.
 
 andq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110110 aaa10010 11bbb??? dddddddd
+00110110 aaa10010 11bbbxxx dddddddd
 and {a} to {b}.
 
 andh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000110 ccc10011 11aaa??? dddddddd
+00000110 ccc10011 11aaaxxx dddddddd
 and {a} to {b}.
 
 andx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010110 ccc10011 11aaa??? dddddddd
+00010110 ccc10011 11aaaxxx dddddddd
 and {a} to {b}.
 
 andd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100110 ccc10011 11aaa??? dddddddd
+00100110 ccc10011 11aaaxxx dddddddd
 and {a} to {b}.
 
 andq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110110 ccc10011 11aaa??? dddddddd
+00110110 ccc10011 11aaaxxx dddddddd
 and {a} to {b}.
 
 andh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000110 aaa10010 11bbb??? dddddddd dddddddd
+00000110 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010110 aaa10010 11bbb??? dddddddd dddddddd
+00010110 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100110 aaa10010 11bbb??? dddddddd dddddddd
+00100110 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110110 aaa10010 11bbb??? dddddddd dddddddd
+00110110 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000110 ccc10011 11aaa??? dddddddd dddddddd
+00000110 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010110 ccc10011 11aaa??? dddddddd dddddddd
+00010110 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100110 ccc10011 11aaa??? dddddddd dddddddd
+00100110 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110110 ccc10011 11aaa??? dddddddd dddddddd
+00110110 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -11177,185 +11177,185 @@ and {a} to {b}.
 andh [%imm], %imm
 = %a:ba
 = %b:a
-00000110 00100001 ???????? cccccccc cccccccc dddddddd
+00000110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}.
 
 andx [%imm], %imm
 = %a:ba
 = %b:a
-00010110 00100001 ???????? cccccccc cccccccc dddddddd
+00010110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}.
 
 andd [%imm], %imm
 = %a:ba
 = %b:a
-00100110 00100001 ???????? cccccccc cccccccc dddddddd
+00100110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}.
 
 andq [%imm], %imm
 = %a:ba
 = %b:a
-00110110 00100001 ???????? cccccccc cccccccc dddddddd
+00110110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}.
 
 andh [%imm], %imm
 = %a:ba
 = %b:a
-00000110 00100101 ???????? cccccccc cccccccc dddddddd
+00000110 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}.
 
 andx [%imm], %imm
 = %a:ba
 = %b:ba
-00010110 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010110 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 and {a} to {b}.
 
 andd [%imm], %imm
 = %a:ba
 = %b:dcba
-00100110 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100110 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 and {a} to {b}.
 
 andq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110110 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110110 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 and {a} to {b}.
 
 andh [%register_nosize], %imm
 = %b:a
-00000110 01000001 ?????aaa cccccccc
+00000110 01000001 xxxxxaaa cccccccc
 and {a} to {b}.
 
 andx [%register_nosize], %imm
 = %b:a
-00010110 01000001 ?????aaa cccccccc
+00010110 01000001 xxxxxaaa cccccccc
 and {a} to {b}.
 
 andd [%register_nosize], %imm
 = %b:a
-00100110 01000001 ?????aaa cccccccc
+00100110 01000001 xxxxxaaa cccccccc
 and {a} to {b}.
 
 andq [%register_nosize], %imm
 = %b:a
-00110110 01000001 ?????aaa cccccccc
+00110110 01000001 xxxxxaaa cccccccc
 and {a} to {b}.
 
 andh [%register_nosize], %imm
 = %b:a
-00000110 01000101 ?????aaa cccccccc
+00000110 01000101 xxxxxaaa cccccccc
 and {a} to {b}.
 
 andx [%register_nosize], %imm
 = %b:ba
-00010110 01000101 ?????aaa cccccccc cccccccc
+00010110 01000101 xxxxxaaa cccccccc cccccccc
 and {a} to {b}.
 
 andd [%register_nosize], %imm
 = %b:dcba
-00100110 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100110 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 and {a} to {b}.
 
 andq [%register_nosize], %imm
 = %b:hgfedcba
-00110110 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110110 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 and {a} to {b}.
 
 andh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-and {a} to {b}.
-
-andx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010110 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-and {a} to {b}.
-
-andd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100110 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-and {a} to {b}.
-
-andq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110110 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-and {a} to {b}.
-
-andh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}.
-
-andx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}.
-
-andd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}.
-
-andq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}.
-
-andh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000110 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010110 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100110 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110110 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+and {a} to {b}.
+
+andh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}.
+
+andx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}.
+
+andd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}.
+
+andq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}.
+
+andh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}.
+
+andx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+and {a} to {b}.
+
+andd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+and {a} to {b}.
+
+andq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andh [%register_nosize + %register_nosize], %imm
@@ -11449,49 +11449,49 @@ and {a} to {b}.
 andh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010110 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100110 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110110 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andh [%register_nosize + 2 * %register_nosize], %imm
@@ -11585,49 +11585,49 @@ and {a} to {b}.
 andh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010110 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100110 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110110 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andh [%register_nosize + 4 * %register_nosize], %imm
@@ -11721,49 +11721,49 @@ and {a} to {b}.
 andh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000110 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}.
 
 andx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010110 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100110 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110110 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}.
 
 andh [%register_nosize + 8 * %register_nosize], %imm
@@ -11856,170 +11856,170 @@ and {a} to {b}.
 
 andh %register_hword, [ip + %imm]
 = %b:a
-00000110 aaa10001 ???????? cccccccc
+00000110 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}.
 
 andx %register_xword, [ip + %imm]
 = %b:a
-00010110 aaa10001 ???????? cccccccc
+00010110 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}.
 
 andd %register_dword, [ip + %imm]
 = %b:a
-00100110 aaa10001 ???????? cccccccc
+00100110 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}.
 
 andq %register_qword, [ip + %imm]
 = %b:a
-00110110 aaa10001 ???????? cccccccc
+00110110 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}.
 
 andh %register_hword, [ip + %imm]
 = %b:ba
-00000110 aaa10001 ???????? cccccccc cccccccc
+00000110 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andx %register_xword, [ip + %imm]
 = %b:ba
-00010110 aaa10001 ???????? cccccccc cccccccc
+00010110 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andd %register_dword, [ip + %imm]
 = %b:ba
-00100110 aaa10001 ???????? cccccccc cccccccc
+00100110 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andq %register_qword, [ip + %imm]
 = %b:ba
-00110110 aaa10001 ???????? cccccccc cccccccc
+00110110 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize, %register_nosize]
-00000110 aaa11001 00ccc???
+00000110 aaa11001 00cccxxx
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize, %register_nosize]
-00010110 aaa11001 00ccc???
+00010110 aaa11001 00cccxxx
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize, %register_nosize]
-00100110 aaa11001 00ccc???
+00100110 aaa11001 00cccxxx
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize, %register_nosize]
-00110110 aaa11001 00ccc???
+00110110 aaa11001 00cccxxx
 and {a} to {b}.
 
 andh [%register_nosize, %register_nosize], %register_hword
-00000110 ccc11101 00bbb???
+00000110 ccc11101 00bbbxxx
 and {a} to {b}.
 
 andx [%register_nosize, %register_nosize], %register_xword
-00010110 ccc11101 00bbb???
+00010110 ccc11101 00bbbxxx
 and {a} to {b}.
 
 andd [%register_nosize, %register_nosize], %register_dword
-00100110 ccc11101 00bbb???
+00100110 ccc11101 00bbbxxx
 and {a} to {b}.
 
 andq [%register_nosize, %register_nosize], %register_qword
-00110110 ccc11101 00bbb???
+00110110 ccc11101 00bbbxxx
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000110 aaa11001 01ccc???
+00000110 aaa11001 01cccxxx
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010110 aaa11001 01ccc???
+00010110 aaa11001 01cccxxx
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize, 2 * %register_nosize]
-00100110 aaa11001 01ccc???
+00100110 aaa11001 01cccxxx
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110110 aaa11001 01ccc???
+00110110 aaa11001 01cccxxx
 and {a} to {b}.
 
 andh [%register_nosize, 2 * %register_nosize], %register_hword
-00000110 ccc11101 01bbb???
+00000110 ccc11101 01bbbxxx
 and {a} to {b}.
 
 andx [%register_nosize, 2 * %register_nosize], %register_xword
-00010110 ccc11101 01bbb???
+00010110 ccc11101 01bbbxxx
 and {a} to {b}.
 
 andd [%register_nosize, 2 * %register_nosize], %register_dword
-00100110 ccc11101 01bbb???
+00100110 ccc11101 01bbbxxx
 and {a} to {b}.
 
 andq [%register_nosize, 2 * %register_nosize], %register_qword
-00110110 ccc11101 01bbb???
+00110110 ccc11101 01bbbxxx
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000110 aaa11001 10ccc???
+00000110 aaa11001 10cccxxx
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010110 aaa11001 10ccc???
+00010110 aaa11001 10cccxxx
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize, 4 * %register_nosize]
-00100110 aaa11001 10ccc???
+00100110 aaa11001 10cccxxx
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110110 aaa11001 10ccc???
+00110110 aaa11001 10cccxxx
 and {a} to {b}.
 
 andh [%register_nosize, 4 * %register_nosize], %register_hword
-00000110 ccc11101 10bbb???
+00000110 ccc11101 10bbbxxx
 and {a} to {b}.
 
 andx [%register_nosize, 4 * %register_nosize], %register_xword
-00010110 ccc11101 10bbb???
+00010110 ccc11101 10bbbxxx
 and {a} to {b}.
 
 andd [%register_nosize, 4 * %register_nosize], %register_dword
-00100110 ccc11101 10bbb???
+00100110 ccc11101 10bbbxxx
 and {a} to {b}.
 
 andq [%register_nosize, 4 * %register_nosize], %register_qword
-00110110 ccc11101 10bbb???
+00110110 ccc11101 10bbbxxx
 and {a} to {b}.
 
 andh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000110 aaa11001 11ccc???
+00000110 aaa11001 11cccxxx
 and {a} to {b}.
 
 andx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010110 aaa11001 11ccc???
+00010110 aaa11001 11cccxxx
 and {a} to {b}.
 
 andd %register_dword, [%register_nosize, 8 * %register_nosize]
-00100110 aaa11001 11ccc???
+00100110 aaa11001 11cccxxx
 and {a} to {b}.
 
 andq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110110 aaa11001 11ccc???
+00110110 aaa11001 11cccxxx
 and {a} to {b}.
 
 andh [%register_nosize, 8 * %register_nosize], %register_hword
-00000110 ccc11101 11bbb???
+00000110 ccc11101 11bbbxxx
 and {a} to {b}.
 
 andx [%register_nosize, 8 * %register_nosize], %register_xword
-00010110 ccc11101 11bbb???
+00010110 ccc11101 11bbbxxx
 and {a} to {b}.
 
 andd [%register_nosize, 8 * %register_nosize], %register_dword
-00100110 ccc11101 11bbb???
+00100110 ccc11101 11bbbxxx
 and {a} to {b}.
 
 andq [%register_nosize, 8 * %register_nosize], %register_qword
-00110110 ccc11101 11bbb???
+00110110 ccc11101 11bbbxxx
 and {a} to {b}.
 
 andh %register_hword, %imm
@@ -12055,235 +12055,235 @@ testq %register_qword, %register_qword
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize]
-00000111 aaa00010 ?????bbb
+00000111 aaa00010 xxxxxbbb
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize]
-00010111 aaa00010 ?????bbb
+00010111 aaa00010 xxxxxbbb
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize]
-00100111 aaa00010 ?????bbb
+00100111 aaa00010 xxxxxbbb
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize]
-00110111 aaa00010 ?????bbb
+00110111 aaa00010 xxxxxbbb
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize], %register_hword
-00000111 bbb00011 ?????aaa
+00000111 bbb00011 xxxxxaaa
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize], %register_xword
-00010111 bbb00011 ?????aaa
+00010111 bbb00011 xxxxxaaa
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize], %register_dword
-00100111 bbb00011 ?????aaa
+00100111 bbb00011 xxxxxaaa
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize], %register_qword
-00110111 bbb00011 ?????aaa
+00110111 bbb00011 xxxxxaaa
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%imm]
 = %b:ba
-00000111 aaa00110 ???????? cccccccc cccccccc
+00000111 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%imm]
 = %b:ba
-00010111 aaa00110 ???????? cccccccc cccccccc
+00010111 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%imm]
 = %b:ba
-00100111 aaa00110 ???????? cccccccc cccccccc
+00100111 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%imm]
 = %b:ba
-00110111 aaa00110 ???????? cccccccc cccccccc
+00110111 aaa00110 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testh [%imm], %register_hword
 = %a:ba
-00000111 bbb00111 ???????? cccccccc cccccccc
+00000111 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testx [%imm], %register_xword
 = %a:ba
-00010111 bbb00111 ???????? cccccccc cccccccc
+00010111 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testd [%imm], %register_dword
 = %a:ba
-00100111 bbb00111 ???????? cccccccc cccccccc
+00100111 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testq [%imm], %register_qword
 = %a:ba
-00110111 bbb00111 ???????? cccccccc cccccccc
+00110111 bbb00111 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000111 aaa01010 ?????bbb dddddddd
+00000111 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010111 aaa01010 ?????bbb dddddddd
+00010111 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100111 aaa01010 ?????bbb dddddddd
+00100111 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110111 aaa01010 ?????bbb dddddddd
+00110111 aaa01010 xxxxxbbb dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %imm], %register_hword
 = %b:a
-00000111 ccc01011 ?????aaa dddddddd
+00000111 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize + %imm], %register_xword
 = %b:a
-00010111 ccc01011 ?????aaa dddddddd
+00010111 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize + %imm], %register_dword
 = %b:a
-00100111 ccc01011 ?????aaa dddddddd
+00100111 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize + %imm], %register_qword
 = %b:a
-00110111 ccc01011 ?????aaa dddddddd
+00110111 ccc01011 xxxxxaaa dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000111 aaa01110 ?????bbb dddddddd dddddddd
+00000111 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010111 aaa01110 ?????bbb dddddddd dddddddd
+00010111 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100111 aaa01110 ?????bbb dddddddd dddddddd
+00100111 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110111 aaa01110 ?????bbb dddddddd dddddddd
+00110111 aaa01110 xxxxxbbb dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000111 ccc01111 ?????aaa dddddddd dddddddd
+00000111 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010111 ccc01111 ?????aaa dddddddd dddddddd
+00010111 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100111 ccc01111 ?????aaa dddddddd dddddddd
+00100111 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110111 ccc01111 ?????aaa dddddddd dddddddd
+00110111 ccc01111 xxxxxaaa dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + %imm]
 = %c:a
-00000111 aaa10010 00bbb??? dddddddd
+00000111 aaa10010 00bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize + %imm]
 = %c:a
-00010111 aaa10010 00bbb??? dddddddd
+00010111 aaa10010 00bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize + %imm]
 = %c:a
-00100111 aaa10010 00bbb??? dddddddd
+00100111 aaa10010 00bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize + %imm]
 = %c:a
-00110111 aaa10010 00bbb??? dddddddd
+00110111 aaa10010 00bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %imm], %register_hword
 = %b:a
-00000111 ccc10011 00aaa??? dddddddd
+00000111 ccc10011 00aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize + %imm], %register_xword
 = %b:a
-00010111 ccc10011 00aaa??? dddddddd
+00010111 ccc10011 00aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize + %imm], %register_dword
 = %b:a
-00100111 ccc10011 00aaa??? dddddddd
+00100111 ccc10011 00aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize + %imm], %register_qword
 = %b:a
-00110111 ccc10011 00aaa??? dddddddd
+00110111 ccc10011 00aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00000111 aaa10010 00bbb??? dddddddd dddddddd
+00000111 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00010111 aaa10010 00bbb??? dddddddd dddddddd
+00010111 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00100111 aaa10010 00bbb??? dddddddd dddddddd
+00100111 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00110111 aaa10010 00bbb??? dddddddd dddddddd
+00110111 aaa10010 00bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %imm], %register_hword
 = %b:ba
-00000111 ccc10011 00aaa??? dddddddd dddddddd
+00000111 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize + %imm], %register_xword
 = %b:ba
-00010111 ccc10011 00aaa??? dddddddd dddddddd
+00010111 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize + %imm], %register_dword
 = %b:ba
-00100111 ccc10011 00aaa??? dddddddd dddddddd
+00100111 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize + %imm], %register_qword
 = %b:ba
-00110111 ccc10011 00aaa??? dddddddd dddddddd
+00110111 ccc10011 00aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -12368,82 +12368,82 @@ and {a} to {b}, throwing away the result.
 
 testh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00000111 aaa10010 01bbb??? dddddddd
+00000111 aaa10010 01bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00010111 aaa10010 01bbb??? dddddddd
+00010111 aaa10010 01bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00100111 aaa10010 01bbb??? dddddddd
+00100111 aaa10010 01bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00110111 aaa10010 01bbb??? dddddddd
+00110111 aaa10010 01bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00000111 ccc10011 01aaa??? dddddddd
+00000111 ccc10011 01aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00010111 ccc10011 01aaa??? dddddddd
+00010111 ccc10011 01aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00100111 ccc10011 01aaa??? dddddddd
+00100111 ccc10011 01aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00110111 ccc10011 01aaa??? dddddddd
+00110111 ccc10011 01aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00000111 aaa10010 01bbb??? dddddddd dddddddd
+00000111 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00010111 aaa10010 01bbb??? dddddddd dddddddd
+00010111 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00100111 aaa10010 01bbb??? dddddddd dddddddd
+00100111 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00110111 aaa10010 01bbb??? dddddddd dddddddd
+00110111 aaa10010 01bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000111 ccc10011 01aaa??? dddddddd dddddddd
+00000111 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010111 ccc10011 01aaa??? dddddddd dddddddd
+00010111 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100111 ccc10011 01aaa??? dddddddd dddddddd
+00100111 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110111 ccc10011 01aaa??? dddddddd dddddddd
+00110111 ccc10011 01aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -12528,82 +12528,82 @@ and {a} to {b}, throwing away the result.
 
 testh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00000111 aaa10010 10bbb??? dddddddd
+00000111 aaa10010 10bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00010111 aaa10010 10bbb??? dddddddd
+00010111 aaa10010 10bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00100111 aaa10010 10bbb??? dddddddd
+00100111 aaa10010 10bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00110111 aaa10010 10bbb??? dddddddd
+00110111 aaa10010 10bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00000111 ccc10011 10aaa??? dddddddd
+00000111 ccc10011 10aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00010111 ccc10011 10aaa??? dddddddd
+00010111 ccc10011 10aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00100111 ccc10011 10aaa??? dddddddd
+00100111 ccc10011 10aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00110111 ccc10011 10aaa??? dddddddd
+00110111 ccc10011 10aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00000111 aaa10010 10bbb??? dddddddd dddddddd
+00000111 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00010111 aaa10010 10bbb??? dddddddd dddddddd
+00010111 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00100111 aaa10010 10bbb??? dddddddd dddddddd
+00100111 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00110111 aaa10010 10bbb??? dddddddd dddddddd
+00110111 aaa10010 10bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000111 ccc10011 10aaa??? dddddddd dddddddd
+00000111 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010111 ccc10011 10aaa??? dddddddd dddddddd
+00010111 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100111 ccc10011 10aaa??? dddddddd dddddddd
+00100111 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110111 ccc10011 10aaa??? dddddddd dddddddd
+00110111 ccc10011 10aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -12688,82 +12688,82 @@ and {a} to {b}, throwing away the result.
 
 testh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00000111 aaa10010 11bbb??? dddddddd
+00000111 aaa10010 11bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00010111 aaa10010 11bbb??? dddddddd
+00010111 aaa10010 11bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00100111 aaa10010 11bbb??? dddddddd
+00100111 aaa10010 11bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00110111 aaa10010 11bbb??? dddddddd
+00110111 aaa10010 11bbbxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00000111 ccc10011 11aaa??? dddddddd
+00000111 ccc10011 11aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00010111 ccc10011 11aaa??? dddddddd
+00010111 ccc10011 11aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00100111 ccc10011 11aaa??? dddddddd
+00100111 ccc10011 11aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00110111 ccc10011 11aaa??? dddddddd
+00110111 ccc10011 11aaaxxx dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00000111 aaa10010 11bbb??? dddddddd dddddddd
+00000111 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00010111 aaa10010 11bbb??? dddddddd dddddddd
+00010111 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00100111 aaa10010 11bbb??? dddddddd dddddddd
+00100111 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00110111 aaa10010 11bbb??? dddddddd dddddddd
+00110111 aaa10010 11bbbxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00000111 ccc10011 11aaa??? dddddddd dddddddd
+00000111 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00010111 ccc10011 11aaa??? dddddddd dddddddd
+00010111 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00100111 ccc10011 11aaa??? dddddddd dddddddd
+00100111 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00110111 ccc10011 11aaa??? dddddddd dddddddd
+00110111 ccc10011 11aaaxxx dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -12889,185 +12889,185 @@ and {a} to {b}, throwing away the result.
 testh [%imm], %imm
 = %a:ba
 = %b:a
-00000111 00100001 ???????? cccccccc cccccccc dddddddd
+00000111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [%imm], %imm
 = %a:ba
 = %b:a
-00010111 00100001 ???????? cccccccc cccccccc dddddddd
+00010111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [%imm], %imm
 = %a:ba
 = %b:a
-00100111 00100001 ???????? cccccccc cccccccc dddddddd
+00100111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [%imm], %imm
 = %a:ba
 = %b:a
-00110111 00100001 ???????? cccccccc cccccccc dddddddd
+00110111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [%imm], %imm
 = %a:ba
 = %b:a
-00000111 00100101 ???????? cccccccc cccccccc dddddddd
+00000111 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 and {a} to {b}, throwing away the result.
 
 testx [%imm], %imm
 = %a:ba
 = %b:ba
-00010111 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00010111 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testd [%imm], %imm
 = %a:ba
 = %b:dcba
-00100111 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00100111 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00110111 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00110111 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize], %imm
 = %b:a
-00000111 01000001 ?????aaa cccccccc
+00000111 01000001 xxxxxaaa cccccccc
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize], %imm
 = %b:a
-00010111 01000001 ?????aaa cccccccc
+00010111 01000001 xxxxxaaa cccccccc
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize], %imm
 = %b:a
-00100111 01000001 ?????aaa cccccccc
+00100111 01000001 xxxxxaaa cccccccc
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize], %imm
 = %b:a
-00110111 01000001 ?????aaa cccccccc
+00110111 01000001 xxxxxaaa cccccccc
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize], %imm
 = %b:a
-00000111 01000101 ?????aaa cccccccc
+00000111 01000101 xxxxxaaa cccccccc
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize], %imm
 = %b:ba
-00010111 01000101 ?????aaa cccccccc cccccccc
+00010111 01000101 xxxxxaaa cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize], %imm
 = %b:dcba
-00100111 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00100111 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize], %imm
 = %b:hgfedcba
-00110111 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00110111 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00000111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00010111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00100111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00110111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00010111 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00100111 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00110111 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00010111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00100111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00110111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-and {a} to {b}, throwing away the result.
-
-testh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00000111 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00000111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010111 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100111 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110111 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00010111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00100111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00110111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00000111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00010111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00100111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+and {a} to {b}, throwing away the result.
+
+testq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00110111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + %register_nosize], %imm
@@ -13161,49 +13161,49 @@ and {a} to {b}, throwing away the result.
 testh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00000111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00010111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00100111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00110111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00000111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010111 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100111 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110111 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + 2 * %register_nosize], %imm
@@ -13297,49 +13297,49 @@ and {a} to {b}, throwing away the result.
 testh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00000111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00010111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00100111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00110111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00000111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010111 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100111 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110111 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + 4 * %register_nosize], %imm
@@ -13433,49 +13433,49 @@ and {a} to {b}, throwing away the result.
 testh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00000111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00010111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00010111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00100111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00100111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00110111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00110111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00000111 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00000111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00010111 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00010111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00100111 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00100111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00110111 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00110111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize + 8 * %register_nosize], %imm
@@ -13568,170 +13568,170 @@ and {a} to {b}, throwing away the result.
 
 testh %register_hword, [ip + %imm]
 = %b:a
-00000111 aaa10001 ???????? cccccccc
+00000111 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [ip + %imm]
 = %b:a
-00010111 aaa10001 ???????? cccccccc
+00010111 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [ip + %imm]
 = %b:a
-00100111 aaa10001 ???????? cccccccc
+00100111 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [ip + %imm]
 = %b:a
-00110111 aaa10001 ???????? cccccccc
+00110111 aaa10001 xxxxxxxx cccccccc
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [ip + %imm]
 = %b:ba
-00000111 aaa10001 ???????? cccccccc cccccccc
+00000111 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [ip + %imm]
 = %b:ba
-00010111 aaa10001 ???????? cccccccc cccccccc
+00010111 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [ip + %imm]
 = %b:ba
-00100111 aaa10001 ???????? cccccccc cccccccc
+00100111 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [ip + %imm]
 = %b:ba
-00110111 aaa10001 ???????? cccccccc cccccccc
+00110111 aaa10001 xxxxxxxx cccccccc cccccccc
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize, %register_nosize]
-00000111 aaa11001 00ccc???
+00000111 aaa11001 00cccxxx
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize, %register_nosize]
-00010111 aaa11001 00ccc???
+00010111 aaa11001 00cccxxx
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize, %register_nosize]
-00100111 aaa11001 00ccc???
+00100111 aaa11001 00cccxxx
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize, %register_nosize]
-00110111 aaa11001 00ccc???
+00110111 aaa11001 00cccxxx
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize, %register_nosize], %register_hword
-00000111 ccc11101 00bbb???
+00000111 ccc11101 00bbbxxx
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize, %register_nosize], %register_xword
-00010111 ccc11101 00bbb???
+00010111 ccc11101 00bbbxxx
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize, %register_nosize], %register_dword
-00100111 ccc11101 00bbb???
+00100111 ccc11101 00bbbxxx
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize, %register_nosize], %register_qword
-00110111 ccc11101 00bbb???
+00110111 ccc11101 00bbbxxx
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize, 2 * %register_nosize]
-00000111 aaa11001 01ccc???
+00000111 aaa11001 01cccxxx
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize, 2 * %register_nosize]
-00010111 aaa11001 01ccc???
+00010111 aaa11001 01cccxxx
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize, 2 * %register_nosize]
-00100111 aaa11001 01ccc???
+00100111 aaa11001 01cccxxx
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize, 2 * %register_nosize]
-00110111 aaa11001 01ccc???
+00110111 aaa11001 01cccxxx
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize, 2 * %register_nosize], %register_hword
-00000111 ccc11101 01bbb???
+00000111 ccc11101 01bbbxxx
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize, 2 * %register_nosize], %register_xword
-00010111 ccc11101 01bbb???
+00010111 ccc11101 01bbbxxx
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize, 2 * %register_nosize], %register_dword
-00100111 ccc11101 01bbb???
+00100111 ccc11101 01bbbxxx
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize, 2 * %register_nosize], %register_qword
-00110111 ccc11101 01bbb???
+00110111 ccc11101 01bbbxxx
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize, 4 * %register_nosize]
-00000111 aaa11001 10ccc???
+00000111 aaa11001 10cccxxx
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize, 4 * %register_nosize]
-00010111 aaa11001 10ccc???
+00010111 aaa11001 10cccxxx
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize, 4 * %register_nosize]
-00100111 aaa11001 10ccc???
+00100111 aaa11001 10cccxxx
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize, 4 * %register_nosize]
-00110111 aaa11001 10ccc???
+00110111 aaa11001 10cccxxx
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize, 4 * %register_nosize], %register_hword
-00000111 ccc11101 10bbb???
+00000111 ccc11101 10bbbxxx
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize, 4 * %register_nosize], %register_xword
-00010111 ccc11101 10bbb???
+00010111 ccc11101 10bbbxxx
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize, 4 * %register_nosize], %register_dword
-00100111 ccc11101 10bbb???
+00100111 ccc11101 10bbbxxx
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize, 4 * %register_nosize], %register_qword
-00110111 ccc11101 10bbb???
+00110111 ccc11101 10bbbxxx
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, [%register_nosize, 8 * %register_nosize]
-00000111 aaa11001 11ccc???
+00000111 aaa11001 11cccxxx
 and {a} to {b}, throwing away the result.
 
 testx %register_xword, [%register_nosize, 8 * %register_nosize]
-00010111 aaa11001 11ccc???
+00010111 aaa11001 11cccxxx
 and {a} to {b}, throwing away the result.
 
 testd %register_dword, [%register_nosize, 8 * %register_nosize]
-00100111 aaa11001 11ccc???
+00100111 aaa11001 11cccxxx
 and {a} to {b}, throwing away the result.
 
 testq %register_qword, [%register_nosize, 8 * %register_nosize]
-00110111 aaa11001 11ccc???
+00110111 aaa11001 11cccxxx
 and {a} to {b}, throwing away the result.
 
 testh [%register_nosize, 8 * %register_nosize], %register_hword
-00000111 ccc11101 11bbb???
+00000111 ccc11101 11bbbxxx
 and {a} to {b}, throwing away the result.
 
 testx [%register_nosize, 8 * %register_nosize], %register_xword
-00010111 ccc11101 11bbb???
+00010111 ccc11101 11bbbxxx
 and {a} to {b}, throwing away the result.
 
 testd [%register_nosize, 8 * %register_nosize], %register_dword
-00100111 ccc11101 11bbb???
+00100111 ccc11101 11bbbxxx
 and {a} to {b}, throwing away the result.
 
 testq [%register_nosize, 8 * %register_nosize], %register_qword
-00110111 ccc11101 11bbb???
+00110111 ccc11101 11bbbxxx
 and {a} to {b}, throwing away the result.
 
 testh %register_hword, %imm
@@ -13767,235 +13767,235 @@ movzq %register_qword, %register_qword
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize]
-00001000 aaa00010 ?????bbb
+00001000 aaa00010 xxxxxbbb
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize]
-00011000 aaa00010 ?????bbb
+00011000 aaa00010 xxxxxbbb
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize]
-00101000 aaa00010 ?????bbb
+00101000 aaa00010 xxxxxbbb
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize]
-00111000 aaa00010 ?????bbb
+00111000 aaa00010 xxxxxbbb
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize], %register_hword
-00001000 bbb00011 ?????aaa
+00001000 bbb00011 xxxxxaaa
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize], %register_xword
-00011000 bbb00011 ?????aaa
+00011000 bbb00011 xxxxxaaa
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize], %register_dword
-00101000 bbb00011 ?????aaa
+00101000 bbb00011 xxxxxaaa
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize], %register_qword
-00111000 bbb00011 ?????aaa
+00111000 bbb00011 xxxxxaaa
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%imm]
 = %b:ba
-00001000 aaa00110 ???????? cccccccc cccccccc
+00001000 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%imm]
 = %b:ba
-00011000 aaa00110 ???????? cccccccc cccccccc
+00011000 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%imm]
 = %b:ba
-00101000 aaa00110 ???????? cccccccc cccccccc
+00101000 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%imm]
 = %b:ba
-00111000 aaa00110 ???????? cccccccc cccccccc
+00111000 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzh [%imm], %register_hword
 = %a:ba
-00001000 bbb00111 ???????? cccccccc cccccccc
+00001000 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzx [%imm], %register_xword
 = %a:ba
-00011000 bbb00111 ???????? cccccccc cccccccc
+00011000 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzd [%imm], %register_dword
 = %a:ba
-00101000 bbb00111 ???????? cccccccc cccccccc
+00101000 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzq [%imm], %register_qword
 = %a:ba
-00111000 bbb00111 ???????? cccccccc cccccccc
+00111000 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001000 aaa01010 ?????bbb dddddddd
+00001000 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011000 aaa01010 ?????bbb dddddddd
+00011000 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101000 aaa01010 ?????bbb dddddddd
+00101000 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111000 aaa01010 ?????bbb dddddddd
+00111000 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %imm], %register_hword
 = %b:a
-00001000 ccc01011 ?????aaa dddddddd
+00001000 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize + %imm], %register_xword
 = %b:a
-00011000 ccc01011 ?????aaa dddddddd
+00011000 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize + %imm], %register_dword
 = %b:a
-00101000 ccc01011 ?????aaa dddddddd
+00101000 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize + %imm], %register_qword
 = %b:a
-00111000 ccc01011 ?????aaa dddddddd
+00111000 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001000 aaa01110 ?????bbb dddddddd dddddddd
+00001000 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011000 aaa01110 ?????bbb dddddddd dddddddd
+00011000 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101000 aaa01110 ?????bbb dddddddd dddddddd
+00101000 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111000 aaa01110 ?????bbb dddddddd dddddddd
+00111000 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001000 ccc01111 ?????aaa dddddddd dddddddd
+00001000 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011000 ccc01111 ?????aaa dddddddd dddddddd
+00011000 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101000 ccc01111 ?????aaa dddddddd dddddddd
+00101000 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111000 ccc01111 ?????aaa dddddddd dddddddd
+00111000 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001000 aaa10010 00bbb??? dddddddd
+00001000 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011000 aaa10010 00bbb??? dddddddd
+00011000 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101000 aaa10010 00bbb??? dddddddd
+00101000 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111000 aaa10010 00bbb??? dddddddd
+00111000 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %imm], %register_hword
 = %b:a
-00001000 ccc10011 00aaa??? dddddddd
+00001000 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize + %imm], %register_xword
 = %b:a
-00011000 ccc10011 00aaa??? dddddddd
+00011000 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize + %imm], %register_dword
 = %b:a
-00101000 ccc10011 00aaa??? dddddddd
+00101000 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize + %imm], %register_qword
 = %b:a
-00111000 ccc10011 00aaa??? dddddddd
+00111000 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001000 aaa10010 00bbb??? dddddddd dddddddd
+00001000 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011000 aaa10010 00bbb??? dddddddd dddddddd
+00011000 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101000 aaa10010 00bbb??? dddddddd dddddddd
+00101000 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111000 aaa10010 00bbb??? dddddddd dddddddd
+00111000 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001000 ccc10011 00aaa??? dddddddd dddddddd
+00001000 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011000 ccc10011 00aaa??? dddddddd dddddddd
+00011000 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101000 ccc10011 00aaa??? dddddddd dddddddd
+00101000 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111000 ccc10011 00aaa??? dddddddd dddddddd
+00111000 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -14080,82 +14080,82 @@ mov {b} to {a}, zero extending
 
 movzh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00001000 aaa10010 01bbb??? dddddddd
+00001000 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00011000 aaa10010 01bbb??? dddddddd
+00011000 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00101000 aaa10010 01bbb??? dddddddd
+00101000 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00111000 aaa10010 01bbb??? dddddddd
+00111000 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00001000 ccc10011 01aaa??? dddddddd
+00001000 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00011000 ccc10011 01aaa??? dddddddd
+00011000 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00101000 ccc10011 01aaa??? dddddddd
+00101000 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00111000 ccc10011 01aaa??? dddddddd
+00111000 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00001000 aaa10010 01bbb??? dddddddd dddddddd
+00001000 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00011000 aaa10010 01bbb??? dddddddd dddddddd
+00011000 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00101000 aaa10010 01bbb??? dddddddd dddddddd
+00101000 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00111000 aaa10010 01bbb??? dddddddd dddddddd
+00111000 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001000 ccc10011 01aaa??? dddddddd dddddddd
+00001000 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011000 ccc10011 01aaa??? dddddddd dddddddd
+00011000 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101000 ccc10011 01aaa??? dddddddd dddddddd
+00101000 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111000 ccc10011 01aaa??? dddddddd dddddddd
+00111000 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -14240,82 +14240,82 @@ mov {b} to {a}, zero extending
 
 movzh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00001000 aaa10010 10bbb??? dddddddd
+00001000 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00011000 aaa10010 10bbb??? dddddddd
+00011000 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00101000 aaa10010 10bbb??? dddddddd
+00101000 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00111000 aaa10010 10bbb??? dddddddd
+00111000 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00001000 ccc10011 10aaa??? dddddddd
+00001000 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00011000 ccc10011 10aaa??? dddddddd
+00011000 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00101000 ccc10011 10aaa??? dddddddd
+00101000 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00111000 ccc10011 10aaa??? dddddddd
+00111000 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00001000 aaa10010 10bbb??? dddddddd dddddddd
+00001000 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00011000 aaa10010 10bbb??? dddddddd dddddddd
+00011000 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00101000 aaa10010 10bbb??? dddddddd dddddddd
+00101000 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00111000 aaa10010 10bbb??? dddddddd dddddddd
+00111000 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001000 ccc10011 10aaa??? dddddddd dddddddd
+00001000 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011000 ccc10011 10aaa??? dddddddd dddddddd
+00011000 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101000 ccc10011 10aaa??? dddddddd dddddddd
+00101000 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111000 ccc10011 10aaa??? dddddddd dddddddd
+00111000 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -14400,82 +14400,82 @@ mov {b} to {a}, zero extending
 
 movzh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00001000 aaa10010 11bbb??? dddddddd
+00001000 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00011000 aaa10010 11bbb??? dddddddd
+00011000 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00101000 aaa10010 11bbb??? dddddddd
+00101000 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00111000 aaa10010 11bbb??? dddddddd
+00111000 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00001000 ccc10011 11aaa??? dddddddd
+00001000 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00011000 ccc10011 11aaa??? dddddddd
+00011000 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00101000 ccc10011 11aaa??? dddddddd
+00101000 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00111000 ccc10011 11aaa??? dddddddd
+00111000 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00001000 aaa10010 11bbb??? dddddddd dddddddd
+00001000 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00011000 aaa10010 11bbb??? dddddddd dddddddd
+00011000 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00101000 aaa10010 11bbb??? dddddddd dddddddd
+00101000 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00111000 aaa10010 11bbb??? dddddddd dddddddd
+00111000 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001000 ccc10011 11aaa??? dddddddd dddddddd
+00001000 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011000 ccc10011 11aaa??? dddddddd dddddddd
+00011000 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101000 ccc10011 11aaa??? dddddddd dddddddd
+00101000 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111000 ccc10011 11aaa??? dddddddd dddddddd
+00111000 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -14601,185 +14601,185 @@ mov {b} to {a}, zero extending
 movzh [%imm], %imm
 = %a:ba
 = %b:a
-00001000 00100001 ???????? cccccccc cccccccc dddddddd
+00001000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, zero extending
 
 movzx [%imm], %imm
 = %a:ba
 = %b:a
-00011000 00100001 ???????? cccccccc cccccccc dddddddd
+00011000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, zero extending
 
 movzd [%imm], %imm
 = %a:ba
 = %b:a
-00101000 00100001 ???????? cccccccc cccccccc dddddddd
+00101000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, zero extending
 
 movzq [%imm], %imm
 = %a:ba
 = %b:a
-00111000 00100001 ???????? cccccccc cccccccc dddddddd
+00111000 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, zero extending
 
 movzh [%imm], %imm
 = %a:ba
 = %b:a
-00001000 00100101 ???????? cccccccc cccccccc dddddddd
+00001000 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, zero extending
 
 movzx [%imm], %imm
 = %a:ba
 = %b:ba
-00011000 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011000 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzd [%imm], %imm
 = %a:ba
 = %b:dcba
-00101000 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101000 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00111000 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111000 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize], %imm
 = %b:a
-00001000 01000001 ?????aaa cccccccc
+00001000 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize], %imm
 = %b:a
-00011000 01000001 ?????aaa cccccccc
+00011000 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize], %imm
 = %b:a
-00101000 01000001 ?????aaa cccccccc
+00101000 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize], %imm
 = %b:a
-00111000 01000001 ?????aaa cccccccc
+00111000 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize], %imm
 = %b:a
-00001000 01000101 ?????aaa cccccccc
+00001000 01000101 xxxxxaaa cccccccc
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize], %imm
 = %b:ba
-00011000 01000101 ?????aaa cccccccc cccccccc
+00011000 01000101 xxxxxaaa cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize], %imm
 = %b:dcba
-00101000 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101000 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize], %imm
 = %b:hgfedcba
-00111000 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111000 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111000 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111000 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-mov {b} to {a}, zero extending
-
-movzx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00011000 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-mov {b} to {a}, zero extending
-
-movzd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00101000 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-mov {b} to {a}, zero extending
-
-movzq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00111000 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-mov {b} to {a}, zero extending
-
-movzh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, zero extending
-
-movzx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00011000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, zero extending
-
-movzd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00101000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, zero extending
-
-movzq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00111000 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, zero extending
-
-movzh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001000 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011000 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101000 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111000 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111000 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+mov {b} to {a}, zero extending
+
+movzh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, zero extending
+
+movzx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00011000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, zero extending
+
+movzd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00101000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, zero extending
+
+movzq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00111000 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, zero extending
+
+movzh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, zero extending
+
+movzx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00011000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+mov {b} to {a}, zero extending
+
+movzd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00101000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+mov {b} to {a}, zero extending
+
+movzq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00111000 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + %register_nosize], %imm
@@ -14873,49 +14873,49 @@ mov {b} to {a}, zero extending
 movzh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111000 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111000 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011000 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101000 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111000 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111000 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + 2 * %register_nosize], %imm
@@ -15009,49 +15009,49 @@ mov {b} to {a}, zero extending
 movzh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111000 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111000 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011000 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101000 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111000 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111000 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + 4 * %register_nosize], %imm
@@ -15145,49 +15145,49 @@ mov {b} to {a}, zero extending
 movzh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111000 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111000 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001000 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, zero extending
 
 movzx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011000 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101000 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111000 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111000 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize + 8 * %register_nosize], %imm
@@ -15280,170 +15280,170 @@ mov {b} to {a}, zero extending
 
 movzh %register_hword, [ip + %imm]
 = %b:a
-00001000 aaa10001 ???????? cccccccc
+00001000 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [ip + %imm]
 = %b:a
-00011000 aaa10001 ???????? cccccccc
+00011000 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [ip + %imm]
 = %b:a
-00101000 aaa10001 ???????? cccccccc
+00101000 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [ip + %imm]
 = %b:a
-00111000 aaa10001 ???????? cccccccc
+00111000 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [ip + %imm]
 = %b:ba
-00001000 aaa10001 ???????? cccccccc cccccccc
+00001000 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [ip + %imm]
 = %b:ba
-00011000 aaa10001 ???????? cccccccc cccccccc
+00011000 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [ip + %imm]
 = %b:ba
-00101000 aaa10001 ???????? cccccccc cccccccc
+00101000 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [ip + %imm]
 = %b:ba
-00111000 aaa10001 ???????? cccccccc cccccccc
+00111000 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize, %register_nosize]
-00001000 aaa11001 00ccc???
+00001000 aaa11001 00cccxxx
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize, %register_nosize]
-00011000 aaa11001 00ccc???
+00011000 aaa11001 00cccxxx
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize, %register_nosize]
-00101000 aaa11001 00ccc???
+00101000 aaa11001 00cccxxx
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize, %register_nosize]
-00111000 aaa11001 00ccc???
+00111000 aaa11001 00cccxxx
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize, %register_nosize], %register_hword
-00001000 ccc11101 00bbb???
+00001000 ccc11101 00bbbxxx
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize, %register_nosize], %register_xword
-00011000 ccc11101 00bbb???
+00011000 ccc11101 00bbbxxx
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize, %register_nosize], %register_dword
-00101000 ccc11101 00bbb???
+00101000 ccc11101 00bbbxxx
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize, %register_nosize], %register_qword
-00111000 ccc11101 00bbb???
+00111000 ccc11101 00bbbxxx
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize, 2 * %register_nosize]
-00001000 aaa11001 01ccc???
+00001000 aaa11001 01cccxxx
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize, 2 * %register_nosize]
-00011000 aaa11001 01ccc???
+00011000 aaa11001 01cccxxx
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize, 2 * %register_nosize]
-00101000 aaa11001 01ccc???
+00101000 aaa11001 01cccxxx
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize, 2 * %register_nosize]
-00111000 aaa11001 01ccc???
+00111000 aaa11001 01cccxxx
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize, 2 * %register_nosize], %register_hword
-00001000 ccc11101 01bbb???
+00001000 ccc11101 01bbbxxx
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize, 2 * %register_nosize], %register_xword
-00011000 ccc11101 01bbb???
+00011000 ccc11101 01bbbxxx
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize, 2 * %register_nosize], %register_dword
-00101000 ccc11101 01bbb???
+00101000 ccc11101 01bbbxxx
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize, 2 * %register_nosize], %register_qword
-00111000 ccc11101 01bbb???
+00111000 ccc11101 01bbbxxx
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize, 4 * %register_nosize]
-00001000 aaa11001 10ccc???
+00001000 aaa11001 10cccxxx
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize, 4 * %register_nosize]
-00011000 aaa11001 10ccc???
+00011000 aaa11001 10cccxxx
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize, 4 * %register_nosize]
-00101000 aaa11001 10ccc???
+00101000 aaa11001 10cccxxx
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize, 4 * %register_nosize]
-00111000 aaa11001 10ccc???
+00111000 aaa11001 10cccxxx
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize, 4 * %register_nosize], %register_hword
-00001000 ccc11101 10bbb???
+00001000 ccc11101 10bbbxxx
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize, 4 * %register_nosize], %register_xword
-00011000 ccc11101 10bbb???
+00011000 ccc11101 10bbbxxx
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize, 4 * %register_nosize], %register_dword
-00101000 ccc11101 10bbb???
+00101000 ccc11101 10bbbxxx
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize, 4 * %register_nosize], %register_qword
-00111000 ccc11101 10bbb???
+00111000 ccc11101 10bbbxxx
 mov {b} to {a}, zero extending
 
 movzh %register_hword, [%register_nosize, 8 * %register_nosize]
-00001000 aaa11001 11ccc???
+00001000 aaa11001 11cccxxx
 mov {b} to {a}, zero extending
 
 movzx %register_xword, [%register_nosize, 8 * %register_nosize]
-00011000 aaa11001 11ccc???
+00011000 aaa11001 11cccxxx
 mov {b} to {a}, zero extending
 
 movzd %register_dword, [%register_nosize, 8 * %register_nosize]
-00101000 aaa11001 11ccc???
+00101000 aaa11001 11cccxxx
 mov {b} to {a}, zero extending
 
 movzq %register_qword, [%register_nosize, 8 * %register_nosize]
-00111000 aaa11001 11ccc???
+00111000 aaa11001 11cccxxx
 mov {b} to {a}, zero extending
 
 movzh [%register_nosize, 8 * %register_nosize], %register_hword
-00001000 ccc11101 11bbb???
+00001000 ccc11101 11bbbxxx
 mov {b} to {a}, zero extending
 
 movzx [%register_nosize, 8 * %register_nosize], %register_xword
-00011000 ccc11101 11bbb???
+00011000 ccc11101 11bbbxxx
 mov {b} to {a}, zero extending
 
 movzd [%register_nosize, 8 * %register_nosize], %register_dword
-00101000 ccc11101 11bbb???
+00101000 ccc11101 11bbbxxx
 mov {b} to {a}, zero extending
 
 movzq [%register_nosize, 8 * %register_nosize], %register_qword
-00111000 ccc11101 11bbb???
+00111000 ccc11101 11bbbxxx
 mov {b} to {a}, zero extending
 
 movzh %register_hword, %imm
@@ -15479,235 +15479,235 @@ movsq %register_qword, %register_qword
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize]
-00001001 aaa00010 ?????bbb
+00001001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize]
-00011001 aaa00010 ?????bbb
+00011001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize]
-00101001 aaa00010 ?????bbb
+00101001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize]
-00111001 aaa00010 ?????bbb
+00111001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize], %register_hword
-00001001 bbb00011 ?????aaa
+00001001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize], %register_xword
-00011001 bbb00011 ?????aaa
+00011001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize], %register_dword
-00101001 bbb00011 ?????aaa
+00101001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize], %register_qword
-00111001 bbb00011 ?????aaa
+00111001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%imm]
 = %b:ba
-00001001 aaa00110 ???????? cccccccc cccccccc
+00001001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%imm]
 = %b:ba
-00011001 aaa00110 ???????? cccccccc cccccccc
+00011001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%imm]
 = %b:ba
-00101001 aaa00110 ???????? cccccccc cccccccc
+00101001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%imm]
 = %b:ba
-00111001 aaa00110 ???????? cccccccc cccccccc
+00111001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsh [%imm], %register_hword
 = %a:ba
-00001001 bbb00111 ???????? cccccccc cccccccc
+00001001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsx [%imm], %register_xword
 = %a:ba
-00011001 bbb00111 ???????? cccccccc cccccccc
+00011001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsd [%imm], %register_dword
 = %a:ba
-00101001 bbb00111 ???????? cccccccc cccccccc
+00101001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsq [%imm], %register_qword
 = %a:ba
-00111001 bbb00111 ???????? cccccccc cccccccc
+00111001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001001 aaa01010 ?????bbb dddddddd
+00001001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011001 aaa01010 ?????bbb dddddddd
+00011001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101001 aaa01010 ?????bbb dddddddd
+00101001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111001 aaa01010 ?????bbb dddddddd
+00111001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc01011 ?????aaa dddddddd
+00001001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc01011 ?????aaa dddddddd
+00011001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc01011 ?????aaa dddddddd
+00101001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc01011 ?????aaa dddddddd
+00111001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001001 aaa01110 ?????bbb dddddddd dddddddd
+00001001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011001 aaa01110 ?????bbb dddddddd dddddddd
+00011001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101001 aaa01110 ?????bbb dddddddd dddddddd
+00101001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111001 aaa01110 ?????bbb dddddddd dddddddd
+00111001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc01111 ?????aaa dddddddd dddddddd
+00001001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc01111 ?????aaa dddddddd dddddddd
+00011001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc01111 ?????aaa dddddddd dddddddd
+00101001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc01111 ?????aaa dddddddd dddddddd
+00111001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001001 aaa10010 00bbb??? dddddddd
+00001001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011001 aaa10010 00bbb??? dddddddd
+00011001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101001 aaa10010 00bbb??? dddddddd
+00101001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111001 aaa10010 00bbb??? dddddddd
+00111001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 00aaa??? dddddddd
+00001001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 00aaa??? dddddddd
+00011001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 00aaa??? dddddddd
+00101001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 00aaa??? dddddddd
+00111001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 00bbb??? dddddddd dddddddd
+00001001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 00bbb??? dddddddd dddddddd
+00011001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 00bbb??? dddddddd dddddddd
+00101001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 00bbb??? dddddddd dddddddd
+00111001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 00aaa??? dddddddd dddddddd
+00001001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 00aaa??? dddddddd dddddddd
+00011001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 00aaa??? dddddddd dddddddd
+00101001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 00aaa??? dddddddd dddddddd
+00111001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -15792,82 +15792,82 @@ mov {b} to {a}, sign extending
 
 movsh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00001001 aaa10010 01bbb??? dddddddd
+00001001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00011001 aaa10010 01bbb??? dddddddd
+00011001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00101001 aaa10010 01bbb??? dddddddd
+00101001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00111001 aaa10010 01bbb??? dddddddd
+00111001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 01aaa??? dddddddd
+00001001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 01aaa??? dddddddd
+00011001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 01aaa??? dddddddd
+00101001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 01aaa??? dddddddd
+00111001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 01bbb??? dddddddd dddddddd
+00001001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 01bbb??? dddddddd dddddddd
+00011001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 01bbb??? dddddddd dddddddd
+00101001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 01bbb??? dddddddd dddddddd
+00111001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 01aaa??? dddddddd dddddddd
+00001001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 01aaa??? dddddddd dddddddd
+00011001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 01aaa??? dddddddd dddddddd
+00101001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 01aaa??? dddddddd dddddddd
+00111001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -15952,82 +15952,82 @@ mov {b} to {a}, sign extending
 
 movsh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00001001 aaa10010 10bbb??? dddddddd
+00001001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00011001 aaa10010 10bbb??? dddddddd
+00011001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00101001 aaa10010 10bbb??? dddddddd
+00101001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00111001 aaa10010 10bbb??? dddddddd
+00111001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 10aaa??? dddddddd
+00001001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 10aaa??? dddddddd
+00011001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 10aaa??? dddddddd
+00101001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 10aaa??? dddddddd
+00111001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 10bbb??? dddddddd dddddddd
+00001001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 10bbb??? dddddddd dddddddd
+00011001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 10bbb??? dddddddd dddddddd
+00101001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 10bbb??? dddddddd dddddddd
+00111001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 10aaa??? dddddddd dddddddd
+00001001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 10aaa??? dddddddd dddddddd
+00011001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 10aaa??? dddddddd dddddddd
+00101001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 10aaa??? dddddddd dddddddd
+00111001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -16112,82 +16112,82 @@ mov {b} to {a}, sign extending
 
 movsh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00001001 aaa10010 11bbb??? dddddddd
+00001001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00011001 aaa10010 11bbb??? dddddddd
+00011001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00101001 aaa10010 11bbb??? dddddddd
+00101001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00111001 aaa10010 11bbb??? dddddddd
+00111001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 11aaa??? dddddddd
+00001001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 11aaa??? dddddddd
+00011001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 11aaa??? dddddddd
+00101001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 11aaa??? dddddddd
+00111001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 11bbb??? dddddddd dddddddd
+00001001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 11bbb??? dddddddd dddddddd
+00011001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 11bbb??? dddddddd dddddddd
+00101001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 11bbb??? dddddddd dddddddd
+00111001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 11aaa??? dddddddd dddddddd
+00001001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 11aaa??? dddddddd dddddddd
+00011001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 11aaa??? dddddddd dddddddd
+00101001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 11aaa??? dddddddd dddddddd
+00111001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -16313,185 +16313,185 @@ mov {b} to {a}, sign extending
 movsh [%imm], %imm
 = %a:ba
 = %b:a
-00001001 00100001 ???????? cccccccc cccccccc dddddddd
+00001001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movsx [%imm], %imm
 = %a:ba
 = %b:a
-00011001 00100001 ???????? cccccccc cccccccc dddddddd
+00011001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movsd [%imm], %imm
 = %a:ba
 = %b:a
-00101001 00100001 ???????? cccccccc cccccccc dddddddd
+00101001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movsq [%imm], %imm
 = %a:ba
 = %b:a
-00111001 00100001 ???????? cccccccc cccccccc dddddddd
+00111001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movsh [%imm], %imm
 = %a:ba
 = %b:a
-00001001 00100101 ???????? cccccccc cccccccc dddddddd
+00001001 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movsx [%imm], %imm
 = %a:ba
 = %b:ba
-00011001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsd [%imm], %imm
 = %a:ba
 = %b:dcba
-00101001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00111001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize], %imm
 = %b:a
-00001001 01000001 ?????aaa cccccccc
+00001001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize], %imm
 = %b:a
-00011001 01000001 ?????aaa cccccccc
+00011001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize], %imm
 = %b:a
-00101001 01000001 ?????aaa cccccccc
+00101001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize], %imm
 = %b:a
-00111001 01000001 ?????aaa cccccccc
+00111001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize], %imm
 = %b:a
-00001001 01000101 ?????aaa cccccccc
+00001001 01000101 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize], %imm
 = %b:ba
-00011001 01000101 ?????aaa cccccccc cccccccc
+00011001 01000101 xxxxxaaa cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize], %imm
 = %b:dcba
-00101001 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101001 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize], %imm
 = %b:hgfedcba
-00111001 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111001 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movsx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00011001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-mov {b} to {a}, sign extending
-
-movsd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00101001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-mov {b} to {a}, sign extending
-
-movsq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00111001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-mov {b} to {a}, sign extending
-
-movsh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movsx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00011001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movsd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00101001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movsq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00111001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movsh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001001 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+mov {b} to {a}, sign extending
+
+movsh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movsx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00011001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movsd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00101001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movsq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00111001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movsh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movsx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00011001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+mov {b} to {a}, sign extending
+
+movsd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00101001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+mov {b} to {a}, sign extending
+
+movsq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00111001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + %register_nosize], %imm
@@ -16585,49 +16585,49 @@ mov {b} to {a}, sign extending
 movsh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + 2 * %register_nosize], %imm
@@ -16721,49 +16721,49 @@ mov {b} to {a}, sign extending
 movsh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + 4 * %register_nosize], %imm
@@ -16857,49 +16857,49 @@ mov {b} to {a}, sign extending
 movsh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movsx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize + 8 * %register_nosize], %imm
@@ -16992,170 +16992,170 @@ mov {b} to {a}, sign extending
 
 movsh %register_hword, [ip + %imm]
 = %b:a
-00001001 aaa10001 ???????? cccccccc
+00001001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [ip + %imm]
 = %b:a
-00011001 aaa10001 ???????? cccccccc
+00011001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [ip + %imm]
 = %b:a
-00101001 aaa10001 ???????? cccccccc
+00101001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [ip + %imm]
 = %b:a
-00111001 aaa10001 ???????? cccccccc
+00111001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [ip + %imm]
 = %b:ba
-00001001 aaa10001 ???????? cccccccc cccccccc
+00001001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [ip + %imm]
 = %b:ba
-00011001 aaa10001 ???????? cccccccc cccccccc
+00011001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [ip + %imm]
 = %b:ba
-00101001 aaa10001 ???????? cccccccc cccccccc
+00101001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [ip + %imm]
 = %b:ba
-00111001 aaa10001 ???????? cccccccc cccccccc
+00111001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize, %register_nosize]
-00001001 aaa11001 00ccc???
+00001001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize, %register_nosize]
-00011001 aaa11001 00ccc???
+00011001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize, %register_nosize]
-00101001 aaa11001 00ccc???
+00101001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize, %register_nosize]
-00111001 aaa11001 00ccc???
+00111001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize, %register_nosize], %register_hword
-00001001 ccc11101 00bbb???
+00001001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize, %register_nosize], %register_xword
-00011001 ccc11101 00bbb???
+00011001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize, %register_nosize], %register_dword
-00101001 ccc11101 00bbb???
+00101001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize, %register_nosize], %register_qword
-00111001 ccc11101 00bbb???
+00111001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize, 2 * %register_nosize]
-00001001 aaa11001 01ccc???
+00001001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize, 2 * %register_nosize]
-00011001 aaa11001 01ccc???
+00011001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize, 2 * %register_nosize]
-00101001 aaa11001 01ccc???
+00101001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize, 2 * %register_nosize]
-00111001 aaa11001 01ccc???
+00111001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize, 2 * %register_nosize], %register_hword
-00001001 ccc11101 01bbb???
+00001001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize, 2 * %register_nosize], %register_xword
-00011001 ccc11101 01bbb???
+00011001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize, 2 * %register_nosize], %register_dword
-00101001 ccc11101 01bbb???
+00101001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize, 2 * %register_nosize], %register_qword
-00111001 ccc11101 01bbb???
+00111001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize, 4 * %register_nosize]
-00001001 aaa11001 10ccc???
+00001001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize, 4 * %register_nosize]
-00011001 aaa11001 10ccc???
+00011001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize, 4 * %register_nosize]
-00101001 aaa11001 10ccc???
+00101001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize, 4 * %register_nosize]
-00111001 aaa11001 10ccc???
+00111001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize, 4 * %register_nosize], %register_hword
-00001001 ccc11101 10bbb???
+00001001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize, 4 * %register_nosize], %register_xword
-00011001 ccc11101 10bbb???
+00011001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize, 4 * %register_nosize], %register_dword
-00101001 ccc11101 10bbb???
+00101001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize, 4 * %register_nosize], %register_qword
-00111001 ccc11101 10bbb???
+00111001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movsh %register_hword, [%register_nosize, 8 * %register_nosize]
-00001001 aaa11001 11ccc???
+00001001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movsx %register_xword, [%register_nosize, 8 * %register_nosize]
-00011001 aaa11001 11ccc???
+00011001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movsd %register_dword, [%register_nosize, 8 * %register_nosize]
-00101001 aaa11001 11ccc???
+00101001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movsq %register_qword, [%register_nosize, 8 * %register_nosize]
-00111001 aaa11001 11ccc???
+00111001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movsh [%register_nosize, 8 * %register_nosize], %register_hword
-00001001 ccc11101 11bbb???
+00001001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movsx [%register_nosize, 8 * %register_nosize], %register_xword
-00011001 ccc11101 11bbb???
+00011001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movsd [%register_nosize, 8 * %register_nosize], %register_dword
-00101001 ccc11101 11bbb???
+00101001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movsq [%register_nosize, 8 * %register_nosize], %register_qword
-00111001 ccc11101 11bbb???
+00111001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movsh %register_hword, %imm
@@ -17191,235 +17191,235 @@ movq %register_qword, %register_qword
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize]
-00001001 aaa00010 ?????bbb
+00001001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize]
-00011001 aaa00010 ?????bbb
+00011001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize]
-00101001 aaa00010 ?????bbb
+00101001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize]
-00111001 aaa00010 ?????bbb
+00111001 aaa00010 xxxxxbbb
 mov {b} to {a}, sign extending
 
 movh [%register_nosize], %register_hword
-00001001 bbb00011 ?????aaa
+00001001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movx [%register_nosize], %register_xword
-00011001 bbb00011 ?????aaa
+00011001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movd [%register_nosize], %register_dword
-00101001 bbb00011 ?????aaa
+00101001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movq [%register_nosize], %register_qword
-00111001 bbb00011 ?????aaa
+00111001 bbb00011 xxxxxaaa
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%imm]
 = %b:ba
-00001001 aaa00110 ???????? cccccccc cccccccc
+00001001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%imm]
 = %b:ba
-00011001 aaa00110 ???????? cccccccc cccccccc
+00011001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%imm]
 = %b:ba
-00101001 aaa00110 ???????? cccccccc cccccccc
+00101001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%imm]
 = %b:ba
-00111001 aaa00110 ???????? cccccccc cccccccc
+00111001 aaa00110 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movh [%imm], %register_hword
 = %a:ba
-00001001 bbb00111 ???????? cccccccc cccccccc
+00001001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movx [%imm], %register_xword
 = %a:ba
-00011001 bbb00111 ???????? cccccccc cccccccc
+00011001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movd [%imm], %register_dword
 = %a:ba
-00101001 bbb00111 ???????? cccccccc cccccccc
+00101001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movq [%imm], %register_qword
 = %a:ba
-00111001 bbb00111 ???????? cccccccc cccccccc
+00111001 bbb00111 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001001 aaa01010 ?????bbb dddddddd
+00001001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011001 aaa01010 ?????bbb dddddddd
+00011001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101001 aaa01010 ?????bbb dddddddd
+00101001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111001 aaa01010 ?????bbb dddddddd
+00111001 aaa01010 xxxxxbbb dddddddd
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc01011 ?????aaa dddddddd
+00001001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movx [%register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc01011 ?????aaa dddddddd
+00011001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movd [%register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc01011 ?????aaa dddddddd
+00101001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movq [%register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc01011 ?????aaa dddddddd
+00111001 ccc01011 xxxxxaaa dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001001 aaa01110 ?????bbb dddddddd dddddddd
+00001001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011001 aaa01110 ?????bbb dddddddd dddddddd
+00011001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101001 aaa01110 ?????bbb dddddddd dddddddd
+00101001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111001 aaa01110 ?????bbb dddddddd dddddddd
+00111001 aaa01110 xxxxxbbb dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc01111 ?????aaa dddddddd dddddddd
+00001001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc01111 ?????aaa dddddddd dddddddd
+00011001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc01111 ?????aaa dddddddd dddddddd
+00101001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc01111 ?????aaa dddddddd dddddddd
+00111001 ccc01111 xxxxxaaa dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001001 aaa10010 00bbb??? dddddddd
+00001001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011001 aaa10010 00bbb??? dddddddd
+00011001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101001 aaa10010 00bbb??? dddddddd
+00101001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111001 aaa10010 00bbb??? dddddddd
+00111001 aaa10010 00bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 00aaa??? dddddddd
+00001001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx [%register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 00aaa??? dddddddd
+00011001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd [%register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 00aaa??? dddddddd
+00101001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq [%register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 00aaa??? dddddddd
+00111001 ccc10011 00aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 00bbb??? dddddddd dddddddd
+00001001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 00bbb??? dddddddd dddddddd
+00011001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 00bbb??? dddddddd dddddddd
+00101001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 00bbb??? dddddddd dddddddd
+00111001 aaa10010 00bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 00aaa??? dddddddd dddddddd
+00001001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 00aaa??? dddddddd dddddddd
+00011001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 00aaa??? dddddddd dddddddd
+00101001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 00aaa??? dddddddd dddddddd
+00111001 ccc10011 00aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -17504,82 +17504,82 @@ mov {b} to {a}, sign extending
 
 movh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00001001 aaa10010 01bbb??? dddddddd
+00001001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00011001 aaa10010 01bbb??? dddddddd
+00011001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00101001 aaa10010 01bbb??? dddddddd
+00101001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00111001 aaa10010 01bbb??? dddddddd
+00111001 aaa10010 01bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 01aaa??? dddddddd
+00001001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 01aaa??? dddddddd
+00011001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 01aaa??? dddddddd
+00101001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 01aaa??? dddddddd
+00111001 ccc10011 01aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 01bbb??? dddddddd dddddddd
+00001001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 01bbb??? dddddddd dddddddd
+00011001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 01bbb??? dddddddd dddddddd
+00101001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 01bbb??? dddddddd dddddddd
+00111001 aaa10010 01bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 01aaa??? dddddddd dddddddd
+00001001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 01aaa??? dddddddd dddddddd
+00011001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 01aaa??? dddddddd dddddddd
+00101001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 01aaa??? dddddddd dddddddd
+00111001 ccc10011 01aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -17664,82 +17664,82 @@ mov {b} to {a}, sign extending
 
 movh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00001001 aaa10010 10bbb??? dddddddd
+00001001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00011001 aaa10010 10bbb??? dddddddd
+00011001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00101001 aaa10010 10bbb??? dddddddd
+00101001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00111001 aaa10010 10bbb??? dddddddd
+00111001 aaa10010 10bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 10aaa??? dddddddd
+00001001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 10aaa??? dddddddd
+00011001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 10aaa??? dddddddd
+00101001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 10aaa??? dddddddd
+00111001 ccc10011 10aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 10bbb??? dddddddd dddddddd
+00001001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 10bbb??? dddddddd dddddddd
+00011001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 10bbb??? dddddddd dddddddd
+00101001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 10bbb??? dddddddd dddddddd
+00111001 aaa10010 10bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 10aaa??? dddddddd dddddddd
+00001001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 10aaa??? dddddddd dddddddd
+00011001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 10aaa??? dddddddd dddddddd
+00101001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 10aaa??? dddddddd dddddddd
+00111001 ccc10011 10aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -17824,82 +17824,82 @@ mov {b} to {a}, sign extending
 
 movh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00001001 aaa10010 11bbb??? dddddddd
+00001001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00011001 aaa10010 11bbb??? dddddddd
+00011001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00101001 aaa10010 11bbb??? dddddddd
+00101001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00111001 aaa10010 11bbb??? dddddddd
+00111001 aaa10010 11bbbxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00001001 ccc10011 11aaa??? dddddddd
+00001001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00011001 ccc10011 11aaa??? dddddddd
+00011001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00101001 ccc10011 11aaa??? dddddddd
+00101001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00111001 ccc10011 11aaa??? dddddddd
+00111001 ccc10011 11aaaxxx dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00001001 aaa10010 11bbb??? dddddddd dddddddd
+00001001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00011001 aaa10010 11bbb??? dddddddd dddddddd
+00011001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00101001 aaa10010 11bbb??? dddddddd dddddddd
+00101001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00111001 aaa10010 11bbb??? dddddddd dddddddd
+00111001 aaa10010 11bbbxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001001 ccc10011 11aaa??? dddddddd dddddddd
+00001001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011001 ccc10011 11aaa??? dddddddd dddddddd
+00011001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101001 ccc10011 11aaa??? dddddddd dddddddd
+00101001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111001 ccc10011 11aaa??? dddddddd dddddddd
+00111001 ccc10011 11aaaxxx dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -18025,185 +18025,185 @@ mov {b} to {a}, sign extending
 movh [%imm], %imm
 = %a:ba
 = %b:a
-00001001 00100001 ???????? cccccccc cccccccc dddddddd
+00001001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movx [%imm], %imm
 = %a:ba
 = %b:a
-00011001 00100001 ???????? cccccccc cccccccc dddddddd
+00011001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movd [%imm], %imm
 = %a:ba
 = %b:a
-00101001 00100001 ???????? cccccccc cccccccc dddddddd
+00101001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movq [%imm], %imm
 = %a:ba
 = %b:a
-00111001 00100001 ???????? cccccccc cccccccc dddddddd
+00111001 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movh [%imm], %imm
 = %a:ba
 = %b:a
-00001001 00100101 ???????? cccccccc cccccccc dddddddd
+00001001 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 mov {b} to {a}, sign extending
 
 movx [%imm], %imm
 = %a:ba
 = %b:ba
-00011001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movd [%imm], %imm
 = %a:ba
 = %b:dcba
-00101001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00111001 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111001 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 mov {b} to {a}, sign extending
 
 movh [%register_nosize], %imm
 = %b:a
-00001001 01000001 ?????aaa cccccccc
+00001001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movx [%register_nosize], %imm
 = %b:a
-00011001 01000001 ?????aaa cccccccc
+00011001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movd [%register_nosize], %imm
 = %b:a
-00101001 01000001 ?????aaa cccccccc
+00101001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movq [%register_nosize], %imm
 = %b:a
-00111001 01000001 ?????aaa cccccccc
+00111001 01000001 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movh [%register_nosize], %imm
 = %b:a
-00001001 01000101 ?????aaa cccccccc
+00001001 01000101 xxxxxaaa cccccccc
 mov {b} to {a}, sign extending
 
 movx [%register_nosize], %imm
 = %b:ba
-00011001 01000101 ?????aaa cccccccc cccccccc
+00011001 01000101 xxxxxaaa cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movd [%register_nosize], %imm
 = %b:dcba
-00101001 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101001 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movq [%register_nosize], %imm
 = %b:hgfedcba
-00111001 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111001 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111001 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00011001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-mov {b} to {a}, sign extending
-
-movd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00101001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-mov {b} to {a}, sign extending
-
-movq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00111001 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-mov {b} to {a}, sign extending
-
-movh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00011001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00101001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00111001 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-mov {b} to {a}, sign extending
-
-movh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001001 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+mov {b} to {a}, sign extending
+
+movh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00011001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00101001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00111001 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+mov {b} to {a}, sign extending
+
+movx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00011001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+mov {b} to {a}, sign extending
+
+movd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00101001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+mov {b} to {a}, sign extending
+
+movq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00111001 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + %register_nosize], %imm
@@ -18297,49 +18297,49 @@ mov {b} to {a}, sign extending
 movh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111001 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + 2 * %register_nosize], %imm
@@ -18433,49 +18433,49 @@ mov {b} to {a}, sign extending
 movh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111001 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + 4 * %register_nosize], %imm
@@ -18569,49 +18569,49 @@ mov {b} to {a}, sign extending
 movh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111001 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111001 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001001 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 mov {b} to {a}, sign extending
 
 movx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111001 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111001 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 mov {b} to {a}, sign extending
 
 movh [%register_nosize + 8 * %register_nosize], %imm
@@ -18704,170 +18704,170 @@ mov {b} to {a}, sign extending
 
 movh %register_hword, [ip + %imm]
 = %b:a
-00001001 aaa10001 ???????? cccccccc
+00001001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movx %register_xword, [ip + %imm]
 = %b:a
-00011001 aaa10001 ???????? cccccccc
+00011001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movd %register_dword, [ip + %imm]
 = %b:a
-00101001 aaa10001 ???????? cccccccc
+00101001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movq %register_qword, [ip + %imm]
 = %b:a
-00111001 aaa10001 ???????? cccccccc
+00111001 aaa10001 xxxxxxxx cccccccc
 mov {b} to {a}, sign extending
 
 movh %register_hword, [ip + %imm]
 = %b:ba
-00001001 aaa10001 ???????? cccccccc cccccccc
+00001001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movx %register_xword, [ip + %imm]
 = %b:ba
-00011001 aaa10001 ???????? cccccccc cccccccc
+00011001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movd %register_dword, [ip + %imm]
 = %b:ba
-00101001 aaa10001 ???????? cccccccc cccccccc
+00101001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movq %register_qword, [ip + %imm]
 = %b:ba
-00111001 aaa10001 ???????? cccccccc cccccccc
+00111001 aaa10001 xxxxxxxx cccccccc cccccccc
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize, %register_nosize]
-00001001 aaa11001 00ccc???
+00001001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize, %register_nosize]
-00011001 aaa11001 00ccc???
+00011001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize, %register_nosize]
-00101001 aaa11001 00ccc???
+00101001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize, %register_nosize]
-00111001 aaa11001 00ccc???
+00111001 aaa11001 00cccxxx
 mov {b} to {a}, sign extending
 
 movh [%register_nosize, %register_nosize], %register_hword
-00001001 ccc11101 00bbb???
+00001001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movx [%register_nosize, %register_nosize], %register_xword
-00011001 ccc11101 00bbb???
+00011001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movd [%register_nosize, %register_nosize], %register_dword
-00101001 ccc11101 00bbb???
+00101001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movq [%register_nosize, %register_nosize], %register_qword
-00111001 ccc11101 00bbb???
+00111001 ccc11101 00bbbxxx
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize, 2 * %register_nosize]
-00001001 aaa11001 01ccc???
+00001001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize, 2 * %register_nosize]
-00011001 aaa11001 01ccc???
+00011001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize, 2 * %register_nosize]
-00101001 aaa11001 01ccc???
+00101001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize, 2 * %register_nosize]
-00111001 aaa11001 01ccc???
+00111001 aaa11001 01cccxxx
 mov {b} to {a}, sign extending
 
 movh [%register_nosize, 2 * %register_nosize], %register_hword
-00001001 ccc11101 01bbb???
+00001001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movx [%register_nosize, 2 * %register_nosize], %register_xword
-00011001 ccc11101 01bbb???
+00011001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movd [%register_nosize, 2 * %register_nosize], %register_dword
-00101001 ccc11101 01bbb???
+00101001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movq [%register_nosize, 2 * %register_nosize], %register_qword
-00111001 ccc11101 01bbb???
+00111001 ccc11101 01bbbxxx
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize, 4 * %register_nosize]
-00001001 aaa11001 10ccc???
+00001001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize, 4 * %register_nosize]
-00011001 aaa11001 10ccc???
+00011001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize, 4 * %register_nosize]
-00101001 aaa11001 10ccc???
+00101001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize, 4 * %register_nosize]
-00111001 aaa11001 10ccc???
+00111001 aaa11001 10cccxxx
 mov {b} to {a}, sign extending
 
 movh [%register_nosize, 4 * %register_nosize], %register_hword
-00001001 ccc11101 10bbb???
+00001001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movx [%register_nosize, 4 * %register_nosize], %register_xword
-00011001 ccc11101 10bbb???
+00011001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movd [%register_nosize, 4 * %register_nosize], %register_dword
-00101001 ccc11101 10bbb???
+00101001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movq [%register_nosize, 4 * %register_nosize], %register_qword
-00111001 ccc11101 10bbb???
+00111001 ccc11101 10bbbxxx
 mov {b} to {a}, sign extending
 
 movh %register_hword, [%register_nosize, 8 * %register_nosize]
-00001001 aaa11001 11ccc???
+00001001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movx %register_xword, [%register_nosize, 8 * %register_nosize]
-00011001 aaa11001 11ccc???
+00011001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movd %register_dword, [%register_nosize, 8 * %register_nosize]
-00101001 aaa11001 11ccc???
+00101001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movq %register_qword, [%register_nosize, 8 * %register_nosize]
-00111001 aaa11001 11ccc???
+00111001 aaa11001 11cccxxx
 mov {b} to {a}, sign extending
 
 movh [%register_nosize, 8 * %register_nosize], %register_hword
-00001001 ccc11101 11bbb???
+00001001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movx [%register_nosize, 8 * %register_nosize], %register_xword
-00011001 ccc11101 11bbb???
+00011001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movd [%register_nosize, 8 * %register_nosize], %register_dword
-00101001 ccc11101 11bbb???
+00101001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movq [%register_nosize, 8 * %register_nosize], %register_qword
-00111001 ccc11101 11bbb???
+00111001 ccc11101 11bbbxxx
 mov {b} to {a}, sign extending
 
 movh %register_hword, %imm
@@ -18903,235 +18903,235 @@ loadq %register_qword, %register_nosize
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize]
-00001010 aaa00010 ?????bbb
+00001010 aaa00010 xxxxxbbb
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize]
-00011010 aaa00010 ?????bbb
+00011010 aaa00010 xxxxxbbb
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize]
-00101010 aaa00010 ?????bbb
+00101010 aaa00010 xxxxxbbb
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize]
-00111010 aaa00010 ?????bbb
+00111010 aaa00010 xxxxxbbb
 load mem[{b}] into {a}.
 
 loadh [%register_nosize], %register_hword
-00001010 bbb00011 ?????aaa
+00001010 bbb00011 xxxxxaaa
 load mem[{b}] into {a}.
 
 loadx [%register_nosize], %register_xword
-00011010 bbb00011 ?????aaa
+00011010 bbb00011 xxxxxaaa
 load mem[{b}] into {a}.
 
 loadd [%register_nosize], %register_dword
-00101010 bbb00011 ?????aaa
+00101010 bbb00011 xxxxxaaa
 load mem[{b}] into {a}.
 
 loadq [%register_nosize], %register_qword
-00111010 bbb00011 ?????aaa
+00111010 bbb00011 xxxxxaaa
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%imm]
 = %b:ba
-00001010 aaa00110 ???????? cccccccc cccccccc
+00001010 aaa00110 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%imm]
 = %b:ba
-00011010 aaa00110 ???????? cccccccc cccccccc
+00011010 aaa00110 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%imm]
 = %b:ba
-00101010 aaa00110 ???????? cccccccc cccccccc
+00101010 aaa00110 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%imm]
 = %b:ba
-00111010 aaa00110 ???????? cccccccc cccccccc
+00111010 aaa00110 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadh [%imm], %register_hword
 = %a:ba
-00001010 bbb00111 ???????? cccccccc cccccccc
+00001010 bbb00111 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadx [%imm], %register_xword
 = %a:ba
-00011010 bbb00111 ???????? cccccccc cccccccc
+00011010 bbb00111 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadd [%imm], %register_dword
 = %a:ba
-00101010 bbb00111 ???????? cccccccc cccccccc
+00101010 bbb00111 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadq [%imm], %register_qword
 = %a:ba
-00111010 bbb00111 ???????? cccccccc cccccccc
+00111010 bbb00111 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001010 aaa01010 ?????bbb dddddddd
+00001010 aaa01010 xxxxxbbb dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011010 aaa01010 ?????bbb dddddddd
+00011010 aaa01010 xxxxxbbb dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101010 aaa01010 ?????bbb dddddddd
+00101010 aaa01010 xxxxxbbb dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111010 aaa01010 ?????bbb dddddddd
+00111010 aaa01010 xxxxxbbb dddddddd
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %imm], %register_hword
 = %b:a
-00001010 ccc01011 ?????aaa dddddddd
+00001010 ccc01011 xxxxxaaa dddddddd
 load mem[{b}] into {a}.
 
 loadx [%register_nosize + %imm], %register_xword
 = %b:a
-00011010 ccc01011 ?????aaa dddddddd
+00011010 ccc01011 xxxxxaaa dddddddd
 load mem[{b}] into {a}.
 
 loadd [%register_nosize + %imm], %register_dword
 = %b:a
-00101010 ccc01011 ?????aaa dddddddd
+00101010 ccc01011 xxxxxaaa dddddddd
 load mem[{b}] into {a}.
 
 loadq [%register_nosize + %imm], %register_qword
 = %b:a
-00111010 ccc01011 ?????aaa dddddddd
+00111010 ccc01011 xxxxxaaa dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001010 aaa01110 ?????bbb dddddddd dddddddd
+00001010 aaa01110 xxxxxbbb dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011010 aaa01110 ?????bbb dddddddd dddddddd
+00011010 aaa01110 xxxxxbbb dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101010 aaa01110 ?????bbb dddddddd dddddddd
+00101010 aaa01110 xxxxxbbb dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111010 aaa01110 ?????bbb dddddddd dddddddd
+00111010 aaa01110 xxxxxbbb dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001010 ccc01111 ?????aaa dddddddd dddddddd
+00001010 ccc01111 xxxxxaaa dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011010 ccc01111 ?????aaa dddddddd dddddddd
+00011010 ccc01111 xxxxxaaa dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101010 ccc01111 ?????aaa dddddddd dddddddd
+00101010 ccc01111 xxxxxaaa dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111010 ccc01111 ?????aaa dddddddd dddddddd
+00111010 ccc01111 xxxxxaaa dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001010 aaa10010 00bbb??? dddddddd
+00001010 aaa10010 00bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize + %imm]
 = %c:a
-00011010 aaa10010 00bbb??? dddddddd
+00011010 aaa10010 00bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize + %imm]
 = %c:a
-00101010 aaa10010 00bbb??? dddddddd
+00101010 aaa10010 00bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111010 aaa10010 00bbb??? dddddddd
+00111010 aaa10010 00bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %imm], %register_hword
 = %b:a
-00001010 ccc10011 00aaa??? dddddddd
+00001010 ccc10011 00aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx [%register_nosize + %imm], %register_xword
 = %b:a
-00011010 ccc10011 00aaa??? dddddddd
+00011010 ccc10011 00aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd [%register_nosize + %imm], %register_dword
 = %b:a
-00101010 ccc10011 00aaa??? dddddddd
+00101010 ccc10011 00aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq [%register_nosize + %imm], %register_qword
 = %b:a
-00111010 ccc10011 00aaa??? dddddddd
+00111010 ccc10011 00aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001010 aaa10010 00bbb??? dddddddd dddddddd
+00001010 aaa10010 00bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011010 aaa10010 00bbb??? dddddddd dddddddd
+00011010 aaa10010 00bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101010 aaa10010 00bbb??? dddddddd dddddddd
+00101010 aaa10010 00bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111010 aaa10010 00bbb??? dddddddd dddddddd
+00111010 aaa10010 00bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001010 ccc10011 00aaa??? dddddddd dddddddd
+00001010 ccc10011 00aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx [%register_nosize + %imm], %register_xword
 = %b:ba
-00011010 ccc10011 00aaa??? dddddddd dddddddd
+00011010 ccc10011 00aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd [%register_nosize + %imm], %register_dword
 = %b:ba
-00101010 ccc10011 00aaa??? dddddddd dddddddd
+00101010 ccc10011 00aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111010 ccc10011 00aaa??? dddddddd dddddddd
+00111010 ccc10011 00aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -19216,82 +19216,82 @@ load mem[{b}] into {a}.
 
 loadh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00001010 aaa10010 01bbb??? dddddddd
+00001010 aaa10010 01bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00011010 aaa10010 01bbb??? dddddddd
+00011010 aaa10010 01bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00101010 aaa10010 01bbb??? dddddddd
+00101010 aaa10010 01bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00111010 aaa10010 01bbb??? dddddddd
+00111010 aaa10010 01bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00001010 ccc10011 01aaa??? dddddddd
+00001010 ccc10011 01aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00011010 ccc10011 01aaa??? dddddddd
+00011010 ccc10011 01aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00101010 ccc10011 01aaa??? dddddddd
+00101010 ccc10011 01aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00111010 ccc10011 01aaa??? dddddddd
+00111010 ccc10011 01aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00001010 aaa10010 01bbb??? dddddddd dddddddd
+00001010 aaa10010 01bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00011010 aaa10010 01bbb??? dddddddd dddddddd
+00011010 aaa10010 01bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00101010 aaa10010 01bbb??? dddddddd dddddddd
+00101010 aaa10010 01bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00111010 aaa10010 01bbb??? dddddddd dddddddd
+00111010 aaa10010 01bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001010 ccc10011 01aaa??? dddddddd dddddddd
+00001010 ccc10011 01aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011010 ccc10011 01aaa??? dddddddd dddddddd
+00011010 ccc10011 01aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101010 ccc10011 01aaa??? dddddddd dddddddd
+00101010 ccc10011 01aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111010 ccc10011 01aaa??? dddddddd dddddddd
+00111010 ccc10011 01aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -19376,82 +19376,82 @@ load mem[{b}] into {a}.
 
 loadh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00001010 aaa10010 10bbb??? dddddddd
+00001010 aaa10010 10bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00011010 aaa10010 10bbb??? dddddddd
+00011010 aaa10010 10bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00101010 aaa10010 10bbb??? dddddddd
+00101010 aaa10010 10bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00111010 aaa10010 10bbb??? dddddddd
+00111010 aaa10010 10bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00001010 ccc10011 10aaa??? dddddddd
+00001010 ccc10011 10aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00011010 ccc10011 10aaa??? dddddddd
+00011010 ccc10011 10aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00101010 ccc10011 10aaa??? dddddddd
+00101010 ccc10011 10aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00111010 ccc10011 10aaa??? dddddddd
+00111010 ccc10011 10aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00001010 aaa10010 10bbb??? dddddddd dddddddd
+00001010 aaa10010 10bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00011010 aaa10010 10bbb??? dddddddd dddddddd
+00011010 aaa10010 10bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00101010 aaa10010 10bbb??? dddddddd dddddddd
+00101010 aaa10010 10bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00111010 aaa10010 10bbb??? dddddddd dddddddd
+00111010 aaa10010 10bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001010 ccc10011 10aaa??? dddddddd dddddddd
+00001010 ccc10011 10aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011010 ccc10011 10aaa??? dddddddd dddddddd
+00011010 ccc10011 10aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101010 ccc10011 10aaa??? dddddddd dddddddd
+00101010 ccc10011 10aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111010 ccc10011 10aaa??? dddddddd dddddddd
+00111010 ccc10011 10aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -19536,82 +19536,82 @@ load mem[{b}] into {a}.
 
 loadh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00001010 aaa10010 11bbb??? dddddddd
+00001010 aaa10010 11bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00011010 aaa10010 11bbb??? dddddddd
+00011010 aaa10010 11bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00101010 aaa10010 11bbb??? dddddddd
+00101010 aaa10010 11bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00111010 aaa10010 11bbb??? dddddddd
+00111010 aaa10010 11bbbxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00001010 ccc10011 11aaa??? dddddddd
+00001010 ccc10011 11aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadx [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00011010 ccc10011 11aaa??? dddddddd
+00011010 ccc10011 11aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadd [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00101010 ccc10011 11aaa??? dddddddd
+00101010 ccc10011 11aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00111010 ccc10011 11aaa??? dddddddd
+00111010 ccc10011 11aaaxxx dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00001010 aaa10010 11bbb??? dddddddd dddddddd
+00001010 aaa10010 11bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00011010 aaa10010 11bbb??? dddddddd dddddddd
+00011010 aaa10010 11bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00101010 aaa10010 11bbb??? dddddddd dddddddd
+00101010 aaa10010 11bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00111010 aaa10010 11bbb??? dddddddd dddddddd
+00111010 aaa10010 11bbbxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001010 ccc10011 11aaa??? dddddddd dddddddd
+00001010 ccc10011 11aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadx [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011010 ccc10011 11aaa??? dddddddd dddddddd
+00011010 ccc10011 11aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101010 ccc10011 11aaa??? dddddddd dddddddd
+00101010 ccc10011 11aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111010 ccc10011 11aaa??? dddddddd dddddddd
+00111010 ccc10011 11aaaxxx dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -19737,185 +19737,185 @@ load mem[{b}] into {a}.
 loadh [%imm], %imm
 = %a:ba
 = %b:a
-00001010 00100001 ???????? cccccccc cccccccc dddddddd
+00001010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 load mem[{b}] into {a}.
 
 loadx [%imm], %imm
 = %a:ba
 = %b:a
-00011010 00100001 ???????? cccccccc cccccccc dddddddd
+00011010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 load mem[{b}] into {a}.
 
 loadd [%imm], %imm
 = %a:ba
 = %b:a
-00101010 00100001 ???????? cccccccc cccccccc dddddddd
+00101010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 load mem[{b}] into {a}.
 
 loadq [%imm], %imm
 = %a:ba
 = %b:a
-00111010 00100001 ???????? cccccccc cccccccc dddddddd
+00111010 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 load mem[{b}] into {a}.
 
 loadh [%imm], %imm
 = %a:ba
 = %b:a
-00001010 00100101 ???????? cccccccc cccccccc dddddddd
+00001010 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 load mem[{b}] into {a}.
 
 loadx [%imm], %imm
 = %a:ba
 = %b:ba
-00011010 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011010 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadd [%imm], %imm
 = %a:ba
 = %b:dcba
-00101010 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101010 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00111010 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111010 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 load mem[{b}] into {a}.
 
 loadh [%register_nosize], %imm
 = %b:a
-00001010 01000001 ?????aaa cccccccc
+00001010 01000001 xxxxxaaa cccccccc
 load mem[{b}] into {a}.
 
 loadx [%register_nosize], %imm
 = %b:a
-00011010 01000001 ?????aaa cccccccc
+00011010 01000001 xxxxxaaa cccccccc
 load mem[{b}] into {a}.
 
 loadd [%register_nosize], %imm
 = %b:a
-00101010 01000001 ?????aaa cccccccc
+00101010 01000001 xxxxxaaa cccccccc
 load mem[{b}] into {a}.
 
 loadq [%register_nosize], %imm
 = %b:a
-00111010 01000001 ?????aaa cccccccc
+00111010 01000001 xxxxxaaa cccccccc
 load mem[{b}] into {a}.
 
 loadh [%register_nosize], %imm
 = %b:a
-00001010 01000101 ?????aaa cccccccc
+00001010 01000101 xxxxxaaa cccccccc
 load mem[{b}] into {a}.
 
 loadx [%register_nosize], %imm
 = %b:ba
-00011010 01000101 ?????aaa cccccccc cccccccc
+00011010 01000101 xxxxxaaa cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadd [%register_nosize], %imm
 = %b:dcba
-00101010 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101010 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadq [%register_nosize], %imm
 = %b:hgfedcba
-00111010 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111010 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111010 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111010 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-load mem[{b}] into {a}.
-
-loadx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00011010 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-load mem[{b}] into {a}.
-
-loadd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00101010 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-load mem[{b}] into {a}.
-
-loadq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00111010 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-load mem[{b}] into {a}.
-
-loadh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-load mem[{b}] into {a}.
-
-loadx [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00011010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-load mem[{b}] into {a}.
-
-loadd [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00101010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-load mem[{b}] into {a}.
-
-loadq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00111010 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-load mem[{b}] into {a}.
-
-loadh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001010 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011010 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101010 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111010 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111010 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+load mem[{b}] into {a}.
+
+loadh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+load mem[{b}] into {a}.
+
+loadx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00011010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+load mem[{b}] into {a}.
+
+loadd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00101010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+load mem[{b}] into {a}.
+
+loadq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00111010 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+load mem[{b}] into {a}.
+
+loadh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+load mem[{b}] into {a}.
+
+loadx [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00011010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+load mem[{b}] into {a}.
+
+loadd [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00101010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+load mem[{b}] into {a}.
+
+loadq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00111010 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + %register_nosize], %imm
@@ -20009,49 +20009,49 @@ load mem[{b}] into {a}.
 loadh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111010 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111010 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011010 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101010 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111010 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111010 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + 2 * %register_nosize], %imm
@@ -20145,49 +20145,49 @@ load mem[{b}] into {a}.
 loadh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111010 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111010 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011010 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101010 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111010 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111010 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + 4 * %register_nosize], %imm
@@ -20281,49 +20281,49 @@ load mem[{b}] into {a}.
 loadh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111010 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111010 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001010 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 load mem[{b}] into {a}.
 
 loadx [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011010 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadd [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101010 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111010 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111010 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 load mem[{b}] into {a}.
 
 loadh [%register_nosize + 8 * %register_nosize], %imm
@@ -20416,170 +20416,170 @@ load mem[{b}] into {a}.
 
 loadh %register_hword, [ip + %imm]
 = %b:a
-00001010 aaa10001 ???????? cccccccc
+00001010 aaa10001 xxxxxxxx cccccccc
 load mem[{b}] into {a}.
 
 loadx %register_xword, [ip + %imm]
 = %b:a
-00011010 aaa10001 ???????? cccccccc
+00011010 aaa10001 xxxxxxxx cccccccc
 load mem[{b}] into {a}.
 
 loadd %register_dword, [ip + %imm]
 = %b:a
-00101010 aaa10001 ???????? cccccccc
+00101010 aaa10001 xxxxxxxx cccccccc
 load mem[{b}] into {a}.
 
 loadq %register_qword, [ip + %imm]
 = %b:a
-00111010 aaa10001 ???????? cccccccc
+00111010 aaa10001 xxxxxxxx cccccccc
 load mem[{b}] into {a}.
 
 loadh %register_hword, [ip + %imm]
 = %b:ba
-00001010 aaa10001 ???????? cccccccc cccccccc
+00001010 aaa10001 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadx %register_xword, [ip + %imm]
 = %b:ba
-00011010 aaa10001 ???????? cccccccc cccccccc
+00011010 aaa10001 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadd %register_dword, [ip + %imm]
 = %b:ba
-00101010 aaa10001 ???????? cccccccc cccccccc
+00101010 aaa10001 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadq %register_qword, [ip + %imm]
 = %b:ba
-00111010 aaa10001 ???????? cccccccc cccccccc
+00111010 aaa10001 xxxxxxxx cccccccc cccccccc
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize, %register_nosize]
-00001010 aaa11001 00ccc???
+00001010 aaa11001 00cccxxx
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize, %register_nosize]
-00011010 aaa11001 00ccc???
+00011010 aaa11001 00cccxxx
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize, %register_nosize]
-00101010 aaa11001 00ccc???
+00101010 aaa11001 00cccxxx
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize, %register_nosize]
-00111010 aaa11001 00ccc???
+00111010 aaa11001 00cccxxx
 load mem[{b}] into {a}.
 
 loadh [%register_nosize, %register_nosize], %register_nosize
-00001010 ccc11101 00bbb???
+00001010 ccc11101 00bbbxxx
 load mem[{b}] into {a}.
 
 loadx [%register_nosize, %register_nosize], %register_nosize
-00011010 ccc11101 00bbb???
+00011010 ccc11101 00bbbxxx
 load mem[{b}] into {a}.
 
 loadd [%register_nosize, %register_nosize], %register_nosize
-00101010 ccc11101 00bbb???
+00101010 ccc11101 00bbbxxx
 load mem[{b}] into {a}.
 
 loadq [%register_nosize, %register_nosize], %register_nosize
-00111010 ccc11101 00bbb???
+00111010 ccc11101 00bbbxxx
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize, 2 * %register_nosize]
-00001010 aaa11001 01ccc???
+00001010 aaa11001 01cccxxx
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize, 2 * %register_nosize]
-00011010 aaa11001 01ccc???
+00011010 aaa11001 01cccxxx
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize, 2 * %register_nosize]
-00101010 aaa11001 01ccc???
+00101010 aaa11001 01cccxxx
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize, 2 * %register_nosize]
-00111010 aaa11001 01ccc???
+00111010 aaa11001 01cccxxx
 load mem[{b}] into {a}.
 
 loadh [%register_nosize, 2 * %register_nosize], %register_nosize
-00001010 ccc11101 01bbb???
+00001010 ccc11101 01bbbxxx
 load mem[{b}] into {a}.
 
 loadx [%register_nosize, 2 * %register_nosize], %register_nosize
-00011010 ccc11101 01bbb???
+00011010 ccc11101 01bbbxxx
 load mem[{b}] into {a}.
 
 loadd [%register_nosize, 2 * %register_nosize], %register_nosize
-00101010 ccc11101 01bbb???
+00101010 ccc11101 01bbbxxx
 load mem[{b}] into {a}.
 
 loadq [%register_nosize, 2 * %register_nosize], %register_nosize
-00111010 ccc11101 01bbb???
+00111010 ccc11101 01bbbxxx
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize, 4 * %register_nosize]
-00001010 aaa11001 10ccc???
+00001010 aaa11001 10cccxxx
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize, 4 * %register_nosize]
-00011010 aaa11001 10ccc???
+00011010 aaa11001 10cccxxx
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize, 4 * %register_nosize]
-00101010 aaa11001 10ccc???
+00101010 aaa11001 10cccxxx
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize, 4 * %register_nosize]
-00111010 aaa11001 10ccc???
+00111010 aaa11001 10cccxxx
 load mem[{b}] into {a}.
 
 loadh [%register_nosize, 4 * %register_nosize], %register_nosize
-00001010 ccc11101 10bbb???
+00001010 ccc11101 10bbbxxx
 load mem[{b}] into {a}.
 
 loadx [%register_nosize, 4 * %register_nosize], %register_nosize
-00011010 ccc11101 10bbb???
+00011010 ccc11101 10bbbxxx
 load mem[{b}] into {a}.
 
 loadd [%register_nosize, 4 * %register_nosize], %register_nosize
-00101010 ccc11101 10bbb???
+00101010 ccc11101 10bbbxxx
 load mem[{b}] into {a}.
 
 loadq [%register_nosize, 4 * %register_nosize], %register_nosize
-00111010 ccc11101 10bbb???
+00111010 ccc11101 10bbbxxx
 load mem[{b}] into {a}.
 
 loadh %register_hword, [%register_nosize, 8 * %register_nosize]
-00001010 aaa11001 11ccc???
+00001010 aaa11001 11cccxxx
 load mem[{b}] into {a}.
 
 loadx %register_xword, [%register_nosize, 8 * %register_nosize]
-00011010 aaa11001 11ccc???
+00011010 aaa11001 11cccxxx
 load mem[{b}] into {a}.
 
 loadd %register_dword, [%register_nosize, 8 * %register_nosize]
-00101010 aaa11001 11ccc???
+00101010 aaa11001 11cccxxx
 load mem[{b}] into {a}.
 
 loadq %register_qword, [%register_nosize, 8 * %register_nosize]
-00111010 aaa11001 11ccc???
+00111010 aaa11001 11cccxxx
 load mem[{b}] into {a}.
 
 loadh [%register_nosize, 8 * %register_nosize], %register_nosize
-00001010 ccc11101 11bbb???
+00001010 ccc11101 11bbbxxx
 load mem[{b}] into {a}.
 
 loadx [%register_nosize, 8 * %register_nosize], %register_nosize
-00011010 ccc11101 11bbb???
+00011010 ccc11101 11bbbxxx
 load mem[{b}] into {a}.
 
 loadd [%register_nosize, 8 * %register_nosize], %register_nosize
-00101010 ccc11101 11bbb???
+00101010 ccc11101 11bbbxxx
 load mem[{b}] into {a}.
 
 loadq [%register_nosize, 8 * %register_nosize], %register_nosize
-00111010 ccc11101 11bbb???
+00111010 ccc11101 11bbbxxx
 load mem[{b}] into {a}.
 
 loadh %register_hword, %imm
@@ -20615,235 +20615,235 @@ storeq %register_qword, %register_qword
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize]
-00001011 aaa00010 ?????bbb
+00001011 aaa00010 xxxxxbbb
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize]
-00011011 aaa00010 ?????bbb
+00011011 aaa00010 xxxxxbbb
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize]
-00101011 aaa00010 ?????bbb
+00101011 aaa00010 xxxxxbbb
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize]
-00111011 aaa00010 ?????bbb
+00111011 aaa00010 xxxxxbbb
 store {a} into mem[{b}].
 
 storeh [%register_nosize], %register_hword
-00001011 bbb00011 ?????aaa
+00001011 bbb00011 xxxxxaaa
 store {a} into mem[{b}].
 
 storex [%register_nosize], %register_xword
-00011011 bbb00011 ?????aaa
+00011011 bbb00011 xxxxxaaa
 store {a} into mem[{b}].
 
 stored [%register_nosize], %register_dword
-00101011 bbb00011 ?????aaa
+00101011 bbb00011 xxxxxaaa
 store {a} into mem[{b}].
 
 storeq [%register_nosize], %register_qword
-00111011 bbb00011 ?????aaa
+00111011 bbb00011 xxxxxaaa
 store {a} into mem[{b}].
 
 storeh %register_hword, [%imm]
 = %b:ba
-00001011 aaa00110 ???????? cccccccc cccccccc
+00001011 aaa00110 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storex %register_xword, [%imm]
 = %b:ba
-00011011 aaa00110 ???????? cccccccc cccccccc
+00011011 aaa00110 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 stored %register_dword, [%imm]
 = %b:ba
-00101011 aaa00110 ???????? cccccccc cccccccc
+00101011 aaa00110 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeq %register_qword, [%imm]
 = %b:ba
-00111011 aaa00110 ???????? cccccccc cccccccc
+00111011 aaa00110 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeh [%imm], %register_hword
 = %a:ba
-00001011 bbb00111 ???????? cccccccc cccccccc
+00001011 bbb00111 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storex [%imm], %register_xword
 = %a:ba
-00011011 bbb00111 ???????? cccccccc cccccccc
+00011011 bbb00111 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 stored [%imm], %register_dword
 = %a:ba
-00101011 bbb00111 ???????? cccccccc cccccccc
+00101011 bbb00111 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeq [%imm], %register_qword
 = %a:ba
-00111011 bbb00111 ???????? cccccccc cccccccc
+00111011 bbb00111 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001011 aaa01010 ?????bbb dddddddd
+00001011 aaa01010 xxxxxbbb dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize + %imm]
 = %c:a
-00011011 aaa01010 ?????bbb dddddddd
+00011011 aaa01010 xxxxxbbb dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize + %imm]
 = %c:a
-00101011 aaa01010 ?????bbb dddddddd
+00101011 aaa01010 xxxxxbbb dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111011 aaa01010 ?????bbb dddddddd
+00111011 aaa01010 xxxxxbbb dddddddd
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %imm], %register_hword
 = %b:a
-00001011 ccc01011 ?????aaa dddddddd
+00001011 ccc01011 xxxxxaaa dddddddd
 store {a} into mem[{b}].
 
 storex [%register_nosize + %imm], %register_xword
 = %b:a
-00011011 ccc01011 ?????aaa dddddddd
+00011011 ccc01011 xxxxxaaa dddddddd
 store {a} into mem[{b}].
 
 stored [%register_nosize + %imm], %register_dword
 = %b:a
-00101011 ccc01011 ?????aaa dddddddd
+00101011 ccc01011 xxxxxaaa dddddddd
 store {a} into mem[{b}].
 
 storeq [%register_nosize + %imm], %register_qword
 = %b:a
-00111011 ccc01011 ?????aaa dddddddd
+00111011 ccc01011 xxxxxaaa dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001011 aaa01110 ?????bbb dddddddd dddddddd
+00001011 aaa01110 xxxxxbbb dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011011 aaa01110 ?????bbb dddddddd dddddddd
+00011011 aaa01110 xxxxxbbb dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101011 aaa01110 ?????bbb dddddddd dddddddd
+00101011 aaa01110 xxxxxbbb dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111011 aaa01110 ?????bbb dddddddd dddddddd
+00111011 aaa01110 xxxxxbbb dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001011 ccc01111 ?????aaa dddddddd dddddddd
+00001011 ccc01111 xxxxxaaa dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex [%register_nosize + %imm], %register_xword
 = %b:ba
-00011011 ccc01111 ?????aaa dddddddd dddddddd
+00011011 ccc01111 xxxxxaaa dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored [%register_nosize + %imm], %register_dword
 = %b:ba
-00101011 ccc01111 ?????aaa dddddddd dddddddd
+00101011 ccc01111 xxxxxaaa dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111011 ccc01111 ?????aaa dddddddd dddddddd
+00111011 ccc01111 xxxxxaaa dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + %imm]
 = %c:a
-00001011 aaa10010 00bbb??? dddddddd
+00001011 aaa10010 00bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize + %imm]
 = %c:a
-00011011 aaa10010 00bbb??? dddddddd
+00011011 aaa10010 00bbbxxx dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize + %imm]
 = %c:a
-00101011 aaa10010 00bbb??? dddddddd
+00101011 aaa10010 00bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize + %imm]
 = %c:a
-00111011 aaa10010 00bbb??? dddddddd
+00111011 aaa10010 00bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %imm], %register_hword
 = %b:a
-00001011 ccc10011 00aaa??? dddddddd
+00001011 ccc10011 00aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storex [%register_nosize + %imm], %register_xword
 = %b:a
-00011011 ccc10011 00aaa??? dddddddd
+00011011 ccc10011 00aaaxxx dddddddd
 store {a} into mem[{b}].
 
 stored [%register_nosize + %imm], %register_dword
 = %b:a
-00101011 ccc10011 00aaa??? dddddddd
+00101011 ccc10011 00aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeq [%register_nosize + %imm], %register_qword
 = %b:a
-00111011 ccc10011 00aaa??? dddddddd
+00111011 ccc10011 00aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + %imm]
 = %c:ba
-00001011 aaa10010 00bbb??? dddddddd dddddddd
+00001011 aaa10010 00bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize + %imm]
 = %c:ba
-00011011 aaa10010 00bbb??? dddddddd dddddddd
+00011011 aaa10010 00bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize + %imm]
 = %c:ba
-00101011 aaa10010 00bbb??? dddddddd dddddddd
+00101011 aaa10010 00bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize + %imm]
 = %c:ba
-00111011 aaa10010 00bbb??? dddddddd dddddddd
+00111011 aaa10010 00bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %imm], %register_hword
 = %b:ba
-00001011 ccc10011 00aaa??? dddddddd dddddddd
+00001011 ccc10011 00aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex [%register_nosize + %imm], %register_xword
 = %b:ba
-00011011 ccc10011 00aaa??? dddddddd dddddddd
+00011011 ccc10011 00aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored [%register_nosize + %imm], %register_dword
 = %b:ba
-00101011 ccc10011 00aaa??? dddddddd dddddddd
+00101011 ccc10011 00aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq [%register_nosize + %imm], %register_qword
 = %b:ba
-00111011 ccc10011 00aaa??? dddddddd dddddddd
+00111011 ccc10011 00aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + %register_nosize + %imm]
@@ -20928,82 +20928,82 @@ store {a} into mem[{b}].
 
 storeh %register_hword, [2 * %register_nosize + %imm]
 = %c:a
-00001011 aaa10010 01bbb??? dddddddd
+00001011 aaa10010 01bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [2 * %register_nosize + %imm]
 = %c:a
-00011011 aaa10010 01bbb??? dddddddd
+00011011 aaa10010 01bbbxxx dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [2 * %register_nosize + %imm]
 = %c:a
-00101011 aaa10010 01bbb??? dddddddd
+00101011 aaa10010 01bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [2 * %register_nosize + %imm]
 = %c:a
-00111011 aaa10010 01bbb??? dddddddd
+00111011 aaa10010 01bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeh [2 * %register_nosize + %imm], %register_hword
 = %b:a
-00001011 ccc10011 01aaa??? dddddddd
+00001011 ccc10011 01aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storex [2 * %register_nosize + %imm], %register_xword
 = %b:a
-00011011 ccc10011 01aaa??? dddddddd
+00011011 ccc10011 01aaaxxx dddddddd
 store {a} into mem[{b}].
 
 stored [2 * %register_nosize + %imm], %register_dword
 = %b:a
-00101011 ccc10011 01aaa??? dddddddd
+00101011 ccc10011 01aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeq [2 * %register_nosize + %imm], %register_qword
 = %b:a
-00111011 ccc10011 01aaa??? dddddddd
+00111011 ccc10011 01aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [2 * %register_nosize + %imm]
 = %c:ba
-00001011 aaa10010 01bbb??? dddddddd dddddddd
+00001011 aaa10010 01bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [2 * %register_nosize + %imm]
 = %c:ba
-00011011 aaa10010 01bbb??? dddddddd dddddddd
+00011011 aaa10010 01bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [2 * %register_nosize + %imm]
 = %c:ba
-00101011 aaa10010 01bbb??? dddddddd dddddddd
+00101011 aaa10010 01bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [2 * %register_nosize + %imm]
 = %c:ba
-00111011 aaa10010 01bbb??? dddddddd dddddddd
+00111011 aaa10010 01bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh [2 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001011 ccc10011 01aaa??? dddddddd dddddddd
+00001011 ccc10011 01aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex [2 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011011 ccc10011 01aaa??? dddddddd dddddddd
+00011011 ccc10011 01aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored [2 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101011 ccc10011 01aaa??? dddddddd dddddddd
+00101011 ccc10011 01aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq [2 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111011 ccc10011 01aaa??? dddddddd dddddddd
+00111011 ccc10011 01aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + 2 * %register_nosize + %imm]
@@ -21088,82 +21088,82 @@ store {a} into mem[{b}].
 
 storeh %register_hword, [4 * %register_nosize + %imm]
 = %c:a
-00001011 aaa10010 10bbb??? dddddddd
+00001011 aaa10010 10bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [4 * %register_nosize + %imm]
 = %c:a
-00011011 aaa10010 10bbb??? dddddddd
+00011011 aaa10010 10bbbxxx dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [4 * %register_nosize + %imm]
 = %c:a
-00101011 aaa10010 10bbb??? dddddddd
+00101011 aaa10010 10bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [4 * %register_nosize + %imm]
 = %c:a
-00111011 aaa10010 10bbb??? dddddddd
+00111011 aaa10010 10bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeh [4 * %register_nosize + %imm], %register_hword
 = %b:a
-00001011 ccc10011 10aaa??? dddddddd
+00001011 ccc10011 10aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storex [4 * %register_nosize + %imm], %register_xword
 = %b:a
-00011011 ccc10011 10aaa??? dddddddd
+00011011 ccc10011 10aaaxxx dddddddd
 store {a} into mem[{b}].
 
 stored [4 * %register_nosize + %imm], %register_dword
 = %b:a
-00101011 ccc10011 10aaa??? dddddddd
+00101011 ccc10011 10aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeq [4 * %register_nosize + %imm], %register_qword
 = %b:a
-00111011 ccc10011 10aaa??? dddddddd
+00111011 ccc10011 10aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [4 * %register_nosize + %imm]
 = %c:ba
-00001011 aaa10010 10bbb??? dddddddd dddddddd
+00001011 aaa10010 10bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [4 * %register_nosize + %imm]
 = %c:ba
-00011011 aaa10010 10bbb??? dddddddd dddddddd
+00011011 aaa10010 10bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [4 * %register_nosize + %imm]
 = %c:ba
-00101011 aaa10010 10bbb??? dddddddd dddddddd
+00101011 aaa10010 10bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [4 * %register_nosize + %imm]
 = %c:ba
-00111011 aaa10010 10bbb??? dddddddd dddddddd
+00111011 aaa10010 10bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh [4 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001011 ccc10011 10aaa??? dddddddd dddddddd
+00001011 ccc10011 10aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex [4 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011011 ccc10011 10aaa??? dddddddd dddddddd
+00011011 ccc10011 10aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored [4 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101011 ccc10011 10aaa??? dddddddd dddddddd
+00101011 ccc10011 10aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq [4 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111011 ccc10011 10aaa??? dddddddd dddddddd
+00111011 ccc10011 10aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + 4 * %register_nosize + %imm]
@@ -21248,82 +21248,82 @@ store {a} into mem[{b}].
 
 storeh %register_hword, [8 * %register_nosize + %imm]
 = %c:a
-00001011 aaa10010 11bbb??? dddddddd
+00001011 aaa10010 11bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [8 * %register_nosize + %imm]
 = %c:a
-00011011 aaa10010 11bbb??? dddddddd
+00011011 aaa10010 11bbbxxx dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [8 * %register_nosize + %imm]
 = %c:a
-00101011 aaa10010 11bbb??? dddddddd
+00101011 aaa10010 11bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [8 * %register_nosize + %imm]
 = %c:a
-00111011 aaa10010 11bbb??? dddddddd
+00111011 aaa10010 11bbbxxx dddddddd
 store {a} into mem[{b}].
 
 storeh [8 * %register_nosize + %imm], %register_hword
 = %b:a
-00001011 ccc10011 11aaa??? dddddddd
+00001011 ccc10011 11aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storex [8 * %register_nosize + %imm], %register_xword
 = %b:a
-00011011 ccc10011 11aaa??? dddddddd
+00011011 ccc10011 11aaaxxx dddddddd
 store {a} into mem[{b}].
 
 stored [8 * %register_nosize + %imm], %register_dword
 = %b:a
-00101011 ccc10011 11aaa??? dddddddd
+00101011 ccc10011 11aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeq [8 * %register_nosize + %imm], %register_qword
 = %b:a
-00111011 ccc10011 11aaa??? dddddddd
+00111011 ccc10011 11aaaxxx dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [8 * %register_nosize + %imm]
 = %c:ba
-00001011 aaa10010 11bbb??? dddddddd dddddddd
+00001011 aaa10010 11bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex %register_xword, [8 * %register_nosize + %imm]
 = %c:ba
-00011011 aaa10010 11bbb??? dddddddd dddddddd
+00011011 aaa10010 11bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored %register_dword, [8 * %register_nosize + %imm]
 = %c:ba
-00101011 aaa10010 11bbb??? dddddddd dddddddd
+00101011 aaa10010 11bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq %register_qword, [8 * %register_nosize + %imm]
 = %c:ba
-00111011 aaa10010 11bbb??? dddddddd dddddddd
+00111011 aaa10010 11bbbxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh [8 * %register_nosize + %imm], %register_hword
 = %b:ba
-00001011 ccc10011 11aaa??? dddddddd dddddddd
+00001011 ccc10011 11aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storex [8 * %register_nosize + %imm], %register_xword
 = %b:ba
-00011011 ccc10011 11aaa??? dddddddd dddddddd
+00011011 ccc10011 11aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored [8 * %register_nosize + %imm], %register_dword
 = %b:ba
-00101011 ccc10011 11aaa??? dddddddd dddddddd
+00101011 ccc10011 11aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq [8 * %register_nosize + %imm], %register_qword
 = %b:ba
-00111011 ccc10011 11aaa??? dddddddd dddddddd
+00111011 ccc10011 11aaaxxx dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize + 8 * %register_nosize + %imm]
@@ -21449,185 +21449,185 @@ store {a} into mem[{b}].
 storeh [%imm], %imm
 = %a:ba
 = %b:a
-00001011 00100001 ???????? cccccccc cccccccc dddddddd
+00001011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 store {a} into mem[{b}].
 
 storex [%imm], %imm
 = %a:ba
 = %b:a
-00011011 00100001 ???????? cccccccc cccccccc dddddddd
+00011011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 store {a} into mem[{b}].
 
 stored [%imm], %imm
 = %a:ba
 = %b:a
-00101011 00100001 ???????? cccccccc cccccccc dddddddd
+00101011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 store {a} into mem[{b}].
 
 storeq [%imm], %imm
 = %a:ba
 = %b:a
-00111011 00100001 ???????? cccccccc cccccccc dddddddd
+00111011 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 store {a} into mem[{b}].
 
 storeh [%imm], %imm
 = %a:ba
 = %b:a
-00001011 00100101 ???????? cccccccc cccccccc dddddddd
+00001011 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 store {a} into mem[{b}].
 
 storex [%imm], %imm
 = %a:ba
 = %b:ba
-00011011 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011011 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 store {a} into mem[{b}].
 
 stored [%imm], %imm
 = %a:ba
 = %b:dcba
-00101011 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101011 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00111011 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111011 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 store {a} into mem[{b}].
 
 storeh [%register_nosize], %imm
 = %b:a
-00001011 01000001 ?????aaa cccccccc
+00001011 01000001 xxxxxaaa cccccccc
 store {a} into mem[{b}].
 
 storex [%register_nosize], %imm
 = %b:a
-00011011 01000001 ?????aaa cccccccc
+00011011 01000001 xxxxxaaa cccccccc
 store {a} into mem[{b}].
 
 stored [%register_nosize], %imm
 = %b:a
-00101011 01000001 ?????aaa cccccccc
+00101011 01000001 xxxxxaaa cccccccc
 store {a} into mem[{b}].
 
 storeq [%register_nosize], %imm
 = %b:a
-00111011 01000001 ?????aaa cccccccc
+00111011 01000001 xxxxxaaa cccccccc
 store {a} into mem[{b}].
 
 storeh [%register_nosize], %imm
 = %b:a
-00001011 01000101 ?????aaa cccccccc
+00001011 01000101 xxxxxaaa cccccccc
 store {a} into mem[{b}].
 
 storex [%register_nosize], %imm
 = %b:ba
-00011011 01000101 ?????aaa cccccccc cccccccc
+00011011 01000101 xxxxxaaa cccccccc cccccccc
 store {a} into mem[{b}].
 
 stored [%register_nosize], %imm
 = %b:dcba
-00101011 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101011 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeq [%register_nosize], %imm
 = %b:hgfedcba
-00111011 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111011 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 stored [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111011 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111011 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-store {a} into mem[{b}].
-
-storex [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00011011 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-store {a} into mem[{b}].
-
-stored [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00101011 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-store {a} into mem[{b}].
-
-storeq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00111011 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-store {a} into mem[{b}].
-
-storeh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-store {a} into mem[{b}].
-
-storex [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00011011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-store {a} into mem[{b}].
-
-stored [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00101011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-store {a} into mem[{b}].
-
-storeq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00111011 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-store {a} into mem[{b}].
-
-storeh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001011 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011011 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 stored [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101011 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111011 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111011 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+store {a} into mem[{b}].
+
+storeh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+store {a} into mem[{b}].
+
+storex [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00011011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+store {a} into mem[{b}].
+
+stored [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00101011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+store {a} into mem[{b}].
+
+storeq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00111011 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+store {a} into mem[{b}].
+
+storeh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+store {a} into mem[{b}].
+
+storex [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00011011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+store {a} into mem[{b}].
+
+stored [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00101011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+store {a} into mem[{b}].
+
+storeq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00111011 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeh [%register_nosize + %register_nosize], %imm
@@ -21721,49 +21721,49 @@ store {a} into mem[{b}].
 storeh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 stored [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111011 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111011 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011011 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 stored [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101011 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111011 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111011 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeh [%register_nosize + 2 * %register_nosize], %imm
@@ -21857,49 +21857,49 @@ store {a} into mem[{b}].
 storeh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 stored [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111011 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111011 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011011 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 stored [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101011 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111011 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111011 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeh [%register_nosize + 4 * %register_nosize], %imm
@@ -21993,49 +21993,49 @@ store {a} into mem[{b}].
 storeh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 stored [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111011 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111011 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storeh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001011 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 store {a} into mem[{b}].
 
 storex [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011011 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 stored [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101011 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111011 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111011 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 store {a} into mem[{b}].
 
 storeh [%register_nosize + 8 * %register_nosize], %imm
@@ -22128,170 +22128,170 @@ store {a} into mem[{b}].
 
 storeh %register_hword, [ip + %imm]
 = %b:a
-00001011 aaa10001 ???????? cccccccc
+00001011 aaa10001 xxxxxxxx cccccccc
 store {a} into mem[{b}].
 
 storex %register_xword, [ip + %imm]
 = %b:a
-00011011 aaa10001 ???????? cccccccc
+00011011 aaa10001 xxxxxxxx cccccccc
 store {a} into mem[{b}].
 
 stored %register_dword, [ip + %imm]
 = %b:a
-00101011 aaa10001 ???????? cccccccc
+00101011 aaa10001 xxxxxxxx cccccccc
 store {a} into mem[{b}].
 
 storeq %register_qword, [ip + %imm]
 = %b:a
-00111011 aaa10001 ???????? cccccccc
+00111011 aaa10001 xxxxxxxx cccccccc
 store {a} into mem[{b}].
 
 storeh %register_hword, [ip + %imm]
 = %b:ba
-00001011 aaa10001 ???????? cccccccc cccccccc
+00001011 aaa10001 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storex %register_xword, [ip + %imm]
 = %b:ba
-00011011 aaa10001 ???????? cccccccc cccccccc
+00011011 aaa10001 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 stored %register_dword, [ip + %imm]
 = %b:ba
-00101011 aaa10001 ???????? cccccccc cccccccc
+00101011 aaa10001 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeq %register_qword, [ip + %imm]
 = %b:ba
-00111011 aaa10001 ???????? cccccccc cccccccc
+00111011 aaa10001 xxxxxxxx cccccccc cccccccc
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize, %register_nosize]
-00001011 aaa11001 00ccc???
+00001011 aaa11001 00cccxxx
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize, %register_nosize]
-00011011 aaa11001 00ccc???
+00011011 aaa11001 00cccxxx
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize, %register_nosize]
-00101011 aaa11001 00ccc???
+00101011 aaa11001 00cccxxx
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize, %register_nosize]
-00111011 aaa11001 00ccc???
+00111011 aaa11001 00cccxxx
 store {a} into mem[{b}].
 
 storeh [%register_nosize, %register_nosize], %register_hword
-00001011 ccc11101 00bbb???
+00001011 ccc11101 00bbbxxx
 store {a} into mem[{b}].
 
 storex [%register_nosize, %register_nosize], %register_xword
-00011011 ccc11101 00bbb???
+00011011 ccc11101 00bbbxxx
 store {a} into mem[{b}].
 
 stored [%register_nosize, %register_nosize], %register_dword
-00101011 ccc11101 00bbb???
+00101011 ccc11101 00bbbxxx
 store {a} into mem[{b}].
 
 storeq [%register_nosize, %register_nosize], %register_qword
-00111011 ccc11101 00bbb???
+00111011 ccc11101 00bbbxxx
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize, 2 * %register_nosize]
-00001011 aaa11001 01ccc???
+00001011 aaa11001 01cccxxx
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize, 2 * %register_nosize]
-00011011 aaa11001 01ccc???
+00011011 aaa11001 01cccxxx
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize, 2 * %register_nosize]
-00101011 aaa11001 01ccc???
+00101011 aaa11001 01cccxxx
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize, 2 * %register_nosize]
-00111011 aaa11001 01ccc???
+00111011 aaa11001 01cccxxx
 store {a} into mem[{b}].
 
 storeh [%register_nosize, 2 * %register_nosize], %register_hword
-00001011 ccc11101 01bbb???
+00001011 ccc11101 01bbbxxx
 store {a} into mem[{b}].
 
 storex [%register_nosize, 2 * %register_nosize], %register_xword
-00011011 ccc11101 01bbb???
+00011011 ccc11101 01bbbxxx
 store {a} into mem[{b}].
 
 stored [%register_nosize, 2 * %register_nosize], %register_dword
-00101011 ccc11101 01bbb???
+00101011 ccc11101 01bbbxxx
 store {a} into mem[{b}].
 
 storeq [%register_nosize, 2 * %register_nosize], %register_qword
-00111011 ccc11101 01bbb???
+00111011 ccc11101 01bbbxxx
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize, 4 * %register_nosize]
-00001011 aaa11001 10ccc???
+00001011 aaa11001 10cccxxx
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize, 4 * %register_nosize]
-00011011 aaa11001 10ccc???
+00011011 aaa11001 10cccxxx
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize, 4 * %register_nosize]
-00101011 aaa11001 10ccc???
+00101011 aaa11001 10cccxxx
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize, 4 * %register_nosize]
-00111011 aaa11001 10ccc???
+00111011 aaa11001 10cccxxx
 store {a} into mem[{b}].
 
 storeh [%register_nosize, 4 * %register_nosize], %register_hword
-00001011 ccc11101 10bbb???
+00001011 ccc11101 10bbbxxx
 store {a} into mem[{b}].
 
 storex [%register_nosize, 4 * %register_nosize], %register_xword
-00011011 ccc11101 10bbb???
+00011011 ccc11101 10bbbxxx
 store {a} into mem[{b}].
 
 stored [%register_nosize, 4 * %register_nosize], %register_dword
-00101011 ccc11101 10bbb???
+00101011 ccc11101 10bbbxxx
 store {a} into mem[{b}].
 
 storeq [%register_nosize, 4 * %register_nosize], %register_qword
-00111011 ccc11101 10bbb???
+00111011 ccc11101 10bbbxxx
 store {a} into mem[{b}].
 
 storeh %register_hword, [%register_nosize, 8 * %register_nosize]
-00001011 aaa11001 11ccc???
+00001011 aaa11001 11cccxxx
 store {a} into mem[{b}].
 
 storex %register_xword, [%register_nosize, 8 * %register_nosize]
-00011011 aaa11001 11ccc???
+00011011 aaa11001 11cccxxx
 store {a} into mem[{b}].
 
 stored %register_dword, [%register_nosize, 8 * %register_nosize]
-00101011 aaa11001 11ccc???
+00101011 aaa11001 11cccxxx
 store {a} into mem[{b}].
 
 storeq %register_qword, [%register_nosize, 8 * %register_nosize]
-00111011 aaa11001 11ccc???
+00111011 aaa11001 11cccxxx
 store {a} into mem[{b}].
 
 storeh [%register_nosize, 8 * %register_nosize], %register_hword
-00001011 ccc11101 11bbb???
+00001011 ccc11101 11bbbxxx
 store {a} into mem[{b}].
 
 storex [%register_nosize, 8 * %register_nosize], %register_xword
-00011011 ccc11101 11bbb???
+00011011 ccc11101 11bbbxxx
 store {a} into mem[{b}].
 
 stored [%register_nosize, 8 * %register_nosize], %register_dword
-00101011 ccc11101 11bbb???
+00101011 ccc11101 11bbbxxx
 store {a} into mem[{b}].
 
 storeq [%register_nosize, 8 * %register_nosize], %register_qword
-00111011 ccc11101 11bbb???
+00111011 ccc11101 11bbbxxx
 store {a} into mem[{b}].
 
 storeh %register_hword, %imm
@@ -22353,185 +22353,185 @@ shift {a} left 5 and or it with {b}
 sloh [%imm], %imm
 = %a:ba
 = %b:a
-00001100 00100001 ???????? cccccccc cccccccc dddddddd
+00001100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 shift {a} left 5 and or it with {b}
 
 slox [%imm], %imm
 = %a:ba
 = %b:a
-00011100 00100001 ???????? cccccccc cccccccc dddddddd
+00011100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 shift {a} left 5 and or it with {b}
 
 slod [%imm], %imm
 = %a:ba
 = %b:a
-00101100 00100001 ???????? cccccccc cccccccc dddddddd
+00101100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 shift {a} left 5 and or it with {b}
 
 sloq [%imm], %imm
 = %a:ba
 = %b:a
-00111100 00100001 ???????? cccccccc cccccccc dddddddd
+00111100 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 shift {a} left 5 and or it with {b}
 
 sloh [%imm], %imm
 = %a:ba
 = %b:a
-00001100 00100101 ???????? cccccccc cccccccc dddddddd
+00001100 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 shift {a} left 5 and or it with {b}
 
 slox [%imm], %imm
 = %a:ba
 = %b:ba
-00011100 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011100 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 shift {a} left 5 and or it with {b}
 
 slod [%imm], %imm
 = %a:ba
 = %b:dcba
-00101100 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101100 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 shift {a} left 5 and or it with {b}
 
 sloq [%imm], %imm
 = %a:ba
 = %b:hgfedcba
-00111100 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111100 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize], %imm
 = %b:a
-00001100 01000001 ?????aaa cccccccc
+00001100 01000001 xxxxxaaa cccccccc
 shift {a} left 5 and or it with {b}
 
 slox [%register_nosize], %imm
 = %b:a
-00011100 01000001 ?????aaa cccccccc
+00011100 01000001 xxxxxaaa cccccccc
 shift {a} left 5 and or it with {b}
 
 slod [%register_nosize], %imm
 = %b:a
-00101100 01000001 ?????aaa cccccccc
+00101100 01000001 xxxxxaaa cccccccc
 shift {a} left 5 and or it with {b}
 
 sloq [%register_nosize], %imm
 = %b:a
-00111100 01000001 ?????aaa cccccccc
+00111100 01000001 xxxxxaaa cccccccc
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize], %imm
 = %b:a
-00001100 01000101 ?????aaa cccccccc
+00001100 01000101 xxxxxaaa cccccccc
 shift {a} left 5 and or it with {b}
 
 slox [%register_nosize], %imm
 = %b:ba
-00011100 01000101 ?????aaa cccccccc cccccccc
+00011100 01000101 xxxxxaaa cccccccc cccccccc
 shift {a} left 5 and or it with {b}
 
 slod [%register_nosize], %imm
 = %b:dcba
-00101100 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101100 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 shift {a} left 5 and or it with {b}
 
 sloq [%register_nosize], %imm
 = %b:hgfedcba
-00111100 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111100 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111100 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111100 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-shift {a} left 5 and or it with {b}
-
-slox [%register_nosize + %imm], %imm
-= %b:ba
-= %c:ba
-00011100 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-shift {a} left 5 and or it with {b}
-
-slod [%register_nosize + %imm], %imm
-= %b:ba
-= %c:dcba
-00101100 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-shift {a} left 5 and or it with {b}
-
-sloq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:hgfedcba
-00111100 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-shift {a} left 5 and or it with {b}
-
-sloh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-shift {a} left 5 and or it with {b}
-
-slox [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00011100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-shift {a} left 5 and or it with {b}
-
-slod [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00101100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-shift {a} left 5 and or it with {b}
-
-sloq [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00111100 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-shift {a} left 5 and or it with {b}
-
-sloh [%register_nosize + %imm], %imm
-= %b:ba
-= %c:a
-00001100 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [%register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011100 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [%register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101100 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [%register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111100 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111100 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+shift {a} left 5 and or it with {b}
+
+sloh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+shift {a} left 5 and or it with {b}
+
+slox [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00011100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+shift {a} left 5 and or it with {b}
+
+slod [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00101100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+shift {a} left 5 and or it with {b}
+
+sloq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00111100 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+shift {a} left 5 and or it with {b}
+
+sloh [%register_nosize + %imm], %imm
+= %b:ba
+= %c:a
+00001100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+shift {a} left 5 and or it with {b}
+
+slox [%register_nosize + %imm], %imm
+= %b:ba
+= %c:ba
+00011100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+shift {a} left 5 and or it with {b}
+
+slod [%register_nosize + %imm], %imm
+= %b:ba
+= %c:dcba
+00101100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+shift {a} left 5 and or it with {b}
+
+sloq [%register_nosize + %imm], %imm
+= %b:ba
+= %c:hgfedcba
+00111100 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize + %register_nosize], %imm
@@ -22625,49 +22625,49 @@ shift {a} left 5 and or it with {b}
 sloh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111100 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111100 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011100 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101100 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [2 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111100 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111100 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize + 2 * %register_nosize], %imm
@@ -22761,49 +22761,49 @@ shift {a} left 5 and or it with {b}
 sloh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111100 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111100 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011100 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101100 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [4 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111100 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111100 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize + 4 * %register_nosize], %imm
@@ -22897,49 +22897,49 @@ shift {a} left 5 and or it with {b}
 sloh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00011100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00101100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00111100 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111100 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:a
-00001100 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slox [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:ba
-00011100 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 slod [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:dcba
-00101100 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloq [8 * %register_nosize + %imm], %imm
 = %b:ba
 = %c:hgfedcba
-00111100 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111100 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 shift {a} left 5 and or it with {b}
 
 sloh [%register_nosize + 8 * %register_nosize], %imm
@@ -23089,185 +23089,185 @@ read control register {b} into {a}.
 readcrh [%imm], %control_register
 = %a:ba
 = %b:a
-00001110 00100001 ???????? cccccccc cccccccc dddddddd
+00001110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 read control register {b} into {a}.
 
 readcrx [%imm], %control_register
 = %a:ba
 = %b:a
-00011110 00100001 ???????? cccccccc cccccccc dddddddd
+00011110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 read control register {b} into {a}.
 
 readcrd [%imm], %control_register
 = %a:ba
 = %b:a
-00101110 00100001 ???????? cccccccc cccccccc dddddddd
+00101110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 read control register {b} into {a}.
 
 readcrq [%imm], %control_register
 = %a:ba
 = %b:a
-00111110 00100001 ???????? cccccccc cccccccc dddddddd
+00111110 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 read control register {b} into {a}.
 
 readcrh [%imm], %control_register
 = %a:ba
 = %b:a
-00001110 00100101 ???????? cccccccc cccccccc dddddddd
+00001110 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 read control register {b} into {a}.
 
 readcrx [%imm], %control_register
 = %a:ba
 = %b:ba
-00011110 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011110 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 read control register {b} into {a}.
 
 readcrd [%imm], %control_register
 = %a:ba
 = %b:dcba
-00101110 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101110 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 read control register {b} into {a}.
 
 readcrq [%imm], %control_register
 = %a:ba
 = %b:hgfedcba
-00111110 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111110 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 read control register {b} into {a}.
 
 readcrh [%register_nosize], %control_register
 = %b:a
-00001110 01000001 ?????aaa cccccccc
+00001110 01000001 xxxxxaaa cccccccc
 read control register {b} into {a}.
 
 readcrx [%register_nosize], %control_register
 = %b:a
-00011110 01000001 ?????aaa cccccccc
+00011110 01000001 xxxxxaaa cccccccc
 read control register {b} into {a}.
 
 readcrd [%register_nosize], %control_register
 = %b:a
-00101110 01000001 ?????aaa cccccccc
+00101110 01000001 xxxxxaaa cccccccc
 read control register {b} into {a}.
 
 readcrq [%register_nosize], %control_register
 = %b:a
-00111110 01000001 ?????aaa cccccccc
+00111110 01000001 xxxxxaaa cccccccc
 read control register {b} into {a}.
 
 readcrh [%register_nosize], %control_register
 = %b:a
-00001110 01000101 ?????aaa cccccccc
+00001110 01000101 xxxxxaaa cccccccc
 read control register {b} into {a}.
 
 readcrx [%register_nosize], %control_register
 = %b:ba
-00011110 01000101 ?????aaa cccccccc cccccccc
+00011110 01000101 xxxxxaaa cccccccc cccccccc
 read control register {b} into {a}.
 
 readcrd [%register_nosize], %control_register
 = %b:dcba
-00101110 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101110 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 read control register {b} into {a}.
 
 readcrq [%register_nosize], %control_register
 = %b:hgfedcba
-00111110 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111110 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 read control register {b} into {a}.
 
 readcrh [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrd [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrq [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111110 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111110 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrh [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-read control register {b} into {a}.
-
-readcrx [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:ba
-00011110 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-read control register {b} into {a}.
-
-readcrd [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:dcba
-00101110 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-read control register {b} into {a}.
-
-readcrq [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:hgfedcba
-00111110 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-read control register {b} into {a}.
-
-readcrh [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00001110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-read control register {b} into {a}.
-
-readcrx [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00011110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-read control register {b} into {a}.
-
-readcrd [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00101110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-read control register {b} into {a}.
-
-readcrq [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00111110 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-read control register {b} into {a}.
-
-readcrh [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00001110 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011110 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrd [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101110 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrq [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111110 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111110 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+read control register {b} into {a}.
+
+readcrh [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00001110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+read control register {b} into {a}.
+
+readcrx [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00011110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+read control register {b} into {a}.
+
+readcrd [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00101110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+read control register {b} into {a}.
+
+readcrq [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00111110 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+read control register {b} into {a}.
+
+readcrh [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00001110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+read control register {b} into {a}.
+
+readcrx [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:ba
+00011110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+read control register {b} into {a}.
+
+readcrd [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:dcba
+00101110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+read control register {b} into {a}.
+
+readcrq [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:hgfedcba
+00111110 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrh [%register_nosize + %register_nosize], %control_register
@@ -23361,49 +23361,49 @@ read control register {b} into {a}.
 readcrh [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrd [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrq [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111110 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111110 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrh [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011110 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrd [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101110 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrq [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111110 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111110 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrh [%register_nosize + 2 * %register_nosize], %control_register
@@ -23497,49 +23497,49 @@ read control register {b} into {a}.
 readcrh [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrd [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrq [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111110 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111110 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrh [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011110 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrd [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101110 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrq [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111110 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111110 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrh [%register_nosize + 4 * %register_nosize], %control_register
@@ -23633,49 +23633,49 @@ read control register {b} into {a}.
 readcrh [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrd [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrq [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111110 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111110 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrh [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001110 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 read control register {b} into {a}.
 
 readcrx [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011110 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrd [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101110 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrq [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111110 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111110 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 read control register {b} into {a}.
 
 readcrh [%register_nosize + 8 * %register_nosize], %control_register
@@ -23825,185 +23825,185 @@ write {a} into control register {b}.
 writecrh [%imm], %control_register
 = %a:ba
 = %b:a
-00001111 00100001 ???????? cccccccc cccccccc dddddddd
+00001111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 write {a} into control register {b}.
 
 writecrx [%imm], %control_register
 = %a:ba
 = %b:a
-00011111 00100001 ???????? cccccccc cccccccc dddddddd
+00011111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 write {a} into control register {b}.
 
 writecrd [%imm], %control_register
 = %a:ba
 = %b:a
-00101111 00100001 ???????? cccccccc cccccccc dddddddd
+00101111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 write {a} into control register {b}.
 
 writecrq [%imm], %control_register
 = %a:ba
 = %b:a
-00111111 00100001 ???????? cccccccc cccccccc dddddddd
+00111111 00100001 xxxxxxxx cccccccc cccccccc dddddddd
 write {a} into control register {b}.
 
 writecrh [%imm], %control_register
 = %a:ba
 = %b:a
-00001111 00100101 ???????? cccccccc cccccccc dddddddd
+00001111 00100101 xxxxxxxx cccccccc cccccccc dddddddd
 write {a} into control register {b}.
 
 writecrx [%imm], %control_register
 = %a:ba
 = %b:ba
-00011111 00100101 ???????? cccccccc cccccccc dddddddd dddddddd
+00011111 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd
 write {a} into control register {b}.
 
 writecrd [%imm], %control_register
 = %a:ba
 = %b:dcba
-00101111 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00101111 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 write {a} into control register {b}.
 
 writecrq [%imm], %control_register
 = %a:ba
 = %b:hgfedcba
-00111111 00100101 ???????? cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
+00111111 00100101 xxxxxxxx cccccccc cccccccc dddddddd dddddddd dddddddd dddddddd
 write {a} into control register {b}.
 
 writecrh [%register_nosize], %control_register
 = %b:a
-00001111 01000001 ?????aaa cccccccc
+00001111 01000001 xxxxxaaa cccccccc
 write {a} into control register {b}.
 
 writecrx [%register_nosize], %control_register
 = %b:a
-00011111 01000001 ?????aaa cccccccc
+00011111 01000001 xxxxxaaa cccccccc
 write {a} into control register {b}.
 
 writecrd [%register_nosize], %control_register
 = %b:a
-00101111 01000001 ?????aaa cccccccc
+00101111 01000001 xxxxxaaa cccccccc
 write {a} into control register {b}.
 
 writecrq [%register_nosize], %control_register
 = %b:a
-00111111 01000001 ?????aaa cccccccc
+00111111 01000001 xxxxxaaa cccccccc
 write {a} into control register {b}.
 
 writecrh [%register_nosize], %control_register
 = %b:a
-00001111 01000101 ?????aaa cccccccc
+00001111 01000101 xxxxxaaa cccccccc
 write {a} into control register {b}.
 
 writecrx [%register_nosize], %control_register
 = %b:ba
-00011111 01000101 ?????aaa cccccccc cccccccc
+00011111 01000101 xxxxxaaa cccccccc cccccccc
 write {a} into control register {b}.
 
 writecrd [%register_nosize], %control_register
 = %b:dcba
-00101111 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00101111 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 write {a} into control register {b}.
 
 writecrq [%register_nosize], %control_register
 = %b:hgfedcba
-00111111 01000101 ?????aaa cccccccc cccccccc cccccccc cccccccc
+00111111 01000101 xxxxxaaa cccccccc cccccccc cccccccc cccccccc
 write {a} into control register {b}.
 
 writecrh [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00001111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00011111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrd [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00101111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrq [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111111 01100001 ?????aaa dddddddd dddddddd eeeeeeee
+00111111 01100001 xxxxxaaa dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrh [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 01100101 ?????aaa dddddddd dddddddd eeeeeeee
-write {a} into control register {b}.
-
-writecrx [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:ba
-00011111 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee
-write {a} into control register {b}.
-
-writecrd [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:dcba
-00101111 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-write {a} into control register {b}.
-
-writecrq [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:hgfedcba
-00111111 01100101 ?????aaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
-write {a} into control register {b}.
-
-writecrh [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00001111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-write {a} into control register {b}.
-
-writecrx [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00011111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-write {a} into control register {b}.
-
-writecrd [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00101111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-write {a} into control register {b}.
-
-writecrq [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00111111 10100001 00aaa??? dddddddd dddddddd eeeeeeee
-write {a} into control register {b}.
-
-writecrh [%register_nosize + %imm], %control_register
-= %b:ba
-= %c:a
-00001111 10100101 00aaa??? dddddddd dddddddd eeeeeeee
+00001111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011111 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrd [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101111 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrq [%register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111111 10100101 00aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111111 01100101 xxxxxaaa dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+write {a} into control register {b}.
+
+writecrh [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00001111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+write {a} into control register {b}.
+
+writecrx [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00011111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+write {a} into control register {b}.
+
+writecrd [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00101111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+write {a} into control register {b}.
+
+writecrq [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00111111 10100001 00aaaxxx dddddddd dddddddd eeeeeeee
+write {a} into control register {b}.
+
+writecrh [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:a
+00001111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee
+write {a} into control register {b}.
+
+writecrx [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:ba
+00011111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
+write {a} into control register {b}.
+
+writecrd [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:dcba
+00101111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+write {a} into control register {b}.
+
+writecrq [%register_nosize + %imm], %control_register
+= %b:ba
+= %c:hgfedcba
+00111111 10100101 00aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrh [%register_nosize + %register_nosize], %control_register
@@ -24097,49 +24097,49 @@ write {a} into control register {b}.
 writecrh [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00001111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00011111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrd [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00101111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrq [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111111 10100001 01aaa??? dddddddd dddddddd eeeeeeee
+00111111 10100001 01aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrh [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 10100101 01aaa??? dddddddd dddddddd eeeeeeee
+00001111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011111 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrd [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101111 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrq [2 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111111 10100101 01aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111111 10100101 01aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrh [%register_nosize + 2 * %register_nosize], %control_register
@@ -24233,49 +24233,49 @@ write {a} into control register {b}.
 writecrh [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00001111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00011111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrd [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00101111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrq [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111111 10100001 10aaa??? dddddddd dddddddd eeeeeeee
+00111111 10100001 10aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrh [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 10100101 10aaa??? dddddddd dddddddd eeeeeeee
+00001111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011111 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrd [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101111 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrq [4 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111111 10100101 10aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111111 10100101 10aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrh [%register_nosize + 4 * %register_nosize], %control_register
@@ -24369,49 +24369,49 @@ write {a} into control register {b}.
 writecrh [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00001111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00011111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00011111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrd [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00101111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00101111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrq [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00111111 10100001 11aaa??? dddddddd dddddddd eeeeeeee
+00111111 10100001 11aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrh [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:a
-00001111 10100101 11aaa??? dddddddd dddddddd eeeeeeee
+00001111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee
 write {a} into control register {b}.
 
 writecrx [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:ba
-00011111 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee
+00011111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrd [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:dcba
-00101111 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00101111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrq [8 * %register_nosize + %imm], %control_register
 = %b:ba
 = %c:hgfedcba
-00111111 10100101 11aaa??? dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
+00111111 10100101 11aaaxxx dddddddd dddddddd eeeeeeee eeeeeeee eeeeeeee eeeeeeee
 write {a} into control register {b}.
 
 writecrh [%register_nosize + 8 * %register_nosize], %control_register

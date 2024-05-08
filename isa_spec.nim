@@ -143,7 +143,7 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       var pattern: string
       var wildcard_mask: string
 
-      while peek(c) in setutils.toSet("01?abcdefghijklmnopqrstuvw "):
+      while peek(c) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
         case peek(c):
           of '0':
             pattern.add('0')
