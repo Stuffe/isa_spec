@@ -1,4 +1,4 @@
-import std/setutils, strutils
+import std/setutils, strutils, math
 import types, parse
 
 const CURRENT_ADDRESS = int.high
@@ -26,6 +26,12 @@ func get_expression*(c: var context, operand_count: int): expression
 
 func get_term(c: var context, operand_count: int): expression =
 
+  if matches(c, "log2("):
+    let exp = get_expression(c, operand_count)
+    if not matches(c, ')'):
+      return expression(exp_kind: exp_fail)
+    return expression(exp_kind: exp_operation, op_kind: op_log2, lhs: exp)
+  
   if matches(c, '('):
     let start = c.index
     result = get_expression(c, operand_count)
@@ -100,6 +106,7 @@ func get_greedy_group(c: var context, operand_count: int): expression =
     if rhs.exp_kind == exp_fail:
       c.index = start_index
       return expression(exp_kind: exp_fail)
+
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
@@ -134,18 +141,22 @@ func get_expression*(c: var context, operand_count: int): expression =
     if rhs.exp_kind == exp_fail:
       c.index = start_index
       return expression(exp_kind: exp_fail)
+
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
-func eval*(input: expression, operands: seq[uint64], ip: uint64): uint64 =
+func eval*(input: expression, operands: seq[uint64], current_address: uint64): uint64 =
+
   case input.exp_kind:
     of exp_fail: assert false
     of exp_number: return input.value
     of exp_operand: 
-      if input.index == CURRENT_ADDRESS: return ip
+      if input.index == CURRENT_ADDRESS: return current_address
       return operands[input.index]
     of exp_operation:
-      let lhs = eval(input.lhs, operands, ip)
-      let rhs = eval(input.rhs, operands, ip)
+      let lhs = eval(input.lhs, operands, current_address)
+      var rhs: uint64
+      if input.op_kind != op_log2:
+        rhs = eval(input.rhs, operands, current_address)
 
       case input.op_kind:
         of op_add: return lhs +   rhs
@@ -159,8 +170,13 @@ func eval*(input: expression, operands: seq[uint64], ip: uint64): uint64 =
         of op_lsl: return lhs shl rhs
         of op_lsr: return lhs shr rhs
         of op_asr: return asr(lhs, rhs)
+        of op_log2:
+          var shifts = 0'u64
+          var number = lhs
+          while (number shr shifts) > 0:
+            shifts += 1
+          return shifts - 1
         of op_byte_swizzle:
-
           var order: seq[uint8]
           var value = rhs
           for i in 0..7:
