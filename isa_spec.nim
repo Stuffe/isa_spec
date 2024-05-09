@@ -9,7 +9,7 @@ const FIELD_IMM        = 3
 const FIELD_LABEL      = 4
 const FIXED_FIELDS_LEN = 5
 
-proc parse_asm_spec*(source: string): spec_parse_result =
+proc parse_isa_spec*(source: string): spec_parse_result =
 
   var c = new_context(source)
 
@@ -163,27 +163,22 @@ proc parse_asm_spec*(source: string): spec_parse_result =
     
     block bit_pattern:
       var pattern: string
-      var wildcard_mask: string
 
       while peek(c) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
         case peek(c):
           of '0':
             pattern.add('0')
-            wildcard_mask.add('1')
             new_instruction.bit_types.add(FIELD_ZERO)
           of '1':
             pattern.add('1')
-            wildcard_mask.add('1')
             new_instruction.bit_types.add(FIELD_ONE)
           of ' ':
             discard
           of 'x':
             pattern.add('0')
-            wildcard_mask.add('0')
             new_instruction.bit_types.add(FIELD_WILDCARD)
           else:
             pattern.add('0')
-            wildcard_mask.add('0')
             let field_index = ord(peek(c)) - ord('a')
 
             if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
@@ -198,8 +193,9 @@ proc parse_asm_spec*(source: string): spec_parse_result =
       if new_instruction.bit_types.len mod 8 != 0:
         return error("Instruction '" & instruction_name & "' is not a multiple of 8")
       
-      discard parseBin(pattern, new_instruction.fixed_pattern)
-      discard parseBin(wildcard_mask, new_instruction.wildcard_mask)
+      discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
+      if pattern.len > 8:
+        discard parseBin(pattern[8..^1], new_instruction.fixed_pattern_1)
 
       skip_whitespaces(c)
 
@@ -219,9 +215,9 @@ proc parse_asm_spec*(source: string): spec_parse_result =
 
     skip_newlines(c)
 
-proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result
+proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 
-func assemble_file*(path: string, asm_spec: assembly_spec, already_included = newSeq[string]()): assembly_result =
+func assemble_file*(path: string, isa_spec: isa_spec, already_included = newSeq[string]()): assembly_result =
   let normal_path = normalizePath(path.replace('\\', '/'))
   
   if normal_path in already_included:
@@ -235,9 +231,64 @@ func assemble_file*(path: string, asm_spec: assembly_spec, already_included = ne
 
   {.noSideEffect.}:
     let source = readFile(normal_path)
-    return assemble(normal_path, asm_spec, source, already_included_new)
+    return assemble(normal_path, isa_spec, source, already_included_new)
 
-proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_included = newSeq[string]()): assembly_result =
+proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
+  var operand_index = 0
+  for part in disassembled_instruction.instruction.syntax:
+    if part == "":
+      echo disassembled_instruction.instruction.fields
+      let field_index = 0#disassembled_instruction.instruction.fields[operand_index] - FIXED_FIELDS_LEN
+
+      result &= $field_index
+      operand_index += 1
+    else:
+      result &= part
+
+proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
+  var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing
+  var index = 0
+
+  while index < machine_code.len:
+    let machine_code_0 = cast[ptr uint64](addr machine_code_pad[index])[]
+    let machine_code_1 = cast[ptr uint64](addr machine_code_pad[index + 8])[]
+
+    var anything_found = false
+
+    for instruction in isa_spec.instructions:
+      if (machine_code_0 and instruction.fixed_pattern_0) == instruction.fixed_pattern_0 and (machine_code_1 and instruction.fixed_pattern_1) == instruction.fixed_pattern_1:
+        index += (instruction.bit_types.len + 7) div 8
+        anything_found = true
+        result.add(disassembled_instruction(is_literal: false, instruction: instruction))
+        var fields: seq[uint64]
+        for i, t in instruction.bit_types:
+          if t < FIXED_FIELDS_LEN: continue
+          let idx = t - FIXED_FIELDS_LEN
+          while idx >= fields.len:
+            fields.add(0)
+
+          var bit = 0'u64
+          if i < 64:
+            bit = uint64((machine_code_0 and (1'u64 shl (instruction.bit_types.high - i))) > 0)
+          else:
+            let i2 = i - 64
+            bit = uint64((machine_code_1 and (1'u64 shl (instruction.bit_types.high - i2))) > 0)
+          
+          fields[idx] = fields[idx] shl 1'u64 or bit
+
+        result[^1].operands = fields
+
+        break
+        
+    if not anything_found:
+      result.add(disassembled_instruction(is_literal: true))
+      let top = index + max(1, isa_spec.code_alignment)
+      while index < top:
+        result[^1].value.add(machine_code_pad[index])
+        index += 1
+
+
+proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
   let normal_path = normalizePath(path.replace('\\', '/'))
 
@@ -270,7 +321,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
   var number_defines: Table[string, value]
   var field_defines: seq[Table[string, value]]
   var jump_patches: seq[jump_patch]
-  field_defines.setLen(asm_spec.field_types.len)
+  field_defines.setLen(isa_spec.field_types.len)
 
   proc error(input: string, error_index = -1): assembly_result =
     res.error = input
@@ -302,7 +353,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
         if field_string in field_defines[field]:
           return (true, field_defines[field][field_string].value)
 
-        for field_value in asm_spec.field_types[field].fields:
+        for field_value in isa_spec.field_types[field].fields:
           if field_value.name == field_string:
             var value = field_value.value
             # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
@@ -475,7 +526,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       while i > 0 and normal_path[i] != '/':
         i -= 1
 
-      let include_res = assemble_file(normal_path[0..i] & file, asm_spec)
+      let include_res = assemble_file(normal_path[0..i] & file, isa_spec)
       if include_res.error != "":
         return include_res
 
@@ -500,7 +551,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       if definition_name in number_defines:
         return error(definition_name & " is already declared")
 
-      for _, field_type in asm_spec.field_types:
+      for _, field_type in isa_spec.field_types:
         for _, field in field_type.fields:
           if field.name == definition_name:
             return error(definition_name & " is already declared")
@@ -517,7 +568,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
       else:
         let define_value = get_string(c)
         var found = false
-        for field_id, field_type in asm_spec.field_types:
+        for field_id, field_type in isa_spec.field_types:
           res.field_definitions[field_id] = @[]
           for i, field in field_type.fields:
             if field.name == define_value:
@@ -547,7 +598,7 @@ proc assemble*(path: string, asm_spec: assembly_spec, source: string, already_in
     var values = [0'u64, 0]
 
     block find_instruction:
-      for instruction in asm_spec.instructions:
+      for instruction in isa_spec.instructions:
         fields.setLen(0)
         c.index = start_index
 

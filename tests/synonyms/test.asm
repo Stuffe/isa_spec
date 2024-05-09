@@ -1,3 +1,3 @@
 
-test1 b0
-test2 d1
+test1 b2
+test2 d6

@@ -58,18 +58,27 @@ type instruction* = object
   fields*: seq[int]
   virtual_fields*: seq[expression]
   bit_types*: seq[int]
-  fixed_pattern*: uint64
-  wildcard_mask*: uint64
+  fixed_pattern_0*: uint64
+  fixed_pattern_1*: uint64
   description*: string
 
-type assembly_spec* = object
+type isa_spec* = object
+  code_alignment*: int
   field_types*: seq[field_type]
   instructions*: seq[instruction]
 
 type spec_parse_result* = object
   error_line*: int
   error*: string
-  spec*: assembly_spec
+  spec*: isa_spec
+
+type disassembled_instruction* = object
+  case is_literal*: bool
+    of false:
+      instruction*: instruction
+      operands*: seq[uint64]
+    of true:
+      value*: seq[uint8]
 
 type assembly_result* = object
   machine_code*: seq[uint8]
