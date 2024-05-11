@@ -1,2 +1,2 @@
 
-swizzle 0x01020304
+test 0

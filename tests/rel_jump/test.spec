@@ -3,5 +3,5 @@
 [instructions]
 jmp %label8
 =  %a - $
-bbbbbbbb
+00bbbbbb
 jump to %a.

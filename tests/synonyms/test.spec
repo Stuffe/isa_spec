@@ -14,4 +14,4 @@ test1 %reg8
 00000aaa
 
 test2 %reg16
-00000aaa
+00001aaa

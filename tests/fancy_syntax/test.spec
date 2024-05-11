@@ -4,12 +4,12 @@ shift
 s1 00
 
 register
-a 000
+a 00
 
 [instructions]
 
 mov [%shift * %register], %imm
-aabbbccc
+0aabbccc
 
 mov [%imm], %imm
-aaaabbbb
+1000aabb

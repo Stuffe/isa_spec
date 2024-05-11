@@ -6,7 +6,7 @@ type context* = object
 
 const STRING_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 const STRING_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
-const NUMBER_FIRST = setutils.toSet("0123456789-")
+const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 
 func new_context*(source: string): context =

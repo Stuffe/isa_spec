@@ -36,8 +36,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
       if field_type_name == "": return error("Expected a name for the field type")
       skip_whitespaces(c)
 
-      var new_field_types: Table[string, field_type] #(name: field_type_name)
-#      var new_field_type = field_type(name: field_type_name)
+      var new_field_types: Table[string, field_type]
       var bit_length = 0
 
       block outer:
@@ -163,22 +162,27 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     
     block bit_pattern:
       var pattern: string
+      var mask: string
 
       while peek(c) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
         case peek(c):
           of '0':
             pattern.add('0')
+            mask.add('1')
             new_instruction.bit_types.add(FIELD_ZERO)
           of '1':
             pattern.add('1')
+            mask.add('1')
             new_instruction.bit_types.add(FIELD_ONE)
           of ' ':
             discard
           of 'x':
             pattern.add('0')
+            mask.add('0')
             new_instruction.bit_types.add(FIELD_WILDCARD)
           else:
             pattern.add('0')
+            mask.add('0')
             let field_index = ord(peek(c)) - ord('a')
 
             if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
@@ -194,8 +198,10 @@ proc parse_isa_spec*(source: string): spec_parse_result =
         return error("Instruction '" & instruction_name & "' is not a multiple of 8")
       
       discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
+      discard parseBin(mask[0..min(7, mask.high)], new_instruction.fixed_mask_0)
       if pattern.len > 8:
         discard parseBin(pattern[8..^1], new_instruction.fixed_pattern_1)
+        discard parseBin(mask[8..^1], new_instruction.fixed_mask_1)
 
       skip_whitespaces(c)
 
@@ -214,6 +220,55 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     result.spec.instructions.add(new_instruction)
 
     skip_newlines(c)
+
+
+proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
+  var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing
+  var index = 0
+
+  while index < machine_code.len:
+    let machine_code_0 = cast[ptr uint64](addr machine_code_pad[index])[]
+    let machine_code_1 = cast[ptr uint64](addr machine_code_pad[index + 8])[]
+
+    var anything_found = false
+
+    for instruction in isa_spec.instructions:
+      let current_address = index
+      if (machine_code_0 and instruction.fixed_mask_0) == instruction.fixed_pattern_0 and (machine_code_1 and instruction.fixed_mask_1) == instruction.fixed_pattern_1:
+        index += (instruction.bit_types.len + 7) div 8
+        anything_found = true
+        result.add(disassembled_instruction(is_literal: false, instruction: instruction))
+        var fields: seq[uint64]
+        for i, t in instruction.bit_types:
+          if t < FIXED_FIELDS_LEN: continue
+          let idx = t - FIXED_FIELDS_LEN
+          while idx >= fields.len:
+            fields.add(0)
+
+          var bit = 0'u64
+          if i < 64:
+            bit = uint64((machine_code_0 and (1'u64 shl (instruction.bit_types.high - i))) > 0)
+          else:
+            let i2 = i - 64
+            bit = uint64((machine_code_1 and (1'u64 shl (instruction.bit_types.high - i2))) > 0)
+          
+          fields[idx] = fields[idx] shl 1'u64 or bit
+        
+        for i, expression in instruction.virtual_fields:
+          let field_index = instruction.fields.len + i
+          let res = cast[int](fields[field_index])
+          fields[field_index] = cast[uint64](reverse_eval(expression, current_address, fields, res))
+                  
+        result[^1].operands = fields
+
+        break
+        
+    if not anything_found:
+      result.add(disassembled_instruction(is_literal: true))
+      let top = index + max(1, isa_spec.code_alignment)
+      while index < top:
+        result[^1].value.add(machine_code_pad[index])
+        index += 1
 
 proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 
@@ -235,58 +290,45 @@ func assemble_file*(path: string, isa_spec: isa_spec, already_included = newSeq[
 
 proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
+
+  if disassembled_instruction.is_literal:
+    var value = disassembled_instruction.value
+    case value.len:
+      of 1: return $value[0] & "\\U8"
+      of 2: return $cast[ptr uint16](addr value[0])[] & "\\U16"
+      of 4: return $cast[ptr uint32](addr value[0])[] & "\\U32"
+      of 8: return $cast[ptr uint64](addr value[0])[] & "\\U64"
+      else: assert false, "TODO, support"
+  
   for part in disassembled_instruction.instruction.syntax:
     if part == "":
-      echo disassembled_instruction.instruction.fields
-      let field_index = 0#disassembled_instruction.instruction.fields[operand_index] - FIXED_FIELDS_LEN
+      let field_index = disassembled_instruction.instruction.fields[operand_index]
 
-      result &= $field_index
+      let operand = disassembled_instruction.operands[operand_index]
+
+      case field_index:
+        of FIELD_ZERO, FIELD_ONE, FIELD_WILDCARD:
+          assert false
+        of FIELD_IMM:
+          result &= $operand
+        of FIELD_LABEL:
+          result &= ".+" & $operand
+        else:
+          let fields = isa_spec.field_types[field_index].fields
+          
+          var found = false
+          for field in fields:
+            if field.value == operand:
+              result &= field.name
+              found = true
+              break
+
+          if not found:
+            return ""
+
       operand_index += 1
     else:
       result &= part
-
-proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
-  var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing
-  var index = 0
-
-  while index < machine_code.len:
-    let machine_code_0 = cast[ptr uint64](addr machine_code_pad[index])[]
-    let machine_code_1 = cast[ptr uint64](addr machine_code_pad[index + 8])[]
-
-    var anything_found = false
-
-    for instruction in isa_spec.instructions:
-      if (machine_code_0 and instruction.fixed_pattern_0) == instruction.fixed_pattern_0 and (machine_code_1 and instruction.fixed_pattern_1) == instruction.fixed_pattern_1:
-        index += (instruction.bit_types.len + 7) div 8
-        anything_found = true
-        result.add(disassembled_instruction(is_literal: false, instruction: instruction))
-        var fields: seq[uint64]
-        for i, t in instruction.bit_types:
-          if t < FIXED_FIELDS_LEN: continue
-          let idx = t - FIXED_FIELDS_LEN
-          while idx >= fields.len:
-            fields.add(0)
-
-          var bit = 0'u64
-          if i < 64:
-            bit = uint64((machine_code_0 and (1'u64 shl (instruction.bit_types.high - i))) > 0)
-          else:
-            let i2 = i - 64
-            bit = uint64((machine_code_1 and (1'u64 shl (instruction.bit_types.high - i2))) > 0)
-          
-          fields[idx] = fields[idx] shl 1'u64 or bit
-
-        result[^1].operands = fields
-
-        break
-        
-    if not anything_found:
-      result.add(disassembled_instruction(is_literal: true))
-      let top = index + max(1, isa_spec.code_alignment)
-      while index < top:
-        result[^1].value.add(machine_code_pad[index])
-        index += 1
-
 
 proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
@@ -377,19 +419,29 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         continue
 
       if instruction.fields[i] == FIELD_LABEL:
-        # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
-        let label_name = get_string(c)
+        
+        if peek(c) == '.':
+          c.index += 1
 
-        if create_jump_patches:
-          jump_patches.add(jump_patch(
-            label: label_name,
-            byte_offset: machine_code_offset,
-            instruction: instruction,
-            index: instruction_start,
-          ))
-          fields.add(0)
+          let jump_distance = get_number(c)
+          fields.add(parseInt(jump_distance).uint64)
+          
         else:
-          fields.add(labels[label_name].value)
+
+          # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
+          let label_name = get_string(c)
+
+          if create_jump_patches:
+            jump_patches.add(jump_patch(
+              label: label_name,
+              byte_offset: machine_code_offset,
+              instruction: instruction,
+              index: instruction_start,
+            ))
+            fields.add(0)
+          else:
+            fields.add(labels[label_name].value)
+
         continue
 
       let (match, value) = get_operand(c, instruction.fields[i])
@@ -400,8 +452,8 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
     var values = [0'u64, 0]
     block generate_fields:
       for virtual_field in instruction.virtual_fields:
-        let new_field = eval(virtual_field, fields, machine_code_offset.uint64)
-        fields.add(new_field)
+        let new_field = eval(virtual_field, fields, machine_code_offset)
+        fields.add(cast[uint64](new_field))
 
       var used_fields: set[uint8]
 
@@ -451,8 +503,6 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         shift_by -= 8
 
   skip_and_record_newlines(c)
-
-  var fields: seq[uint64]
 
   while peek(c) != '\0':
 
@@ -599,7 +649,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
 
     block find_instruction:
       for instruction in isa_spec.instructions:
-        fields.setLen(0)
+        var fields: seq[uint64]
         c.index = start_index
 
         block test:
@@ -617,9 +667,16 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
               continue
 
             if instruction.fields[i] == FIELD_LABEL:
-              let label_name = get_string(c)
-              if label_name == "":
-                return error("Was expecting a label name here")
+              if peek(c) == '.':
+                c.index += 1
+                let jump_distance = get_number(c)
+                if jump_distance == "":
+                  return error("Expected a jump distance here")
+              
+              else:
+                let label_name = get_string(c)
+                if label_name == "":
+                  return error("Was expecting a label name here")
 
               fields.add(0)
               continue
@@ -642,7 +699,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
           block generate_fields:
             for virtual_field in instr.virtual_fields:
               let new_field = eval(virtual_field, fields, 0)
-              fields.add(new_field)
+              fields.add(cast[uint64](new_field))
 
             var used_fields: set[uint8]
 

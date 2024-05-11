@@ -35,7 +35,6 @@ type op_kind* = enum
   op_lsr
   op_asr
   op_log2
-  op_byte_swizzle
 
 const OP_INDEXES* = ["+", "-", "*", "/", "%", "&&", "||", "^", "<<", ">>>", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
@@ -45,7 +44,7 @@ type expression* = ref object
   case exp_kind*: exp_kind
     of exp_fail: discard
     of exp_number:
-      value*: uint64
+      value*: int
     of exp_operand:
       index*: int
     of exp_operation:
@@ -60,6 +59,8 @@ type instruction* = object
   bit_types*: seq[int]
   fixed_pattern_0*: uint64
   fixed_pattern_1*: uint64
+  fixed_mask_0*: uint64
+  fixed_mask_1*: uint64
   description*: string
 
 type isa_spec* = object
@@ -89,6 +90,9 @@ type assembly_result* = object
   field_definitions*: OrderedTable[int, seq[string]]
   number_defines*: seq[string]
   label_names*: seq[string]
+
+proc lsr*(a: int, b: int): int =
+  return cast[int](cast[uint64](a) shr cast[uint64](b))
 
 proc asr*(a: uint64, b: uint64): uint64 =
   return cast[uint64](cast[int](a) shr cast[int](b))

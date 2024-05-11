@@ -8,18 +8,11 @@ func `$`*(exp: expression): string =
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
     of exp_operand: 
-      if exp.index == CURRENT_ADDRESS: return "CURRENT_ADDRESS"
+      if exp.index == CURRENT_ADDRESS: return "$"
       return $char(ord('a') + exp.index)
     of exp_operation: 
-      if exp.op_kind == op_byte_swizzle:
-        var pattern: string
-        var value = exp.rhs.value
-        for i in 0..7:
-          let val = cast[uint8](value)
-          if val == 0xff: break
-          pattern.add(char(ord('a') + val))
-          value = value shr 8
-        return $exp.lhs & ":" & pattern
+      if exp.op_kind == op_log2:
+        return "log2(" & $exp.lhs & ")"
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
 func get_expression*(c: var context, operand_count: int): expression
@@ -59,20 +52,7 @@ func get_term(c: var context, operand_count: int): expression =
     if number.len == 0: 
       return expression(exp_kind: exp_fail)
 
-    result = expression(exp_kind: exp_number, value: cast[uint64](parseInt(number)))
-
-  if matches(c, ':'):
-    var order = [0xff'u8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]
-    var i = 0
-    while i < 8:
-      let index = "abcdefgh".find(peek(c))
-      if index == -1: break
-      c.index += 1
-      order[i] = index.uint8
-      i += 1
-
-    let rhs = expression(exp_kind: exp_number, value: cast[ptr uint64](addr order[0])[])
-    result = expression(exp_kind: exp_operation, op_kind: op_byte_swizzle, lhs: result, rhs: rhs)
+    result = expression(exp_kind: exp_number, value: parseInt(number))
 
 func get_greedy_group(c: var context, operand_count: int): expression =
 
@@ -144,17 +124,18 @@ func get_expression*(c: var context, operand_count: int): expression =
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
-func eval*(input: expression, operands: seq[uint64], current_address: uint64): uint64 =
+proc eval*(input: expression, operands: seq[uint64], current_address: int): int =
 
   case input.exp_kind:
     of exp_fail: assert false
     of exp_number: return input.value
     of exp_operand: 
-      if input.index == CURRENT_ADDRESS: return current_address
-      return operands[input.index]
+      if input.index == CURRENT_ADDRESS: 
+        return current_address
+      return cast[int](operands[input.index])
     of exp_operation:
       let lhs = eval(input.lhs, operands, current_address)
-      var rhs: uint64
+      var rhs: int
       if input.op_kind != op_log2:
         rhs = eval(input.rhs, operands, current_address)
 
@@ -168,23 +149,68 @@ func eval*(input: expression, operands: seq[uint64], current_address: uint64): u
         of op_or:  return lhs or  rhs
         of op_xor: return lhs xor rhs
         of op_lsl: return lhs shl rhs
-        of op_lsr: return lhs shr rhs
-        of op_asr: return asr(lhs, rhs)
+        of op_lsr: return lsr(lhs, rhs)
+        of op_asr: return lhs shr rhs
         of op_log2:
-          var shifts = 0'u64
+          var shifts = 0
           var number = lhs
           while (number shr shifts) > 0:
             shifts += 1
           return shifts - 1
-        of op_byte_swizzle:
-          var order: seq[uint8]
-          var value = rhs
-          for i in 0..7:
-            let val = cast[uint8](value)
-            if val == 0xff: break
-            order.add(val)
-            value = value shr 8
 
-          let l = order.high
-          for i, place in order:
-            result = result or ((lhs shr (8 * i)) and 0xff) shl ((l - i) * 8)
+proc is_known_leaf(input: expression): bool =
+  return input.exp_kind == exp_number or (input.exp_kind == exp_operand and input.index == CURRENT_ADDRESS)
+
+proc get_leaf_value(input: expression, operands: seq[uint64], current_address: int): int =
+  case input.exp_kind:
+    of exp_number: return input.value
+    of exp_operand: 
+      if input.index == CURRENT_ADDRESS: return current_address
+      return cast[int](operands[input.index])
+    else: assert false
+
+proc reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int
+proc reverse_single(fields: var seq[uint64], current_address: int, op_kind: op_kind, known: int, unknown: expression, res: int): int =
+  case op_kind:
+    of op_add: return reverse_eval(unknown, current_address, fields, res -   known)
+    of op_sub: return reverse_eval(unknown, current_address, fields, res +   known)
+    of op_mul: return reverse_eval(unknown, current_address, fields, res div known)
+    of op_div: return reverse_eval(unknown, current_address, fields, res *   known)
+    of op_mod: return res
+    of op_and: return res
+    of op_or:  return res
+    of op_xor: return reverse_eval(unknown, current_address, fields, res xor known)
+    of op_lsl: return reverse_eval(unknown, current_address, fields, res shr known)
+    of op_lsr: return reverse_eval(unknown, current_address, fields, res shl known)
+    of op_asr: return reverse_eval(unknown, current_address, fields, res shl known)
+    of op_log2: assert false
+
+proc reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int =
+  
+  case input.exp_kind:
+    of exp_fail:    assert false
+    of exp_number:  return input.value
+    of exp_operand:
+      if input.index == CURRENT_ADDRESS: return current_address
+      fields[input.index] = cast[uint64](res)
+      return res
+    of exp_operation:
+  
+      if input.op_kind == op_log2:
+        result = 1 shl res
+        if input.lhs.exp_kind == exp_operand:
+          fields[input.lhs.index] = cast[uint64](result)
+        return result
+
+      if is_known_leaf(input.lhs):
+        return reverse_single(fields, current_address, input.op_kind, get_leaf_value(input.lhs, fields, current_address), input.rhs, res)
+
+      if is_known_leaf(input.rhs):
+        result = reverse_single(fields, current_address, input.op_kind, get_leaf_value(input.rhs, fields, current_address), input.lhs, res)
+        return result
+
+      # TODO, really we are assuming one equation with at most one unknown here. Rewrite this so it can solve more complex systems of equations
+    
+
+  
+  

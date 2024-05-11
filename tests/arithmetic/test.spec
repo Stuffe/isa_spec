@@ -3,12 +3,8 @@
 
 test %imm
 = %a << 2
-bbbbbbbb
-
-swizzle %imm
-= %a:dcba
-bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb
+00bbbbbb
 
 log2 %imm
 = log2(%a)
-bbbbbbbb
+10bbbbbb
