@@ -1,7 +1,7 @@
 [fields]
 
 [instructions]
-jmp %label8
+jmp %label
 =  %a - $
 00bbbbbb
 jump to %a.

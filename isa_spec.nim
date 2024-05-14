@@ -20,8 +20,8 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     field_type(name: "0"),
     field_type(name: "1"),
     field_type(name: "x"),
-    field_type(name: "imm"),
-    field_type(name: "label8"),
+    field_type(name: "immediate"),
+    field_type(name: "label"),
   ]
 
   skip_newlines(c)
@@ -82,7 +82,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
             if real_name notin new_field_types:
               new_field_types[real_name] = field_type(name: real_name, bit_length: bit_length)
               
-            new_field_types[real_name].fields.add(field_value(
+            new_field_types[real_name].values.add(field_value(
               name: field_name,
               value: cast[uint64](bit_value),
             ))
@@ -205,7 +205,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
 
       skip_whitespaces(c)
 
-      if read(c) != '\n':
+      if read(c) notin {'\n', '\0'}:
         return error("Was expecting a newline here")
 
     block get_description:
@@ -314,7 +314,7 @@ proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
         of FIELD_LABEL:
           result &= ".+" & $operand
         else:
-          let fields = isa_spec.field_types[field_index].fields
+          let fields = isa_spec.field_types[field_index].values
           
           var found = false
           for field in fields:
@@ -395,7 +395,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         if field_string in field_defines[field]:
           return (true, field_defines[field][field_string].value)
 
-        for field_value in isa_spec.field_types[field].fields:
+        for field_value in isa_spec.field_types[field].values:
           if field_value.name == field_string:
             var value = field_value.value
             # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
@@ -602,7 +602,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         return error(definition_name & " is already declared")
 
       for _, field_type in isa_spec.field_types:
-        for _, field in field_type.fields:
+        for _, field in field_type.values:
           if field.name == definition_name:
             return error(definition_name & " is already declared")
 
@@ -620,7 +620,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         var found = false
         for field_id, field_type in isa_spec.field_types:
           res.field_definitions[field_id] = @[]
-          for i, field in field_type.fields:
+          for i, field in field_type.values:
             if field.name == define_value:
               field_defines[field_id][definition_name] = value(public: public, value: field.value)
               res.field_definitions[field_id].add(definition_name)

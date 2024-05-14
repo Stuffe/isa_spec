@@ -26,7 +26,8 @@ func peek*(c: context, offset: int): char =
 
 func read*(c: var context): char =
   result = c.source[c.index]
-  c.index += 1
+  if result != '\0':
+    c.index += 1
 
 func skip_comment*(c: var context): bool =
   if peek(c) == ';' or (peek(c) == '/' and peek(c, 1) == '/'):

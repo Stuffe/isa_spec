@@ -3,5 +3,5 @@
 
 [instructions]
 
-load %imm
+load %immediate
 0000aaaa

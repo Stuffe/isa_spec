@@ -3,9 +3,9 @@
 
 [instructions]
 
-load %imm
+load %immediate
 0000aaaa
 
-load %imm
+load %immediate
 00000001 aaaaaaaa
 

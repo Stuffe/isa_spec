@@ -8,8 +8,8 @@ a 00
 
 [instructions]
 
-mov [%shift * %register], %imm
+mov [%shift * %register], %immediate
 0aabbccc
 
-mov [%imm], %imm
+mov [%immediate], %immediate
 1000aabb

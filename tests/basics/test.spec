@@ -16,11 +16,11 @@ mov %register, %register
 10aaabbb
 Move %b to %a.
  
-load %imm
+load %immediate
 00aaaaaa
 Store %a in r0.
  
-jmp %label8
+jmp %label
 00aaaaaa
 Store %a in r0.
 

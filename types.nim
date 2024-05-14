@@ -14,7 +14,7 @@ type field_type* = object
   register_kind: register_kind
   name*: string
   bit_length*: int
-  fields*: seq[field_value]
+  values*: seq[field_value]
 
 type exp_kind* = enum
   exp_fail
