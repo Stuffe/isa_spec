@@ -10,8 +10,8 @@ b6 110 8, d6 110 16
 
 [instructions]
 
-test1 %reg8
+test1 %a(reg8)
 00000aaa
 
-test2 %reg16
+test2 %a(reg16)
 00001aaa

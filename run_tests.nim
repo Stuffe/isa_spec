@@ -8,7 +8,6 @@ type test = object
 
 const TESTS = {
   "evaluator": test(result: @[0'u8, 33, 95, 103, 133, 160, 192]),
-
   "rel_arithmetic": test(result: @[0'u8, 0, 0, 131]),
   "imm_overload": test(result: @[1'u8, 64]),
   "large": test(result: @[0'u8, 1, 2, 3, 4, 5, 6, 7]),
@@ -51,7 +50,6 @@ for name, test in TESTS:
   var reasm_source: string
   for instr in disassembled:
     reasm_source &= str(isa_spec, instr) & "\n"
-
 
   let reasm = assemble("", isa_spec, reasm_source)
 

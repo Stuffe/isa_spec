@@ -122,10 +122,22 @@ proc parse_isa_spec*(source: string): spec_parse_result =
       add_string_syntax(c, new_instruction.syntax)
 
       while matches(c, '%'):
+        let operand_name = get_string(c)
+        let expected_operand_name = char(ord('a') + new_instruction.fields.len)
+
+        if operand_name.len != 1 or operand_name[0] != expected_operand_name:
+          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
+
+        if not matches(c, '('):
+          return error("Expected parenthesis after the operand name, like: " & operand_name & "(immediate)")
+
         let field_name = get_string(c)
 
         if field_name == "":
           return error("Was expecting a field name here")
+
+        if not matches(c, ')'):
+          return error("Expected a closing parenthesis after the field type")
 
         var found = false
 
@@ -137,6 +149,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
             break
         
         if not found:
+          echo new_instruction.fields
           return error("Field name '" & field_name & "' not defined")
 
         add_string_syntax(c, new_instruction.syntax)

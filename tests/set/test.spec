@@ -9,5 +9,5 @@ ddd 011
 
 [instructions]
 
-test %my_field
+test %a(my_field)
 00000aaa

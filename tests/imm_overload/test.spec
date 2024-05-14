@@ -3,9 +3,9 @@
 
 [instructions]
 
-load %immediate
+load %a(immediate)
 0000aaaa
 
-load %immediate
+load %a(immediate)
 00000001 aaaaaaaa
 

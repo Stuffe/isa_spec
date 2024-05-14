@@ -12,15 +12,15 @@ io 110
  
 [instructions] 
  
-mov %register, %register
+mov %a(register), %b(register)
 10aaabbb
 Move %b to %a.
  
-load %immediate
+load %a(immediate)
 00aaaaaa
 Store %a in r0.
  
-jmp %label
+jmp %a(label)
 00aaaaaa
 Store %a in r0.
 
