@@ -4,5 +4,5 @@
 [instructions]
 
 test %a(immediate)
-= 2 * (%a + 1)
+%b = 2 * (%a + 1)
 00bbbbbb

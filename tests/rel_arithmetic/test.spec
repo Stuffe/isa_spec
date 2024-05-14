@@ -4,7 +4,7 @@
 [instructions]
 
 load ip
-= $
+%a = $
 1aaaaaaa
 
 nop

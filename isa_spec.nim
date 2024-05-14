@@ -123,9 +123,9 @@ proc parse_isa_spec*(source: string): spec_parse_result =
 
       while matches(c, '%'):
         let operand_name = get_string(c)
-        let expected_operand_name = char(ord('a') + new_instruction.fields.len)
+        let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
 
-        if operand_name.len != 1 or operand_name[0] != expected_operand_name:
+        if operand_name != expected_operand_name:
           return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
 
         if not matches(c, '('):
@@ -161,7 +161,20 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     
     block virtual_field:
       var count = 1
-      while matches(c, '='):
+      while matches(c, '%'):
+        let operand_name = get_string(c)
+        let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
+
+        if operand_name != expected_operand_name:
+          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
+
+        skip_newlines(c)
+
+        if not matches(c, '='):
+          return error("Expected an assignment here")
+
+        skip_newlines(c)
+
         let virt_op = get_expression(c, new_instruction.fields.len + new_instruction.virtual_fields.len)
         new_instruction.virtual_fields.add(virt_op)
 
