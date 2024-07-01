@@ -118,10 +118,12 @@ func get_line_number*(c: context, byte_index = -1): int =
   return line
 
 func get_size*(c: var context): int =
-  if peek(c) != '\\' or peek(c, 1) != 'U': return
+  if peek(c) != '<' or peek(c, 1) != 'U': return
+  let orig_index = c.index
   c.index += 2
   let number = get_number(c)
-  if number == "":
-    c.index -= 2
+  if number == "" or read(c) != '>':
+    c.index = orig_index
     return
+
   return parseInt(number)

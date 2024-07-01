@@ -2,12 +2,204 @@
 import tables, std/setutils, parseUtils, strutils, bitops, os, pathnorm
 import types, parse, expressions
 
+export parse.new_context
+
 const FIELD_ZERO       = 0
 const FIELD_ONE        = 1
 const FIELD_WILDCARD   = 2
 const FIELD_IMM        = 3
 const FIELD_LABEL      = 4
 const FIXED_FIELDS_LEN = 5
+
+proc instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
+  var source = ""
+  var field_i = 0
+  for syntax in instruction.syntax:
+    if syntax == "":
+      source &= "%" & $char(ord('a') + field_i) & "(" & isa_spec.field_types[instruction.fields[field_i]].name & ")"
+      field_i += 1
+    else:
+      source &= syntax
+  source &= "\n"
+
+  for bit_type in instruction.bit_types:
+    if bit_type < FIXED_FIELDS_LEN:
+      assert bit_type < 3
+      source &= "01x"[bit_type]
+    else:
+      source &= $char(ord('a') + bit_type - FIXED_FIELDS_LEN)
+
+  source &= "\n" & instruction.description
+  return source
+
+proc spec_to_string*(isa_spec: isa_spec): string =
+  var source = "[fields]\n"
+
+  const FIXED_FIELDS_LEN = 5
+
+  for field_type in isa_spec.field_types[FIXED_FIELDS_LEN..^1]:
+    
+    source &= "\n" & field_type.name & "\n"
+
+    for field_value in field_type.values:
+      source &= field_value.name & " " & toBin(cast[int](field_value.value), field_type.bit_length) & "\n"
+
+  source &= "\n[instructions]\n"
+
+  for instruction in isa_spec.instructions:
+    source &= "\n" & instruction_to_string(isa_spec, instruction) & "\n\n"
+
+  return source
+
+proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string) =
+  # Being able to reparse a single instruction is needed for Turing Complete
+
+  proc error(input: string): (instruction, string) =
+    return (instruction(), input)
+
+  proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
+    var this_part: string
+    while peek(c) notin {'%', '\0', '\n'}:
+      let char = read(c)
+      if char in {'\r', '\t', ' '}:
+        if this_part != "":
+          syntax_parts.add(this_part)
+          this_part = ""
+        syntax_parts.add(" ")
+      else:
+        this_part.add(char)
+
+    if this_part != "":
+      syntax_parts.add(this_part)
+
+  var new_instruction: instruction
+
+  block syntax:
+    add_string_syntax(c, new_instruction.syntax)
+
+    while matches(c, '%'):
+      let operand_name = get_string(c)
+      let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
+
+      if operand_name != expected_operand_name:
+        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
+
+      if not matches(c, '('):
+        return error("Expected parenthesis after the operand name, like: " & operand_name & "(immediate)")
+
+      let field_name = get_string(c)
+
+      if field_name == "":
+        return error("Was expecting a field name here")
+
+      if not matches(c, ')'):
+        return error("Expected a closing parenthesis after the field type")
+
+      var found = false
+
+      for i, field in isa_spec.field_types:
+        if field_name == field.name:
+          found = true
+          new_instruction.fields.add(i)
+          new_instruction.syntax.add("")
+          break
+      
+      if not found:
+        echo new_instruction.fields
+        return error("Field name '" & field_name & "' not defined")
+
+      add_string_syntax(c, new_instruction.syntax)
+
+    if read(c) != '\n':
+      return error("Was expecting a newline here")
+
+  let instruction_name = new_instruction.syntax[0]
+  
+  block virtual_field:
+    var count = 1
+    while matches(c, '%'):
+      let operand_name = get_string(c)
+      let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
+
+      if operand_name != expected_operand_name:
+        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
+
+      skip_newlines(c)
+
+      if not matches(c, '='):
+        return error("Expected an assignment here")
+
+      skip_newlines(c)
+
+      let virt_op = get_expression(c, new_instruction.fields.len + new_instruction.virtual_fields.len)
+      new_instruction.virtual_fields.add(virt_op)
+
+      if virt_op.exp_kind == exp_fail:
+        if instruction_name == "":
+          return error("Could not read virtual operand " & $count)
+        else:
+          return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
+      count += 1
+      skip_newlines(c)
+  
+  block bit_pattern:
+    var pattern: string
+    var mask: string
+
+    while peek(c) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
+      case peek(c):
+        of '0':
+          pattern.add('0')
+          mask.add('1')
+          new_instruction.bit_types.add(FIELD_ZERO)
+        of '1':
+          pattern.add('1')
+          mask.add('1')
+          new_instruction.bit_types.add(FIELD_ONE)
+        of ' ':
+          discard
+        of 'x':
+          pattern.add('0')
+          mask.add('0')
+          new_instruction.bit_types.add(FIELD_WILDCARD)
+        else:
+          pattern.add('0')
+          mask.add('0')
+          let field_index = ord(peek(c)) - ord('a')
+
+          if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
+            return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
+          let field_real_index = field_index + FIXED_FIELDS_LEN
+          new_instruction.bit_types.add(field_real_index)
+
+      c.index += 1
+    
+    if new_instruction.bit_types.len ==  0:
+      return error("Instruction '" & instruction_name & "' is missing the bit field definition")
+    if new_instruction.bit_types.len mod 8 != 0:
+      return error("Instruction '" & instruction_name & "' is not a multiple of 8")
+    
+    discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
+    discard parseBin(mask[0..min(7, mask.high)], new_instruction.fixed_mask_0)
+    if pattern.len > 8:
+      discard parseBin(pattern[8..^1], new_instruction.fixed_pattern_1)
+      discard parseBin(mask[8..^1], new_instruction.fixed_mask_1)
+
+    skip_whitespaces(c)
+
+    if read(c) notin {'\n', '\0'}:
+      return error("Was expecting a newline here")
+
+  block get_description:
+    var description: string
+    while peek(c) notin {'\n', '\0'}:
+      let char = peek(c)
+      if char notin {'\r'}:
+        description.add(char)
+      c.index += 1
+    new_instruction.description = description
+
+  return (new_instruction, "")
 
 proc parse_isa_spec*(source: string): spec_parse_result =
 
@@ -87,162 +279,23 @@ proc parse_isa_spec*(source: string): spec_parse_result =
               value: cast[uint64](bit_value),
             ))
 
-      if new_field_types.len == 0:
-        return error("Expected field values")
+      #if new_field_types.len == 0:
+      #  return error("Expected field values")
 
       for name, field_type in new_field_types:
         result.spec.field_types.add(field_type)
 
       skip_newlines(c)
   
-  proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
-    var this_part: string
-    while peek(c) notin {'%', '\0', '\n'}:
-      let char = read(c)
-      if char in {'\r', '\t', ' '}:
-        if this_part != "":
-          syntax_parts.add(this_part)
-          this_part = ""
-        syntax_parts.add(" ")
-      else:
-        this_part.add(char)
-
-    if this_part != "":
-      syntax_parts.add(this_part)
-
   if not matches(c, "[instructions]"):
     return error("Was expecting the [instructions] header here")
 
   skip_newlines(c)
 
   while peek(c) != '\0':
-    var new_instruction: instruction
-
-    block syntax:
-      add_string_syntax(c, new_instruction.syntax)
-
-      while matches(c, '%'):
-        let operand_name = get_string(c)
-        let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
-
-        if operand_name != expected_operand_name:
-          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
-
-        if not matches(c, '('):
-          return error("Expected parenthesis after the operand name, like: " & operand_name & "(immediate)")
-
-        let field_name = get_string(c)
-
-        if field_name == "":
-          return error("Was expecting a field name here")
-
-        if not matches(c, ')'):
-          return error("Expected a closing parenthesis after the field type")
-
-        var found = false
-
-        for i, field in result.spec.field_types:
-          if field_name == field.name:
-            found = true
-            new_instruction.fields.add(i)
-            new_instruction.syntax.add("")
-            break
-        
-        if not found:
-          echo new_instruction.fields
-          return error("Field name '" & field_name & "' not defined")
-
-        add_string_syntax(c, new_instruction.syntax)
-
-      if read(c) != '\n':
-        return error("Was expecting a newline here")
-
-    let instruction_name = new_instruction.syntax[0]
-    
-    block virtual_field:
-      var count = 1
-      while matches(c, '%'):
-        let operand_name = get_string(c)
-        let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
-
-        if operand_name != expected_operand_name:
-          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
-
-        skip_newlines(c)
-
-        if not matches(c, '='):
-          return error("Expected an assignment here")
-
-        skip_newlines(c)
-
-        let virt_op = get_expression(c, new_instruction.fields.len + new_instruction.virtual_fields.len)
-        new_instruction.virtual_fields.add(virt_op)
-
-        if virt_op.exp_kind == exp_fail:
-          if instruction_name == "":
-            return error("Could not read virtual operand " & $count)
-          else:
-            return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
-        count += 1
-        skip_newlines(c)
-    
-    block bit_pattern:
-      var pattern: string
-      var mask: string
-
-      while peek(c) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
-        case peek(c):
-          of '0':
-            pattern.add('0')
-            mask.add('1')
-            new_instruction.bit_types.add(FIELD_ZERO)
-          of '1':
-            pattern.add('1')
-            mask.add('1')
-            new_instruction.bit_types.add(FIELD_ONE)
-          of ' ':
-            discard
-          of 'x':
-            pattern.add('0')
-            mask.add('0')
-            new_instruction.bit_types.add(FIELD_WILDCARD)
-          else:
-            pattern.add('0')
-            mask.add('0')
-            let field_index = ord(peek(c)) - ord('a')
-
-            if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
-              return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
-            let field_real_index = field_index + FIXED_FIELDS_LEN
-            new_instruction.bit_types.add(field_real_index)
-
-        c.index += 1
-      
-      if new_instruction.bit_types.len ==  0:
-        return error("Instruction '" & instruction_name & "' is missing the bit field definition")
-      if new_instruction.bit_types.len mod 8 != 0:
-        return error("Instruction '" & instruction_name & "' is not a multiple of 8")
-      
-      discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
-      discard parseBin(mask[0..min(7, mask.high)], new_instruction.fixed_mask_0)
-      if pattern.len > 8:
-        discard parseBin(pattern[8..^1], new_instruction.fixed_pattern_1)
-        discard parseBin(mask[8..^1], new_instruction.fixed_mask_1)
-
-      skip_whitespaces(c)
-
-      if read(c) notin {'\n', '\0'}:
-        return error("Was expecting a newline here")
-
-    block get_description:
-      var description: string
-      while peek(c) notin {'\n', '\0'}:
-        let char = peek(c)
-        if char notin {'\r'}:
-          description.add(char)
-        c.index += 1
-      new_instruction.description = description
-
+    var (new_instruction, error_message) = get_instruction(c, result.spec)
+    if error_message != "":
+      return error(error_message)
     result.spec.instructions.add(new_instruction)
 
     skip_newlines(c)
@@ -320,10 +373,10 @@ proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
   if disassembled_instruction.is_literal:
     var value = disassembled_instruction.value
     case value.len:
-      of 1: return $value[0] & "\\U8"
-      of 2: return $cast[ptr uint16](addr value[0])[] & "\\U16"
-      of 4: return $cast[ptr uint32](addr value[0])[] & "\\U32"
-      of 8: return $cast[ptr uint64](addr value[0])[] & "\\U64"
+      of 1: return "<U8> " & $value[0]
+      of 2: return "<U16> " & $cast[ptr uint16](addr value[0])[]
+      of 4: return "<U32> " & $cast[ptr uint32](addr value[0])[]
+      of 8: return "<U64> " & $cast[ptr uint64](addr value[0])[]
       else: assert false, "TODO, support"
   
   for part in disassembled_instruction.instruction.syntax:
@@ -535,13 +588,15 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
     skip_and_record_newlines(c)
 
     let start_index = c.index
+    let size = get_size(c)
+
+    skip_whitespaces(c)
 
     let number = get_number(c)
 
     if number != "":
-      let size = get_size(c)
       if size == 0:
-        return error("Expected a size after the number, like " & number & "\\U64")
+        return error("Expected a size before the number, like <U64> " & number)
 
       if size notin [8, 16, 32, 64]:
         return error("Only 8, 16, 32 and 64 bits are supported for now")
@@ -777,7 +832,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         if max_fields_matched != -1: 
           return error("Operand " & $(max_fields_matched+1) & " does not match for '" & mnemonic & "'")
         
-        return error("No instruction using the mnemonic '" & mnemonic & "' exists")
+        return error("No instruction using the mnemonic '" & mnemonic & "' uses this syntax")
 
     block emit:
 

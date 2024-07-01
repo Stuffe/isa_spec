@@ -7,6 +7,7 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "literals": test(result: @[1'u8, 0, 2, 97, 98, 99]),
   "evaluator": test(result: @[0'u8, 33, 95, 103, 133, 160, 192]),
   "rel_arithmetic": test(result: @[0'u8, 0, 0, 131]),
   "imm_overload": test(result: @[1'u8, 64]),
@@ -19,7 +20,6 @@ const TESTS = {
   "basics": test(result: @[138'u8, 3, 38]),
   "include": test(result: @[1'u8]),
   "synonyms": test(result: @[2'u8, 14]),
-  "literals": test(result: @[1'u8, 0, 2, 97, 98, 99]),
   "numbers": test(result: @[0'u8, 15, 15]),
   "set": test(result: @[3'u8]),
 }.toOrderedTable

@@ -1,2 +1,2 @@
-1\U8
+<U8> 1
 pub set hello 2
