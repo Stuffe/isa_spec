@@ -22,12 +22,14 @@ proc instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       source &= syntax
   source &= "\n"
 
-  for bit_type in instruction.bit_types:
+  for i, bit_type in instruction.bit_types:
     if bit_type < FIXED_FIELDS_LEN:
       assert bit_type < 3
       source &= "01x"[bit_type]
     else:
       source &= $char(ord('a') + bit_type - FIXED_FIELDS_LEN)
+    if i mod 8 == 7:
+      source &= " "
 
   source &= "\n" & instruction.description
   return source
@@ -360,10 +362,10 @@ func assemble_file*(path: string, isa_spec: isa_spec, already_included = newSeq[
   var already_included_new = already_included
   already_included_new.add(normal_path)
 
-  if not fileExists(normal_path):
-    return assembly_result(error: "File does not exist: " & normal_path)
-
   {.noSideEffect.}:
+    if not fileExists(normal_path):
+      return assembly_result(error: "File does not exist: " & normal_path)
+
     let source = readFile(normal_path)
     return assemble(normal_path, isa_spec, source, already_included_new)
 
