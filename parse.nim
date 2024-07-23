@@ -71,6 +71,17 @@ func get_string*(c: var context): string =
   while peek(c) in STRING_NEXT:
     result.add(read(c))
 
+func isa_spec_filter_string*(text: string): string =
+  var first = true
+  for c in text:
+    if first:
+      if c in STRING_FIRST:
+        result.add(c)
+        first = false
+    else:
+      if c in STRING_NEXT:
+        result.add(c)
+
 func get_number*(c: var context): string =
   if peek(c) == '0':
     var value = 0'u64
@@ -100,7 +111,10 @@ func get_number*(c: var context): string =
     result.add(read(c))
 
 func parse_number*(input: string): uint64 =
-  if input.len < 2: return cast[uint64](parseInt(input))
+  if input.len < 3: 
+    try:
+      return cast[uint64](parseInt(input))
+    except: return 0
   case input[1]:
     of 'x': return fromHex[uint64](input)
     of 'o': return fromOct[uint64](input)
