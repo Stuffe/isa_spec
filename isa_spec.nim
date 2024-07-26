@@ -84,7 +84,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
 
       if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
+        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & operand_name)
 
       if not matches(c, '('):
         return error("Expected parenthesis after the operand name, like: " & operand_name & "(immediate)")
@@ -107,7 +107,6 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
           break
       
       if not found:
-        echo new_instruction.fields
         return error("Field name '" & field_name & "' not defined")
 
       add_string_syntax(c, new_instruction.syntax)
@@ -124,7 +123,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
 
       if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called " & $expected_operand_name & ", not '" & operand_name & "'")
+        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & operand_name)
 
       skip_newlines(c)
 
@@ -179,7 +178,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
     if new_instruction.bit_types.len ==  0:
       return error("Instruction '" & instruction_name & "' is missing the bit field definition")
     if new_instruction.bit_types.len mod 8 != 0:
-      return error("Instruction '" & instruction_name & "' is not a multiple of 8")
+      return error("The width of instruction '" & instruction_name & "' is " & $new_instruction.bit_types.len & " bits, but only multiples of 8 are supported")
     
     discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
     discard parseBin(mask[0..min(7, mask.high)], new_instruction.fixed_mask_0)
@@ -353,18 +352,28 @@ proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
 
 proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 
-func assemble_file*(path: string, isa_spec: isa_spec, already_included = newSeq[string]()): assembly_result =
+func assemble_file*(path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
   let normal_path = normalizePath(path.replace('\\', '/'))
+
+
   
   if normal_path in already_included:
-    return assembly_result(error: "Recursive inclusion of: " & normal_path)
+    return assembly_result(
+      error: "Recursive inclusion of: " & normal_path,
+      error_line: line,
+      error_file: normal_path,
+    )
   
   var already_included_new = already_included
   already_included_new.add(normal_path)
 
   {.noSideEffect.}:
     if not fileExists(normal_path):
-      return assembly_result(error: "File does not exist: " & normal_path)
+      return assembly_result(
+        error: "File does not exist: " & normal_path,
+        error_line: line,
+        error_file: normal_path,
+      )
 
     let source = readFile(normal_path)
     return assemble(normal_path, isa_spec, source, already_included_new)
@@ -435,16 +444,9 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
     byte_offset: int
     instruction: instruction
     index: int
-
-  type value = object
-    public: bool
-    value: uint64
   
-  var labels: Table[string, value]
-  var number_defines: Table[string, value]
-  var field_defines: seq[Table[string, value]]
   var jump_patches: seq[jump_patch]
-  field_defines.setLen(isa_spec.field_types.len)
+  res.field_defines.setLen(isa_spec.field_types.len)
 
   proc error(input: string, error_index = -1): assembly_result =
     res.error = input
@@ -465,16 +467,16 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
 
         let field_string = get_string(c)
 
-        if field_string in number_defines:
-          return (true, number_defines[field_string].value)
+        if field_string in res.number_defines:
+          return (true, res.number_defines[field_string].value)
        
       of FIELD_LABEL: assert false
 
       else:
         let field_string = get_string(c)
 
-        if field_string in field_defines[field]:
-          return (true, field_defines[field][field_string].value)
+        if field_string in res.field_defines[field]:
+          return (true, res.field_defines[field][field_string].value)
 
         for field_value in isa_spec.field_types[field].values:
           if field_value.name == field_string:
@@ -521,7 +523,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
             ))
             fields.add(0)
           else:
-            fields.add(labels[label_name].value)
+            fields.add(res.labels[label_name].value)
 
         continue
 
@@ -565,7 +567,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
     var width_left = instruction.bit_types.len
     var value_index = 0
 
-    var o = 0
+    var o = width_left div 8 - 1
     while width_left > 0:
       var value = values[value_index]
       let max_width = min(64, width_left)
@@ -580,7 +582,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
 
       for i in 0..shift_count:
         byte_code[machine_code_offset + o] = cast[uint8](value shr shift_by)
-        o += 1
+        o -= 1
         shift_by -= 8
 
   skip_and_record_newlines(c)
@@ -608,8 +610,8 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
       var value = parse_number(number) and mask
 
       while i > 0:
-        res.machine_code.add(cast[uint8](value shr (size - 8)))
-        value = value shl 8
+        res.machine_code.add(cast[uint8](value))
+        value = value shr 8
         i -= 1
 
       skip_and_record_newlines(c)
@@ -659,9 +661,24 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
       while i > 0 and normal_path[i] != '/':
         i -= 1
 
-      let include_res = assemble_file(normal_path[0..i] & file, isa_spec)
+      let include_res = assemble_file(normal_path[0..i] & file, isa_spec, get_line_number(c))
       if include_res.error != "":
         return include_res
+
+      for name, val in include_res.labels:
+        if val.public:
+          var new_val = val
+          new_val.value += include_res.machine_code.len.uint64
+          res.labels[name] = new_val
+
+      for name, val in include_res.number_defines:
+        if val.public:
+          res.number_defines[name] = val
+
+      for field, field_values in include_res.field_defines:
+        for name, val in field_values:
+          if val.public:
+            res.field_defines[field][name] = val
 
       res.machine_code.add(include_res.machine_code)
 
@@ -669,10 +686,9 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
       continue
 
     elif special_test != "" and peek(c) == ':':
-      if special_test in labels:
+      if special_test in res.labels:
         return error("Label " & special_test & " is already declared")
-      labels[special_test] = value(public: public, value: res.machine_code.len.uint64)
-      res.label_names.add(special_test)
+      res.labels[special_test] = define_value(public: public, value: res.machine_code.len.uint64)
       c.index += 1
       skip_and_record_newlines(c)
 
@@ -681,7 +697,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
     elif special_test == "set":
       skip_whitespaces(c)
       let definition_name = get_string(c)
-      if definition_name in number_defines:
+      if definition_name in res.number_defines:
         return error(definition_name & " is already declared")
 
       for _, field_type in isa_spec.field_types:
@@ -693,20 +709,15 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
 
       let number = get_number(c)
       if number != "":
-        number_defines[definition_name] = value(public: public, value: parse_number(number))
-        if FIELD_IMM notin res.field_definitions:
-          res.field_definitions[FIELD_IMM] = @[]
-        res.field_definitions[FIELD_IMM].add(definition_name)
+        res.number_defines[definition_name] = define_value(public: public, value: parse_number(number))
 
       else:
         let define_value = get_string(c)
         var found = false
         for field_id, field_type in isa_spec.field_types:
-          res.field_definitions[field_id] = @[]
           for i, field in field_type.values:
             if field.name == define_value:
-              field_defines[field_id][definition_name] = value(public: public, value: field.value)
-              res.field_definitions[field_id].add(definition_name)
+              res.field_defines[field_id][definition_name] = define_value(public: public, value: field.value)
               found = true
               break
         
@@ -853,8 +864,8 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
     skip_and_record_newlines(c)
 
   for patch in jump_patches:
-    if patch.label notin labels:
-      return error("No label with the name '" & patch.label & "' declared", patch.index)
+    if patch.label notin res.labels:
+      return error("No label with the name '" & patch.label & "' found", patch.index)
 
     c.index = patch.index
     assemble_instruction(c, res.machine_code, patch.instruction, patch.byte_offset)

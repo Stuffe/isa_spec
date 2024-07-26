@@ -88,7 +88,7 @@ func get_number*(c: var context): string =
     if peek(c, 1) == 'x':
       c.index += 2
       result = "0x"
-      while peek(c) in setutils.toSet("0123456789abcdef"):
+      while peek(c) in setutils.toSet("0123456789abcdefABCDEF"):
         result.add(read(c))
       return result
     if peek(c, 1) == 'o':

@@ -1,2 +1,3 @@
-<U8> 1
-pub set hello 2
+<U8> 2
+pub set test 4
+pub my_label:

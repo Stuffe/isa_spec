@@ -2,7 +2,7 @@
 [instructions]
 
 test %a(immediate)
-%b = %a << 2
+%b = %a << 0x2
 00bbbbbb
 
 log2 %a(immediate)

@@ -36,7 +36,7 @@ type op_kind* = enum
   op_asr
   op_log2
 
-const OP_INDEXES* = ["+", "-", "*", "/", "%", "&&", "||", "^", "<<", ">>>", ">>"]
+const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>>", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&")
 
@@ -81,15 +81,19 @@ type disassembled_instruction* = object
     of true:
       value*: seq[uint8]
 
+type define_value* = object
+  public*: bool
+  value*: uint64
+
 type assembly_result* = object
   machine_code*: seq[uint8]
   line_to_byte*: seq[int]
   error*: string
   error_line*: int
   error_file*: string
-  field_definitions*: OrderedTable[int, seq[string]]
-  number_defines*: seq[string]
-  label_names*: seq[string]
+  field_defines*: seq[Table[string, define_value]]
+  number_defines*: Table[string, define_value]
+  labels*: Table[string, define_value]
 
 proc lsr*(a: int, b: int): int =
   return cast[int](cast[uint64](a) shr cast[uint64](b))
