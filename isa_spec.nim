@@ -1,3 +1,4 @@
+import godot/godot
   
 import tables, std/setutils, parseUtils, strutils, bitops, os, pathnorm
 import types, parse, expressions
@@ -350,13 +351,11 @@ proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
         result[^1].value.add(machine_code_pad[index])
         index += 1
 
-proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
+proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 
-func assemble_file*(path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
+func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
   let normal_path = normalizePath(path.replace('\\', '/'))
 
-
-  
   if normal_path in already_included:
     return assembly_result(
       error: "Recursive inclusion of: " & normal_path,
@@ -368,15 +367,17 @@ func assemble_file*(path: string, isa_spec: isa_spec, line: int, already_include
   already_included_new.add(normal_path)
 
   {.noSideEffect.}:
-    if not fileExists(normal_path):
+    if not fileExists(base_path & normal_path):
+      print(base_path & normal_path)
+      print(get_stack_trace())
       return assembly_result(
         error: "File does not exist: " & normal_path,
         error_line: line,
         error_file: normal_path,
       )
 
-    let source = readFile(normal_path)
-    return assemble(normal_path, isa_spec, source, already_included_new)
+    let source = readFile(base_path & normal_path)
+    return assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
 proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
@@ -420,7 +421,7 @@ proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
     else:
       result &= part
 
-proc assemble*(path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
+proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
   let normal_path = normalizePath(path.replace('\\', '/'))
 
@@ -649,7 +650,7 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
         return error("Expected a string after the keyword 'include'")
       
       var file: string
-      while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"):
+      while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
         file.add(read(c))
 
       file = file.replace("\\", "/") & ".asm"
@@ -661,14 +662,14 @@ proc assemble*(path: string, isa_spec: isa_spec, source: string, already_include
       while i > 0 and normal_path[i] != '/':
         i -= 1
 
-      let include_res = assemble_file(normal_path[0..i] & file, isa_spec, get_line_number(c))
+      let include_res = assemble_file(base_path, normal_path[0..i] & file, isa_spec, get_line_number(c))
       if include_res.error != "":
         return include_res
 
       for name, val in include_res.labels:
         if val.public:
           var new_val = val
-          new_val.value += include_res.machine_code.len.uint64
+          new_val.value += res.machine_code.len.uint64
           res.labels[name] = new_val
 
       for name, val in include_res.number_defines:
