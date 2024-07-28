@@ -1,5 +1,3 @@
-import godot/godot
-  
 import tables, std/setutils, parseUtils, strutils, bitops, os, pathnorm
 import types, parse, expressions
 
@@ -115,7 +113,9 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
     if read(c) != '\n':
       return error("Was expecting a newline here")
 
-  let instruction_name = new_instruction.syntax[0]
+  var instruction_name: string
+  if new_instruction.syntax.len > 0:
+    instruction_name = new_instruction.syntax[0]
   
   block virtual_field:
     var count = 1
@@ -354,7 +354,7 @@ proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
 proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 
 func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
-  let normal_path = normalizePath(path.replace('\\', '/'))
+  let normal_path = normalizePath(path).replace('\\', '/')
 
   if normal_path in already_included:
     return assembly_result(
@@ -368,8 +368,6 @@ func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: i
 
   {.noSideEffect.}:
     if not fileExists(base_path & normal_path):
-      print(base_path & normal_path)
-      print(get_stack_trace())
       return assembly_result(
         error: "File does not exist: " & normal_path,
         error_line: line,
@@ -423,7 +421,7 @@ proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
 
 proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
-  let normal_path = normalizePath(path.replace('\\', '/'))
+  let normal_path = normalizePath(path).replace('\\', '/')
 
   var res = assembly_result(line_to_byte: @[0])
 
