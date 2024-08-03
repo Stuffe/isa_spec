@@ -21,7 +21,7 @@ proc instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       source &= syntax
   source &= "\n"
 
-  for i, bit_type in instruction.bit_types:
+  for i, bit_type in instruction.bits:
     if bit_type < FIXED_FIELDS_LEN:
       assert bit_type < 3
       source &= "01x"[bit_type]
@@ -153,17 +153,17 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
         of '0':
           pattern.add('0')
           mask.add('1')
-          new_instruction.bit_types.add(FIELD_ZERO)
+          new_instruction.bits.add(FIELD_ZERO)
         of '1':
           pattern.add('1')
           mask.add('1')
-          new_instruction.bit_types.add(FIELD_ONE)
+          new_instruction.bits.add(FIELD_ONE)
         of ' ':
           discard
         of 'x':
           pattern.add('0')
           mask.add('0')
-          new_instruction.bit_types.add(FIELD_WILDCARD)
+          new_instruction.bits.add(FIELD_WILDCARD)
         else:
           pattern.add('0')
           mask.add('0')
@@ -172,14 +172,14 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
           if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
             return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
           let field_real_index = field_index + FIXED_FIELDS_LEN
-          new_instruction.bit_types.add(field_real_index)
+          new_instruction.bits.add(field_real_index)
 
       c.index += 1
     
-    if new_instruction.bit_types.len ==  0:
+    if new_instruction.bits.len ==  0:
       return error("Instruction '" & instruction_name & "' is missing the bit field definition")
-    if new_instruction.bit_types.len mod 8 != 0:
-      return error("The width of instruction '" & instruction_name & "' is " & $new_instruction.bit_types.len & " bits, but only multiples of 8 are supported")
+    if new_instruction.bits.len mod 8 != 0:
+      return error("The width of instruction '" & instruction_name & "' is " & $new_instruction.bits.len & " bits, but only multiples of 8 are supported")
     
     discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
     discard parseBin(mask[0..min(7, mask.high)], new_instruction.fixed_mask_0)
@@ -236,53 +236,43 @@ proc parse_isa_spec*(source: string): spec_parse_result =
       block outer:
         while read(c) == '\n':
 
-          var first = true
-          while first or peek(c) == ',':
-            
-            if first:
-              first = false
-            else:
-              c.index += 1
-              skip_whitespaces(c)
+          let field_name = get_string(c)
+          if field_name == "": break outer
+          skip_whitespaces(c)
 
-            let field_name = get_string(c)
-            if field_name == "": break outer
-            skip_whitespaces(c)
+          var bits: string
 
-            var bits: string
-
-            while peek(c) in {'0','1'}:
-              bits.add(read(c))
+          while peek(c) in {'0','1'}:
+            bits.add(read(c))
+        
+          if bits.len == 0:
+            return error("Expected a bit pattern for " & field_name)
+          if bits.len > 64:
+            return error("Only up to 64 bit field lengths supported")
           
-            if bits.len == 0:
-              return error("Expected a bit pattern for " & field_name)
-            if bits.len > 64:
-              return error("Only up to 64 bit field lengths supported")
+          if bit_length == 0:
+            bit_length = bits.len
+          else:
+            if bit_length != bits.len:
+              return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $bit_length)
+
+          var bit_value = 0
+          discard parseBin(bits, bit_value)
+
+          skip_whitespaces(c)
+          let bit_width = get_number(c)
+
+          if field_type_name notin new_field_types:
+            new_field_types[field_type_name] = field_type(name: field_type_name, bit_length: bit_length)
             
-            if bit_length == 0:
-              bit_length = bits.len
-            else:
-              if bit_length != bits.len:
-                return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $bit_length)
+          new_field_types[field_type_name].values.add(field_value(
+            name: field_name,
+            value: cast[uint64](bit_value),
+          ))
 
-            var bit_value = 0
-            discard parseBin(bits, bit_value)
-
-            skip_whitespaces(c)
-            let bit_width = get_number(c)
-
-            let real_name = field_type_name & bit_width
-            
-            if real_name notin new_field_types:
-              new_field_types[real_name] = field_type(name: real_name, bit_length: bit_length)
-              
-            new_field_types[real_name].values.add(field_value(
-              name: field_name,
-              value: cast[uint64](bit_value),
-            ))
-
-      #if new_field_types.len == 0:
-      #  return error("Expected field values")
+      if field_type_name notin new_field_types:
+        # Nonsensical, but will otherwise render some specs unusable in TC
+        new_field_types[field_type_name] = field_type(name: field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
         result.spec.field_types.add(field_type)
@@ -316,11 +306,11 @@ proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
     for instruction in isa_spec.instructions:
       let current_address = index
       if (machine_code_0 and instruction.fixed_mask_0) == instruction.fixed_pattern_0 and (machine_code_1 and instruction.fixed_mask_1) == instruction.fixed_pattern_1:
-        index += (instruction.bit_types.len + 7) div 8
+        index += (instruction.bits.len + 7) div 8
         anything_found = true
         result.add(disassembled_instruction(is_literal: false, instruction: instruction))
         var fields: seq[uint64]
-        for i, t in instruction.bit_types:
+        for i, t in instruction.bits:
           if t < FIXED_FIELDS_LEN: continue
           let idx = t - FIXED_FIELDS_LEN
           while idx >= fields.len:
@@ -328,10 +318,10 @@ proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
 
           var bit = 0'u64
           if i < 64:
-            bit = uint64((machine_code_0 and (1'u64 shl (instruction.bit_types.high - i))) > 0)
+            bit = uint64((machine_code_0 and (1'u64 shl (instruction.bits.high - i))) > 0)
           else:
             let i2 = i - 64
-            bit = uint64((machine_code_1 and (1'u64 shl (instruction.bit_types.high - i2))) > 0)
+            bit = uint64((machine_code_1 and (1'u64 shl (instruction.bits.high - i2))) > 0)
           
           fields[idx] = fields[idx] shl 1'u64 or bit
         
@@ -502,9 +492,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
       if instruction.fields[i] == FIELD_LABEL:
         
-        if peek(c) == '.':
-          c.index += 1
-
+        if matches(c, '.'):
           let jump_distance = get_number(c)
           fields.add(parseInt(jump_distance).uint64)
           
@@ -524,9 +512,11 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
           else:
             fields.add(res.labels[label_name].value)
 
+        i += 1
         continue
 
       let (match, value) = get_operand(c, instruction.fields[i])
+      assert match
 
       fields.add(value)
       i += 1
@@ -539,9 +529,9 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
       var used_fields: set[uint8]
 
-      var i = instruction.bit_types.high
+      var i = instruction.bits.high
       while i >= 0:
-        let bit_type = instruction.bit_types[i]
+        let bit_type = instruction.bits[i]
         let bit_index = i mod 64
         let int_index = i div 64
 
@@ -563,7 +553,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
         i -= 1
 
-    var width_left = instruction.bit_types.len
+    var width_left = instruction.bits.len
     var value_index = 0
 
     var o = width_left div 8 - 1
@@ -772,6 +762,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
                   return error("Was expecting a label name here")
 
               fields.add(0)
+              i += 1
               continue
             
             let (match, value) = get_operand(c, instruction.fields[i])
@@ -796,9 +787,9 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
             var used_fields: set[uint8]
 
-            var i = instr.bit_types.high
+            var i = instr.bits.high
             while i >= 0:
-              let bit_type = instr.bit_types[i]
+              let bit_type = instr.bits[i]
               let bit_index = i mod 64
               let int_index = i div 64
 
@@ -849,7 +840,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
     block emit:
 
       let machine_code_offset = res.machine_code.len
-      let instruction_length = instr.bit_types.len div 8
+      let instruction_length = instr.bits.len div 8
       res.machine_code.setLen(res.machine_code.len + instruction_length)
 
       c.index = start_index
@@ -866,6 +857,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
     if patch.label notin res.labels:
       return error("No label with the name '" & patch.label & "' found", patch.index)
 
+  for patch in jump_patches:
     c.index = patch.index
     assemble_instruction(c, res.machine_code, patch.instruction, patch.byte_offset)
 

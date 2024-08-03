@@ -9,6 +9,8 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "player_crash_0": test(result: @[0'u8, 0, 1, 2]),
+  "empty_field": test(),
   "include": test(result: @[1'u8, 2, 3, 4, 2]),
   "aarch64": test(result: @[0'u8, 0, 0, 170]),
   "literals": test(result: @[1'u8, 205, 171, 97, 98, 99]),
@@ -22,7 +24,6 @@ const TESTS = {
   "arithmetic": test(result: @[12'u8, 131]),
   "fancy_syntax": test(result: @[133'u8, 5]),
   "basics": test(result: @[138'u8, 3, 38]),
-  "synonyms": test(result: @[2'u8, 14]),
   "numbers": test(result: @[0'u8, 15, 15]),
   "set": test(result: @[3'u8]),
 }.toOrderedTable
@@ -39,7 +40,7 @@ for name, test in TESTS:
     continue
 
   let asm_source = readFile("tests/" & name & "/test.asm")
-  let asm_result = assemble("tests/" & name & "/test.asm", isa_spec, asm_source)
+  let asm_result = assemble("tests/", name & "/test.asm", isa_spec, asm_source)
 
   if asm_result.error != test.asm_error:
     echo "\u001b[31m" & name & ": " & asm_result.error_file & "\u001b[0m: " & asm_result.error
@@ -58,7 +59,7 @@ for name, test in TESTS:
     for instr in disassembled:
       reasm_source &= str(isa_spec, instr) & "\n"
 
-    let reasm = assemble("", isa_spec, reasm_source)
+    let reasm = assemble("", "", isa_spec, reasm_source)
 
     if reasm.machine_code != asm_result.machine_code:
       echo "\u001b[31m'" & name & "'\u001b[0m: Reassembly test failed"
