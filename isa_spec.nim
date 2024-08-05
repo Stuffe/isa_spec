@@ -637,11 +637,11 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
       if read(c) != '"':
         return error("Expected a string after the keyword 'include'")
       
-      var file: string
+      var file_wo_header: string
       while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
-        file.add(read(c))
+        file_wo_header.add(read(c))
 
-      file = file.replace("\\", "/") & ".asm"
+      let file = file_wo_header.replace("\\", "/") & ".asm"
 
       if read(c) != '"':
         return error("Expected a string after the keyword 'include'")
@@ -654,20 +654,22 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
       if include_res.error != "":
         return include_res
 
+      let file_first = file_wo_header.split("/")[^1]
+
       for name, val in include_res.labels:
         if val.public:
           var new_val = val
           new_val.value += res.machine_code.len.uint64
-          res.labels[name] = new_val
+          res.labels[file_first & "." & name] = new_val
 
       for name, val in include_res.number_defines:
         if val.public:
-          res.number_defines[name] = val
+          res.number_defines[file_first & "." & name] = val
 
       for field, field_values in include_res.field_defines:
         for name, val in field_values:
           if val.public:
-            res.field_defines[field][name] = val
+            res.field_defines[field][file_first & "." & name] = val
 
       res.machine_code.add(include_res.machine_code)
 

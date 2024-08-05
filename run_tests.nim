@@ -9,9 +9,9 @@ type test = object
   result: seq[uint8]
 
 const TESTS = {
+  "include": test(result: @[1'u8, 2, 3, 4, 2]),
   "player_crash_0": test(result: @[0'u8, 0, 1, 2]),
   "empty_field": test(),
-  "include": test(result: @[1'u8, 2, 3, 4, 2]),
   "aarch64": test(result: @[0'u8, 0, 0, 170]),
   "literals": test(result: @[1'u8, 205, 171, 97, 98, 99]),
   "evaluator": test(result: @[0'u8, 33, 95, 103, 133, 160, 192]),
