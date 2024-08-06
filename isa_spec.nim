@@ -634,17 +634,12 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
     if special_test == "include":
       skip_whitespaces(c)
-      if read(c) != '"':
-        return error("Expected a string after the keyword 'include'")
-      
+
       var file_wo_header: string
       while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
         file_wo_header.add(read(c))
 
       let file = file_wo_header.replace("\\", "/") & ".asm"
-
-      if read(c) != '"':
-        return error("Expected a string after the keyword 'include'")
 
       var i = normal_path.high
       while i > 0 and normal_path[i] != '/':
