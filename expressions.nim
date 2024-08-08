@@ -71,7 +71,7 @@ func get_greedy_group(c: var context, operand_count: int): expression =
 
     var next_token: string
     
-    while peek(c) in GREEDY_CHARS and peek(c, 1) == ' ': # The '%' in '%reg' is not an operator!
+    while peek(c) in GREEDY_CHARS and peek(c, 1) != '%': # The '%' in '%reg' is not an operator!
       next_token.add(peek(c))
       c.index += 1
 
@@ -127,7 +127,7 @@ func get_expression*(c: var context, operand_count: int): expression =
 proc eval*(input: expression, operands: seq[uint64], current_address: int): int =
 
   case input.exp_kind:
-    of exp_fail: assert false
+    of exp_fail: return # We need to handle invalid expressions for TC
     of exp_number: return input.value
     of exp_operand: 
       if input.index == CURRENT_ADDRESS: 
@@ -211,6 +211,3 @@ proc reverse_eval*(input: expression, current_address: int, fields: var seq[uint
 
       # TODO, really we are assuming one equation with at most one unknown here. Rewrite this so it can solve more complex systems of equations
     
-
-  
-  

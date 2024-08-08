@@ -28,7 +28,6 @@ const TESTS = {
   "set": test(result: @[3'u8]),
 }.toOrderedTable
 
-
 for name, test in TESTS:
   let spec_source = readFile("tests/" & name & "/test.spec")
   let spec_result = parse_isa_spec(spec_source)
