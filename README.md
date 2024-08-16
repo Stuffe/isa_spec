@@ -2,7 +2,7 @@
 The goal of isa_spec is to eventually be a single format that contains all the information for an ISA to do the following:
 * Assemble
 * Disassemble
-* Produce neat a cheatsheet
+* Produce a neat cheatsheet
 * Use as a compilation target
 
 A lot more data is needed for using this as a compilation target, so that data is optional.
