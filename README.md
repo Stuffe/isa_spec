@@ -2,10 +2,10 @@
 The goal of isa_spec is to eventually be a single format that contains all the information for an ISA to do the following:
 * Assemble
 * Disassemble
-* Produce neat a cheatsheet
+* Produce a neat cheatsheet
 * Use as a compilation target
 
-A lot more data is needed for using this as a compilation target, so that data is optional.
+A lot of information is needed for compilation targets only, so that data is optional.
 
 # Special properties
 The specification is designed such that:
@@ -18,6 +18,8 @@ The specification is designed such that:
 
 ```
 [fields]
+
+register
 r0 000
 r1 001
 r2 010
@@ -38,12 +40,12 @@ Move a byte %b to %a
 
 jmp %a(label)
 10000000 aaaaaaaa
-Move %b to %a
+Jump to %a
 
 ```
 
 ## Fields
-The specification may optionally contain a fields section, specify this by adding the line ```[fields]``` and listing the fields below. A field section could look like this:
+The specification may optionally contain a fields section, by adding the line ```[fields]``` and listing the fields below. A field section could look like this:
 ```
 [fields] 
  
@@ -57,10 +59,10 @@ r5 101
 io 110
 ```
 
-In addition to user defined fields, there are two kinds of special fields, ```immediate``` and ```label```. These fields are used in instruction definitions.
+In addition to user defined fields, there are two kinds of special fields, ```immediate```, ```revese_immediate``` and ```label```. These fields are used in instruction definitions.
 
 ## Instructions
-Instructions need at least two lines, syntax and and bit pattern. Optionally a third description line can be added.
+Instructions need at least two lines, syntax and and bit pattern. Optionally, expression linea can be added and finally, a description line can optionally be added as well.
 
 ```
 [instructions]
