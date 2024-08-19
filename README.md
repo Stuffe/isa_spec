@@ -18,6 +18,8 @@ The specification is designed such that:
 
 ```
 [fields]
+
+register
 r0 000
 r1 001
 r2 010
@@ -38,7 +40,7 @@ Move a byte %b to %a
 
 jmp %a(label)
 10000000 aaaaaaaa
-Move %b to %a
+Jump to %a
 
 ```
 
