@@ -71,18 +71,7 @@ func get_string*(c: var context): string =
   while peek(c) in STRING_NEXT:
     result.add(read(c))
 
-func isa_spec_filter_string*(text: string): string =
-  var first = true
-  for c in text:
-    if first:
-      if c in STRING_FIRST:
-        result.add(c)
-        first = false
-    else:
-      if c in STRING_NEXT:
-        result.add(c)
-
-func get_number*(c: var context): string =
+func get_unsigned*(c: var context): string =
   if peek(c) == '0':
     var value = 0'u64
     if peek(c, 1) == 'x':
@@ -110,7 +99,7 @@ func get_number*(c: var context): string =
   while peek(c) in NUMBER_NEXT:
     result.add(read(c))
 
-func parse_number*(input: string): uint64 =
+func parse_unsigned*(input: string): uint64 =
   if input.len < 3: 
     try:
       return cast[uint64](parseInt(input))
@@ -121,12 +110,24 @@ func parse_number*(input: string): uint64 =
     of 'b': return fromBin[uint64](input)
     else:   return cast[uint64](parseInt(input))
 
-func get_line_number*(c: context, byte_index = -1): int =
-  var idx = byte_index
-  if byte_index == -1:
-    idx = c.index
+func get_signed*(c: var context): string =
+  
+  if c.peek() == '-':
+    result.add('-')
+    c.index += 1
+
+  result.add(c.get_unsigned())
+
+func parse_signed*(input: string): int =
+  if input.len == 0: return
+
+  if input[0] == '-':
+    return -1 * cast[int](parse_unsigned(input[1..^1]))
+  return cast[int](parse_unsigned(input))
+
+func get_line_number*(c: context): int =
   var line = 1
-  for i in 0..idx - 1:
+  for i in 0..c.index - 1:
     if c.source[i] == '\n':
       line += 1
   return line
@@ -135,7 +136,7 @@ func get_size*(c: var context): int =
   if peek(c) != '<' or peek(c, 1) != 'U': return
   let orig_index = c.index
   c.index += 2
-  let number = get_number(c)
+  let number = get_unsigned(c)
   if number == "" or read(c) != '>':
     c.index = orig_index
     return

@@ -260,7 +260,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
           discard parseBin(bits, bit_value)
 
           skip_whitespaces(c)
-          let bit_width = get_number(c)
+          let bit_width = get_unsigned(c)
 
           if field_type_name notin new_field_types:
             new_field_types[field_type_name] = field_type(name: field_type_name, bit_length: bit_length)
@@ -437,9 +437,9 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
   var jump_patches: seq[jump_patch]
   res.field_defines.setLen(isa_spec.field_types.len)
 
-  proc error(input: string, error_index = -1): assembly_result =
+  proc error(input: string): assembly_result =
     res.error = input
-    res.error_line = get_line_number(c, error_index)
+    res.error_line = get_line_number(c)
     res.error_file = normal_path
     return res
 
@@ -449,9 +449,9 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
     case field:
       of FIELD_IMM:
-        let number = get_number(c)
+        let number = get_unsigned(c)
         if number != "":
-          result = (true, parse_number(number))
+          result = (true, parse_unsigned(number))
           return result
 
         let field_string = get_string(c)
@@ -493,7 +493,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
       if instruction.fields[i] == FIELD_LABEL:
         
         if matches(c, '.'):
-          let jump_distance = get_number(c)
+          let jump_distance = get_unsigned(c)
           fields.add(parseInt(jump_distance).uint64)
           
         else:
@@ -585,7 +585,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
     skip_whitespaces(c)
 
-    let number = get_number(c)
+    let number = get_unsigned(c)
 
     if number != "":
       if size == 0:
@@ -596,7 +596,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
       let mask = uint64.high shr (64 - size)
       var i = size div 8
-      var value = parse_number(number) and mask
+      var value = parse_unsigned(number) and mask
 
       while i > 0:
         res.machine_code.add(cast[uint8](value))
@@ -693,9 +693,9 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
       skip_whitespaces(c)
 
-      let number = get_number(c)
+      let number = get_unsigned(c)
       if number != "":
-        res.number_defines[definition_name] = define_value(public: public, value: parse_number(number))
+        res.number_defines[definition_name] = define_value(public: public, value: parse_unsigned(number))
 
       else:
         let define_value = get_string(c)
@@ -749,7 +749,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
             if instruction.fields[i] == FIELD_LABEL:
               if peek(c) == '.':
                 c.index += 1
-                let jump_distance = get_number(c)
+                let jump_distance = get_unsigned(c)
                 if jump_distance == "":
                   return error("Expected a jump distance here")
               
@@ -852,7 +852,8 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
 
   for patch in jump_patches:
     if patch.label notin res.labels:
-      return error("No label with the name '" & patch.label & "' found", patch.index)
+      c.index = patch.index
+      return error("No label with the name '" & patch.label & "' found")
 
   for patch in jump_patches:
     c.index = patch.index
