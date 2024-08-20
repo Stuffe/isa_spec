@@ -48,11 +48,11 @@ func get_term(c: var context, operand_count: int): expression =
     result = expression(exp_kind: exp_operand, index: operand_index)
   
   else:
-    let number = get_number(c)
+    let number = get_unsigned(c)
     if number.len == 0: 
       return expression(exp_kind: exp_fail)
 
-    result = expression(exp_kind: exp_number, value: cast[int](parse_number(number)))
+    result = expression(exp_kind: exp_number, value: cast[int](parse_unsigned(number)))
 
 func get_greedy_group(c: var context, operand_count: int): expression =
 
