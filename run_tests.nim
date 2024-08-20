@@ -1,7 +1,7 @@
 import tables
 import isa_spec
 
-const STOP_AT_FIRST_FAIL = true
+const STOP_AT_FIRST_FAIL = false
 
 type test = object
   spec_error: string

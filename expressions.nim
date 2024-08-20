@@ -1,7 +1,7 @@
 import std/setutils, strutils, math
 import types, parse
 
-const CURRENT_ADDRESS = int.high
+const CURRENT_ADDRESS* = int.high
 
 func `$`*(exp: expression): string =
   case exp.exp_kind:
