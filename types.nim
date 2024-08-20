@@ -85,6 +85,14 @@ type define_value* = object
   public*: bool
   value*: uint64
 
+type file_location* = object
+  file*: string
+  line*: int # We might want to expand this to start/end column
+
+type error* = object
+  loc*: file_location
+  message*: string
+
 type assembly_result* = object
   machine_code*: seq[uint8]
   line_to_byte*: seq[int]

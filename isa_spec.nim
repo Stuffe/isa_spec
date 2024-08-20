@@ -1,4 +1,4 @@
-import tables, std/setutils, parseUtils, strutils, bitops, os, pathnorm
+import std/[setutils, parseUtils, strutils, bitops, os, pathnorm, tables, strformat]
 import types, parse, expressions
 
 export parse.new_context
@@ -341,31 +341,100 @@ proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
         result[^1].value.add(machine_code_pad[index])
         index += 1
 
-proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
+type
+  label_ref = object
+    public: bool
+    seg_id: int
+    offset: int
 
-func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
+  pre_assembly_result = object
+    errors: seq[error]
+    segments: seq[segment]
+    labels: Table[string, label_ref]
+    pc: parse_context
+
+  segment = object
+    file: string
+    line_boundaries: seq[(int, int)]
+    fixed: seq[uint8]
+    relaxable: matched_instruction
+
+  operand_kind = enum
+    ok_fixed
+    ok_label_ref
+    ok_relative
+
+  operand = object
+    case kind: operand_kind
+    of ok_fixed:
+      value: uint64
+    of ok_label_ref:
+      name: string
+    of ok_relative:
+      offset: int64
+
+  matched_instruction = object
+    selected_option: int
+    options: seq[instruction]
+    operands: seq[operand]
+
+  inst_parse_result = object
+    error: string
+    error_priority: int
+    operands: seq[operand]
+    final_index: int
+
+  parse_context = object
+    isa_spec: isa_spec
+    field_defines: seq[Table[string, define_value]]
+    number_defines*: Table[string, define_value]
+
+proc `==`(a, b: operand): bool =
+  if a.kind != b.kind:
+    return false
+  case a.kind:
+    of ok_fixed:
+      return a.value == b.value
+    of ok_label_ref:
+      return a.name == b.name
+    of ok_relative:
+      return a.offset == b.offset
+
+
+proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result
+proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
+func finalize(pa: pre_assembly_result): assembly_result
+func relax(pa: var pre_assembly_result)
+
+func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   if normal_path in already_included:
-    return assembly_result(
-      error: "Recursive inclusion of: " & normal_path,
-      error_line: line,
-      error_file: normal_path,
-    )
-  
+    return pre_assembly_result(
+      errors: @[error(
+        message: "Recursive inclusion of: " & normal_path,
+        loc: file_location(line: line, file: normal_path)
+    )])
+
   var already_included_new = already_included
   already_included_new.add(normal_path)
 
   {.noSideEffect.}:
     if not fileExists(base_path & normal_path):
-      return assembly_result(
-        error: "File does not exist: " & normal_path,
-        error_line: line,
-        error_file: normal_path,
-      )
+      return pre_assembly_result(
+        errors: @[error(
+          message: "File does not exist: " & normal_path,
+          loc: file_location(line: line, file: normal_path)
+      )])
 
     let source = readFile(base_path & normal_path)
-    return assemble(base_path, normal_path, isa_spec, source, already_included_new)
+    return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
+
+func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
+  let normal_path = normalizePath(path).replace('\\', '/')
+  var pa = pre_assemble_file(base_path, normal_path, isa_spec, line, already_included)
+  relax(pa)
+  return finalize(pa)
 
 proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
@@ -409,454 +478,549 @@ proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
     else:
       result &= part
 
+proc `$$`[T](s: openArray[T]): seq[string] =
+  if s.len == 0:
+    return @["@[]"]
+  else:
+    for value in s:
+      when compiles($$value):
+        let lines = $$value
+        if lines.len == 0:
+          result.add name & "- <nothing>"
+        elif lines.len == 1:
+          result.add name & "- " & lines[0]
+        else:
+          result.add name & "- "
+          for line in lines:
+            result.add "    " & line
+      else:
+        result.add "- " & $value
+
+proc `$$`(i: isa_spec): seq[string] =
+  return @["<isa_spec>"]
+
+proc `$$`(t: Table): seq[string] =
+  return $t
+
+proc `$$`(o: object | tuple): seq[string] =
+  for name, value in o.field_pairs:
+    when compiles($$value):
+      let lines = $$value
+      if lines.len == 0:
+        result.add name & ": <nothing>"
+      elif lines.len == 1:
+        result.add name & ": " & lines[0]
+      else:
+        result.add name & ": "
+        for line in lines:
+          result.add "    " & line
+    else:
+      result.add name & ": " & $value
+
 proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
   let normal_path = normalizePath(path).replace('\\', '/')
+  var pa = pre_assemble(base_path, normal_path, isa_spec, source, already_included)
+  pa.relax()
+  return finalize(pa)
 
-  var res = assembly_result(line_to_byte: @[0])
+proc is_defined(p: parse_context, name: string): bool =
+  if name in p.number_defines:
+    return true
+  for field, field_values in p.field_defines:
+    if name in field_values:
+      return true
+    for fv in p.isa_spec.field_types[field].values:
+      if fv.name == name:
+        return true
+  return false
 
-  proc skip_newlines(c: var context) =
+proc parse_instruction(c: var context, p: parse_context, inst: instruction): inst_parse_result =
+
+  template error(msg: string, priority: int): inst_parse_result =
+    result.error = msg
+    result.error_priority = priority
+    result
+
+  proc fixed(val: uint64): operand =
+    return operand(kind: ok_fixed, value: val)
+
+  var i = 0
+  for syntax in inst.syntax:
+    if syntax == " ":
+      skip_whitespaces(c)
+      continue
+
+    if syntax != "":
+      if not matches(c, syntax):
+        return error(&"Expected {syntax} here", i)
+      continue
+    let field = inst.fields[i]
+    case field:
+      of FIELD_LABEL:
+        if peek(c) == '.':
+          c.index += 1
+          let jump_distance = get_number(c)
+          if jump_distance == "":
+            return error("Expected a jump distance here", i)
+          result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_number(jump_distance)))
+        else:
+          let label_name = get_string(c)
+          if label_name == "":
+            return error("Was expecting a label name here", i)
+          if p.is_defined(label_name):
+            return error("Was expecting a label name here", i)
+          result.operands.add operand(kind: ok_label_ref, name: label_name)
+
+        i += 1
+        continue
+      of FIELD_IMM:
+        let number = get_number(c)
+        if number != "":
+          result.operands.add fixed(parse_number(number))
+        else:
+          let field_string = get_string(c)
+          if field_string in p.number_defines:
+            result.operands.add fixed(p.number_defines[field_string].value)
+          else:
+            return error(&"Undefined constant {field_string}", i)
+        i += 1
+        continue
+      else: # Some user defined field type
+        assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+        let field_string = get_string(c)
+
+        if field_string in p.field_defines[field]:
+          result.operands.add fixed(p.field_defines[field][field_string].value)
+        else:
+          var found = false
+          block search_field:
+            for field_value in p.isa_spec.field_types[field].values:
+              if field_value.name == field_string:
+                found = true
+                var value = field_value.value
+                # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
+                # TODO: Check what the above comment means
+                result.operands.add fixed(value)
+                break
+          if not found:
+            return error(&"Unknown field value {field_string} for {p.isa_spec.field_types[field].name}", i)
+        i += 1
+        continue
+    doAssert false, "unreachable"
+  result.final_index = c.index
+
+proc assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
+  var fields = args
+  for virtual_field in inst.virtual_fields:
+    let new_field = eval(virtual_field, fields, ip)
+    fields.add(cast[uint64](new_field))
+  var values = [0'u64, 0]
+
+  var used_fields: set[uint8]
+
+  var i = inst.bits.high
+  while i >= 0:
+    let bit_type = inst.bits[i]
+    let bit_index = i mod 64
+    let int_index = i div 64
+
+    case bit_type:
+      of FIELD_ZERO: discard
+      of FIELD_ONE: setBit[uint64](values[int_index], bit_index)
+      of FIELD_WILDCARD: discard
+      of FIELD_IMM: assert false
+      of FIELD_LABEL: assert false
+      else:
+        let index = bit_type - FIXED_FIELDS_LEN
+
+        used_fields.incl(index.uint8)
+
+        let bit = (fields[index] and 1)
+        if bit == 1:
+          setBit[uint64](values[int_index], bit_index)
+        fields[index] = asr(fields[index], 1)
+
+    i -= 1
+
+  for i, field in fields:
+    if i.uint8 notin used_fields: continue
+    if field != 0 and field != uint64.high: # high for sign extended
+      return (&"Field %{$char(ord('a') + i)} doesn't fit", @[])
+
+  var width_left = inst.bits.len
+  result[1].set_len(width_left div 8)
+  var value_index = 0
+  const big_endian = true # TODO
+  var offset = if big_endian:
+      width_left div 8 - 1
+    else:
+      0
+
+  while width_left > 0:
+    var value = values[value_index]
+    let max_width = min(64, width_left)
+    value_index += 1
+    width_left -= 64
+
+    value = reverseBits(value)
+    value = value shr (64 - max_width)
+
+    var shift_count = max_width div 8 - 1
+    var shift_by    = max_width - 8
+
+    for i in 0..shift_count:
+      result[1][offset] = cast[uint8](value shr shift_by)
+      if big_endian:
+        offset -= 1
+      else:
+        offset += 1
+      shift_by -= 8
+
+
+proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result =
+  let normal_path = normalizePath(path).replace('\\', '/')
+
+  proc skip_newlines(c: var context) {.error.}
     # Shadows parse.skip_newlines()
-    assert false, "Use skip_record_newlines() for assembling, as we need to record machine code offsets"
+
+
+  var res: pre_assembly_result
+
+  res.segments.add segment(file: normal_path)
+  res.pc.isa_spec = isa_spec
+  res.pc.field_defines.setLen(isa_spec.field_types.len)
+
+  var c = new_context(source)
+  var line_counter = 0
+
 
   proc skip_and_record_newlines(c: var context) =
     while peek(c) in {' ', '\r', '\n', '\t'}:
       if read(c) == '\n':
-        res.line_to_byte.add(res.machine_code.len)
+        res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
+        line_counter += 1
     if skip_comment(c):
       skip_and_record_newlines(c)
-  
-  var c = new_context(source)
 
-  type jump_patch = object
-    label: string
-    byte_offset: int
-    instruction: instruction
-    index: int
-  
-  var jump_patches: seq[jump_patch]
-  res.field_defines.setLen(isa_spec.field_types.len)
+  proc skip_line(c: var context) =
+    while peek(c) not_in {'\0', '\n'}:
+      discard read(c)
+    skip_and_record_newlines(c)
 
-  proc error(input: string, error_index = -1): assembly_result =
-    res.error = input
-    res.error_line = get_line_number(c, error_index)
-    res.error_file = normal_path
-    return res
+  proc error(message: string) =
+    res.errors.add error(loc: file_location(file: normal_path, line: line_counter), message: message)
 
-  proc get_operand(c: var context, field: int): (bool, uint64) =
+  proc emit(val: uint8) =
+    res.segments[^1].fixed.add val
+  var progress_index = -1
 
-    const FAIL = (false, 0'u64)
+  proc any_pc_rel(expr: expression): bool =
+    if expr == nil:
+      return false
+    case expr.exp_kind:
+      of exp_fail, exp_number:
+        return false
+      of exp_operand:
+        return expr.index == CURRENT_ADDRESS
+      of exp_operation:
+        return expr.lhs.any_pc_rel or expr.rhs.any_pc_rel
 
-    case field:
-      of FIELD_IMM:
-        let number = get_number(c)
-        if number != "":
-          result = (true, parse_number(number))
-          return result
-
-        let field_string = get_string(c)
-
-        if field_string in res.number_defines:
-          return (true, res.number_defines[field_string].value)
-       
-      of FIELD_LABEL: assert false
-
-      else:
-        let field_string = get_string(c)
-
-        if field_string in res.field_defines[field]:
-          return (true, res.field_defines[field][field_string].value)
-
-        for field_value in isa_spec.field_types[field].values:
-          if field_value.name == field_string:
-            var value = field_value.value
-            # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
-            return (true, value)
-
-    return FAIL
-
-  proc assemble_instruction(c: var context, byte_code: var seq[uint8], instruction: instruction, machine_code_offset: int, create_jump_patches = false) =
-    let instruction_start = c.index
-    var fields: seq[uint64]
-    
-    var i = 0
-    for syntax in instruction.syntax:
-
-      if syntax == " ":
-        skip_whitespaces(c)
-        continue
-
-      if syntax != "":
-        discard matches(c, syntax)
-        continue
-
-      if instruction.fields[i] == FIELD_LABEL:
-        
-        if matches(c, '.'):
-          let jump_distance = get_number(c)
-          fields.add(parseInt(jump_distance).uint64)
-          
-        else:
-
-          # As a label may be used before it is declared, labels are only resolved after we reach the end of the file
-          let label_name = get_string(c)
-
-          if create_jump_patches:
-            jump_patches.add(jump_patch(
-              label: label_name,
-              byte_offset: machine_code_offset,
-              instruction: instruction,
-              index: instruction_start,
-            ))
-            fields.add(0)
-          else:
-            fields.add(res.labels[label_name].value)
-
-        i += 1
-        continue
-
-      let (match, value) = get_operand(c, instruction.fields[i])
-      assert match
-
-      fields.add(value)
-      i += 1
-
-    var values = [0'u64, 0]
-    block generate_fields:
-      for virtual_field in instruction.virtual_fields:
-        let new_field = eval(virtual_field, fields, machine_code_offset)
-        fields.add(cast[uint64](new_field))
-
-      var used_fields: set[uint8]
-
-      var i = instruction.bits.high
-      while i >= 0:
-        let bit_type = instruction.bits[i]
-        let bit_index = i mod 64
-        let int_index = i div 64
-
-        case bit_type:
-          of FIELD_ZERO: discard
-          of FIELD_ONE: setBit[uint64](values[int_index], bit_index)
-          of FIELD_WILDCARD: discard
-          of FIELD_IMM: assert false
-          of FIELD_LABEL: assert false
-          else:
-            let index = bit_type - FIXED_FIELDS_LEN
-
-            used_fields.incl(index.uint8)
-
-            let bit = (fields[index] and 1)
-            if bit == 1:
-              setBit[uint64](values[int_index], bit_index)
-            fields[index] = asr(fields[index], 1)
-
-        i -= 1
-
-    var width_left = instruction.bits.len
-    var value_index = 0
-
-    var o = width_left div 8 - 1
-    while width_left > 0:
-      var value = values[value_index]
-      let max_width = min(64, width_left)
-      value_index += 1
-      width_left -= 64
-
-      value = reverseBits(value)
-      value = value shr (64 - max_width)
-
-      var shift_count = max_width div 8 - 1
-      var shift_by    = max_width - 8
-
-      for i in 0..shift_count:
-        byte_code[machine_code_offset + o] = cast[uint8](value shr shift_by)
-        o -= 1
-        shift_by -= 8
-
-  skip_and_record_newlines(c)
+  proc any_pc_rel(match: matched_instruction): bool =
+    for op in match.operands:
+      if op.kind != ok_fixed:
+        return true
+    for inst in match.options:
+      for virt in inst.virtual_fields:
+        if virt.any_pc_rel:
+          return true
+    return false
 
   while peek(c) != '\0':
-
+    doAssert c.index != progress_index, "Did not make progress at " & peek(c)
+    progress_index = c.index
     skip_and_record_newlines(c)
-
-    let start_index = c.index
-    let size = get_size(c)
-
-    skip_whitespaces(c)
-
-    let number = get_number(c)
-
-    if number != "":
-      if size == 0:
-        return error("Expected a size before the number, like <U64> " & number)
-
-      if size notin [8, 16, 32, 64]:
-        return error("Only 8, 16, 32 and 64 bits are supported for now")
-
-      let mask = uint64.high shr (64 - size)
-      var i = size div 8
-      var value = parse_number(number) and mask
-
-      while i > 0:
-        res.machine_code.add(cast[uint8](value))
-        value = value shr 8
-        i -= 1
-
-      skip_and_record_newlines(c)
-
-      continue
-
-    if peek(c) in {'"', '\''}:
-      let char = read(c)
-      # TODO escape
-      var literal: string
-      while peek(c) notin {char, '\0'}:
-        literal.add(read(c))
-
-      if read(c) == '\0':
-        return error("Missing closing " & $char & " character")
-
-      for i in 0..literal.high:
-        res.machine_code.add(cast[uint8](ord(literal[i])))
-
-      skip_and_record_newlines(c)
-
-      continue
-
-    var special_test = get_string(c)
-
-    var public: bool
-    if special_test == "pub":
-      public = true
+    block number_literal:
+      let start_index = c.index
+      let size = get_size(c)
       skip_whitespaces(c)
-      special_test = get_string(c)
-
-    if special_test == "include":
-      skip_whitespaces(c)
-
-      var file_wo_header: string
-      while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
-        file_wo_header.add(read(c))
-
-      let file = file_wo_header.replace("\\", "/") & ".asm"
-
-      var i = normal_path.high
-      while i > 0 and normal_path[i] != '/':
-        i -= 1
-
-      let include_res = assemble_file(base_path, normal_path[0..i] & file, isa_spec, get_line_number(c))
-      if include_res.error != "":
-        return include_res
-
-      let file_first = file_wo_header.split("/")[^1]
-
-      for name, val in include_res.labels:
-        if val.public:
-          var new_val = val
-          new_val.value += res.machine_code.len.uint64
-          res.labels[file_first & "." & name] = new_val
-
-      for name, val in include_res.number_defines:
-        if val.public:
-          res.number_defines[file_first & "." & name] = val
-
-      for field, field_values in include_res.field_defines:
-        for name, val in field_values:
-          if val.public:
-            res.field_defines[field][file_first & "." & name] = val
-
-      res.machine_code.add(include_res.machine_code)
-
-      skip_and_record_newlines(c)
-      continue
-
-    elif special_test != "" and peek(c) == ':':
-      if special_test in res.labels:
-        return error("Label " & special_test & " is already declared")
-      res.labels[special_test] = define_value(public: public, value: res.machine_code.len.uint64)
-      c.index += 1
-      skip_and_record_newlines(c)
-
-      continue
-    
-    elif special_test == "set":
-      skip_whitespaces(c)
-      let definition_name = get_string(c)
-      if definition_name in res.number_defines:
-        return error(definition_name & " is already declared")
-
-      for _, field_type in isa_spec.field_types:
-        for _, field in field_type.values:
-          if field.name == definition_name:
-            return error(definition_name & " is already declared")
-
-      skip_whitespaces(c)
-
       let number = get_number(c)
       if number != "":
-        res.number_defines[definition_name] = define_value(public: public, value: parse_number(number))
+        if size == 0:
+          error("Expected a size before the number, like <U64> " & number)
+          skip_line(c)
+          continue
+        if size mod 8 != 0:
+          error("Only multiples of 8 bits are supported for now")
+          skip_line(c)
+          continue
+        let mask = uint64.high shr (64 - size)
+        var i = size div 8
+        var value = parse_number(number) and mask
+
+        while i > 0:
+          emit(cast[uint8](value))
+          value = value shr 8
+          i -= 1
+        skip_and_record_newlines(c)
+        continue
+
+      elif size != 0:
+        error("Expected a number after a size declaration")
+        skip_line(c)
+        continue
+      else:
+        c.index = start_index
+        break number_literal
+
+    block string:
+      if peek(c) in {'"', '\''}:
+        let char = read(c)
+        # TODO escape
+        var literal: string
+        while peek(c) notin {char, '\0'}:
+          literal.add(read(c))
+
+        if read(c) == '\0':
+          error("Missing closing " & $char & " character")
+          skip_line(c)
+          continue
+
+        for i in 0..literal.high:
+          emit(cast[uint8](ord(literal[i])))
+
+        skip_and_record_newlines(c)
+
+        continue
+
+    block special:
+      let start_index = c.index
+      var special_test = get_string(c)
+
+      var public: bool
+      if special_test == "pub":
+        public = true
+        skip_whitespaces(c)
+        special_test = get_string(c)
+
+      if special_test == "include":
+        skip_whitespaces(c)
+
+        var file_wo_header: string
+        while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
+          file_wo_header.add(read(c))
+
+        let file = file_wo_header.replace("\\", "/") & ".asm"
+
+        var i = normal_path.high
+        while i > 0 and normal_path[i] != '/':
+          i -= 1
+
+        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter)
+        if include_res.errors.len != 0:
+          res.errors.add include_res.errors
+
+        let file_first = file_wo_header.split("/")[^1]
+
+        for name, lbl in include_res.labels:
+          if lbl.public:
+            var new_val = lbl
+            new_val.seg_id += res.segments.len
+            res.labels[file_first & "." & name] = new_val
+
+        for name, val in include_res.pc.number_defines:
+          if val.public:
+            res.pc.number_defines[file_first & "." & name] = val
+
+        for field, field_values in include_res.pc.field_defines:
+          for name, val in field_values:
+            if val.public:
+              res.pc.field_defines[field][file_first & "." & name] = val
+
+        res.segments.add(include_res.segments)
+
+        skip_and_record_newlines(c)
+        continue
+      elif special_test != "" and peek(c) == ':':
+        if special_test in res.labels:
+          error("Label " & special_test & " is already declared")
+          skip_line(c)
+          continue
+        res.labels[special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
+        c.index += 1
+        skip_and_record_newlines(c)
+
+        continue
+
+      elif special_test == "set":
+        skip_whitespaces(c)
+        let definition_name = get_string(c)
+        if definition_name in res.pc.number_defines:
+          error(definition_name & " is already declared")
+          skip_line(c)
+          continue
+
+        for _, field_type in isa_spec.field_types:
+          for _, field in field_type.values:
+            if field.name == definition_name:
+              error(definition_name & " is already declared")
+              skip_line(c)
+              continue
+
+        skip_whitespaces(c)
+
+        let number = get_number(c)
+        if number != "":
+          res.pc.number_defines[definition_name] = define_value(public: public, value: parse_number(number))
+
+        else:
+          let define_value = get_string(c)
+          var found = false
+          for field_id, field_type in isa_spec.field_types:
+            for i, field in field_type.values:
+              if field.name == define_value:
+                res.pc.field_defines[field_id][definition_name] = define_value(public: public, value: field.value)
+                found = true
+                break
+
+          if not found:
+            error("Definition value must be either a number or a register")
+            skip_line(c)
+            continue
+
+        skip_and_record_newlines(c)
+        continue
 
       else:
-        let define_value = get_string(c)
-        var found = false
-        for field_id, field_type in isa_spec.field_types:
-          for i, field in field_type.values:
-            if field.name == define_value:
-              res.field_defines[field_id][definition_name] = define_value(public: public, value: field.value)
-              found = true
-              break
-        
-        if not found:
-          return error("Definition value must be either a number or a register")
-
-      skip_and_record_newlines(c)
-      continue
-
-    else:
-      c.index = start_index
-
-    if public:
-      return error("Only labels and 'set' values can be public")
-
-    var instruction_found = false
-    var best_candidate: instruction
-    var field_too_large = -1
-    var max_fields_matched = -1
-    
-    var instr: instruction
-    var values = [0'u64, 0]
-
-    block find_instruction:
-      for instruction in isa_spec.instructions:
-        var fields: seq[uint64]
         c.index = start_index
 
-        block test:
-                    
-          var i = 0
-          for syntax in instruction.syntax:
+    block find_instruction:
+      #[
+        Here we iterate through all available instruction (performance improvements could be made at some point)
+        and try to parse them.
+        `best_match` is either the highest-priority failed instruction or the *first* instruction that matched
+         `matched` contains a list of all instructions that matched
+         We require that all instructions that do match have the same length in terms of what of the input is consumed
+         and that they produce the same list of operands.
+         This could at some point be checked statically for better error messages
+       ]#
+      var best_match: inst_parse_result
+      var matched: matched_instruction
+      let start_index = c.index
 
-            if syntax == " ":
-              skip_whitespaces(c)
+      for inst in isa_spec.instructions:
+        c.index = start_index  # Reset to the beginning of the line
+        let inst_res = parse_instruction(c, res.pc, inst)
+        if inst_res.error == "": # The instruction parsed succesfully
+          if matched.options.len == 0: # This is the first instruction we found
+            best_match = inst_res
+            matched.operands = inst_res.operands
+          else: # This is not the first instruction we found. Check that it's compatible with the first
+            if matched.operands != inst_res.operands or inst_res.final_index != best_match.final_index:
+              error("Multiple instruction matched with conflicting syntax")
+              skip_line(c)
+              break find_instruction
+          matched.options.add inst
+        if matched.options.len == 0:
+          if inst_res.error_priority > best_match.error_priority or best_match.error == "":
+            best_match = inst_res
+
+      c.index = best_match.final_index
+
+      if matched.options.len != 0:
+        if matched.any_pc_rel:
+          # If the instruction is position relative (either in operands or virtual fields) we need to make it relaxable
+          res.segments[^1].relaxable = matched
+          res.segments.add segment(file: normal_path)
+        else:
+          let args = block:
+            var t: seq[uint64] = @[]
+            for op in matched.operands:
+              assert op.kind == ok_fixed, "any_pc_rel did something weird"
+              t.add op.value
+            t
+          var final_err_msg = ""
+          for inst in matched.options:
+            let (err_msg, machine_code) = assemble_instruction(inst, args, 0xDEAD)
+            if err_msg != "":
+              final_err_msg = err_msg
               continue
-
-            if syntax != "":
-              if not matches(c, syntax):
-                break test
-              continue
-
-            if instruction.fields[i] == FIELD_LABEL:
-              if peek(c) == '.':
-                c.index += 1
-                let jump_distance = get_number(c)
-                if jump_distance == "":
-                  return error("Expected a jump distance here")
-              
-              else:
-                let label_name = get_string(c)
-                if label_name == "":
-                  return error("Was expecting a label name here")
-
-              fields.add(0)
-              i += 1
-              continue
-            
-            let (match, value) = get_operand(c, instruction.fields[i])
-
-            if not match: 
-              if i > max_fields_matched:
-                max_fields_matched = i
-                best_candidate = instruction
-              break test
-
-            fields.add(value)
-
-            i += 1
-
-          instr = instruction
-
-          values = [0'u64, 0]
-          block generate_fields:
-            for virtual_field in instr.virtual_fields:
-              let new_field = eval(virtual_field, fields, 0)
-              fields.add(cast[uint64](new_field))
-
-            var used_fields: set[uint8]
-
-            var i = instr.bits.high
-            while i >= 0:
-              let bit_type = instr.bits[i]
-              let bit_index = i mod 64
-              let int_index = i div 64
-
-              if bit_type >= FIXED_FIELDS_LEN:
-                let index = bit_type - FIXED_FIELDS_LEN
-                if index > fields.high: return error("There is no operand $" & $char(ord('a') + index))
-
-                used_fields.incl(index.uint8)
-
-                let bit = (fields[index] and 1)
-                if bit == 1:
-                  setBit[uint64](values[int_index], bit_index)
-                fields[index] = asr(fields[index], 1)
-
-              i -= 1
-
-            for i, field in fields:
-              if i.uint8 notin used_fields: continue
-              if field != 0 and field != uint64.high: # high for sign extended
-                best_candidate = instruction
-                field_too_large = i
-                break test
-
-          instruction_found = true
-          break find_instruction
-
-    if not instruction_found:
-      c.index = start_index
-      var mnemonic: string
-      if c.index != 0 and peek(c, -1) == '\n':
-        mnemonic = get_string(c)
-
-      if mnemonic == "":
-        if field_too_large != -1:
-          return error("Immediate " & $(field_too_large+1) & " doesn't fit in field")
-        if max_fields_matched != -1: 
-          return error("Operand " & $(max_fields_matched+1) & " does not match")
-        return error("Could not parse this instruction")
-
+            res.segments[^1].fixed.add machine_code
+            final_err_msg = ""
+            break
+          if final_err_msg != "":
+            error(final_err_msg)
+            skip_line(c)
+            continue
       else:
-        if field_too_large != -1:
-          return error("Immediate " & $(field_too_large+1) & " doesn't fit in field for '" & mnemonic & "'")
-        if max_fields_matched != -1: 
-          return error("Operand " & $(max_fields_matched+1) & " does not match for '" & mnemonic & "'")
-        
-        return error("No instruction using the mnemonic '" & mnemonic & "' uses this syntax")
-
-    block emit:
-
-      let machine_code_offset = res.machine_code.len
-      let instruction_length = instr.bits.len div 8
-      res.machine_code.setLen(res.machine_code.len + instruction_length)
-
-      c.index = start_index
-      assemble_instruction(c, res.machine_code, instr, machine_code_offset, create_jump_patches = true)
-
-    skip_whitespaces(c)
-
-    if peek(c) notin {'\n', '\0'}:
-      return error("Was expecting the instruction to end here")
-
+        if best_match.error != "":
+          error(best_match.error)
+        else:
+          error("No instruction matched")
+        skip_line(c)
+        continue
     skip_and_record_newlines(c)
-
-  for patch in jump_patches:
-    if patch.label notin res.labels:
-      return error("No label with the name '" & patch.label & "' found", patch.index)
-
-  for patch in jump_patches:
-    c.index = patch.index
-    assemble_instruction(c, res.machine_code, patch.instruction, patch.byte_offset)
 
   return res
 
+func finalize(pa: pre_assembly_result): assembly_result =
+  proc error(msg: string, file: string, line: int): assembly_result =
+    return assembly_result(error: msg, error_file: file, error_line: line)
+
+  proc error(err: error): assembly_result =
+    return assembly_result(error: err.message, error_file: err.loc.file, error_line: err.loc.line)
+
+  if pa.errors.len != 0:
+    return error(pa.errors[0])
+
+  let segment_starts = block:
+    var ip: int
+    var starts: seq[int]
+    for seg in pa.segments:
+      starts.add(ip)
+      ip += seg.fixed.len
+      if seg.relaxable.options.len > 0:
+        ip += seg.relaxable.options[seg.relaxable.selected_option].bits.len div 8
+    starts
+
+  result.line_to_byte = @[0]
+  let main_file = pa.segments[0].file
+
+  for label_name, label in pa.labels:
+    let address = segment_starts[label.seg_id] + label.offset
+    result.labels[label_name] = define_value(public: label.public, value: cast[uint64](address))
+
+  result.field_defines = pa.pc.field_defines
+  result.number_defines = pa.pc.number_defines
+
+  for seg_id, segment in pa.segments:
+
+    if segment.file == main_file:
+      for (byte_offset, line) in segment.line_boundaries:
+        while line > result.line_to_byte.len:
+          result.line_to_byte.add (result.machine_code.len + byte_offset)
+
+    assert segment_starts[seg_id] == result.machine_code.len
+    result.machine_code.add segment.fixed
+    if segment.relaxable.options.len == 0:
+      continue
+
+    let inst = segment.relaxable.options[segment.relaxable.selected_option]
+    let args = block:
+      var values: seq[uint64]
+      for op in segment.relaxable.operands:
+        values.add case op.kind:
+          of ok_fixed:
+            op.value
+          of ok_label_ref:
+            result.labels[op.name].value
+          of ok_relative:
+            cast[uint64](result.machine_code.len + op.offset)
+      values
+    let (err_msg, machine_code) = assemble_instruction(inst, args, result.machine_code.len)
+    if err_msg != "":
+      return error(err_msg, segment.file, result.line_to_byte.len)
+    result.machine_code &= machine_code
+
+func relax(pa: var pre_assembly_result) =
+  discard # TODO: Implement this
