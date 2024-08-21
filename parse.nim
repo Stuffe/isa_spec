@@ -20,33 +20,36 @@ proc new_context*(source: string): context =
     finish: source.high,
   )
 
-proc source*(context: context): string = # Hopefully the compiler doesn't copy here, otherwise make it a template
-  return buffers[context.source_id]
+func source*(context: context): string = 
+  # Hopefully the compiler doesn't copy here, otherwise make it a template
+  {.noSideEffect.}:
+    # We need to pretend this has no side effects to use some generic nim functions.
+    buffers[context.source_id]
 
-proc inc*(context: var context, amount = 1) =
+func inc*(context: var context, amount = 1) =
   context.start += amount
 
-proc get_index*(context: context): int =
+func get_index*(context: context): int =
   return context.start
 
-proc set_index*(context: var context, value: int) =
+func set_index*(context: var context, value: int) =
   context.start = value
 
-proc dbg*(c: context): string =
+func dbg*(c: context): string =
   return "\u001b[31m" & source(c)[0..c.start - 1] & "\u001b[0m" & source(c)[c.start..^1]
 
-proc peek*(c: context): char =
+func peek*(c: context): char =
   return source(c)[c.start]
 
-proc peek*(c: context, offset: int): char =
+func peek*(c: context, offset: int): char =
   return source(c)[c.start + offset]
 
-proc read*(c: var context): char =
+func read*(c: var context): char =
   result = c.source[c.start]
   if result != '\0':
     c.start += 1
 
-proc skip_comment*(c: var context): bool =
+func skip_comment*(c: var context): bool =
   if peek(c) == ';' or (peek(c) == '/' and peek(c, 1) == '/'):
     while peek(c) notin {'\n', '\0'}:
       c.start += 1
@@ -156,7 +159,7 @@ proc get_line_number*(c: context): int =
       line += 1
   return line
 
-proc get_size*(c: var context): int =
+func get_size*(c: var context): int =
   if peek(c) != '<' or peek(c, 1) != 'U': return
   let orig_index = c.start
   c.start += 2
@@ -167,10 +170,10 @@ proc get_size*(c: var context): int =
 
   return parseInt(number)
 
-proc length*(c: context): int =
+func length*(c: context): int =
   return c.finish - c.start
 
-proc `$`*(c: context): string =
+func `$`*(c: context): string =
   return source(c)[c.start..c.finish - 1]
 
 iterator items(c: context): char =
@@ -185,23 +188,23 @@ iterator pairs(c: context): (int, char) =
     yield (i - c.start, source(c)[i])
     i += 1
 
-proc `[]`(c: context, index: int): char =
+func `[]`(c: context, index: int): char =
   return source(c)[index]
 
-proc `==`*(a: context, b: context): bool =
+func `==`*(a: context, b: context): bool =
   if a.source_id == b.source_id and a.start == b.start and a.finish == b.finish: return true
   if a.length != b.length: return false
   for i, c in a:
     if b[i] != c: return false
   return true
 
-proc `==`*(a: context, b: string): bool =
+func `==`*(a: context, b: string): bool =
   if a.length != b.len: return false
   for i, c in a:
     if b[i] != c: return false
   return true
 
-proc `==`*(a: string, b: context): bool =
+func `==`*(a: string, b: context): bool =
   return b == a
 
 proc to_context*(input: string): context =
