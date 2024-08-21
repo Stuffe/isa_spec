@@ -26,11 +26,19 @@ func source*(context: context): string =
     # We need to pretend this has no side effects to use some generic nim functions.
     buffers[context.source_id]
 
-func length*(c: context): int =
+func len*(c: context): int =
   return c.finish - c.start
 
 func `$`*(c: context): string =
   return source(c)[c.start..c.finish - 1]
+
+func `[]`(c: context, index: int): char =
+  return source(c)[c.start + index]
+
+func `[]`(c: context, index: HSlice): context =
+  result = c
+  result.start  += index.a
+  result.finish -= index.b.int
 
 func inc*(context: var context, amount = 1) =
   context.start += amount
@@ -139,16 +147,17 @@ proc get_unsigned*(c: var context): context =
     inc(c)
     result.finish += 1
 
-func parse_unsigned*(input: string): uint64 =
+func parse_unsigned*(input: context): uint64 =
   if input.len < 3: 
     try:
-      return cast[uint64](parseInt(input))
+      return cast[uint64](parseInt($input))
     except: return 0
+
   case input[1]:
-    of 'x': return fromHex[uint64](input)
-    of 'o': return fromOct[uint64](input)
-    of 'b': return fromBin[uint64](input)
-    else:   return cast[uint64](parseInt(input))
+    of 'x': return fromHex[uint64]($input)
+    of 'o': return fromOct[uint64]($input)
+    of 'b': return fromBin[uint64]($input)
+    else:   return cast[uint64](parseInt($input))
 
 proc get_signed*(c: var context): context =
   
@@ -160,7 +169,7 @@ proc get_signed*(c: var context): context =
   if negative:
     result.start -= 1
 
-proc parse_signed*(input: string): int =
+proc parse_signed*(input: context): int =
   if input.len == 0: return
 
   if input[0] == '-':
@@ -197,18 +206,15 @@ iterator pairs(c: context): (int, char) =
     yield (i - c.start, source(c)[i])
     i += 1
 
-func `[]`(c: context, index: int): char =
-  return source(c)[index]
-
 func `==`*(a: context, b: context): bool =
   if a.source_id == b.source_id and a.start == b.start and a.finish == b.finish: return true
-  if a.length != b.length: return false
+  if a.len != b.len: return false
   for i, c in a:
     if b[i] != c: return false
   return true
 
 func `==`*(a: context, b: string): bool =
-  if a.length != b.len: return false
+  if a.len != b.len: return false
   for i, c in a:
     if b[i] != c: return false
   return true

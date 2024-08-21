@@ -90,7 +90,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
 
       let field_name = get_string(c)
 
-      if field_name.length == 0:
+      if field_name.len == 0:
         return error("Was expecting a field name here")
 
       if not matches(c, ')'):
@@ -227,7 +227,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     while not matches(c, "[instructions]", increment = false):
       skip_whitespaces(c)
       var field_type_name = get_string(c)
-      if field_type_name.length == 0: return error("Expected a name for the field type")
+      if field_type_name.len == 0: return error("Expected a name for the field type")
       skip_whitespaces(c)
 
       var new_field_types: Table[string, field_type]
@@ -237,7 +237,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
         while read(c) == '\n':
 
           let field_name = get_string(c)
-          if field_name.length == 0: break outer
+          if field_name.len == 0: break outer
           skip_whitespaces(c)
 
           var bits: string
@@ -563,10 +563,10 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
           let jump_distance = get_unsigned(c)
           if jump_distance == "":
             return error("Expected a jump distance here", i)
-          result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned($jump_distance)))
+          result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned(jump_distance)))
         else:
           let label_name = get_string(c)
-          if label_name.length == 0:
+          if label_name.len == 0:
             return error("Was expecting a label name here", i)
           if p.is_defined($label_name):
             return error("Was expecting a label name here", i)
@@ -576,8 +576,8 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
         continue
       of FIELD_IMM:
         let number = get_unsigned(c)
-        if number.length != 0:
-          result.operands.add fixed(parse_unsigned($number))
+        if number.len != 0:
+          result.operands.add fixed(parse_unsigned(number))
         else:
           let field_string = get_string(c)
           if $field_string in p.number_defines:
@@ -756,7 +756,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           continue
         let mask = uint64.high shr (64 - size)
         var i = size div 8
-        var value = parse_unsigned($number) and mask
+        var value = parse_unsigned(number) and mask
 
         while i > 0:
           emit(cast[uint8](value))
@@ -871,7 +871,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         let number = get_unsigned(c)
         if number != "":
-          res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned($number))
+          res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned(number))
 
         else:
           let define_value = get_string(c)
