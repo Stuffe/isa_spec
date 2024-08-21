@@ -26,6 +26,12 @@ func source*(context: context): string =
     # We need to pretend this has no side effects to use some generic nim functions.
     buffers[context.source_id]
 
+func length*(c: context): int =
+  return c.finish - c.start
+
+func `$`*(c: context): string =
+  return source(c)[c.start..c.finish - 1]
+
 func inc*(context: var context, amount = 1) =
   context.start += amount
 
@@ -98,33 +104,40 @@ proc get_string*(c: var context): context =
     inc(c)
     result.finish += 1
 
-proc get_unsigned*(c: var context): string =
+proc get_unsigned*(c: var context): context =
+  result = c
+  result.finish = c.start
   if peek(c) == '0':
     var value = 0'u64
     if peek(c, 1) == 'x':
-      c.start += 2
-      result = "0x"
+      inc(c, 2)
+      result.finish += 2
       while peek(c) in setutils.toSet("0123456789abcdefABCDEF"):
-        result.add(read(c))
+        inc(c)
+        result.finish += 1
       return result
     if peek(c, 1) == 'o':
-      c.start += 2
-      result = "0o"
+      inc(c, 2)
+      result.finish += 2
       while peek(c) in setutils.toSet("01234567"):
-        result.add(read(c))
+        inc(c)
+        result.finish += 1
       return result
     if peek(c, 1) == 'b':
-      c.start += 2
-      result = "0b"
+      inc(c, 2)
+      result.finish += 2
       while peek(c) in setutils.toSet("01"):
-        result.add(read(c))
+        inc(c)
+        result.finish += 1
       return result
 
   if peek(c) notin NUMBER_FIRST:
     return
-  result.add(read(c))
+  inc(c)
+  result.finish += 1
   while peek(c) in NUMBER_NEXT:
-    result.add(read(c))
+    inc(c)
+    result.finish += 1
 
 func parse_unsigned*(input: string): uint64 =
   if input.len < 3: 
@@ -137,13 +150,15 @@ func parse_unsigned*(input: string): uint64 =
     of 'b': return fromBin[uint64](input)
     else:   return cast[uint64](parseInt(input))
 
-proc get_signed*(c: var context): string =
+proc get_signed*(c: var context): context =
   
-  if c.peek() == '-':
-    result.add('-')
-    c.start += 1
+  let negative = c.peek() == '-'
+  if negative:
+    inc(c)
 
-  result.add(c.get_unsigned())
+  result = c.get_unsigned()
+  if negative:
+    result.start -= 1
 
 proc parse_signed*(input: string): int =
   if input.len == 0: return
@@ -163,18 +178,12 @@ func get_size*(c: var context): int =
   if peek(c) != '<' or peek(c, 1) != 'U': return
   let orig_index = c.start
   c.start += 2
-  let number = get_unsigned(c)
+  let number = $get_unsigned(c)
   if number == "" or read(c) != '>':
     c.start = orig_index
     return
 
   return parseInt(number)
-
-func length*(c: context): int =
-  return c.finish - c.start
-
-func `$`*(c: context): string =
-  return source(c)[c.start..c.finish - 1]
 
 iterator items(c: context): char =
   var i = c.start

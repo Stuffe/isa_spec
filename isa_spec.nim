@@ -563,7 +563,7 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
           let jump_distance = get_unsigned(c)
           if jump_distance == "":
             return error("Expected a jump distance here", i)
-          result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned(jump_distance)))
+          result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned($jump_distance)))
         else:
           let label_name = get_string(c)
           if label_name.length == 0:
@@ -576,8 +576,8 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
         continue
       of FIELD_IMM:
         let number = get_unsigned(c)
-        if number != "":
-          result.operands.add fixed(parse_unsigned(number))
+        if number.length != 0:
+          result.operands.add fixed(parse_unsigned($number))
         else:
           let field_string = get_string(c)
           if $field_string in p.number_defines:
@@ -747,7 +747,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       let number = get_unsigned(c)
       if number != "":
         if size == 0:
-          error("Expected a size before the number, like <U64> " & number)
+          error("Expected a size before the number, like <U64> " & $number)
           skip_line(c)
           continue
         if size mod 8 != 0:
@@ -756,7 +756,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           continue
         let mask = uint64.high shr (64 - size)
         var i = size div 8
-        var value = parse_unsigned(number) and mask
+        var value = parse_unsigned($number) and mask
 
         while i > 0:
           emit(cast[uint8](value))
@@ -871,7 +871,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         let number = get_unsigned(c)
         if number != "":
-          res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned(number))
+          res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned($number))
 
         else:
           let define_value = get_string(c)
