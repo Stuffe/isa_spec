@@ -20,7 +20,7 @@ proc new_context*(source: string): context =
     finish: source.high,
   )
 
-proc source*(context: context): string =
+proc source*(context: context): string = # Hopefully the compiler doesn't copy here, otherwise make it a template
   return buffers[context.source_id]
 
 proc inc*(context: var context, amount = 1) =
@@ -36,10 +36,10 @@ proc dbg*(c: context): string =
   return "\u001b[31m" & source(c)[0..c.start - 1] & "\u001b[0m" & source(c)[c.start..^1]
 
 proc peek*(c: context): char =
-  return c.source[c.start]
+  return source(c)[c.start]
 
 proc peek*(c: context, offset: int): char =
-  return c.source[c.start + offset]
+  return source(c)[c.start + offset]
 
 proc read*(c: var context): char =
   result = c.source[c.start]
@@ -189,7 +189,7 @@ proc `[]`(c: context, index: int): char =
   return source(c)[index]
 
 proc `==`*(a: context, b: context): bool =
-  if a == b: return true
+  if a.source_id == b.source_id and a.start == b.start and a.finish == b.finish: return true
   if a.length != b.length: return false
   for i, c in a:
     if b[i] != c: return false
