@@ -1,4 +1,4 @@
-import std/setutils, strutils
+import std/setutils, strutils, hashes, tables
 
 type context* = object
   source_id: int
@@ -235,3 +235,10 @@ proc `&`*(a: context, b: string): context =
 
 proc `&`*(a: string, b: context): context =
   return to_context($a & $b)
+
+proc hash*(a: context): Hash =
+  # Needed for contexts to be keys in maps
+  var h: Hash = 0
+  for c in a:
+    h = h !& hash(c)
+  result = !$h  
