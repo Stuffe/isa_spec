@@ -1,4 +1,4 @@
-import tables, std/setutils
+import tables, std/setutils, parse
 
 type register_kind* = enum
   field

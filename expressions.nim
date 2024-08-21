@@ -3,7 +3,7 @@ import types, parse
 
 const CURRENT_ADDRESS* = int.high
 
-func `$`*(exp: expression): string =
+proc `$`*(exp: expression): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
@@ -15,9 +15,9 @@ func `$`*(exp: expression): string =
         return "log2(" & $exp.lhs & ")"
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
-func get_expression*(c: var context, operand_count: int): expression
+proc get_expression*(c: var context, operand_count: int): expression
 
-func get_term(c: var context, operand_count: int): expression =
+proc get_term(c: var context, operand_count: int): expression =
 
   if matches(c, "log2("):
     let exp = get_expression(c, operand_count)
@@ -26,21 +26,21 @@ func get_term(c: var context, operand_count: int): expression =
     return expression(exp_kind: exp_operation, op_kind: op_log2, lhs: exp)
   
   if matches(c, '('):
-    let start = c.index
+    let restore = c
     result = get_expression(c, operand_count)
     skip_whitespaces(c)
     if read(c) != ')':
-      c.index = start
+      c = restore
       return expression(exp_kind: exp_fail)
 
   elif peek(c) == '$':
-    c.index += 1
+    c.inc()
     return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
 
   elif peek(c) == '%':
     let operand = peek(c, 1)
     if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return expression(exp_kind: exp_fail)
-    c.index += 2
+    inc(c, 2)
 
     let operand_index = ord(operand) - ord('a')
     if operand_index < 0 or operand_index > operand_count: return expression(exp_kind: exp_fail)
@@ -54,7 +54,7 @@ func get_term(c: var context, operand_count: int): expression =
 
     result = expression(exp_kind: exp_number, value: cast[int](parse_unsigned(number)))
 
-func get_greedy_group(c: var context, operand_count: int): expression =
+proc get_greedy_group(c: var context, operand_count: int): expression =
 
   skip_whitespaces(c)
 
@@ -67,13 +67,13 @@ func get_greedy_group(c: var context, operand_count: int): expression =
 
     skip_whitespaces(c)
 
-    let start_index = c.index
+    let restore = c
 
     var next_token: string
     
     while peek(c) in GREEDY_CHARS and peek(c, 1) != '%': # The '%' in '%reg' is not an operator!
       next_token.add(peek(c))
-      c.index += 1
+      inc(c)
 
     let op_index = OP_INDEXES.find(next_token)
 
@@ -84,13 +84,13 @@ func get_greedy_group(c: var context, operand_count: int): expression =
 
     let rhs = get_term(c, operand_count)
     if rhs.exp_kind == exp_fail:
-      c.index = start_index
+      c = restore
       return expression(exp_kind: exp_fail)
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
-func get_expression*(c: var context, operand_count: int): expression =
+proc get_expression*(c: var context, operand_count: int): expression =
 
   skip_whitespaces(c)
 
@@ -103,7 +103,7 @@ func get_expression*(c: var context, operand_count: int): expression =
 
     skip_whitespaces(c)
 
-    let start_index = c.index
+    let restore = c
 
     var next_token: string
     
@@ -119,7 +119,7 @@ func get_expression*(c: var context, operand_count: int): expression =
 
     let rhs = get_greedy_group(c, operand_count)
     if rhs.exp_kind == exp_fail:
-      c.index = start_index
+      c = restore
       return expression(exp_kind: exp_fail)
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)

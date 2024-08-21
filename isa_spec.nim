@@ -83,14 +83,14 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
 
       if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & operand_name)
+        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
       if not matches(c, '('):
-        return error("Expected parenthesis after the operand name, like: " & operand_name & "(immediate)")
+        return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
 
       let field_name = get_string(c)
 
-      if field_name == "":
+      if field_name.length == 0:
         return error("Was expecting a field name here")
 
       if not matches(c, ')'):
@@ -99,14 +99,14 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       var found = false
 
       for i, field in isa_spec.field_types:
-        if field_name == field.name:
+        if $field_name == field.name:
           found = true
           new_instruction.fields.add(i)
           new_instruction.syntax.add("")
           break
       
       if not found:
-        return error("Field name '" & field_name & "' not defined")
+        return error("Field name '" & $field_name & "' not defined")
 
       add_string_syntax(c, new_instruction.syntax)
 
@@ -124,7 +124,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
 
       if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & operand_name)
+        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
       skip_newlines(c)
 
@@ -174,7 +174,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
           let field_real_index = field_index + FIXED_FIELDS_LEN
           new_instruction.bits.add(field_real_index)
 
-      c.index += 1
+      inc(c)
     
     if new_instruction.bits.len ==  0:
       return error("Instruction '" & instruction_name & "' is missing the bit field definition")
@@ -198,7 +198,7 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       let char = peek(c)
       if char notin {'\r'}:
         description.add(char)
-      c.index += 1
+      inc(c)
     new_instruction.description = description
 
   return (new_instruction, "")
@@ -227,7 +227,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     while not matches(c, "[instructions]", increment = false):
       skip_whitespaces(c)
       var field_type_name = get_string(c)
-      if field_type_name == "": return error("Expected a name for the field type")
+      if field_type_name.length == 0: return error("Expected a name for the field type")
       skip_whitespaces(c)
 
       var new_field_types: Table[string, field_type]
@@ -237,7 +237,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
         while read(c) == '\n':
 
           let field_name = get_string(c)
-          if field_name == "": break outer
+          if field_name.length == 0: break outer
           skip_whitespaces(c)
 
           var bits: string
@@ -246,7 +246,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
             bits.add(read(c))
         
           if bits.len == 0:
-            return error("Expected a bit pattern for " & field_name)
+            return error("Expected a bit pattern for " & $field_name)
           if bits.len > 64:
             return error("Only up to 64 bit field lengths supported")
           
@@ -254,7 +254,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
             bit_length = bits.len
           else:
             if bit_length != bits.len:
-              return error("The bit pattern of " & field_name & " is only " & $bits.len & " long, expected " & $bit_length)
+              return error("The bit pattern of " & $field_name & " is only " & $bits.len & " long, expected " & $bit_length)
 
           var bit_value = 0
           discard parseBin(bits, bit_value)
@@ -262,17 +262,17 @@ proc parse_isa_spec*(source: string): spec_parse_result =
           skip_whitespaces(c)
           let bit_width = get_unsigned(c)
 
-          if field_type_name notin new_field_types:
-            new_field_types[field_type_name] = field_type(name: field_type_name, bit_length: bit_length)
+          if $field_type_name notin new_field_types:
+            new_field_types[$field_type_name] = field_type(name: $field_type_name, bit_length: bit_length)
             
-          new_field_types[field_type_name].values.add(field_value(
-            name: field_name,
+          new_field_types[$field_type_name].values.add(field_value(
+            name: $field_name,
             value: cast[uint64](bit_value),
           ))
 
-      if field_type_name notin new_field_types:
+      if $field_type_name notin new_field_types:
         # Nonsensical, but will otherwise render some specs unusable in TC
-        new_field_types[field_type_name] = field_type(name: field_type_name, bit_length: 3)
+        new_field_types[$field_type_name] = field_type(name: $field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
         result.spec.field_types.add(field_type)
@@ -559,18 +559,18 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
     case field:
       of FIELD_LABEL:
         if peek(c) == '.':
-          c.index += 1
+          inc(c)
           let jump_distance = get_unsigned(c)
           if jump_distance == "":
             return error("Expected a jump distance here", i)
           result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned(jump_distance)))
         else:
           let label_name = get_string(c)
-          if label_name == "":
+          if label_name.length == 0:
             return error("Was expecting a label name here", i)
-          if p.is_defined(label_name):
+          if p.is_defined($label_name):
             return error("Was expecting a label name here", i)
-          result.operands.add operand(kind: ok_label_ref, name: label_name)
+          result.operands.add operand(kind: ok_label_ref, name: $label_name)
 
         i += 1
         continue
@@ -580,15 +580,15 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
           result.operands.add fixed(parse_unsigned(number))
         else:
           let field_string = get_string(c)
-          if field_string in p.number_defines:
-            result.operands.add fixed(p.number_defines[field_string].value)
+          if $field_string in p.number_defines:
+            result.operands.add fixed(p.number_defines[$field_string].value)
           else:
             return error(&"Undefined constant {field_string}", i)
         i += 1
         continue
       else: # Some user defined field type
         assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
-        let field_string = get_string(c)
+        let field_string = $get_string(c)
 
         if field_string in p.field_defines[field]:
           result.operands.add fixed(p.field_defines[field][field_string].value)
@@ -608,7 +608,7 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
         i += 1
         continue
     doAssert false, "unreachable"
-  result.final_index = c.index
+  result.final_index = get_index(c)
 
 proc assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
   var fields = args
@@ -737,11 +737,11 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
     return false
 
   while peek(c) != '\0':
-    doAssert c.index != progress_index, "Did not make progress at " & peek(c)
-    progress_index = c.index
+    doAssert get_index(c) != progress_index, "Did not make progress at " & peek(c)
+    progress_index = get_index(c)
     skip_and_record_newlines(c)
     block number_literal:
-      let start_index = c.index
+      let restore = c
       let size = get_size(c)
       skip_whitespaces(c)
       let number = get_unsigned(c)
@@ -770,7 +770,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         skip_line(c)
         continue
       else:
-        c.index = start_index
+        c = restore
         break number_literal
 
     block string:
@@ -794,7 +794,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         continue
 
     block special:
-      let start_index = c.index
+      let restore = c
       var special_test = get_string(c)
 
       var public: bool
@@ -842,28 +842,28 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         skip_and_record_newlines(c)
         continue
       elif special_test != "" and peek(c) == ':':
-        if special_test in res.labels:
-          error("Label " & special_test & " is already declared")
+        if $special_test in res.labels:
+          error("Label " & $special_test & " is already declared")
           skip_line(c)
           continue
-        res.labels[special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
-        c.index += 1
+        res.labels[$special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
+        inc(c)
         skip_and_record_newlines(c)
 
         continue
 
       elif special_test == "set":
         skip_whitespaces(c)
-        let definition_name = get_string(c)
+        let definition_name = $get_string(c)
         if definition_name in res.pc.number_defines:
-          error(definition_name & " is already declared")
+          error($definition_name & " is already declared")
           skip_line(c)
           continue
 
         for _, field_type in isa_spec.field_types:
           for _, field in field_type.values:
             if field.name == definition_name:
-              error(definition_name & " is already declared")
+              error($definition_name & " is already declared")
               skip_line(c)
               continue
 
@@ -892,7 +892,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         continue
 
       else:
-        c.index = start_index
+        c = restore
 
     block find_instruction:
       #[
@@ -906,10 +906,10 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
        ]#
       var best_match: inst_parse_result
       var matched: matched_instruction
-      let start_index = c.index
+      let restore = c
 
       for inst in isa_spec.instructions:
-        c.index = start_index  # Reset to the beginning of the line
+        c = restore  # Reset to the beginning of the line
         let inst_res = parse_instruction(c, res.pc, inst)
         if inst_res.error == "": # The instruction parsed succesfully
           if matched.options.len == 0: # This is the first instruction we found
@@ -925,7 +925,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           if inst_res.error_priority > best_match.error_priority or best_match.error == "":
             best_match = inst_res
 
-      c.index = best_match.final_index
+      set_index(c, best_match.final_index)
 
       if matched.options.len != 0:
         if matched.any_pc_rel:
