@@ -1,6 +1,7 @@
 import std/setutils, strutils, hashes, tables
 
 type stream_slice* = object
+  source: ref string
   source_id: int
   start: int
   finish: int
@@ -14,51 +15,62 @@ var buffers = @[""]
 
 proc new_stream_slice*(source: string): stream_slice =
   buffers.add(source & '\0')
+  var reference = new(string)
+  reference[] = source & '\0'
   return stream_slice(
+    source: reference,
     source_id: buffers.high,
     start: 0,
-    finish: source.high,
+    finish: source.len,
   )
 
-func source*(context: stream_slice): string = 
-  # Hopefully the compiler doesn't copy here, otherwise make it a template
-  {.noSideEffect.}:
-    # We need to pretend this has no side effects to use some generic nim functions.
-    buffers[context.source_id]
+func finished*(s: stream_slice): bool =
+  assert not isNil(s.source)
+  return s.start >= s.finish
 
 func len*(s: stream_slice): int =
+  assert not isNil(s.source)
   return s.finish - s.start
 
 func `$`*(s: stream_slice): string =
-  return source(s)[s.start..s.finish - 1]
+  assert not isNil(s.source)
+  return s.source[s.start..s.finish - 1]
 
 func `[]`(s: stream_slice, index: int): char =
-  return source(s)[s.start + index]
+  assert not isNil(s.source)
+  return s.source[s.start + index]
 
 func `[]`(s: stream_slice, index: HSlice): stream_slice =
+  assert not isNil(s.source)
   result = s
   result.start  += index.a
   result.finish -= index.b.int
 
 func skip*(s: var stream_slice, amount = 1) =
+  assert not isNil(s.source)
   s.start += amount
 
 func get_index*(s: stream_slice): int =
+  assert not isNil(s.source)
   return s.start
 
 func set_index*(s: var stream_slice, value: int) =
+  assert not isNil(s.source)
   s.start = value
 
 func dbg*(s: stream_slice): string =
-  return "\u001b[31m" & source(s)[0..s.start - 1] & "\u001b[0m" & source(s)[s.start..^1]
+  return "\u001b[31m" & s.source[0..s.start - 1] & "\u001b[0m" & s.source[s.start..^1]
 
 func peek*(s: stream_slice): char =
-  return source(s)[s.start]
+  assert not isNil(s.source)
+  return s.source[s.start]
 
 func peek*(s: stream_slice, offset: int): char =
-  return source(s)[s.start + offset]
+  assert not isNil(s.source)
+  return s.source[s.start + offset]
 
 func read*(s: var stream_slice): char =
+  assert not isNil(s.source)
   result = s.source[s.start]
   if result != '\0':
     s.start += 1
@@ -197,13 +209,13 @@ func get_size*(s: var stream_slice): int =
 iterator items(s: stream_slice): char =
   var i = s.start
   while i < s.finish:
-    yield source(s)[i]
+    yield s.source[i]
     i += 1
 
 iterator pairs(s: stream_slice): (int, char) =
   var i = s.start
   while i < s.finish:
-    yield (i - s.start, source(s)[i])
+    yield (i - s.start, s.source[i])
     i += 1
 
 func `==`*(a: stream_slice, b: stream_slice): bool =
@@ -222,19 +234,14 @@ func `==`*(a: stream_slice, b: string): bool =
 func `==`*(a: string, b: stream_slice): bool =
   return b == a
 
-proc to_context*(input: string): stream_slice =
-  result = stream_slice(start: buffers[0].len)
-  buffers[0] &= input
-  result.finish = buffers[0].len
-
 proc `&`*(a: stream_slice, b: stream_slice): stream_slice =
-  return to_context($a & $b)
+  return new_stream_slice($a & $b)
 
 proc `&`*(a: stream_slice, b: string): stream_slice =
-  return to_context($a & $b)
+  return new_stream_slice($a & $b)
 
 proc `&`*(a: string, b: stream_slice): stream_slice =
-  return to_context($a & $b)
+  return new_stream_slice($a & $b)
 
 proc hash*(s: stream_slice): Hash =
   # Needed for contexts to be keys in maps
@@ -242,9 +249,6 @@ proc hash*(s: stream_slice): Hash =
   for c in s:
     h = h !& hash(c)
   result = !$h  
-
-proc finished*(s: stream_slice): bool = 
-  return s.start >= s.finish
 
 proc get_quoted_string*(s: var stream_slice): stream_slice =
   
