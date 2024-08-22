@@ -225,7 +225,7 @@ func `==`*(a: string, b: context): bool =
 proc to_context*(input: string): context =
   result = context(start: buffers[0].len)
   buffers[0] &= input
-  result.finish = buffers[0].high
+  result.finish = buffers[0].len
 
 proc `&`*(a: context, b: context): context =
   return to_context($a & $b)

@@ -350,7 +350,7 @@ type
   pre_assembly_result = object
     errors: seq[error]
     segments: seq[segment]
-    labels: Table[string, label_ref]
+    labels: Table[context, label_ref]
     pc: parse_context
 
   segment = object
@@ -369,7 +369,7 @@ type
     of ok_fixed:
       value: uint64
     of ok_label_ref:
-      name: string
+      name: context
     of ok_relative:
       offset: int64
 
@@ -570,7 +570,7 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
             return error("Was expecting a label name here", i)
           if p.is_defined($label_name):
             return error("Was expecting a label name here", i)
-          result.operands.add operand(kind: ok_label_ref, name: $label_name)
+          result.operands.add operand(kind: ok_label_ref, name: label_name)
 
         i += 1
         continue
@@ -841,12 +841,13 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         skip_and_record_newlines(c)
         continue
-      elif special_test != "" and peek(c) == ':':
-        if $special_test in res.labels:
+
+      elif special_test.len != 0 and peek(c) == ':':
+        if special_test in res.labels:
           error("Label " & $special_test & " is already declared")
           skip_line(c)
           continue
-        res.labels[$special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
+        res.labels[special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
         inc(c)
         skip_and_record_newlines(c)
 
@@ -893,6 +894,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
       else:
         c = restore
+
 
     block find_instruction:
       #[

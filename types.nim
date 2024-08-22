@@ -101,7 +101,7 @@ type assembly_result* = object
   error_file*: string
   field_defines*: seq[Table[string, define_value]]
   number_defines*: Table[string, define_value]
-  labels*: Table[string, define_value]
+  labels*: Table[context, define_value]
 
 proc lsr*(a: int, b: int): int =
   return cast[int](cast[uint64](a) shr cast[uint64](b))
