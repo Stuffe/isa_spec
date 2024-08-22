@@ -10,7 +10,7 @@ const FIELD_IMM        = 3
 const FIELD_LABEL      = 4
 const FIXED_FIELDS_LEN = 5
 
-proc instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
+func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
   var source = ""
   var field_i = 0
   for syntax in instruction.syntax:
@@ -33,7 +33,7 @@ proc instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   source &= "\n" & instruction.description
   return source
 
-proc spec_to_string*(isa_spec: isa_spec): string =
+func spec_to_string*(isa_spec: isa_spec): string =
   var source = "[fields]\n"
 
   const FIXED_FIELDS_LEN = 5
@@ -52,13 +52,13 @@ proc spec_to_string*(isa_spec: isa_spec): string =
 
   return source
 
-proc get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, string) =
+func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, string) =
   # Being able to reparse a single instruction is needed for Turing Complete
 
-  proc error(input: string): (instruction, string) =
+  func error(input: string): (instruction, string) =
     return (instruction(), input)
 
-  proc add_string_syntax(s: var stream_slice, syntax_parts: var seq[string]) =
+  func add_string_syntax(s: var stream_slice, syntax_parts: var seq[string]) =
     var this_part: string
     while peek(s) notin {'%', '\0', '\n'}:
       let char = read(s)
@@ -203,11 +203,11 @@ proc get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
   return (new_instruction, "")
 
-proc parse_isa_spec*(source: string): spec_parse_result =
+func parse_isa_spec*(source: string): spec_parse_result =
 
   var s = new_stream_slice(source)
 
-  proc error(input: string): spec_parse_result =
+  func error(input: string): spec_parse_result =
     return spec_parse_result(error: input, error_line: get_line_number(s))
 
   result.spec.field_types = @[
@@ -293,7 +293,7 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     skip_newlines(s)
 
 
-proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
+func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
   var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing
   var index = 0
 
@@ -389,7 +389,7 @@ type
     field_defines: seq[Table[stream_slice, define_value]]
     number_defines*: Table[stream_slice, define_value]
 
-proc `==`(a, b: operand): bool =
+func `==`(a, b: operand): bool =
   if a.kind != b.kind:
     return false
   case a.kind:
@@ -401,8 +401,8 @@ proc `==`(a, b: operand): bool =
       return a.offset == b.offset
 
 
-proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result
-proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
+func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result
+func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 func finalize(pa: pre_assembly_result): assembly_result
 func relax(pa: var pre_assembly_result)
 
@@ -436,7 +436,7 @@ func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: i
   relax(pa)
   return finalize(pa)
 
-proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
+func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
 
   if disassembled_instruction.is_literal:
@@ -478,7 +478,7 @@ proc str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
     else:
       result &= part
 
-proc `$$`[T](s: openArray[T]): seq[string] =
+func `$$`[T](s: openArray[T]): seq[string] =
   if s.len == 0:
     return @["@[]"]
   else:
@@ -496,13 +496,13 @@ proc `$$`[T](s: openArray[T]): seq[string] =
       else:
         result.add "- " & $value
 
-proc `$$`(i: isa_spec): seq[string] =
+func `$$`(i: isa_spec): seq[string] =
   return @["<isa_spec>"]
 
-proc `$$`(t: Table): seq[string] =
+func `$$`(t: Table): seq[string] =
   return $t
 
-proc `$$`(o: object | tuple): seq[string] =
+func `$$`(o: object | tuple): seq[string] =
   for name, value in o.field_pairs:
     when compiles($$value):
       let lines = $$value
@@ -517,14 +517,14 @@ proc `$$`(o: object | tuple): seq[string] =
     else:
       result.add name & ": " & $value
 
-proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
+func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
 
   let normal_path = normalizePath(path).replace('\\', '/')
   var pa = pre_assemble(base_path, normal_path, isa_spec, source, already_included)
   pa.relax()
   return finalize(pa)
 
-proc is_defined(p: parse_context, name: stream_slice): bool =
+func is_defined(p: parse_context, name: stream_slice): bool =
   if name in p.number_defines:
     return true
   for field, field_values in p.field_defines:
@@ -535,14 +535,14 @@ proc is_defined(p: parse_context, name: stream_slice): bool =
         return true
   return false
 
-proc parse_instruction(s: var stream_slice, p: parse_context, inst: instruction): inst_parse_result =
+func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction): inst_parse_result =
 
   template error(msg: string, priority: int): inst_parse_result =
     result.error = msg
     result.error_priority = priority
     result
 
-  proc fixed(val: uint64): operand =
+  func fixed(val: uint64): operand =
     return operand(kind: ok_fixed, value: val)
 
   var i = 0
@@ -610,7 +610,7 @@ proc parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
     doAssert false, "unreachable"
   result.final_index = get_index(s)
 
-proc assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
+func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
   var fields = args
   for virtual_field in inst.virtual_fields:
     let new_field = eval(virtual_field, fields, ip)
@@ -678,10 +678,10 @@ proc assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
       shift_by -= 8
 
 
-proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result =
+func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
-  proc skip_newlines(s: var stream_slice) {.error.}
+  func skip_newlines(s: var stream_slice) {.error.}
     # Shadows parse.skip_newlines()
 
 
@@ -695,7 +695,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
   var line_counter = 0
 
 
-  proc skip_and_record_newlines(s: var stream_slice) =
+  func skip_and_record_newlines(s: var stream_slice) =
     while peek(s) in {' ', '\r', '\n', '\t'}:
       if read(s) == '\n':
         res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
@@ -703,19 +703,19 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
     if skip_comment(s):
       skip_and_record_newlines(s)
 
-  proc skip_line(s: var stream_slice) =
+  func skip_line(s: var stream_slice) =
     while peek(s) not_in {'\0', '\n'}:
       discard read(s)
     skip_and_record_newlines(s)
 
-  proc error(message: string) =
+  func error(message: string) =
     res.errors.add error(loc: file_location(file: normal_path, line: line_counter), message: message)
 
-  proc emit(val: uint8) =
+  func emit(val: uint8) =
     res.segments[^1].fixed.add val
   var progress_index = -1
 
-  proc any_pc_rel(expr: expression): bool =
+  func any_pc_rel(expr: expression): bool =
     if expr == nil:
       return false
     case expr.exp_kind:
@@ -726,7 +726,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       of exp_operation:
         return expr.lhs.any_pc_rel or expr.rhs.any_pc_rel
 
-  proc any_pc_rel(match: matched_instruction): bool =
+  func any_pc_rel(match: matched_instruction): bool =
     for op in match.operands:
       if op.kind != ok_fixed:
         return true
@@ -966,10 +966,10 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
   return res
 
 func finalize(pa: pre_assembly_result): assembly_result =
-  proc error(msg: string, file: string, line: int): assembly_result =
+  func error(msg: string, file: string, line: int): assembly_result =
     return assembly_result(error: msg, error_file: file, error_line: line)
 
-  proc error(err: error): assembly_result =
+  func error(err: error): assembly_result =
     return assembly_result(error: err.message, error_file: err.loc.file, error_line: err.loc.line)
 
   if pa.errors.len != 0:

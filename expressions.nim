@@ -3,7 +3,7 @@ import types, parse
 
 const CURRENT_ADDRESS* = int.high
 
-proc `$`*(exp: expression): string =
+func `$`*(exp: expression): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
@@ -15,9 +15,9 @@ proc `$`*(exp: expression): string =
         return "log2(" & $exp.lhs & ")"
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
-proc get_expression*(s: var stream_slice, operand_count: int): expression
+func get_expression*(s: var stream_slice, operand_count: int): expression
 
-proc get_term(s: var stream_slice, operand_count: int): expression =
+func get_term(s: var stream_slice, operand_count: int): expression =
 
   if matches(s, "log2("):
     let exp = get_expression(s, operand_count)
@@ -54,7 +54,7 @@ proc get_term(s: var stream_slice, operand_count: int): expression =
 
     result = expression(exp_kind: exp_number, value: cast[int](parse_unsigned(number)))
 
-proc get_greedy_group(s: var stream_slice, operand_count: int): expression =
+func get_greedy_group(s: var stream_slice, operand_count: int): expression =
 
   skip_whitespaces(s)
 
@@ -90,7 +90,7 @@ proc get_greedy_group(s: var stream_slice, operand_count: int): expression =
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
-proc get_expression*(s: var stream_slice, operand_count: int): expression =
+func get_expression*(s: var stream_slice, operand_count: int): expression =
 
   skip_whitespaces(s)
 
@@ -124,7 +124,7 @@ proc get_expression*(s: var stream_slice, operand_count: int): expression =
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
-proc eval*(input: expression, operands: seq[uint64], current_address: int): int =
+func eval*(input: expression, operands: seq[uint64], current_address: int): int =
 
   case input.exp_kind:
     of exp_fail: return # We need to handle invalid expressions for TC
@@ -158,10 +158,10 @@ proc eval*(input: expression, operands: seq[uint64], current_address: int): int 
             shifts += 1
           return shifts - 1
 
-proc is_known_leaf(input: expression): bool =
+func is_known_leaf(input: expression): bool =
   return input.exp_kind == exp_number or (input.exp_kind == exp_operand and input.index == CURRENT_ADDRESS)
 
-proc get_leaf_value(input: expression, operands: seq[uint64], current_address: int): int =
+func get_leaf_value(input: expression, operands: seq[uint64], current_address: int): int =
   case input.exp_kind:
     of exp_number: return input.value
     of exp_operand: 
@@ -169,8 +169,8 @@ proc get_leaf_value(input: expression, operands: seq[uint64], current_address: i
       return cast[int](operands[input.index])
     else: assert false
 
-proc reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int
-proc reverse_single(fields: var seq[uint64], current_address: int, op_kind: op_kind, known: int, unknown: expression, res: int): int =
+func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int
+func reverse_single(fields: var seq[uint64], current_address: int, op_kind: op_kind, known: int, unknown: expression, res: int): int =
   case op_kind:
     of op_add: return reverse_eval(unknown, current_address, fields, res -   known)
     of op_sub: return reverse_eval(unknown, current_address, fields, res +   known)
@@ -185,7 +185,7 @@ proc reverse_single(fields: var seq[uint64], current_address: int, op_kind: op_k
     of op_asr: return reverse_eval(unknown, current_address, fields, res shl known)
     of op_log2: assert false
 
-proc reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int =
+func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int =
   
   case input.exp_kind:
     of exp_fail:    assert false

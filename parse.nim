@@ -10,7 +10,7 @@ const STRING_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
 const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 
-proc new_stream_slice*(source: string): stream_slice =
+func new_stream_slice*(source: string): stream_slice =
   var reference = new(string)
   reference[] = source & '\0'
   return stream_slice(
@@ -80,19 +80,19 @@ func skip_comment*(s: var stream_slice): bool =
       s.start += 1
     return true
 
-proc skip_whitespaces*(s: var stream_slice) =
+func skip_whitespaces*(s: var stream_slice) =
   while peek(s) in {' ', '\t', '\r'}:
     s.start += 1
   if skip_comment(s):
     skip_whitespaces(s)
 
-proc skip_newlines*(s: var stream_slice) =
+func skip_newlines*(s: var stream_slice) =
   while peek(s) in {' ', '\r', '\n', '\t'}:
     s.start += 1
   if skip_comment(s):
     skip_newlines(s)
 
-proc matches*(s: var stream_slice, value: string, increment = true): bool =
+func matches*(s: var stream_slice, value: string, increment = true): bool =
   for i in 0..value.high:
     if peek(s, i) != value[i]: 
       return false
@@ -100,12 +100,12 @@ proc matches*(s: var stream_slice, value: string, increment = true): bool =
     s.start += value.len
   return true
 
-proc matches*(s: var stream_slice, value: char): bool =
+func matches*(s: var stream_slice, value: char): bool =
   if peek(s) == value:
     s.start += 1
     return true
 
-proc get_string*(s: var stream_slice): stream_slice =
+func get_string*(s: var stream_slice): stream_slice =
   result = s
   result.finish = s.start
 
@@ -119,7 +119,7 @@ proc get_string*(s: var stream_slice): stream_slice =
     skip(s)
     result.finish += 1
 
-proc get_unsigned*(s: var stream_slice): stream_slice =
+func get_unsigned*(s: var stream_slice): stream_slice =
   result = s
   result.finish = s.start
   if peek(s) == '0':
@@ -166,7 +166,7 @@ func parse_unsigned*(s: stream_slice): uint64 =
     of 'b': return fromBin[uint64]($s)
     else:   return cast[uint64](parseInt($s))
 
-proc get_signed*(s: var stream_slice): stream_slice =
+func get_signed*(s: var stream_slice): stream_slice =
   
   let negative = s.peek() == '-'
   if negative:
@@ -176,14 +176,14 @@ proc get_signed*(s: var stream_slice): stream_slice =
   if negative:
     result.start -= 1
 
-proc parse_signed*(s: stream_slice): int =
+func parse_signed*(s: stream_slice): int =
   if s.len == 0: return
 
   if s[0] == '-':
     return -1 * cast[int](parse_unsigned(s[1..^1]))
   return cast[int](parse_unsigned(s))
 
-proc get_line_number*(s: stream_slice): int =
+func get_line_number*(s: stream_slice): int =
   var line = 1
   for i in 0..s.start - 1:
     if s.source[i] == '\n':
@@ -229,23 +229,23 @@ func `==`*(a: stream_slice, b: string): bool =
 func `==`*(a: string, b: stream_slice): bool =
   return b == a
 
-proc `&`*(a: stream_slice, b: stream_slice): stream_slice =
+func `&`*(a: stream_slice, b: stream_slice): stream_slice =
   return new_stream_slice($a & $b)
 
-proc `&`*(a: stream_slice, b: string): stream_slice =
+func `&`*(a: stream_slice, b: string): stream_slice =
   return new_stream_slice($a & $b)
 
-proc `&`*(a: string, b: stream_slice): stream_slice =
+func `&`*(a: string, b: stream_slice): stream_slice =
   return new_stream_slice($a & $b)
 
-proc hash*(s: stream_slice): Hash =
+func hash*(s: stream_slice): Hash =
   # Needed for contexts to be keys in maps
   var h: Hash = 0
   for c in s:
     h = h !& hash(c)
   result = !$h  
 
-proc get_quoted_string*(s: var stream_slice): stream_slice =
+func get_quoted_string*(s: var stream_slice): stream_slice =
   
   let restore = s
 
@@ -267,7 +267,7 @@ proc get_quoted_string*(s: var stream_slice): stream_slice =
   result.start  = restore.start + 1
   result.finish = s.start - 1
 
-proc get_encapsulation*(s: var stream_slice): stream_slice =
+func get_encapsulation*(s: var stream_slice): stream_slice =
 
   let restore = s
 
