@@ -15,32 +15,32 @@ proc `$`*(exp: expression): string =
         return "log2(" & $exp.lhs & ")"
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
-proc get_expression*(c: var context, operand_count: int): expression
+proc get_expression*(s: var stream_slice, operand_count: int): expression
 
-proc get_term(c: var context, operand_count: int): expression =
+proc get_term(s: var stream_slice, operand_count: int): expression =
 
-  if matches(c, "log2("):
-    let exp = get_expression(c, operand_count)
-    if not matches(c, ')'):
+  if matches(s, "log2("):
+    let exp = get_expression(s, operand_count)
+    if not matches(s, ')'):
       return expression(exp_kind: exp_fail)
     return expression(exp_kind: exp_operation, op_kind: op_log2, lhs: exp)
   
-  if matches(c, '('):
-    let restore = c
-    result = get_expression(c, operand_count)
-    skip_whitespaces(c)
-    if read(c) != ')':
-      c = restore
+  if matches(s, '('):
+    let restore = s
+    result = get_expression(s, operand_count)
+    skip_whitespaces(s)
+    if read(s) != ')':
+      s = restore
       return expression(exp_kind: exp_fail)
 
-  elif peek(c) == '$':
-    c.inc()
+  elif peek(s) == '$':
+    skip(s)
     return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
 
-  elif peek(c) == '%':
-    let operand = peek(c, 1)
+  elif peek(s) == '%':
+    let operand = peek(s, 1)
     if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return expression(exp_kind: exp_fail)
-    inc(c, 2)
+    skip(s, 2)
 
     let operand_index = ord(operand) - ord('a')
     if operand_index < 0 or operand_index > operand_count: return expression(exp_kind: exp_fail)
@@ -48,78 +48,78 @@ proc get_term(c: var context, operand_count: int): expression =
     result = expression(exp_kind: exp_operand, index: operand_index)
   
   else:
-    let number = get_unsigned(c)
+    let number = get_unsigned(s)
     if number.len == 0: 
       return expression(exp_kind: exp_fail)
 
     result = expression(exp_kind: exp_number, value: cast[int](parse_unsigned(number)))
 
-proc get_greedy_group(c: var context, operand_count: int): expression =
+proc get_greedy_group(s: var stream_slice, operand_count: int): expression =
 
-  skip_whitespaces(c)
+  skip_whitespaces(s)
 
-  var exp = get_term(c, operand_count)
+  var exp = get_term(s, operand_count)
 
   if exp.exp_kind == exp_fail: 
     return expression(exp_kind: exp_fail)
 
   while true:
 
-    skip_whitespaces(c)
+    skip_whitespaces(s)
 
-    let restore = c
+    let restore = s
 
     var next_token: string
     
-    while peek(c) in GREEDY_CHARS and peek(c, 1) != '%': # The '%' in '%reg' is not an operator!
-      next_token.add(peek(c))
-      inc(c)
+    while peek(s) in GREEDY_CHARS and peek(s, 1) != '%': # The '%' in '%reg' is not an operator!
+      next_token.add(peek(s))
+      skip(s)
 
     let op_index = OP_INDEXES.find(next_token)
 
     if op_index == -1: return exp
-    skip_whitespaces(c)
+    skip_whitespaces(s)
 
     let op = op_kind(op_index)
 
-    let rhs = get_term(c, operand_count)
+    let rhs = get_term(s, operand_count)
     if rhs.exp_kind == exp_fail:
-      c = restore
+      s = restore
       return expression(exp_kind: exp_fail)
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
-proc get_expression*(c: var context, operand_count: int): expression =
+proc get_expression*(s: var stream_slice, operand_count: int): expression =
 
-  skip_whitespaces(c)
+  skip_whitespaces(s)
 
-  var exp = get_greedy_group(c, operand_count)
+  var exp = get_greedy_group(s, operand_count)
 
   if exp.exp_kind == exp_fail: 
     return expression(exp_kind: exp_fail)
 
   while true:
 
-    skip_whitespaces(c)
+    skip_whitespaces(s)
 
-    let restore = c
+    let restore = s
 
     var next_token: string
     
-    while peek(c) in LAZY_CHARS:
-      next_token.add(read(c))
+    while peek(s) in LAZY_CHARS:
+      next_token.add(read(s))
 
     let op_index = OP_INDEXES.find(next_token)
 
     if op_index == -1: return exp
-    skip_whitespaces(c)
+    skip_whitespaces(s)
 
     let op = op_kind(op_index)
 
-    let rhs = get_greedy_group(c, operand_count)
+    let rhs = get_greedy_group(s, operand_count)
     if rhs.exp_kind == exp_fail:
-      c = restore
+      s = restore
       return expression(exp_kind: exp_fail)
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)

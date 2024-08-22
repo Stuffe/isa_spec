@@ -1,7 +1,7 @@
 import std/[setutils, parseUtils, strutils, bitops, os, pathnorm, tables, strformat]
 import types, parse, expressions
 
-export parse.new_context
+export parse.new_stream_slice
 
 const FIELD_ZERO       = 0
 const FIELD_ONE        = 1
@@ -52,16 +52,16 @@ proc spec_to_string*(isa_spec: isa_spec): string =
 
   return source
 
-proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string) =
+proc get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, string) =
   # Being able to reparse a single instruction is needed for Turing Complete
 
   proc error(input: string): (instruction, string) =
     return (instruction(), input)
 
-  proc add_string_syntax(c: var context, syntax_parts: var seq[string]) =
+  proc add_string_syntax(s: var stream_slice, syntax_parts: var seq[string]) =
     var this_part: string
-    while peek(c) notin {'%', '\0', '\n'}:
-      let char = read(c)
+    while peek(s) notin {'%', '\0', '\n'}:
+      let char = read(s)
       if char in {'\r', '\t', ' '}:
         if this_part != "":
           syntax_parts.add(this_part)
@@ -76,24 +76,24 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
   var new_instruction: instruction
 
   block syntax:
-    add_string_syntax(c, new_instruction.syntax)
+    add_string_syntax(s, new_instruction.syntax)
 
-    while matches(c, '%'):
-      let operand_name = get_string(c)
+    while matches(s, '%'):
+      let operand_name = get_string(s)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
 
       if operand_name != expected_operand_name:
         return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
-      if not matches(c, '('):
+      if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
 
-      let field_name = get_string(c)
+      let field_name = get_string(s)
 
       if field_name.len == 0:
         return error("Was expecting a field name here")
 
-      if not matches(c, ')'):
+      if not matches(s, ')'):
         return error("Expected a closing parenthesis after the field type")
 
       var found = false
@@ -108,9 +108,9 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       if not found:
         return error("Field name '" & $field_name & "' not defined")
 
-      add_string_syntax(c, new_instruction.syntax)
+      add_string_syntax(s, new_instruction.syntax)
 
-    if read(c) != '\n':
+    if read(s) != '\n':
       return error("Was expecting a newline here")
 
   var instruction_name: string
@@ -119,21 +119,21 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
   
   block virtual_field:
     var count = 1
-    while matches(c, '%'):
-      let operand_name = get_string(c)
+    while matches(s, '%'):
+      let operand_name = get_string(s)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
 
       if operand_name != expected_operand_name:
         return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
-      skip_newlines(c)
+      skip_newlines(s)
 
-      if not matches(c, '='):
+      if not matches(s, '='):
         return error("Expected an assignment here")
 
-      skip_newlines(c)
+      skip_newlines(s)
 
-      let virt_op = get_expression(c, new_instruction.fields.len + new_instruction.virtual_fields.len)
+      let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
       new_instruction.virtual_fields.add(virt_op)
 
       if virt_op.exp_kind == exp_fail:
@@ -142,14 +142,14 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
         else:
           return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
       count += 1
-      skip_newlines(c)
+      skip_newlines(s)
   
   block bit_pattern:
     var pattern: string
     var mask: string
 
-    while peek(c) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
-      case peek(c):
+    while peek(s) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
+      case peek(s):
         of '0':
           pattern.add('0')
           mask.add('1')
@@ -167,14 +167,14 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
         else:
           pattern.add('0')
           mask.add('0')
-          let field_index = ord(peek(c)) - ord('a')
+          let field_index = ord(peek(s)) - ord('a')
 
           if field_index > new_instruction.fields.len + new_instruction.virtual_fields.len:
-            return error("Error defining '" & instruction_name & "'. Character '" & peek(c) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
+            return error("Error defining '" & instruction_name & "'. Character '" & peek(s) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
           let field_real_index = field_index + FIXED_FIELDS_LEN
           new_instruction.bits.add(field_real_index)
 
-      inc(c)
+      skip(s)
     
     if new_instruction.bits.len ==  0:
       return error("Instruction '" & instruction_name & "' is missing the bit field definition")
@@ -187,28 +187,28 @@ proc get_instruction*(c: var context, isa_spec: isa_spec): (instruction, string)
       discard parseBin(pattern[8..^1], new_instruction.fixed_pattern_1)
       discard parseBin(mask[8..^1], new_instruction.fixed_mask_1)
 
-    skip_whitespaces(c)
+    skip_whitespaces(s)
 
-    if read(c) notin {'\n', '\0'}:
+    if read(s) notin {'\n', '\0'}:
       return error("Was expecting a newline here")
 
   block get_description:
     var description: string
-    while peek(c) notin {'\n', '\0'}:
-      let char = peek(c)
+    while peek(s) notin {'\n', '\0'}:
+      let char = peek(s)
       if char notin {'\r'}:
         description.add(char)
-      inc(c)
+      skip(s)
     new_instruction.description = description
 
   return (new_instruction, "")
 
 proc parse_isa_spec*(source: string): spec_parse_result =
 
-  var c = new_context(source)
+  var s = new_stream_slice(source)
 
   proc error(input: string): spec_parse_result =
-    return spec_parse_result(error: input, error_line: get_line_number(c))
+    return spec_parse_result(error: input, error_line: get_line_number(s))
 
   result.spec.field_types = @[
     field_type(name: "0"),
@@ -218,32 +218,32 @@ proc parse_isa_spec*(source: string): spec_parse_result =
     field_type(name: "label"),
   ]
 
-  skip_newlines(c)
+  skip_newlines(s)
 
-  if matches(c, "[fields]"):
+  if matches(s, "[fields]"):
 
-    skip_newlines(c)
+    skip_newlines(s)
 
-    while not matches(c, "[instructions]", increment = false):
-      skip_whitespaces(c)
-      var field_type_name = get_string(c)
+    while not matches(s, "[instructions]", increment = false):
+      skip_whitespaces(s)
+      var field_type_name = get_string(s)
       if field_type_name.len == 0: return error("Expected a name for the field type")
-      skip_whitespaces(c)
+      skip_whitespaces(s)
 
       var new_field_types: Table[string, field_type]
       var bit_length = 0
 
       block outer:
-        while read(c) == '\n':
+        while read(s) == '\n':
 
-          let field_name = get_string(c)
+          let field_name = get_string(s)
           if field_name.len == 0: break outer
-          skip_whitespaces(c)
+          skip_whitespaces(s)
 
           var bits: string
 
-          while peek(c) in {'0','1'}:
-            bits.add(read(c))
+          while peek(s) in {'0','1'}:
+            bits.add(read(s))
         
           if bits.len == 0:
             return error("Expected a bit pattern for " & $field_name)
@@ -259,8 +259,8 @@ proc parse_isa_spec*(source: string): spec_parse_result =
           var bit_value = 0
           discard parseBin(bits, bit_value)
 
-          skip_whitespaces(c)
-          let bit_width = get_unsigned(c)
+          skip_whitespaces(s)
+          let bit_width = get_unsigned(s)
 
           if $field_type_name notin new_field_types:
             new_field_types[$field_type_name] = field_type(name: $field_type_name, bit_length: bit_length)
@@ -277,20 +277,20 @@ proc parse_isa_spec*(source: string): spec_parse_result =
       for name, field_type in new_field_types:
         result.spec.field_types.add(field_type)
 
-      skip_newlines(c)
+      skip_newlines(s)
   
-  if not matches(c, "[instructions]"):
+  if not matches(s, "[instructions]"):
     return error("Was expecting the [instructions] header here")
 
-  skip_newlines(c)
+  skip_newlines(s)
 
-  while peek(c) != '\0':
-    var (new_instruction, error_message) = get_instruction(c, result.spec)
+  while peek(s) != '\0':
+    var (new_instruction, error_message) = get_instruction(s, result.spec)
     if error_message != "":
       return error(error_message)
     result.spec.instructions.add(new_instruction)
 
-    skip_newlines(c)
+    skip_newlines(s)
 
 
 proc disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
@@ -350,7 +350,7 @@ type
   pre_assembly_result = object
     errors: seq[error]
     segments: seq[segment]
-    labels: Table[context, label_ref]
+    labels: Table[stream_slice, label_ref]
     pc: parse_context
 
   segment = object
@@ -369,7 +369,7 @@ type
     of ok_fixed:
       value: uint64
     of ok_label_ref:
-      name: context
+      name: stream_slice
     of ok_relative:
       offset: int64
 
@@ -386,8 +386,8 @@ type
 
   parse_context = object
     isa_spec: isa_spec
-    field_defines: seq[Table[context, define_value]]
-    number_defines*: Table[context, define_value]
+    field_defines: seq[Table[stream_slice, define_value]]
+    number_defines*: Table[stream_slice, define_value]
 
 proc `==`(a, b: operand): bool =
   if a.kind != b.kind:
@@ -524,7 +524,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
   pa.relax()
   return finalize(pa)
 
-proc is_defined(p: parse_context, name: context): bool =
+proc is_defined(p: parse_context, name: stream_slice): bool =
   if name in p.number_defines:
     return true
   for field, field_values in p.field_defines:
@@ -535,7 +535,7 @@ proc is_defined(p: parse_context, name: context): bool =
         return true
   return false
 
-proc parse_instruction(c: var context, p: parse_context, inst: instruction): inst_parse_result =
+proc parse_instruction(s: var stream_slice, p: parse_context, inst: instruction): inst_parse_result =
 
   template error(msg: string, priority: int): inst_parse_result =
     result.error = msg
@@ -548,24 +548,24 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
   var i = 0
   for syntax in inst.syntax:
     if syntax == " ":
-      skip_whitespaces(c)
+      skip_whitespaces(s)
       continue
 
     if syntax != "":
-      if not matches(c, syntax):
+      if not matches(s, syntax):
         return error(&"Expected {syntax} here", i)
       continue
     let field = inst.fields[i]
     case field:
       of FIELD_LABEL:
-        if peek(c) == '.':
-          inc(c)
-          let jump_distance = get_unsigned(c)
+        if peek(s) == '.':
+          skip(s)
+          let jump_distance = get_unsigned(s)
           if jump_distance == "":
             return error("Expected a jump distance here", i)
           result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned(jump_distance)))
         else:
-          let label_name = get_string(c)
+          let label_name = get_string(s)
           if label_name.len == 0:
             return error("Was expecting a label name here", i)
           if p.is_defined(label_name):
@@ -575,11 +575,11 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
         i += 1
         continue
       of FIELD_IMM:
-        let number = get_unsigned(c)
+        let number = get_unsigned(s)
         if number.len != 0:
           result.operands.add fixed(parse_unsigned(number))
         else:
-          let field_string = get_string(c)
+          let field_string = get_string(s)
           if field_string in p.number_defines:
             result.operands.add fixed(p.number_defines[field_string].value)
           else:
@@ -588,7 +588,7 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
         continue
       else: # Some user defined field type
         assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
-        let field_string = get_string(c)
+        let field_string = get_string(s)
 
         if field_string in p.field_defines[field]:
           result.operands.add fixed(p.field_defines[field][field_string].value)
@@ -608,7 +608,7 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
         i += 1
         continue
     doAssert false, "unreachable"
-  result.final_index = get_index(c)
+  result.final_index = get_index(s)
 
 proc assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
   var fields = args
@@ -681,7 +681,7 @@ proc assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
 proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
-  proc skip_newlines(c: var context) {.error.}
+  proc skip_newlines(s: var stream_slice) {.error.}
     # Shadows parse.skip_newlines()
 
 
@@ -691,22 +691,22 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
   res.pc.isa_spec = isa_spec
   res.pc.field_defines.setLen(isa_spec.field_types.len)
 
-  var c = new_context(source)
+  var s = new_stream_slice(source)
   var line_counter = 0
 
 
-  proc skip_and_record_newlines(c: var context) =
-    while peek(c) in {' ', '\r', '\n', '\t'}:
-      if read(c) == '\n':
+  proc skip_and_record_newlines(s: var stream_slice) =
+    while peek(s) in {' ', '\r', '\n', '\t'}:
+      if read(s) == '\n':
         res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
         line_counter += 1
-    if skip_comment(c):
-      skip_and_record_newlines(c)
+    if skip_comment(s):
+      skip_and_record_newlines(s)
 
-  proc skip_line(c: var context) =
-    while peek(c) not_in {'\0', '\n'}:
-      discard read(c)
-    skip_and_record_newlines(c)
+  proc skip_line(s: var stream_slice) =
+    while peek(s) not_in {'\0', '\n'}:
+      discard read(s)
+    skip_and_record_newlines(s)
 
   proc error(message: string) =
     res.errors.add error(loc: file_location(file: normal_path, line: line_counter), message: message)
@@ -736,23 +736,23 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           return true
     return false
 
-  while peek(c) != '\0':
-    doAssert get_index(c) != progress_index, "Did not make progress at " & peek(c)
-    progress_index = get_index(c)
-    skip_and_record_newlines(c)
+  while peek(s) != '\0':
+    doAssert get_index(s) != progress_index, "Did not make progress at " & peek(s)
+    progress_index = get_index(s)
+    skip_and_record_newlines(s)
     block number_literal:
-      let restore = c
-      let size = get_size(c)
-      skip_whitespaces(c)
-      let number = get_unsigned(c)
+      let restore = s
+      let size = get_size(s)
+      skip_whitespaces(s)
+      let number = get_unsigned(s)
       if number != "":
         if size == 0:
           error("Expected a size before the number, like <U64> " & $number)
-          skip_line(c)
+          skip_line(s)
           continue
         if size mod 8 != 0:
           error("Only multiples of 8 bits are supported for now")
-          skip_line(c)
+          skip_line(s)
           continue
         let mask = uint64.high shr (64 - size)
         var i = size div 8
@@ -762,53 +762,53 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           emit(cast[uint8](value))
           value = value shr 8
           i -= 1
-        skip_and_record_newlines(c)
+        skip_and_record_newlines(s)
         continue
 
       elif size != 0:
         error("Expected a number after a size declaration")
-        skip_line(c)
+        skip_line(s)
         continue
       else:
-        c = restore
+        s = restore
         break number_literal
 
     block string:
-      if peek(c) in {'"', '\''}:
-        let char = read(c)
+      if peek(s) in {'"', '\''}:
+        let char = read(s)
         # TODO escape
         var literal: string
-        while peek(c) notin {char, '\0'}:
-          literal.add(read(c))
+        while peek(s) notin {char, '\0'}:
+          literal.add(read(s))
 
-        if read(c) == '\0':
+        if read(s) == '\0':
           error("Missing closing " & $char & " character")
-          skip_line(c)
+          skip_line(s)
           continue
 
         for i in 0..literal.high:
           emit(cast[uint8](ord(literal[i])))
 
-        skip_and_record_newlines(c)
+        skip_and_record_newlines(s)
 
         continue
 
     block special:
-      let restore = c
-      var special_test = get_string(c)
+      let restore = s
+      var special_test = get_string(s)
 
       var public: bool
       if special_test == "pub":
         public = true
-        skip_whitespaces(c)
-        special_test = get_string(c)
+        skip_whitespaces(s)
+        special_test = get_string(s)
 
       if special_test == "include":
-        skip_whitespaces(c)
+        skip_whitespaces(s)
 
         var file_wo_header: string
-        while peek(c) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
-          file_wo_header.add(read(c))
+        while peek(s) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
+          file_wo_header.add(read(s))
 
         let file = file_wo_header.replace("\\", "/") & ".asm"
 
@@ -839,43 +839,43 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         res.segments.add(include_res.segments)
 
-        skip_and_record_newlines(c)
+        skip_and_record_newlines(s)
         continue
 
-      elif special_test.len != 0 and peek(c) == ':':
+      elif special_test.len != 0 and peek(s) == ':':
         if special_test in res.labels:
           error("Label " & $special_test & " is already declared")
-          skip_line(c)
+          skip_line(s)
           continue
         res.labels[special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
-        inc(c)
-        skip_and_record_newlines(c)
+        skip(s)
+        skip_and_record_newlines(s)
 
         continue
 
       elif special_test == "set":
-        skip_whitespaces(c)
-        let definition_name = get_string(c)
+        skip_whitespaces(s)
+        let definition_name = get_string(s)
         if definition_name in res.pc.number_defines:
           error($definition_name & " is already declared")
-          skip_line(c)
+          skip_line(s)
           continue
 
         for _, field_type in isa_spec.field_types:
           for _, field in field_type.values:
             if field.name == definition_name:
               error($definition_name & " is already declared")
-              skip_line(c)
+              skip_line(s)
               continue
 
-        skip_whitespaces(c)
+        skip_whitespaces(s)
 
-        let number = get_unsigned(c)
+        let number = get_unsigned(s)
         if number != "":
           res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned(number))
 
         else:
-          let define_value = get_string(c)
+          let define_value = get_string(s)
           var found = false
           for field_id, field_type in isa_spec.field_types:
             for i, field in field_type.values:
@@ -886,14 +886,14 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
           if not found:
             error("Definition value must be either a number or a register")
-            skip_line(c)
+            skip_line(s)
             continue
 
-        skip_and_record_newlines(c)
+        skip_and_record_newlines(s)
         continue
 
       else:
-        c = restore
+        s = restore
 
 
     block find_instruction:
@@ -908,11 +908,11 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
        ]#
       var best_match: inst_parse_result
       var matched: matched_instruction
-      let restore = c
+      let restore = s
 
       for inst in isa_spec.instructions:
-        c = restore  # Reset to the beginning of the line
-        let inst_res = parse_instruction(c, res.pc, inst)
+        s = restore  # Reset to the beginning of the line
+        let inst_res = parse_instruction(s, res.pc, inst)
         if inst_res.error == "": # The instruction parsed succesfully
           if matched.options.len == 0: # This is the first instruction we found
             best_match = inst_res
@@ -920,14 +920,14 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           else: # This is not the first instruction we found. Check that it's compatible with the first
             if matched.operands != inst_res.operands or inst_res.final_index != best_match.final_index:
               error("Multiple instruction matched with conflicting syntax")
-              skip_line(c)
+              skip_line(s)
               break find_instruction
           matched.options.add inst
         if matched.options.len == 0:
           if inst_res.error_priority > best_match.error_priority or best_match.error == "":
             best_match = inst_res
 
-      set_index(c, best_match.final_index)
+      set_index(s, best_match.final_index)
 
       if matched.options.len != 0:
         if matched.any_pc_rel:
@@ -952,16 +952,16 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
             break
           if final_err_msg != "":
             error(final_err_msg)
-            skip_line(c)
+            skip_line(s)
             continue
       else:
         if best_match.error != "":
           error(best_match.error)
         else:
           error("No instruction matched")
-        skip_line(c)
+        skip_line(s)
         continue
-    skip_and_record_newlines(c)
+    skip_and_record_newlines(s)
 
   return res
 

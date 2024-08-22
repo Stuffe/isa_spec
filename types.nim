@@ -99,9 +99,9 @@ type assembly_result* = object
   error*: string
   error_line*: int
   error_file*: string
-  field_defines*: seq[Table[context, define_value]]
-  number_defines*: Table[context, define_value]
-  labels*: Table[context, define_value]
+  field_defines*: seq[Table[stream_slice, define_value]]
+  number_defines*: Table[stream_slice, define_value]
+  labels*: Table[stream_slice, define_value]
 
 proc lsr*(a: int, b: int): int =
   return cast[int](cast[uint64](a) shr cast[uint64](b))
