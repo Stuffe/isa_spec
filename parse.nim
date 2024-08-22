@@ -242,3 +242,62 @@ proc hash*(s: stream_slice): Hash =
   for c in s:
     h = h !& hash(c)
   result = !$h  
+
+proc finished*(s: stream_slice): bool = 
+  return s.start >= s.finish
+
+proc get_quoted_string*(s: var stream_slice): stream_slice =
+  
+  let restore = s
+
+  let quote = s.read()
+
+  if quote notin {'"', '\'', '`'}: 
+    s = restore
+    return
+
+  var next = read(s)
+
+  while next != quote or peek(s, -1) == '\\':
+    next = read(s)
+    if finished(s):
+      s = restore
+      return
+
+  result = s
+  result.start  = restore.start + 1
+  result.finish = s.start - 1
+
+proc get_encapsulation*(s: var stream_slice): stream_slice =
+
+  let restore = s
+
+  let open = read(s)
+  var close: char
+
+  case open:
+    of '(': close = ')'
+    of '[': close = ']'
+    of '{': close = '}'
+    else:
+      s = restore
+      return
+
+  var depth = 1
+  while depth > 0:
+    let c = read(s)
+    if c == open: depth += 1
+    if c == close: depth -= 1
+
+    if c in {'"', '\'', '`'}:
+      s.start -= 1
+      discard get_quoted_string(s)
+
+    if finished(s): 
+      s = restore
+      return
+
+  result = s
+  result.start  = restore.start + 1
+  result.finish = s.start - 1
+
