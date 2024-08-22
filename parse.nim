@@ -2,7 +2,6 @@ import std/setutils, strutils, hashes, tables
 
 type stream_slice* = object
   source: ref string
-  source_id: int
   start: int
   finish: int
 
@@ -11,15 +10,11 @@ const STRING_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
 const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 
-var buffers = @[""]
-
 proc new_stream_slice*(source: string): stream_slice =
-  buffers.add(source & '\0')
   var reference = new(string)
   reference[] = source & '\0'
   return stream_slice(
     source: reference,
-    source_id: buffers.high,
     start: 0,
     finish: source.len,
   )
@@ -219,7 +214,7 @@ iterator pairs(s: stream_slice): (int, char) =
     i += 1
 
 func `==`*(a: stream_slice, b: stream_slice): bool =
-  if a.source_id == b.source_id and a.start == b.start and a.finish == b.finish: return true
+  if a.source == b.source and a.start == b.start and a.finish == b.finish: return true
   if a.len != b.len: return false
   for i, c in a:
     if b[i] != c: return false
