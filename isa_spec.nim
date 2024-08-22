@@ -386,8 +386,8 @@ type
 
   parse_context = object
     isa_spec: isa_spec
-    field_defines: seq[Table[string, define_value]]
-    number_defines*: Table[string, define_value]
+    field_defines: seq[Table[context, define_value]]
+    number_defines*: Table[context, define_value]
 
 proc `==`(a, b: operand): bool =
   if a.kind != b.kind:
@@ -524,7 +524,7 @@ proc assemble*(base_path: string, path: string, isa_spec: isa_spec, source: stri
   pa.relax()
   return finalize(pa)
 
-proc is_defined(p: parse_context, name: string): bool =
+proc is_defined(p: parse_context, name: context): bool =
   if name in p.number_defines:
     return true
   for field, field_values in p.field_defines:
@@ -568,7 +568,7 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
           let label_name = get_string(c)
           if label_name.len == 0:
             return error("Was expecting a label name here", i)
-          if p.is_defined($label_name):
+          if p.is_defined(label_name):
             return error("Was expecting a label name here", i)
           result.operands.add operand(kind: ok_label_ref, name: label_name)
 
@@ -580,15 +580,15 @@ proc parse_instruction(c: var context, p: parse_context, inst: instruction): ins
           result.operands.add fixed(parse_unsigned(number))
         else:
           let field_string = get_string(c)
-          if $field_string in p.number_defines:
-            result.operands.add fixed(p.number_defines[$field_string].value)
+          if field_string in p.number_defines:
+            result.operands.add fixed(p.number_defines[field_string].value)
           else:
             return error(&"Undefined constant {field_string}", i)
         i += 1
         continue
       else: # Some user defined field type
         assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
-        let field_string = $get_string(c)
+        let field_string = get_string(c)
 
         if field_string in p.field_defines[field]:
           result.operands.add fixed(p.field_defines[field][field_string].value)
@@ -855,7 +855,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
       elif special_test == "set":
         skip_whitespaces(c)
-        let definition_name = $get_string(c)
+        let definition_name = get_string(c)
         if definition_name in res.pc.number_defines:
           error($definition_name & " is already declared")
           skip_line(c)

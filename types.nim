@@ -99,8 +99,8 @@ type assembly_result* = object
   error*: string
   error_line*: int
   error_file*: string
-  field_defines*: seq[Table[string, define_value]]
-  number_defines*: Table[string, define_value]
+  field_defines*: seq[Table[context, define_value]]
+  number_defines*: Table[context, define_value]
   labels*: Table[context, define_value]
 
 proc lsr*(a: int, b: int): int =
