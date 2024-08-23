@@ -420,14 +420,14 @@ func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, lin
   already_included_new.add(normal_path)
 
   {.noSideEffect.}:
-    if not fileExists(base_path & normal_path):
+    if not fileExists(base_path / normal_path):
       return pre_assembly_result(
         errors: @[error(
           message: "File does not exist: " & normal_path,
           loc: file_location(line: line, file: normal_path)
       )])
 
-    let source = readFile(base_path & normal_path)
+    let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
 func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
@@ -1030,4 +1030,14 @@ func finalize(pa: pre_assembly_result): assembly_result =
     result.machine_code &= machine_code
 
 func relax(pa: var pre_assembly_result) =
-  discard # TODO: Implement this
+  var any_undefined = false
+  for segment in pa.segments: # Check that all labels are defined
+    for operand in segment.relaxable.operands:
+      if operand.kind == ok_label_ref:
+        if operand.name not_in pa.labels:
+          pa.errors.add error(loc: file_location(file: segment.file, line: segment.line_boundaries[^1][1]),
+                              message: &"Undefined label {$operand.name}")
+          any_undefined = true
+  if any_undefined:
+    return
+  # TODO: implement relaxing phase
