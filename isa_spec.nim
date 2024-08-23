@@ -906,7 +906,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
          and that they produce the same list of operands.
          This could at some point be checked statically for better error messages
        ]#
-      var best_match: inst_parse_result
+      var best_match = inst_parse_result()
       var matched: matched_instruction
       let restore = s
 
@@ -926,6 +926,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         if matched.options.len == 0:
           if inst_res.error_priority > best_match.error_priority or best_match.error == "":
             best_match = inst_res
+
+      if get_index(s) == get_index(restore):
+        while read(s) notin {'\n', '\0'}:
+          continue
+        best_match.final_index = get_index(s)
 
       set_index(s, best_match.final_index)
 
