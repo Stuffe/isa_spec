@@ -1,4 +1,4 @@
-import std/[setutils, parseUtils, strutils, bitops, os, pathnorm, tables, strformat]
+import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils
 import types, parse, expressions
 
 export parse.new_stream_slice
