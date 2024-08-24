@@ -35,11 +35,6 @@ for name, test in TESTS:
   let spec_result = parse_isa_spec(spec_source)
   let isa_spec = spec_result.spec
 
-<<<<<<< Updated upstream
-  if spec_result.error != test.spec_error:
-    echo "\u001b[31m'" & name & "/test.spec' error\u001b[0m: " & spec_result.error
-    if STOP_AT_FIRST_FAIL: quit()
-=======
 const TEST_PATH = "tests"
 
 var global_fail: bool = false
@@ -93,31 +88,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     echo "\u001b[31m" & name & ": " & asm_result.error_file & "\u001b[0m: " & asm_result.error
     if STOP_AT_FIRST_FAIL: quit()
     continue
-<<<<<<< Updated upstream
 
-  if asm_result.machine_code != test.result:
-    echo "\u001b[31m" & name & ": " & asm_result.error_file & "\u001b[0m\nGot:      " & $asm_result.machine_code & "\nExpected: " & $test.result
-    if STOP_AT_FIRST_FAIL: quit()
-    continue
-
-  if false:
-    let disassembled = disassemble(isa_spec, asm_result.machine_code)
-
-    var reasm_source: string
-    for instr in disassembled:
-      reasm_source &= str(isa_spec, instr) & "\n"
-
-    let reasm = assemble("", "", isa_spec, reasm_source)
-
-    if reasm.machine_code != asm_result.machine_code:
-      echo "\u001b[31m'" & name & "'\u001b[0m: Reassembly test failed"
-      echo reasm.machine_code, " ", asm_result.machine_code
-      if STOP_AT_FIRST_FAIL: quit()
-      continue
-
-  echo "\u001b[32mTest '" & name & "' passed.\u001b[0m"
-  
-=======
   var sub_tests: Table[string, test_files]
   for (kind, file_name) in test_dir.walk_dir(relative=true):
     if file_name == ".DS_Store": continue
@@ -205,4 +176,3 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
 
 if global_fail:
   quit(1)
->>>>>>> Stashed changes
