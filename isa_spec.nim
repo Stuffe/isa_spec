@@ -420,14 +420,14 @@ func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, lin
   already_included_new.add(normal_path)
 
   {.noSideEffect.}:
-    if not fileExists(base_path & normal_path):
+    if not fileExists(base_path / normal_path):
       return pre_assembly_result(
         errors: @[error(
           message: "File does not exist: " & normal_path,
           loc: file_location(line: line, file: normal_path)
       )])
 
-    let source = readFile(base_path & normal_path)
+    let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
 func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =

@@ -1,39 +1,19 @@
-import tables
+import std/[tables, os, strutils, strformat]
 import isa_spec
 
 const STOP_AT_FIRST_FAIL = true
-const RUN_SINGLE_TEST    = "player_crash_2" # Emtpy string means run all tests
+const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
 
-type test = object
-  spec_error: string
-  asm_error: string
-  result: seq[uint8]
+type asm_test_files = tuple
+  source_file: string
+  error_file: string
+  result_file: string
 
-const TESTS = {
-#  "player_crash_1": test(result: @[0'u8, 0, 1, 2]),
-  "player_crash_0": test(result: @[0'u8, 0, 1, 2]),
-  "include": test(result: @[1'u8, 2, 3, 4, 2]),
-  "empty_field": test(),
-  "aarch64": test(result: @[0'u8, 0, 0, 170]),
-  "literals": test(result: @[1'u8, 205, 171, 97, 98, 99]),
-  "evaluator": test(result: @[0'u8, 33, 95, 103, 133, 160, 192]),
-  "rel_arithmetic": test(result: @[0'u8, 0, 0, 131]),
-  "imm_overload": test(result: @[64'u8, 1]),
-  "large": test(result: @[7'u8, 6, 5, 4, 3, 2, 1, 0]),
-  "oversized": test(result: @[8'u8, 7, 6, 5, 4, 3, 2, 1, 0]),
-  "rel_jump": test(result: @[0'u8, 1]),
-  "parenthesis": test(result: @[2'u8]),
-  "arithmetic": test(result: @[12'u8, 131]),
-  "fancy_syntax": test(result: @[133'u8, 5]),
-  "basics": test(result: @[138'u8, 3, 38]),
-  "numbers": test(result: @[0'u8, 15, 15]),
-  "set": test(result: @[3'u8]),
-}.toOrderedTable
+type test_files = object
+  spec_file: string
+  spec_error_file: string
+  asm_tests: seq[asm_test_files]
 
-for name, test in TESTS:
-  let spec_source = readFile("tests/" & name & "/test.spec")
-  let spec_result = parse_isa_spec(spec_source)
-  let isa_spec = spec_result.spec
 
 const TEST_PATH = "tests"
 
@@ -79,15 +59,9 @@ func format_as_hex(data: seq[uint8]): string =
 for (kind, test_dir) in TEST_PATH.walk_dir():
   if kind != pcDir:
     continue
-
-  let asm_source = readFile("tests/" & name & "/test.asm")
-  let asm_result = assemble("tests/", name & "/test.asm", isa_spec, asm_source)
-
-  if asm_result.error != test.asm_error:
-    echo "\u001b[31m" & name & ": " & asm_result.error_file & "\u001b[0m: " & asm_result.error
-    if STOP_AT_FIRST_FAIL: quit()
+  let test_name = test_dir.last_path_part()
+  if test_name.startswith('_'):
     continue
-
   var sub_tests: Table[string, test_files]
   for (kind, file_name) in test_dir.walk_dir(relative=true):
     if file_name == ".DS_Store": continue
@@ -105,6 +79,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         parseInt(parts[1])
     if subid >= sub_tests[name].asm_tests.len:
       sub_tests[name].asm_tests.set_len(subid + 1)
+
     case parts[^1]:
       of "spec":
         doAssert parts.len == 2, &"spec files can't have a subid ({test_dir/file_name})"
