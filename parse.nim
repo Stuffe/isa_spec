@@ -31,11 +31,11 @@ func `$`*(s: stream_slice): string =
   assert not isNil(s.source)
   return s.source[s.start..s.finish - 1]
 
-func `[]`(s: stream_slice, index: int): char =
+func `[]`*(s: stream_slice, index: int): char =
   assert not isNil(s.source)
   return s.source[s.start + index]
 
-func `[]`(s: stream_slice, index: HSlice): stream_slice =
+func `[]`*(s: stream_slice, index: HSlice): stream_slice =
   assert not isNil(s.source)
   result = s
   result.start  += index.a
@@ -202,13 +202,13 @@ func get_size*(s: var stream_slice): int =
 
   return parseInt(number)
 
-iterator items(s: stream_slice): char =
+iterator items*(s: stream_slice): char =
   var i = s.start
   while i < s.finish:
     yield s.source[i]
     i += 1
 
-iterator pairs(s: stream_slice): (int, char) =
+iterator pairs*(s: stream_slice): (int, char) =
   var i = s.start
   while i < s.finish:
     yield (i - s.start, s.source[i])
@@ -393,4 +393,3 @@ func get_table*(s: var stream_slice): OrderedTable[stream_slice, stream_slice] =
 
     if peek(list) == ',':
       skip(list)
-
