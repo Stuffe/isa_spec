@@ -1,0 +1,41 @@
+[fields]
+
+reg
+r0 0000
+r1 0001
+r2 0010
+r3 0011
+r4 0100
+r5 0101
+r6 0110
+r7 0111
+pc 1000
+sp 1001
+rp 1010
+bp 1011
+
+
+cond
+ja 0000
+no 0001
+ne 0010
+eq 0011
+ge 0100
+ls 0101
+gr 0110
+le 0111
+cc 1000
+cs 1001
+vc 1010
+vs 1011
+
+[instructions]
+
+
+
+shr %a(reg), %b(reg), %c(immediate) 
+ccccbbbbaaaa000000100111
+
+shr %a(reg), %b(reg) 
+bbbbaaaa00101000
+

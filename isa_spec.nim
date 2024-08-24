@@ -608,6 +608,12 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         i += 1
         continue
     doAssert false, "unreachable"
+
+  skip_whitespaces(s)
+
+  if peek(s) notin {'\n', '\0'}:
+    return error("Expected the instruciton to end here", i)
+
   result.final_index = get_index(s)
 
 func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
