@@ -713,7 +713,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
   func emit(val: uint8) =
     res.segments[^1].fixed.add val
-  var progress_index = -1
 
   func any_pc_rel(expr: expression): bool =
     if expr == nil:
@@ -736,9 +735,17 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           return true
     return false
 
+  var progress_index = -1
+
   while peek(s) != '\0':
-    doAssert get_index(s) != progress_index, "Did not make progress at " & peek(s)
+    if get_index(s) <= progress_index:
+      # No progress made, advance to newline
+      set_index(s, progress_index)
+      while read(s) != '\n':
+        continue
+
     progress_index = get_index(s)
+
     skip_and_record_newlines(s)
     block number_literal:
       let restore = s
@@ -966,6 +973,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           error("No instruction matched")
         skip_line(s)
         continue
+    
     skip_and_record_newlines(s)
 
   return res
@@ -1020,7 +1028,10 @@ func finalize(pa: pre_assembly_result): assembly_result =
           of ok_fixed:
             op.value
           of ok_label_ref:
-            result.labels[op.name].value
+            if op.name in result.labels:
+              result.labels[op.name].value
+            else:
+              0
           of ok_relative:
             cast[uint64](result.machine_code.len + op.offset)
       values
@@ -1030,4 +1041,29 @@ func finalize(pa: pre_assembly_result): assembly_result =
     result.machine_code &= machine_code
 
 func relax(pa: var pre_assembly_result) =
+<<<<<<< Updated upstream
   discard # TODO: Implement this
+=======
+  
+
+  var any_undefined = false
+  for segment in pa.segments: # Check that all labels are defined
+    if segment.line_boundaries.len == 0:
+      
+      #
+      # NOTE BELOW WAS CRASHING BECAUSE: 
+      #  segment.line_boundaries.len == 0
+      #
+
+      continue
+
+    for operand in segment.relaxable.operands:
+      if operand.kind == ok_label_ref:
+        if operand.name not_in pa.labels:
+          pa.errors.add error(loc: file_location(file: segment.file, line: segment.line_boundaries[^1][1]),
+                              message: &"Undefined label {$operand.name}")
+          any_undefined = true
+  if any_undefined:
+    return
+  # TODO: implement relaxing phase
+>>>>>>> Stashed changes
