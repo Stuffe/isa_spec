@@ -693,19 +693,19 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
   var res: pre_assembly_result
 
-  res.segments.add segment(file: normal_path)
+  res.segments.add segment(file: normal_path, line_boundaries: @[(0, 1)])
   res.pc.isa_spec = isa_spec
   res.pc.field_defines.setLen(isa_spec.field_types.len)
 
   var s = new_stream_slice(source)
-  var line_counter = 0
+  var line_counter = 1
 
 
   func skip_and_record_newlines(s: var stream_slice) =
     while peek(s) in {' ', '\r', '\n', '\t'}:
       if read(s) == '\n':
-        res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
         line_counter += 1
+        res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
     if skip_comment(s):
       skip_and_record_newlines(s)
 
@@ -939,11 +939,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         if matched.options.len == 0:
           if inst_res.error_priority > best_match.error_priority or best_match.error == "":
             best_match = inst_res
-
-      if get_index(s) == get_index(restore):
-        while read(s) notin {'\n', '\0'}:
-          continue
-        best_match.final_index = get_index(s)
 
       set_index(s, best_match.final_index)
 

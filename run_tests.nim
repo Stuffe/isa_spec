@@ -1,5 +1,5 @@
 import std/[tables, os, strutils, strformat]
-import isa_spec
+import isa_spec, types
 
 const STOP_AT_FIRST_FAIL = true
 const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
@@ -8,6 +8,7 @@ type asm_test_files = tuple
   source_file: string
   error_file: string
   result_file: string
+  lines_file: string
 
 type test_files = object
   spec_file: string
@@ -62,10 +63,12 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
   let test_name = test_dir.last_path_part()
   if test_name.startswith('_'):
     continue
+  if RUN_SINGLE_TEST != "" and test_name != RUN_SINGLE_TEST:
+    continue
   var sub_tests: Table[string, test_files]
+  local_fail = false
   for (kind, file_name) in test_dir.walk_dir(relative=true):
     if file_name == ".DS_Store": continue
-    local_fail = false
     if kind != pcFile:
       continue
     let parts = file_name.split(".")
@@ -93,11 +96,12 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         sub_tests[name].asm_tests[subid].error_file = test_dir/file_name
       of "hex":
         sub_tests[name].asm_tests[subid].result_file = test_dir/file_name
+      of "lines":
+        sub_tests[name].asm_tests[subid].lines_file = test_dir/file_name
       else:
         raiseAssert &"Unknown file type {test_dir/file_name}"
 
   for sub_name, tests in sub_tests:
-    if RUN_SINGLE_TEST != "" and tests.spec_file != "tests/" & RUN_SINGLE_TEST & "/test.spec": continue
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
     let spec_source = readFile(tests.spec_file)
@@ -144,9 +148,22 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
                                               &"{format_as_hex(asm_result.machine_code)}\n" &
                                               &"Expected:\n{format_as_hex(expected_result)}")
         continue
+      if asm_test.lines_file != "":
+        let line_source = readFile(asm_test.lines_file)
+        # In a lines file, each line corresponds to a single byte,
+        # marking the line that is expected for that byte
+        var byte_index = 0
+        for line_text in splitLines(line_source):
+          let expected_line_number = parseInt(line_text)
+          let actual_line_number = asm_result.line_to_byte.get_line_from_byte(byte_index)
+          if expected_line_number != actual_line_number:
+            fail(test_name, asm_test.source_file, &"Mismatch in expected line number for byte {byte_index}. " &
+                                                  &"Expected: {expected_line_number}, Got {actual_line_number}")
+            break
+          byte_index += 1
 
-    if not local_fail:
-      echo "\u001b[32mTest '" & test_name & "' passed.\u001b[0m"
+  if not local_fail:
+    echo "\u001b[32mTest '" & test_name & "' passed.\u001b[0m"
 
 if global_fail:
   quit(1)
