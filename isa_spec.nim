@@ -79,7 +79,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
-      let operand_name = get_string(s)
+      let operand_name = get_identifier(s)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
 
       if operand_name != expected_operand_name:
@@ -88,7 +88,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
 
-      let field_name = get_string(s)
+      let field_name = get_identifier(s)
 
       if field_name.len == 0:
         return error("Was expecting a field name here")
@@ -120,7 +120,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   block virtual_field:
     var count = 1
     while matches(s, '%'):
-      let operand_name = get_string(s)
+      let operand_name = get_identifier(s)
       let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
 
       if operand_name != expected_operand_name:
@@ -226,7 +226,7 @@ func parse_isa_spec*(source: string): spec_parse_result =
 
     while not matches(s, "[instructions]", increment = false):
       skip_whitespaces(s)
-      var field_type_name = get_string(s)
+      var field_type_name = get_identifier(s)
       if field_type_name.len == 0: return error("Expected a name for the field type")
       skip_whitespaces(s)
 
@@ -236,7 +236,7 @@ func parse_isa_spec*(source: string): spec_parse_result =
       block outer:
         while read(s) == '\n':
 
-          let field_name = get_string(s)
+          let field_name = get_identifier(s)
           if field_name.len == 0: break outer
           skip_whitespaces(s)
 
@@ -565,7 +565,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
             return error("Expected a jump distance here", i)
           result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned(jump_distance)))
         else:
-          let label_name = get_string(s)
+          let label_name = get_identifier(s)
           if label_name.len == 0:
             return error("Was expecting a label name here", i)
           if p.is_defined(label_name):
@@ -579,7 +579,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         if number.len != 0:
           result.operands.add fixed(parse_unsigned(number))
         else:
-          let field_string = get_string(s)
+          let field_string = get_identifier(s)
           if field_string in p.number_defines:
             result.operands.add fixed(p.number_defines[field_string].value)
           else:
@@ -588,7 +588,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         continue
       else: # Some user defined field type
         assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
-        let field_string = get_string(s)
+        let field_string = get_identifier(s)
 
         if field_string in p.field_defines[field]:
           result.operands.add fixed(p.field_defines[field][field_string].value)
@@ -808,13 +808,13 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
     block special:
       let restore = s
-      var special_test = get_string(s)
+      var special_test = get_identifier(s)
 
       var public: bool
       if special_test == "pub":
         public = true
         skip_whitespaces(s)
-        special_test = get_string(s)
+        special_test = get_identifier(s)
 
       if special_test == "include":
         skip_whitespaces(s)
@@ -868,7 +868,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
       elif special_test == "set":
         skip_whitespaces(s)
-        let definition_name = get_string(s)
+        let definition_name = get_identifier(s)
         if definition_name in res.pc.number_defines:
           error($definition_name & " is already declared")
           skip_line(s)
@@ -888,7 +888,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned(number))
 
         else:
-          let define_value = get_string(s)
+          let define_value = get_identifier(s)
           var found = false
           for field_id, field_type in isa_spec.field_types:
             for i, field in field_type.values:

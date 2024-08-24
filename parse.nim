@@ -105,7 +105,7 @@ func matches*(s: var stream_slice, value: char): bool =
     s.start += 1
     return true
 
-func get_string*(s: var stream_slice): stream_slice =
+func get_identifier*(s: var stream_slice): stream_slice =
   result = s
   result.finish = s.start
 
@@ -299,4 +299,3 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
   result = s
   result.start  = restore.start + 1
   result.finish = s.start - 1
-
