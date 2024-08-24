@@ -78,7 +78,6 @@ func format_as_hex(data: seq[uint8]): string =
 
 for (kind, test_dir) in TEST_PATH.walk_dir():
   if kind != pcDir:
->>>>>>> Stashed changes
     continue
 
   let asm_source = readFile("tests/" & name & "/test.asm")
