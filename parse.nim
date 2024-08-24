@@ -254,7 +254,7 @@ func empty_slice(s: stream_slice): stream_slice =
   result = s
   result.finish = s.start
 
-func get_quoted_string*(s: var stream_slice): stream_slice =
+func get_string*(s: var stream_slice): stream_slice =
   
   let restore = s
 
@@ -303,7 +303,7 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
 
     if c in {'"', '\'', '`'}:
       s.start -= 1
-      discard get_quoted_string(s)
+      discard get_string(s)
 
     if finished(s): 
       s = restore
@@ -324,7 +324,7 @@ func get_list_value(s: var stream_slice): stream_slice =
   let start = s.start
   case peek(s):
     of '"', '\'', '`': # These may contain commas
-      discard get_quoted_string(s)
+      discard get_string(s)
     of '(', '[', '{': # These may contain commas
       discard get_encapsulation(s)
     else:
