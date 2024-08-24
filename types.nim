@@ -103,6 +103,19 @@ type assembly_result* = object
   number_defines*: Table[stream_slice, define_value]
   labels*: Table[stream_slice, define_value]
 
+func get_line_from_byte*(line_info: seq[int], target: int): int =
+  for line, start_byte in line_info:
+    if target <= start_byte:
+      return line
+  return line_info.len
+
+func get_byte_from_line*(line_info: seq[int], target: int):  int =
+  if line_info.len == 0 or target <= 0:
+    return 0
+  if target >= line_info.len:
+    return line_info[^1]
+  return line_info[target]
+
 proc lsr*(a: int, b: int): int =
   return cast[int](cast[uint64](a) shr cast[uint64](b))
 
