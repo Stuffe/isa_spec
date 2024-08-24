@@ -105,9 +105,9 @@ type assembly_result* = object
 
 func get_line_from_byte*(line_info: seq[int], target: int): int =
   for line, start_byte in line_info:
-    if target <= start_byte:
-      return line
-  return line_info.len
+    if start_byte > target:
+      return line - 1
+  return line_info.len - 1
 
 func get_byte_from_line*(line_info: seq[int], target: int):  int =
   if line_info.len == 0 or target <= 0:

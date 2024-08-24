@@ -63,10 +63,12 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
   let test_name = test_dir.last_path_part()
   if test_name.startswith('_'):
     continue
+  if RUN_SINGLE_TEST != "" and test_name != RUN_SINGLE_TEST:
+    continue
   var sub_tests: Table[string, test_files]
+  local_fail = false
   for (kind, file_name) in test_dir.walk_dir(relative=true):
     if file_name == ".DS_Store": continue
-    local_fail = false
     if kind != pcFile:
       continue
     let parts = file_name.split(".")
@@ -100,7 +102,6 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         raiseAssert &"Unknown file type {test_dir/file_name}"
 
   for sub_name, tests in sub_tests:
-    if RUN_SINGLE_TEST != "" and tests.spec_file != "tests/" & RUN_SINGLE_TEST & "/test.spec": continue
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
     let spec_source = readFile(tests.spec_file)
@@ -156,13 +157,13 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
           let expected_line_number = parseInt(line_text)
           let actual_line_number = asm_result.line_to_byte.get_line_from_byte(byte_index)
           if expected_line_number != actual_line_number:
-            fail(test_name, asm_test.source_file, &"Mismatch in expected line number for byte {byte_index}." &
+            fail(test_name, asm_test.source_file, &"Mismatch in expected line number for byte {byte_index}. " &
                                                   &"Expected: {expected_line_number}, Got {actual_line_number}")
             break
           byte_index += 1
 
-    if not local_fail:
-      echo "\u001b[32mTest '" & test_name & "' passed.\u001b[0m"
+  if not local_fail:
+    echo "\u001b[32mTest '" & test_name & "' passed.\u001b[0m"
 
 if global_fail:
   quit(1)
