@@ -54,10 +54,11 @@ func set_index*(s: var stream_slice, value: int) =
   s.start = value
 
 func dbg*(s: stream_slice): string =
-  return "\u001b[31m" & s.source[0..s.start - 1] & "\u001b[0m" & s.source[s.start..^1]
+  return s.source[0..s.start - 1] & "\u001b[31m" & s.source[s.start..s.finish - 1] & "\u001b[0m" & s.source[s.finish..^1]
 
 func peek*(s: stream_slice): char =
   assert not isNil(s.source)
+  if s.start >= s.finish: return
   return s.source[s.start]
 
 func peek*(s: stream_slice, offset: int): char =
@@ -245,6 +246,14 @@ func hash*(s: stream_slice): Hash =
     h = h !& hash(c)
   result = !$h  
 
+func get_bool*(s: var stream_slice): bool =
+  if matches(s, "true"): return true
+  discard matches(s, "false")
+
+func empty_slice(s: stream_slice): stream_slice =
+  result = s
+  result.finish = s.start
+
 func get_quoted_string*(s: var stream_slice): stream_slice =
   
   let restore = s
@@ -253,7 +262,7 @@ func get_quoted_string*(s: var stream_slice): stream_slice =
 
   if quote notin {'"', '\'', '`'}: 
     s = restore
-    return
+    return empty_slice(s)
 
   var next = read(s)
 
@@ -261,13 +270,14 @@ func get_quoted_string*(s: var stream_slice): stream_slice =
     next = read(s)
     if finished(s):
       s = restore
-      return
+      return empty_slice(s)
 
   result = s
   result.start  = restore.start + 1
   result.finish = s.start - 1
 
 func get_encapsulation*(s: var stream_slice): stream_slice =
+  assert not isNil(s.source)
 
   let restore = s
 
@@ -280,13 +290,16 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
     of '{': close = '}'
     else:
       s = restore
-      return
+      return empty_slice(s)
+
 
   var depth = 1
-  while depth > 0:
+  while true:
     let c = read(s)
-    if c == open: depth += 1
-    if c == close: depth -= 1
+    if c == open:  depth += 1
+    if c == close: 
+      depth -= 1
+      if depth == 0: break
 
     if c in {'"', '\'', '`'}:
       s.start -= 1
@@ -294,8 +307,90 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
 
     if finished(s): 
       s = restore
-      return
+      return empty_slice(s)
 
   result = s
   result.start  = restore.start + 1
   result.finish = s.start - 1
+
+func strip*(s: stream_slice): stream_slice =
+  result = s
+  while peek(result) in {' ', '\t'} and result.start > 0:
+    result.start -= 1
+
+func get_list_value(s: var stream_slice): stream_slice =
+  assert not isNil(s.source)
+
+  let start = s.start
+  case peek(s):
+    of '"', '\'', '`': # These may contain commas
+      discard get_quoted_string(s)
+    of '(', '[', '{': # These may contain commas
+      discard get_encapsulation(s)
+    else:
+      while peek(s) notin {',', ':', '\0'}:
+        skip(s)
+      s = strip(s)
+
+  result = s
+  result.start = start
+  result.finish = s.start
+
+func get_list*(s: var stream_slice): seq[stream_slice] =
+
+  let restore = s
+  
+  var list = get_encapsulation(s)
+
+  while not finished(list):
+    skip_whitespaces(list)
+
+    let start = list.start
+    let new_stream_slice = get_list_value(list)
+
+    if list.start == start: 
+      s = restore
+      return @[]
+
+    result.add(new_stream_slice)
+
+    skip_whitespaces(list)
+
+    if peek(list) == ',':
+      skip(list)
+
+
+func get_table*(s: var stream_slice): OrderedTable[stream_slice, stream_slice] =
+
+  let restore = s
+  
+  var list = get_encapsulation(s)
+
+  var res: OrderedTable[stream_slice, stream_slice]
+
+  while not finished(list):
+    skip_whitespaces(list)
+
+    let key = get_list_value(list)
+
+    skip_whitespaces(list)
+
+    if read(list) != ':':
+      s = restore
+      return
+
+    skip_whitespaces(list)
+
+    let value = get_list_value(list)
+
+    if key.len == 0 or value.len == 0: 
+      s = restore
+      return
+
+    result[key] = value
+
+    skip_whitespaces(list)
+
+    if peek(list) == ',':
+      skip(list)
+
