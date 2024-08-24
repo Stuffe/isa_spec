@@ -73,9 +73,9 @@ Move a value from %b to %a
 ```
 
 ### The syntax line
-The syntax line is a mix of hard coded strings and operands. Operands always start with % followed by a letter which is used to identify it on the other lines. The first letter must always be 'a', the next 'b' and so on. Next to this comes an operand type. Spaces in the syntax field are not interpreted literally, but match any number of spaces and tabs (including none). An operand can match more than one user defined operand type, like so (not done yet): 
+The syntax line is a mix of hard coded strings and operands. Operands always start with % followed by a letter which is used to identify it on the other lines. The first letter must always be 'a', the next 'b' and so on. Next to this comes an operand type. Spaces in the syntax field are not interpreted literally, but match any number of spaces and tabs (including none): 
 ```
-mov %a(register_32), %b(register_64 | register_32)
+mov %a(register_32), %b(register_64)
 ```
 
 ### The bit field line
