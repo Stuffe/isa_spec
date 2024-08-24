@@ -740,9 +740,9 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
   while peek(s) != '\0':
     if get_index(s) <= progress_index:
       # No progress made, advance to newline
+      error("No progress was made")
       set_index(s, progress_index)
-      while read(s) != '\n':
-        continue
+      skip_line(s)
 
     progress_index = get_index(s)
 
@@ -1041,9 +1041,6 @@ func finalize(pa: pre_assembly_result): assembly_result =
     result.machine_code &= machine_code
 
 func relax(pa: var pre_assembly_result) =
-<<<<<<< Updated upstream
-  discard # TODO: Implement this
-=======
   
 
   var any_undefined = false
@@ -1051,7 +1048,7 @@ func relax(pa: var pre_assembly_result) =
     if segment.line_boundaries.len == 0:
       
       #
-      # NOTE BELOW WAS CRASHING BECAUSE: 
+      # TODO FIXME BELOW WAS CRASHING BECAUSE: 
       #  segment.line_boundaries.len == 0
       #
 
@@ -1066,4 +1063,3 @@ func relax(pa: var pre_assembly_result) =
   if any_undefined:
     return
   # TODO: implement relaxing phase
->>>>>>> Stashed changes
