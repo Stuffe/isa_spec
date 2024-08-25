@@ -21,7 +21,7 @@ r6r7 1011
 
 [instructions]
 
-Test(%a(register)!=%b(immediate)) =>%c(error);
+Test(%a(register)!=%b:i(immediate)) =>%c(error);
 cccccccc bbbbbbbb aaaaaaaa 10011000 
 pop error if a != b
 

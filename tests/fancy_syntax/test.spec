@@ -8,8 +8,8 @@ a 00
 
 [instructions]
 
-mov [%a(shift) * %b(register)], %c(immediate)
+mov [%a(shift) * %b(register)], %c:u(immediate)
 0aabbccc
 
-mov [%a(immediate)], %b(immediate)
+mov [%a(immediate)], %b:u(immediate)
 1000aabb

@@ -16,7 +16,7 @@ mov %a(register), %b(register)
 10aaabbb
 Move %b to %a.
  
-load %a(immediate)
+load %a:u(immediate)
 00aaaaaa
 Store %a in r0.
  

@@ -119,7 +119,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           new_instruction.syntax.add("")
           if field_sign == sk_default:
             if field.name == "immediate":
-              field_sign = sk_either
+              field_sign = sk_signed
             else:
               field_sign = sk_unsigned
           new_instruction.field_sign.add(field_sign)
