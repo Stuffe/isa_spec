@@ -12,7 +12,7 @@ const NUMBER_NEXT  = setutils.toSet("0123456789")
 
 func new_stream_slice*(source: string): stream_slice =
   var reference = new(string)
-  reference[] = source & '\0'
+  reference[] = source
   return stream_slice(
     source: reference,
     start: 0,
@@ -69,10 +69,13 @@ func peek*(s: stream_slice): char =
 
 func peek*(s: stream_slice, offset: int): char =
   assert not isNil(s.source)
-  return s.source[s.start + offset]
+  let i = s.start + offset
+  if i > s.source[].high: return
+  return s.source[i]
 
 func read*(s: var stream_slice): char =
   assert not isNil(s.source)
+  if s.start > s.source[].high: return
   result = s.source[s.start]
   if result != '\0':
     s.start += 1

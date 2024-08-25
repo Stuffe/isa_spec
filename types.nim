@@ -153,7 +153,7 @@ func get_line_from_byte*(li: complete_line_information, target: int): file_locat
       return -1  # byte_index is smaller
     return 0
   if seg_index > li.segments.high or target < li.segments[seg_index].start_byte:
-    return file_location(line: -1)
+    return file_location(line: 0)
   let line = upperBound(li.segments[seg_index].l2b, target)
   return file_location(file: li.segments[seg_index].file_name, line: line)
 
