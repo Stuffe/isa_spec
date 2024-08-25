@@ -750,6 +750,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       error("No progress was made")
       set_index(s, progress_index)
       skip_line(s)
+      break
 
     progress_index = get_index(s)
 
