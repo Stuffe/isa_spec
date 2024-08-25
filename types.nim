@@ -125,7 +125,7 @@ func add_line*(li: var complete_line_information, file_name: string, start_byte:
       li.segments[^1].file_name != file_name or # This is a new file
       line <= li.segments[^1].l2b.len): # We jumped back inside the file, e.g. because of duplicate includes
     if li.segments.len > 0:
-      assert start_byte >= li.segments[^1].end_byte
+      assert start_byte >= li.segments[^1].end_byte - 1 # See end of function for why we subtract 1
       li.segments[^1].end_byte = start_byte
     else:
       assert start_byte == 0, "Output should start at byte 0"
@@ -136,8 +136,14 @@ func add_line*(li: var complete_line_information, file_name: string, start_byte:
     assert li.segments[^1].l2b[^1] <= start_byte, "Invalid start_byte insertion"
   while line > li.segments[^1].l2b.len:
     li.segments[^1].l2b.add start_byte
-  assert start_byte >= li.segments[^1].end_byte
-  li.segments[^1].end_byte = start_byte
+
+  # To make sure line_info instances are always usable, we set `end_byte` here.
+  # But we don't know how long the last line is, so we add 1. This allows at least
+  # finding this last line by passing in the current length of the output
+  # However, if it turns out the line is actually empty, we need to be able to set an
+  # otherwise incorrect end_byte value, so we subtract back the 1 from the test
+  assert start_byte >= li.segments[^1].end_byte - 1
+  li.segments[^1].end_byte = start_byte + 1
 
 func done*(li: var complete_line_information, total_length: int) =
   if li.segments.len != 0:
@@ -153,7 +159,7 @@ func get_line_from_byte*(li: complete_line_information, target: int): file_locat
       return -1  # byte_index is smaller
     return 0
   if seg_index > li.segments.high or target < li.segments[seg_index].start_byte:
-    return file_location(line: -1)
+    return file_location()
   let line = upperBound(li.segments[seg_index].l2b, target)
   return file_location(file: li.segments[seg_index].file_name, line: line)
 
