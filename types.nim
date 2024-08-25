@@ -52,10 +52,17 @@ type expression* = ref object
       lhs*: expression
       rhs*: expression
 
+type sign_kind* = enum
+  sk_default # Needed since labels should default to unsigned and immediates should default to signed
+  sk_signed # -128 to 127
+  sk_unsigned # 0 to 255
+  sk_either # -128 to 255, assumes programmers know what they are doing
+
 type instruction* = object
   syntax*: seq[string]
   fields*: seq[int]
   virtual_fields*: seq[expression]
+  field_sign*: seq[sign_kind]
   bits*: seq[int]
   fixed_pattern_0*: uint64
   fixed_pattern_1*: uint64

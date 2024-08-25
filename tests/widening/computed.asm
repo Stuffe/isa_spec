@@ -26,24 +26,4 @@ l4:
     nop
 l5:
 
-    jmp l6
-    nop
-    nop
-    nop
-    nop
-    nop
-l6:
-
-    jmp l7
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-l7:
 

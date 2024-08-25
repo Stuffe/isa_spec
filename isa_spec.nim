@@ -85,6 +85,20 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       if operand_name != expected_operand_name:
         return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
+      var field_sign = block:
+        if matches(s, ':'):
+          let marker = get_identifier(s)
+          if $marker == "s":
+            sk_signed
+          elif $marker == "u":
+            sk_unsigned
+          elif $marker == "i":
+            sk_either
+          else:
+            return error(&"Invalid annotation for operand %{operand_name}: {marker}")
+        else:
+          sk_default
+
       if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
 
@@ -103,6 +117,12 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           found = true
           new_instruction.fields.add(i)
           new_instruction.syntax.add("")
+          if field_sign == sk_default:
+            if field.name == "immediate":
+              field_sign = sk_either
+            else:
+              field_sign = sk_unsigned
+          new_instruction.field_sign.add(field_sign)
           break
       
       if not found:
@@ -127,6 +147,20 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
       skip_newlines(s)
+      let field_sign = block:
+        if matches(s, ':'):
+          let marker = get_identifier(s)
+          if $marker == "s":
+            sk_signed
+          elif $marker == "u":
+            sk_unsigned
+          elif $marker == "i":
+            sk_either
+          else:
+            return error(&"Invalid annotation for operand %{operand_name}: {marker}")
+        else:
+          sk_signed # default to signed.
+      skip_newlines(s)
 
       if not matches(s, '='):
         return error("Expected an assignment here")
@@ -135,6 +169,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
       let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
       new_instruction.virtual_fields.add(virt_op)
+      new_instruction.field_sign.add(field_sign)
 
       if virt_op.exp_kind == exp_fail:
         if instruction_name == "":
@@ -623,7 +658,11 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     fields.add(cast[uint64](new_field))
   var values = [0'u64, 0]
 
-  var used_fields: set[uint8]
+  type usage_kind = enum
+    unused
+    used_no_sign_bit
+    used_sign_bit
+  var used_fields = newSeq[usage_kind](fields.len)
 
   var i = inst.bits.high
   while i >= 0:
@@ -640,19 +679,35 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
       else:
         let index = bit_type - FIXED_FIELDS_LEN
 
-        used_fields.incl(index.uint8)
-
         let bit = (fields[index] and 1)
         if bit == 1:
           setBit[uint64](values[int_index], bit_index)
-        fields[index] = asr(fields[index], 1)
+        if inst.field_sign[index] == sk_unsigned:
+          fields[index] = fields[index] shr 1
+        else:
+          fields[index] = asr(fields[index], 1)
+
+        if used_fields[index] != used_sign_bit:
+          let matches_sign_bit = (bit == 0 and fields[index] == 0) or (bit == 1 and fields[index] == uint64.high)
+          if matches_sign_bit:
+            used_fields[index] = used_sign_bit
+          else:
+            used_fields[index] = used_no_sign_bit
 
     i -= 1
 
   for i, field in fields:
-    if i.uint8 notin used_fields: continue
-    if field != 0 and field != uint64.high: # high for sign extended
-      return (&"Field %{$char(ord('a') + i)} doesn't fit", @[])
+    if used_fields[i] == unused: continue
+    case inst.field_sign[i]:
+      of sk_default, sk_either:
+        if field != 0 and field != uint64.high:
+          return (&"Field %{$char(ord('a') + i)} doesn't fit", @[])
+      of sk_signed:
+        if used_fields[i] != used_sign_bit:
+          return (&"Signed field %{$char(ord('a') + i)} doesn't fit", @[])
+      of sk_unsigned:
+        if field != 0:
+          return (&"Unsigned field %{$char(ord('a') + i)} doesn't fit", @[])
 
   var width_left = inst.bits.len
   result[1].set_len(width_left div 8)

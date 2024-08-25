@@ -30,17 +30,3 @@ l6:
     nop
     nop
     jmp l6
-
-l7:
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    nop
-    jmp l7
-
