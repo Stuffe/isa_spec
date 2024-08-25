@@ -311,12 +311,12 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
 
     if c in {'"', '\'', '`'}:
       s.start -= 1
-      discard get_string(s)
+      if get_string(s).len == 0:
+        return empty_slice(s)
 
     if finished(s): 
       s = restore
       return empty_slice(s)
-
   
   result = s
   result.start  = start
@@ -326,17 +326,17 @@ func strip*(s: stream_slice): stream_slice =
   result = s
   while peek(result) in {' ', '\t', '\r', '\n'}:
     skip(result)
-  while result.source[][result.finish - 1] in {' ', '\t', '\r', '\n'}:
+  while result.finish - 1 > 0 and result.source[][result.finish - 1] in {' ', '\t', '\r', '\n'}:
     result.finish -= 1
 
 func get_list_value(s: var stream_slice): stream_slice =
   assert not isNil(s.source)
 
   let start = s.start
-  debugecho peek(s)
+
   case peek(s):
     of '"', '\'', '`': # These may contain commas
-      debugecho ">>>", get_string(s), "<<<"
+      discard get_string(s)
     of '(', '[', '{': # These may contain commas
       discard get_encapsulation(s)
     else:
@@ -365,7 +365,6 @@ func get_list*(s: var stream_slice): seq[stream_slice] =
     let new_stream_slice = get_list_value(list)
 
     if list.start == start: 
-      debugecho dbg(list)
       s = restore
       return @[]
 
@@ -375,6 +374,8 @@ func get_list*(s: var stream_slice): seq[stream_slice] =
 
     if peek(list) == ',':
       skip(list)
+
+    list = strip(list)
 
 
 func get_table*(s: var stream_slice): OrderedTable[stream_slice, stream_slice] =
