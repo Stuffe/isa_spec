@@ -799,7 +799,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
   var progress_index = -1
 
-  while peek(s) != '\0':
+  while not finished(s):
     if get_index(s) <= progress_index:
       # No progress made, advance to newline
       error("No progress was made")
