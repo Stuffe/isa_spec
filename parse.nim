@@ -35,11 +35,17 @@ func `[]`*(s: stream_slice, index: int): char =
   assert not isNil(s.source)
   return s.source[s.start + index]
 
+func `[]`*(s: stream_slice, index: BackwardsIndex): char =
+  assert not isNil(s.source)
+  let i = s.finish - index.int
+  if i < 0: return
+  return s.source[i]
+
 func `[]`*(s: stream_slice, index: HSlice): stream_slice =
   assert not isNil(s.source)
   result = s
   result.start  += index.a
-  result.finish -= index.b.int
+  result.finish -= index.b.int - 1
 
 func skip*(s: var stream_slice, amount = 1) =
   assert not isNil(s.source)
@@ -264,10 +270,7 @@ func get_string*(s: var stream_slice): stream_slice =
     s = restore
     return empty_slice(s)
 
-  var next = read(s)
-
-  while next != quote or peek(s, -1) == '\\':
-    next = read(s)
+  while read(s) != quote or peek(s, -2) == '\\':
     if finished(s):
       s = restore
       return empty_slice(s)
@@ -292,6 +295,8 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
       s = restore
       return empty_slice(s)
 
+  skip_newlines(s)
+  let start = s.start
 
   var depth = 1
   while true:
@@ -309,22 +314,26 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
       s = restore
       return empty_slice(s)
 
+  
   result = s
-  result.start  = restore.start + 1
+  result.start  = start
   result.finish = s.start - 1
 
 func strip*(s: stream_slice): stream_slice =
   result = s
-  while peek(result) in {' ', '\t'} and result.start > 0:
-    result.start -= 1
+  while peek(result) in {' ', '\t', '\r', '\n'}:
+    skip(result)
+  while result.source[][result.finish - 1] in {' ', '\t', '\r', '\n'}:
+    result.finish -= 1
 
 func get_list_value(s: var stream_slice): stream_slice =
   assert not isNil(s.source)
 
   let start = s.start
+  debugecho peek(s)
   case peek(s):
     of '"', '\'', '`': # These may contain commas
-      discard get_string(s)
+      debugecho ">>>", get_string(s), "<<<"
     of '(', '[', '{': # These may contain commas
       discard get_encapsulation(s)
     else:
@@ -340,7 +349,11 @@ func get_list*(s: var stream_slice): seq[stream_slice] =
 
   let restore = s
   
-  var list = get_encapsulation(s)
+  var list = strip(get_encapsulation(s))
+
+  if list[^1] == ',':
+    list.finish -= 1
+    list = strip(list)
 
   while not finished(list):
     skip_whitespaces(list)
@@ -349,6 +362,7 @@ func get_list*(s: var stream_slice): seq[stream_slice] =
     let new_stream_slice = get_list_value(list)
 
     if list.start == start: 
+      debugecho dbg(list)
       s = restore
       return @[]
 
@@ -364,7 +378,7 @@ func get_table*(s: var stream_slice): OrderedTable[stream_slice, stream_slice] =
 
   let restore = s
   
-  var list = get_encapsulation(s)
+  var list = strip(get_encapsulation(s))
 
   var res: OrderedTable[stream_slice, stream_slice]
 
@@ -393,3 +407,4 @@ func get_table*(s: var stream_slice): OrderedTable[stream_slice, stream_slice] =
 
     if peek(list) == ',':
       skip(list)
+
