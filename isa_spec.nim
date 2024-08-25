@@ -693,12 +693,13 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
   var res: pre_assembly_result
 
-  res.segments.add segment(file: normal_path, line_boundaries: @[(0, 1)])
   res.pc.isa_spec = isa_spec
   res.pc.field_defines.setLen(isa_spec.field_types.len)
 
   var s = new_stream_slice(source)
   var line_counter = 1
+
+  res.segments.add segment(file: normal_path, line_boundaries: @[(0, line_counter)])
 
 
   func skip_and_record_newlines(s: var stream_slice) =
@@ -851,6 +852,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
               res.pc.field_defines[field][file_first & "." & name] = val
 
         res.segments.add(include_res.segments)
+        res.segments.add(segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
 
         skip_and_record_newlines(s)
         continue
@@ -946,7 +948,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         if matched.any_pc_rel:
           # If the instruction is position relative (either in operands or virtual fields) we need to make it relaxable
           res.segments[^1].relaxable = matched
-          res.segments.add segment(file: normal_path)
+          res.segments.add segment(file: normal_path, line_boundaries: @[(0, line_counter)])
         else:
           let args = block:
             var t: seq[uint64] = @[]
@@ -983,6 +985,9 @@ func finalize(pa: pre_assembly_result): assembly_result =
   func error(msg: string, file: string, line: int): assembly_result =
     return assembly_result(error: msg, error_file: file, error_line: line)
 
+  func error(msg: string, loc: file_location): assembly_result =
+    return assembly_result(error: msg, error_file: loc.file, error_line: loc.line)
+
   func error(err: error): assembly_result =
     return assembly_result(error: err.message, error_file: err.loc.file, error_line: err.loc.line)
 
@@ -999,7 +1004,7 @@ func finalize(pa: pre_assembly_result): assembly_result =
         ip += seg.relaxable.options[seg.relaxable.selected_option].bits.len div 8
     starts
 
-  result.line_to_byte = @[0]
+  result.line_info = new_line_info()
   let main_file = pa.segments[0].file
 
   for label_name, label in pa.labels:
@@ -1010,11 +1015,8 @@ func finalize(pa: pre_assembly_result): assembly_result =
   result.number_defines = pa.pc.number_defines
 
   for seg_id, segment in pa.segments:
-
-    if segment.file == main_file:
-      for (byte_offset, line) in segment.line_boundaries:
-        while line > result.line_to_byte.len:
-          result.line_to_byte.add (result.machine_code.len + byte_offset)
+    for (byte_offset, line) in segment.line_boundaries:
+      result.line_info.add_line(segment.file, result.machine_code.len + byte_offset, line)
 
     assert segment_starts[seg_id] == result.machine_code.len
     result.machine_code.add segment.fixed
@@ -1038,23 +1040,15 @@ func finalize(pa: pre_assembly_result): assembly_result =
       values
     let (err_msg, machine_code) = assemble_instruction(inst, args, result.machine_code.len)
     if err_msg != "":
-      return error(err_msg, segment.file, result.line_to_byte.len)
+      return error(err_msg, result.line_info.get_line_from_byte(result.machine_code.len))
     result.machine_code &= machine_code
+  result.line_info.done(result.machine_code.len)
 
 func relax(pa: var pre_assembly_result) =
   
 
   var any_undefined = false
   for segment in pa.segments: # Check that all labels are defined
-    if segment.line_boundaries.len == 0:
-      
-      #
-      # TODO FIXME BELOW WAS CRASHING BECAUSE: 
-      #  segment.line_boundaries.len == 0
-      #
-
-      continue
-
     for operand in segment.relaxable.operands:
       if operand.kind == ok_label_ref:
         if operand.name not_in pa.labels:

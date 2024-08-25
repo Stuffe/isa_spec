@@ -1,4 +1,4 @@
-import tables, std/setutils, parse
+import tables, std/[algorithm, setutils], parse
 
 type register_kind* = enum
   field
@@ -93,9 +93,23 @@ type error* = object
   loc*: file_location
   message*: string
 
+type file_line_information = object
+  start_byte: int # inclusive
+  end_byte: int # exclusive
+  file_name: string
+  # It might make sense to use a more compct representation here since
+  # some segments will not actually start at line 1 (e.g. portion in a main file after an include)
+  l2b: seq[int] # line_to_byte @[start_line_1, start_line_2, start_line_2]
+
+type complete_line_information* = object
+  # Because we use binary search on this list, various invariants have to be held up.
+  # Additionally, the techincally non-required property that all bytes are covered
+  # should be enforced by the construction methods
+  segments: seq[file_line_information]
+
 type assembly_result* = object
   machine_code*: seq[uint8]
-  line_to_byte*: seq[int]
+  line_info*: complete_line_information
   error*: string
   error_line*: int
   error_file*: string
@@ -103,18 +117,54 @@ type assembly_result* = object
   number_defines*: Table[stream_slice, define_value]
   labels*: Table[stream_slice, define_value]
 
-func get_line_from_byte*(line_info: seq[int], target: int): int =
-  for line, start_byte in line_info:
-    if start_byte > target:
-      return line - 1
-  return line_info.len - 1
+func new_line_info*(): complete_line_information =
+  return default(complete_line_information)
 
-func get_byte_from_line*(line_info: seq[int], target: int):  int =
-  if line_info.len == 0 or target <= 0:
+func add_line*(li: var complete_line_information, file_name: string, start_byte: int, line: int) =
+  if (li.segments.len == 0 or # This is the first segment
+      li.segments[^1].file_name != file_name or # This is a new file
+      line <= li.segments[^1].l2b.len): # We jumped back inside the file, e.g. because of duplicate includes
+    if li.segments.len > 0:
+      assert start_byte >= li.segments[^1].end_byte
+      li.segments[^1].end_byte = start_byte
+    else:
+      assert start_byte == 0, "Output should start at byte 0"
+    li.segments.add file_line_information(file_name: file_name, start_byte: start_byte)
+
+  assert line > li.segments[^1].l2b.len, "Duplicate line insertion for " & $line
+  if li.segments[^1].l2b.len > 0:
+    assert li.segments[^1].l2b[^1] <= start_byte, "Invalid start_byte insertion"
+  while line > li.segments[^1].l2b.len:
+    li.segments[^1].l2b.add start_byte
+  assert start_byte >= li.segments[^1].end_byte
+  li.segments[^1].end_byte = start_byte
+
+func done*(li: var complete_line_information, total_length: int) =
+  if li.segments.len != 0:
+    li.segments[^1].end_byte = total_length
+    if li.segments[^1].l2b.len > 0:
+      assert li.segments[^1].l2b[^1] <= total_length, "Invalid total_length"
+
+func get_line_from_byte*(li: complete_line_information, target: int): file_location =
+  let seg_index = lowerBound(li.segments, target) do (segment: file_line_information, byte_index: int) -> int:
+    if byte_index < segment.start_byte:
+      return 1  # byte_index is larger
+    if segment.end_byte <= byte_index:
+      return -1  # byte_index is smaller
     return 0
-  if target >= line_info.len:
-    return line_info[^1]
-  return line_info[target]
+  if seg_index > li.segments.high or target < li.segments[seg_index].start_byte:
+    return file_location()
+  let line = upperBound(li.segments[seg_index].l2b, target)
+  return file_location(file: li.segments[seg_index].file_name, line: line)
+
+func get_byte_from_line*(line_info: complete_line_information, target: file_location): seq[int] =
+  if target.line < 1:
+    return
+  for segment in line_info.segments:
+    if segment.file_name != target.file:
+      continue
+    if target.line <= segment.l2b.len:
+      result.add segment.l2b[target.line - 1]
 
 proc lsr*(a: int, b: int): int =
   return cast[int](cast[uint64](a) shr cast[uint64](b))

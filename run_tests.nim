@@ -151,15 +151,26 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       if asm_test.lines_file != "":
         let line_source = readFile(asm_test.lines_file)
         # In a lines file, each line corresponds to a single byte,
-        # marking the line that is expected for that byte
+        # marking the file and line that is expected for that byte
         var byte_index = 0
+        var last_line = file_location()
         for line_text in splitLines(line_source):
-          let expected_line_number = parseInt(line_text)
-          let actual_line_number = asm_result.line_to_byte.get_line_from_byte(byte_index)
-          if expected_line_number != actual_line_number:
+          doAssert line_text.split(':').len == 2, &"Each line in a `.lines` file should have the form 'file.asm:n' ({asm_test.lines_file})"
+          let expected_fl = file_location(
+                  file: line_text.split(":")[0],
+                  line: parseInt(line_text.split(":")[1])
+                )
+          let actual_fl = asm_result.line_info.get_line_from_byte(byte_index)
+          if expected_fl != actual_fl:
             fail(test_name, asm_test.source_file, &"Mismatch in expected line number for byte {byte_index}. " &
-                                                  &"Expected: {expected_line_number}, Got {actual_line_number}")
+                                                  &"Expected: {expected_fl}, got {actual_fl}")
             break
+          if last_line != expected_fl:
+            let actual_start_index = asm_result.line_info.get_byte_from_line(expected_fl)
+            if byte_index not_in actual_start_index and expected_fl.line != 0:
+              fail(test_name, asm_test.source_file, &"Incorrect result from `get_byte_from_line({expected_fl})`: " &
+                                                    &"Expected {byte_index}, got {actual_start_index}")
+          last_line = expected_fl
           byte_index += 1
 
   if not local_fail:
