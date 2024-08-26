@@ -119,7 +119,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           new_instruction.syntax.add("")
           if field_sign == sk_default:
             if field.name == "immediate":
-              field_sign = sk_either
+              field_sign = sk_unsigned
             else:
               field_sign = sk_unsigned
           new_instruction.field_sign.add(field_sign)
@@ -159,7 +159,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           else:
             return error(&"Invalid annotation for operand %{operand_name}: {marker}")
         else:
-          sk_signed # default to signed.
+          sk_unsigned # default to signed.
       skip_newlines(s)
 
       if not matches(s, '='):
