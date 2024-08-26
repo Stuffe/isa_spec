@@ -12,7 +12,7 @@ test_2
 001aaaaa
 
 test_3
-%a = 1 - 2
+%a:s = 1 - 2
 010aaaaa
 
 test_4
@@ -28,5 +28,5 @@ test_6
 101aaaaa
 
 test_7
-%a = 3 - 2 - 1 + 1 * 3 * -2 + 6
+%a:s = 3 - 2 - 1 + 1 * 3 * -2 + 6
 110aaaaa
