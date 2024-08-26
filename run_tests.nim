@@ -130,12 +130,12 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
           let expected_asm_error = readFile(asm_test.error_file)
           if expected_asm_error != asm_result.error:
             fail(test_name, asm_test.source_file, &"Wrong error message:\n" &
-                                                  &" Got \"{spec_result.error}\"" &
+                                                  &" Got \"{asm_result.error}\" " &
                                                   &"Expected \"{expected_asm_error}\"")
           else:
             doAssert asm_test.result_file == "", &"Can't have both error and results for the same test ({asm_test.source_file}))"
         else:
-          fail(test_name, asm_test.source_file, &"Unexpected assemble failure: \"{asm_result.error}\"")
+          fail(test_name, asm_test.source_file, &"Unexpected assemble failure: \"{asm_result.error}\" at line {asm_result.error_line}")
         continue
       if asm_test.error_file != "":
         fail(test_name, asm_test.source_file, "Expected assemble failure")

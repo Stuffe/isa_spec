@@ -52,10 +52,17 @@ type expression* = ref object
       lhs*: expression
       rhs*: expression
 
+type sign_kind* = enum
+  sk_default # Needed since labels should default to unsigned and immediates should default to signed
+  sk_signed # -128 to 127
+  sk_unsigned # 0 to 255
+  sk_either # -128 to 255, assumes programmers know what they are doing
+
 type instruction* = object
   syntax*: seq[string]
   fields*: seq[int]
   virtual_fields*: seq[expression]
+  field_sign*: seq[sign_kind]
   bits*: seq[int]
   fixed_pattern_0*: uint64
   fixed_pattern_1*: uint64
@@ -125,7 +132,7 @@ func add_line*(li: var complete_line_information, file_name: string, start_byte:
       li.segments[^1].file_name != file_name or # This is a new file
       line <= li.segments[^1].l2b.len): # We jumped back inside the file, e.g. because of duplicate includes
     if li.segments.len > 0:
-      assert start_byte >= li.segments[^1].end_byte
+      assert start_byte >= li.segments[^1].end_byte - 1 # See end of function for why we subtract 1
       li.segments[^1].end_byte = start_byte
     else:
       assert start_byte == 0, "Output should start at byte 0"
@@ -136,8 +143,14 @@ func add_line*(li: var complete_line_information, file_name: string, start_byte:
     assert li.segments[^1].l2b[^1] <= start_byte, "Invalid start_byte insertion"
   while line > li.segments[^1].l2b.len:
     li.segments[^1].l2b.add start_byte
-  assert start_byte >= li.segments[^1].end_byte
-  li.segments[^1].end_byte = start_byte
+
+  # To make sure line_info instances are always usable, we set `end_byte` here.
+  # But we don't know how long the last line is, so we add 1. This allows at least
+  # finding this last line by passing in the current length of the output
+  # However, if it turns out the line is actually empty, we need to be able to set an
+  # otherwise incorrect end_byte value, so we subtract back the 1 from the test
+  assert start_byte >= li.segments[^1].end_byte - 1
+  li.segments[^1].end_byte = start_byte + 1
 
 func done*(li: var complete_line_information, total_length: int) =
   if li.segments.len != 0:
