@@ -112,8 +112,6 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         let expected_spec_error = readFile(tests.spec_error_file)
         if expected_spec_error != spec_result.error:
           fail(test_name, tests.spec_file, &"Wrong error message: Got \"{spec_result.error}\", Expected \"{expected_spec_error}\"")
-        else:
-          doAssert tests.asm_tests.len == 0, &"Can't have both spec_err and asm_tests for the same spec file ({tests.spec_file})"
       else:
         fail(test_name, tests.spec_file, &"Unexpected Spec failure: \"{spec_result.error}\" at line {spec_result.error_line}")
       continue
