@@ -272,8 +272,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
         while read(s) == '\n':
 
           let field_name = get_identifier(s)
-          if field_name.len == 0: break outer
           skip_whitespaces(s)
+          if field_name.len == 0 and peek(s) in {'\n', '\0'}: break outer
 
           var bits: string
 
