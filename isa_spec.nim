@@ -98,17 +98,18 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
       var field_sign = block:
         if matches(s, ':'):
-          let marker = get_identifier(s)
-          if $marker == "s":
-            sk_signed
-          elif $marker == "u":
-            sk_unsigned
-          elif $marker == "i":
-            sk_either
-          else:
-            return error(&"Invalid annotation for operand %{operand_name}: {marker}")
+          let marker = read(s)
+          case marker:
+            of 's':
+              sk_signed
+            of 'u':
+              sk_unsigned
+            of 'i':
+              sk_either
+            else:
+              return error(&"Invalid annotation for operand %{operand_name}: {marker}")
         else:
-          sk_default
+          sk_unsigned
 
       if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
@@ -128,11 +129,6 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           found = true
           new_instruction.fields.add(i)
           new_instruction.syntax.add("")
-          if field_sign == sk_default:
-            if field.name == "immediate":
-              field_sign = sk_unsigned
-            else:
-              field_sign = sk_unsigned
           new_instruction.field_sign.add(field_sign)
           break
       
@@ -160,17 +156,18 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       skip_newlines(s)
       let field_sign = block:
         if matches(s, ':'):
-          let marker = get_identifier(s)
-          if $marker == "s":
-            sk_signed
-          elif $marker == "u":
-            sk_unsigned
-          elif $marker == "i":
-            sk_either
-          else:
-            return error(&"Invalid annotation for operand %{operand_name}: {marker}")
+          let marker = read(s)
+          case marker:
+            of 's':
+              sk_signed
+            of 'u':
+              sk_unsigned
+            of 'i':
+              sk_either
+            else:
+              return error(&"Invalid annotation for operand %{operand_name}:{marker}")
         else:
-          sk_unsigned # default to signed.
+          sk_unsigned # default to unsigned.
       skip_newlines(s)
 
       if not matches(s, '='):
@@ -718,7 +715,7 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
   for i, field in fields:
     if used_fields[i] == unused: continue
     case inst.field_sign[i]:
-      of sk_default, sk_either:
+      of sk_either:
         if field != 0 and field != uint64.high:
           return (&"Field %{$char(ord('a') + i)} doesn't fit", @[])
       of sk_signed:

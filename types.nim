@@ -53,9 +53,8 @@ type expression* = ref object
       rhs*: expression
 
 type sign_kind* = enum
-  sk_default # Needed since labels should default to unsigned and immediates should default to signed
-  sk_signed # -128 to 127
   sk_unsigned # 0 to 255
+  sk_signed # -128 to 127
   sk_either # -128 to 255, assumes programmers know what they are doing
 
 type instruction* = object
