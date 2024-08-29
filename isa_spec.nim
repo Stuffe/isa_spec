@@ -66,7 +66,11 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         if this_part != "":
           syntax_parts.add(this_part)
           this_part = ""
-        syntax_parts.add(" ")
+        # One space means it's optional, two spaces means some whitespace seperation is required
+        if syntax_parts[^1] == " ":
+          syntax_parts[^1] = "  "
+        elif syntax_parts[^1] != "  ":
+          syntax_parts.add(" ")
       else:
         this_part.add(char)
 
@@ -584,6 +588,12 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
   for syntax in inst.syntax:
     if syntax == " ":
       skip_whitespaces(s)
+      continue
+    if syntax == "  ":
+      let start_index = s.get_index()
+      skip_whitespaces(s)
+      if s.get_index() == start_index:
+        return error("Expected whitespace here", i)
       continue
 
     if syntax != "":
