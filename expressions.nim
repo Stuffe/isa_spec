@@ -20,10 +20,24 @@ func get_expression*(s: var stream_slice, operand_count: int): expression
 func get_term(s: var stream_slice, operand_count: int): expression =
 
   if matches(s, "log2("):
+    skip_whitespaces(s)
     let exp = get_expression(s, operand_count)
     if not matches(s, ')'):
       return expression(exp_kind: exp_fail)
+    skip_whitespaces(s)
     return expression(exp_kind: exp_operation, op_kind: op_log2, lhs: exp)
+
+  if matches(s, "asr("):
+    let lhs = get_expression(s, operand_count)
+    skip_whitespaces(s)
+    if not matches(s, ','):
+      return expression(exp_kind: exp_fail)
+    skip_whitespaces(s)
+    let rhs = get_expression(s, operand_count)
+    skip_whitespaces(s)
+    if not matches(s, ')'):
+      return expression(exp_kind: exp_fail)
+    return expression(exp_kind: exp_operation, op_kind: op_asr, lhs: lhs, rhs: rhs)
   
   if matches(s, '('):
     let restore = s

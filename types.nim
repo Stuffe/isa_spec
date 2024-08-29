@@ -36,7 +36,7 @@ type op_kind* = enum
   op_asr
   op_log2
 
-const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>>", ">>"]
+const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&")
 

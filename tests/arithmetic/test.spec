@@ -8,3 +8,7 @@ test %a(immediate)
 log2 %a(immediate)
 %b = log2(%a)
 10bbbbbb
+
+asr %a(immediate), %b(immediate)
+%c = asr(%a, %b)
+01cccccc

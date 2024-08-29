@@ -10,6 +10,9 @@ const FIELD_IMM        = 3
 const FIELD_LABEL      = 4
 const FIXED_FIELDS_LEN = 5
 
+const ANY_NUMBER_OF_SPACES = " "
+const AT_LEAST_ONE_SPACE   = "  "
+
 func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
   var source = ""
   var field_i = 0
@@ -67,10 +70,14 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           syntax_parts.add(this_part)
           this_part = ""
         # One space means it's optional, two spaces means some whitespace seperation is required
-        if syntax_parts[^1] == " ":
-          syntax_parts[^1] = "  "
-        elif syntax_parts[^1] != "  ":
-          syntax_parts.add(" ")
+        if char == ' ' and syntax_parts.len > 0:
+          case syntax_parts[^1]:
+            of ANY_NUMBER_OF_SPACES:
+              syntax_parts[^1] = AT_LEAST_ONE_SPACE
+            of AT_LEAST_ONE_SPACE:
+              discard
+            else:
+              syntax_parts.add(ANY_NUMBER_OF_SPACES)
       else:
         this_part.add(char)
 
@@ -180,6 +187,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           return error("Could not read virtual operand " & $count)
         else:
           return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
+      
       count += 1
       skip_newlines(s)
   
@@ -586,10 +594,11 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
 
   var i = 0
   for syntax in inst.syntax:
-    if syntax == " ":
+    if syntax == ANY_NUMBER_OF_SPACES:
       skip_whitespaces(s)
       continue
-    if syntax == "  ":
+
+    if syntax == AT_LEAST_ONE_SPACE:
       let start_index = s.get_index()
       skip_whitespaces(s)
       if s.get_index() == start_index:
