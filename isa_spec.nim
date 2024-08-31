@@ -63,7 +63,14 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
   func add_string_syntax(s: var stream_slice, syntax_parts: var seq[string]) =
     var this_part: string
-    while peek(s) notin {'%', '\0', '\n'}:
+    while peek(s) notin {'\0', '\n'}:
+      if peek(s) == '%':
+        if peek(s, 1) == '%':
+          doAssert matches(s, "%%")
+          this_part.add('%')
+          continue
+        else:
+          break
       let char = read(s)
       if char in {'\r', '\t', ' '}:
         if this_part != "":
