@@ -304,7 +304,6 @@ func parse_isa_spec*(source: string): spec_parse_result =
           discard parseBin(bits, bit_value)
 
           skip_whitespaces(s)
-          let bit_width = get_unsigned(s)
 
           if $field_type_name notin new_field_types:
             new_field_types[$field_type_name] = field_type(name: $field_type_name, bit_length: bit_length)
@@ -611,10 +610,11 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       of FIELD_LABEL:
         if peek(s) == '.':
           skip(s)
-          let jump_distance = get_unsigned(s)
-          if jump_distance == "":
-            return error("Expected a jump distance here", i)
-          result.operands.add operand(kind: ok_relative, offset: cast[int64](parse_unsigned(jump_distance)))
+          let jump_distance = get_unsigned(s).on_err do:
+            return error(err, i)
+          let value: uint64 = parse_unsigned(jump_distance).on_err do:
+            return error(err, i)
+          result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
         else:
           let label_name = get_identifier(s)
           if label_name.len == 0:
@@ -626,11 +626,15 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         i += 1
         continue
       of FIELD_IMM:
-        let number = get_unsigned(s)
-        if number.len != 0:
-          result.operands.add fixed(parse_unsigned(number))
+        let (number_err, number) = get_unsigned(s)
+        if number_err == "":
+          result.operands.add fixed(parse_unsigned(number).on_err do:
+            return error(err, i)
+          )
         else:
           let field_string = get_identifier(s)
+          if field_string.len == 0:
+            return error("Expected either a number or a symbol", i)
           if field_string in p.number_defines:
             result.operands.add fixed(p.number_defines[field_string].value)
           else:
@@ -828,11 +832,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
     skip_and_record_newlines(s)
     block number_literal:
       let restore = s
-      let size = get_size(s)
+      let (size_error, size) = get_size(s)
       skip_whitespaces(s)
-      let number = get_unsigned(s)
-      if number != "":
-        if size == 0:
+      let (number_error, number) = get_unsigned(s)
+      if number_error == "":
+        if size_error != "":
           error("Expected a size before the number, like <U64> " & $number)
           skip_line(s)
           continue
@@ -842,8 +846,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           continue
         let mask = uint64.high shr (64 - size)
         var i = size div 8
-        var value = parse_unsigned(number) and mask
-
+        var value = mask and (parse_unsigned(number).on_err do:
+          error(err)
+          skip_line(s)
+          continue
+        )
         while i > 0:
           emit(cast[uint8](value))
           value = value shr 8
@@ -851,7 +858,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         skip_and_record_newlines(s)
         continue
 
-      elif size != 0:
+      elif size_error == "":
         error("Expected a number after a size declaration")
         skip_line(s)
         continue
@@ -957,9 +964,15 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         skip_whitespaces(s)
 
-        let number = get_unsigned(s)
-        if number != "":
-          res.pc.number_defines[definition_name] = define_value(public: public, value: parse_unsigned(number))
+        let (number_err, number) = get_unsigned(s)
+        if number_err == "":
+          res.pc.number_defines[definition_name] = define_value(
+              public: public,
+              value: (parse_unsigned(number).on_err() do:
+                error(err)
+                skip_line(s)
+                continue
+          ))
 
         else:
           let define_value = get_identifier(s)

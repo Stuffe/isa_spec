@@ -5,8 +5,8 @@ type stream_slice* = object
   start: int
   finish: int
 
-const STRING_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
-const STRING_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.")
+const IDENTIFIER_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
+const IDENTIFIER_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.")
 const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 
@@ -18,6 +18,10 @@ func new_stream_slice*(source: string): stream_slice =
     start: 0,
     finish: source.len,
   )
+
+func empty_slice(s: stream_slice): stream_slice =
+  result = s
+  result.finish = s.start
 
 func finished*(s: stream_slice): bool =
   assert not isNil(s.source)
@@ -115,83 +119,101 @@ func matches*(s: var stream_slice, value: char): bool =
     s.start += 1
     return true
 
+template on_err*[T](inp: (string, T), callback: untyped): T =
+  let (raw_err, res) = inp
+  if raw_err != "":
+    let err {.inject, used.} = raw_err
+    callback
+  else:
+    res
+
 func get_identifier*(s: var stream_slice): stream_slice =
   result = s
   result.finish = s.start
 
-  if peek(s) notin STRING_FIRST: 
+  if peek(s) notin IDENTIFIER_FIRST:
     return
 
   skip(s)
   result.finish += 1
 
-  while peek(s) in STRING_NEXT:
+  while peek(s) in IDENTIFIER_NEXT:
     skip(s)
     result.finish += 1
 
-func get_unsigned*(s: var stream_slice): stream_slice =
-  result = s
-  result.finish = s.start
+func get_unsigned*(s: var stream_slice): (string, stream_slice) =
+  result[1] = s
+  result[1].finish = s.start
   if peek(s) == '0':
-    var value = 0'u64
     if peek(s, 1) == 'x':
       skip(s, 2)
-      result.finish += 2
+      result[1].finish += 2
       while peek(s) in setutils.toSet("0123456789abcdefABCDEF"):
         skip(s)
-        result.finish += 1
+        result[1].finish += 1
       return result
     if peek(s, 1) == 'o':
       skip(s, 2)
-      result.finish += 2
+      result[1].finish += 2
       while peek(s) in setutils.toSet("01234567"):
         skip(s)
-        result.finish += 1
+        result[1].finish += 1
       return result
     if peek(s, 1) == 'b':
       skip(s, 2)
-      result.finish += 2
+      result[1].finish += 2
       while peek(s) in setutils.toSet("01"):
         skip(s)
-        result.finish += 1
+        result[1].finish += 1
       return result
 
   if peek(s) notin NUMBER_FIRST:
-    return
+    return ("Expected a number literal", empty_slice(s))
   skip(s)
-  result.finish += 1
+  result[1].finish += 1
   while peek(s) in NUMBER_NEXT:
     skip(s)
-    result.finish += 1
+    result[1].finish += 1
 
-func parse_unsigned*(s: stream_slice): uint64 =
+func parse_unsigned*(s: stream_slice): (string, uint64) =
+  # TODO: Generate more correct error messages in this function and probably don't use the builtin functions
   if s.len < 3: 
     try:
-      return cast[uint64](parseInt($s))
-    except: return 0
+      return ("", cast[uint64](parseInt($s)))
+    except ValueError: return ("Invalid int literal", 0'u64)
+  try:
+    case s[1]:
+      of 'x': return ("", fromHex[uint64]($s))
+      of 'o': return ("", fromOct[uint64]($s))
+      of 'b': return ("", fromBin[uint64]($s))
+      else:   return ("", cast[uint64](parseInt($s)))
+  except ValueError: return ("Invalid int literal", 0'u64)
 
-  case s[1]:
-    of 'x': return fromHex[uint64]($s)
-    of 'o': return fromOct[uint64]($s)
-    of 'b': return fromBin[uint64]($s)
-    else:   return cast[uint64](parseInt($s))
-
-func get_signed*(s: var stream_slice): stream_slice =
+func get_signed*(s: var stream_slice): (string, stream_slice) =
   
   let negative = s.peek() == '-'
   if negative:
     skip(s)
 
   result = s.get_unsigned()
-  if negative:
-    result.start -= 1
+  if negative and result[0] == "":
+    result[1].start -= 1
 
-func parse_signed*(s: stream_slice): int =
-  if s.len == 0: return
+func parse_signed*(s: stream_slice): (string, int) =
+  if s.len == 0: return ("Invalid signed int literal", 0)
 
   if s[0] == '-':
-    return -1 * cast[int](parse_unsigned(s[1..^1]))
-  return cast[int](parse_unsigned(s))
+    let raw_uint = parse_unsigned(s[1..^1]).on_err do:
+      return (err, 0)
+    if raw_uint > int.high.uint64 + 1: # we can represent one more negative value than positive values
+      return ("Literal to large for a signed int", 0)
+    return ("", -1 * cast[int](raw_uint))
+  else:
+    let raw_uint = parse_unsigned(s).on_err do:
+      return (err, 0)
+    if raw_uint > int.high.uint64:
+      return ("Literal to large for a signed int", 0)
+    return ("", cast[int](raw_uint))
 
 func get_line_number*(s: stream_slice): int =
   var line = 1
@@ -200,16 +222,19 @@ func get_line_number*(s: stream_slice): int =
       line += 1
   return line
 
-func get_size*(s: var stream_slice): int =
-  if peek(s) != '<' or peek(s, 1) != 'U': return
-  let orig_index = s.start
-  s.start += 2
-  let number = $get_unsigned(s)
+func get_size*(s: var stream_slice): (string, int) =
+  let restore = s
+  if peek(s) != '<' or peek(s, 1) != 'U':
+    return ("Expected a size declaration here", 0)
+  s.skip(2)
+  let number = $(get_unsigned(s).on_err do:
+    return (err, 0)
+  )
   if number == "" or read(s) != '>':
-    s.start = orig_index
-    return
+    s = restore
+    return ("Expected a size declaration here", 0)
 
-  return parseInt(number)
+  return ("", parseInt(number))
 
 iterator items*(s: stream_slice): char =
   var i = s.start
@@ -255,15 +280,29 @@ func hash*(s: stream_slice): Hash =
     h = h !& hash(c)
   result = !$h  
 
-func get_bool*(s: var stream_slice): bool =
-  if matches(s, "true"): return true
-  discard matches(s, "false")
+func get_enum*[T](s: var stream_slice, options: openArray[(string, T)]): (string, T) =
+  for (str, value) in options:
+    if s.matches(str):
+      return ("", value)
 
-func empty_slice(s: stream_slice): stream_slice =
-  result = s
-  result.finish = s.start
+  var joined_options = ""
+  for i, (str, _) in options:
+    if i != 0: # Not the first element
+      if i == options.high: # This is the last element
+        joined_options &= " or "
+      else:
+        joined_options &= ", "
+    joined_options &= str
+  let current = get_identifier(s)
+  if current.len != 0:
+    return ("Expected one of " & joined_options & ", got " & $current, default(T))
+  else:
+    return ("Expected one of " & joined_options, default(T))
 
-func get_string*(s: var stream_slice): stream_slice =
+func get_bool*(s: var stream_slice): (string, bool) =
+  return get_enum(s, {"true": true, "false": false})
+
+func get_string*(s: var stream_slice): (string, stream_slice) =
   
   let restore = s
 
@@ -271,18 +310,20 @@ func get_string*(s: var stream_slice): stream_slice =
 
   if quote notin {'"', '\'', '`'}: 
     s = restore
-    return empty_slice(s)
+    return ("Expected an opening quote (one of \", ' or `)", empty_slice(s))
 
-  while read(s) != quote or peek(s, -2) == '\\':
+  while peek(s) != quote:
+    if read(s) == '\\':
+      discard read(s)
     if finished(s):
       s = restore
-      return empty_slice(s)
+      return ("Unexpected EOF while parsing a string", empty_slice(s))
 
-  result = s
-  result.start  = restore.start + 1
-  result.finish = s.start - 1
+  result[1] = s
+  result[1].start  = restore.start + 1
+  result[1].finish = s.start - 1
 
-func get_encapsulation*(s: var stream_slice): stream_slice =
+func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
   assert not isNil(s.source)
 
   let restore = s
@@ -296,7 +337,7 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
     of '{': close = '}'
     else:
       s = restore
-      return empty_slice(s)
+      return ("Expected an opening parantheses (one of '(', '[' or '{')", empty_slice(s))
 
   skip_newlines(s)
   let start = s.start
@@ -311,16 +352,17 @@ func get_encapsulation*(s: var stream_slice): stream_slice =
 
     if c in {'"', '\'', '`'}:
       s.start -= 1
-      if get_string(s).len == 0:
-        return empty_slice(s)
+      discard get_string(s).on_err do:
+        s = restore
+        return (err, empty_slice(s))
 
     if finished(s): 
       s = restore
-      return empty_slice(s)
+      return ("Expected '" & close & "', got EOF", empty_slice(s))
   
-  result = s
-  result.start  = start
-  result.finish = s.start - 1
+  result[1] = s
+  result[1].start  = start
+  result[1].finish = s.start - 1
 
 func strip*(s: stream_slice): stream_slice =
   result = s
@@ -329,30 +371,32 @@ func strip*(s: stream_slice): stream_slice =
   while result.finish - 1 > 0 and result.source[][result.finish - 1] in {' ', '\t', '\r', '\n'}:
     result.finish -= 1
 
-func get_list_value(s: var stream_slice): stream_slice =
+func get_list_value(s: var stream_slice): (string, stream_slice) =
   assert not isNil(s.source)
 
   let start = s.start
 
   case peek(s):
     of '"', '\'', '`': # These may contain commas
-      discard get_string(s)
+      return get_string(s)
     of '(', '[', '{': # These may contain commas
-      discard get_encapsulation(s)
+      return get_encapsulation(s)
     else:
       while peek(s) notin {',', ':', '\0'}:
         skip(s)
-      s = strip(s)
 
-  result = s
-  result.start = start
-  result.finish = s.start
+      result[1] = s
+      result[1].start = start
+      result[1].finish = s.start
+      result[1] = strip(result[1])
 
-func get_list*(s: var stream_slice): seq[stream_slice] =
+func get_list*(s: var stream_slice): (string, seq[stream_slice]) =
 
   let restore = s
-  
-  var list = strip(get_encapsulation(s))
+  let (err_msg, raw) = get_encapsulation(s)
+  var list = strip(get_encapsulation(s).on_err do:
+    return (err_msg, @[])
+  )
 
   if list[^1] == ',':
     list.finish -= 1
@@ -362,13 +406,14 @@ func get_list*(s: var stream_slice): seq[stream_slice] =
     skip_whitespaces(list)
 
     let start = list.start
-    let new_stream_slice = get_list_value(list)
-
+    let new_stream_slice = get_list_value(list).on_err do:
+      s = restore
+      return (err_msg, @[])
     if list.start == start: 
       s = restore
-      return @[]
+      return ("Expecated a list value", @[])
 
-    result.add(new_stream_slice)
+    result[1].add(new_stream_slice)
 
     skip_whitespaces(list)
 
@@ -378,34 +423,39 @@ func get_list*(s: var stream_slice): seq[stream_slice] =
     list = strip(list)
 
 
-func get_table*(s: var stream_slice): OrderedTable[stream_slice, stream_slice] =
+func get_table*(s: var stream_slice): (string, OrderedTable[stream_slice, stream_slice]) =
 
   let restore = s
-  
-  var list = strip(get_encapsulation(s))
 
-  var res: OrderedTable[stream_slice, stream_slice]
+  let (err_msg, raw) = get_encapsulation(s)
+  var list = strip(get_encapsulation(s).on_err do:
+    return (err, result[1])
+  )
 
   while not finished(list):
     skip_whitespaces(list)
 
-    let key = get_list_value(list)
+    let key = get_list_value(list).on_err do:
+      s = restore
+      return (err, result[1])
 
     skip_whitespaces(list)
 
     if read(list) != ':':
       s = restore
-      return
+      return ("Expected ':' after the key", result[1])
 
     skip_whitespaces(list)
 
-    let value = get_list_value(list)
+    let value = get_list_value(list).on_err do:
+      s = restore
+      return (err, result[1])
 
     if key.len == 0 or value.len == 0: 
       s = restore
-      return
+      return ("Expected a key and value", result[1])
 
-    result[key] = value
+    result[1][key] = value
 
     skip_whitespaces(list)
 
