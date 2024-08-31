@@ -42,7 +42,8 @@ const LAZY_CHARS* = setutils.toSet("+-<>|!&")
 
 type expression* = ref object
   case exp_kind*: exp_kind
-    of exp_fail: discard
+    of exp_fail:
+      msg*: string
     of exp_number:
       value*: int
     of exp_operand:

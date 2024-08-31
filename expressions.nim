@@ -13,6 +13,8 @@ func `$`*(exp: expression): string =
     of exp_operation: 
       if exp.op_kind == op_log2:
         return "log2(" & $exp.lhs & ")"
+      elif exp.op_kind == op_asr:
+        return "asr(" & $exp.lhs & ")"
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
 func get_expression*(s: var stream_slice, operand_count: int): expression
@@ -62,11 +64,12 @@ func get_term(s: var stream_slice, operand_count: int): expression =
     result = expression(exp_kind: exp_operand, index: operand_index)
   
   else:
-    let number = get_unsigned(s)
-    if number.len == 0: 
-      return expression(exp_kind: exp_fail)
-
-    result = expression(exp_kind: exp_number, value: cast[int](parse_unsigned(number)))
+    let (err, number) = get_unsigned(s)
+    if err != "":
+      return expression(exp_kind: exp_fail, msg: err)
+    let value: uint64 = parse_unsigned(number).on_err() do:
+        return expression(exp_kind: exp_fail, msg: err)
+    result = expression(exp_kind: exp_number, value: cast[int](value))
 
 func get_greedy_group(s: var stream_slice, operand_count: int): expression =
 
