@@ -70,7 +70,23 @@ type instruction* = object
   fixed_mask_1*: uint64
   description*: string
 
+# type endianness* = enum
+#   end_big
+#   end_little
+
+type isa_settings* = object
+  line_comments*: seq[string]
+  block_comments*: seq[(string, string)]
+  # endianness*: endianness
+
+const default_isa_settings* = isa_settings(
+  line_comments: @[";", "//"],
+  block_comments: @{"/*": "*/"},
+  # endianness: end_big
+)
+
 type isa_spec* = object
+  settings*: isa_settings
   code_alignment*: int
   field_types*: seq[field_type]
   instructions*: seq[instruction]
