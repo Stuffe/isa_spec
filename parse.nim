@@ -1,4 +1,4 @@
-import std/setutils, strutils, hashes, tables
+import std/setutils, strutils, hashes, tables, strformat
 
 type stream_slice* = object
   source: ref string
@@ -84,31 +84,9 @@ func read*(s: var stream_slice): char =
   if result != '\0':
     s.start += 1
 
-func skip_comment*(s: var stream_slice): bool =
-  if peek(s) == ';' or (peek(s) == '/' and peek(s, 1) == '/'):
-    while peek(s) notin {'\n', '\0'}:
-      s.start += 1
-    return true
-  if peek(s) == '/' and peek(s, 1) == '*':
-    while peek(s) != '\0' and (peek(s) != '*' or peek(s, 1) != '/'):
-      s.start += 1
-    return true
-
-func skip_whitespaces*(s: var stream_slice) =
-  while peek(s) in {' ', '\t', '\r'}:
-    s.start += 1
-  if skip_comment(s):
-    skip_whitespaces(s)
-
-func skip_newlines*(s: var stream_slice) =
-  while peek(s) in {' ', '\r', '\n', '\t'}:
-    s.start += 1
-  if skip_comment(s):
-    skip_newlines(s)
-
 func matches*(s: var stream_slice, value: string, increment = true): bool =
   for i in 0..value.high:
-    if peek(s, i) != value[i]: 
+    if peek(s, i) != value[i]:
       return false
   if increment:
     s.start += value.len
@@ -118,6 +96,30 @@ func matches*(s: var stream_slice, value: char): bool =
   if peek(s) == value:
     s.start += 1
     return true
+
+func skip_comment*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool =
+  for (start_sym, end_sym) in block_comments:
+    if s.matches(start_sym):
+      while not finished(s) and not s.matches(end_sym):
+        s.start += 1
+      return true
+  for lc in line_comments:
+    if s.matches(lc):
+      while not finished(s) and peek(s) != '\n':
+        s.start += 1
+      return true
+
+func skip_whitespaces*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}) =
+  while peek(s) in {' ', '\t', '\r'}:
+    s.start += 1
+  if skip_comment(s, line_comments, block_comments):
+    skip_whitespaces(s)
+
+func skip_newlines*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}) =
+  while peek(s) in {' ', '\r', '\n', '\t'}:
+    s.start += 1
+  if skip_comment(s, line_comments, block_comments):
+    skip_newlines(s)
 
 template on_err*[T](inp: (string, T), callback: untyped): T =
   let (raw_err, res) = inp
@@ -174,6 +176,14 @@ func get_unsigned*(s: var stream_slice): (string, stream_slice) =
   while peek(s) in NUMBER_NEXT:
     skip(s)
     result[1].finish += 1
+
+func xdigit_to_value(c: char): int =
+  # Assumes that c has already been verified
+  if c in DIGITS:
+    return c.ord - '0'.ord
+  if c in {'A'..'Z'}:
+    return c.ord - 'A'.ord + 10
+  return c.ord - 'a'.ord + 10
 
 func parse_unsigned*(s: stream_slice): (string, uint64) =
   # TODO: Generate more correct error messages in this function and probably don't use the builtin functions
@@ -319,9 +329,62 @@ func get_string*(s: var stream_slice): (string, stream_slice) =
       s = restore
       return ("Unexpected EOF while parsing a string", empty_slice(s))
 
+  discard read(s)
+
   result[1] = s
   result[1].start  = restore.start + 1
   result[1].finish = s.start - 1
+
+func descape_string_content*(s: stream_slice): (string, string) =
+  var it = s
+  while not it.finished():
+    let c = it.read()
+    if c != '\\':
+      result[1].add c
+      continue
+    if it.finished():
+      return ("Unfinished escape sequence", "")
+    let nc = it.read()
+    case nc:
+      of 'a': result[1].add '\a' # Bell (Alert)
+      of 'b': result[1].add '\b' # Backspace
+      of 'f': result[1].add '\f' # Formfeed
+      of 'n': result[1].add '\n' # Linefeed (newline)
+      of 'r': result[1].add '\r' # Carriage Return
+      of 't': result[1].add '\t' # Horizontal Tab
+      of 'v': result[1].add '\v' # Vertical Tab
+      of '\\': result[1].add '\\'
+      of '"': result[1].add '"'
+      of '\'': result[1].add '\''
+      of '`': result[1].add '`'
+      of '0'..'9':
+        var value = nc.ord - '0'.ord
+        if peek(it) in DIGITS:
+          value = 8 * value + read(it).ord - '0'.ord
+        if peek(it) in DIGITS:
+          value = 8 * value + read(it).ord - '0'.ord
+        if value > 255:
+          return ("Invalid octal escape sequence", "")
+        result[1].add char(value)
+      of 'x':
+        var digit1 = read(it)
+        var digit2 = read(it)
+        if digit1 not_in HEX_DIGITS or digit2 not_in HEX_DIGITS:
+          return ("Invalid hex escape sequence", "")
+        let value = xdigit_to_value(digit1) * 16 + xdigit_to_value(digit2)
+        result[1].add char(value)
+      else:
+        return (&"Invalid escape character '{nc}'", "")
+
+
+func parse_string*(s: stream_slice): (string, string) =
+  # To be used with results from get_list_value
+  var it = s
+  let content = it.get_string().on_err do:
+    return (err, "")
+  return descape_string_content(content)
+
+
 
 func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
   assert not isNil(s.source)
@@ -337,7 +400,7 @@ func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
     of '{': close = '}'
     else:
       s = restore
-      return ("Expected an opening parantheses (one of '(', '[' or '{')", empty_slice(s))
+      return (&"Expected an opening parantheses (one of '(', '[' or '{{'), got '{open}'", empty_slice(s))
 
   skip_newlines(s)
   let start = s.start
@@ -378,24 +441,25 @@ func get_list_value(s: var stream_slice): (string, stream_slice) =
 
   case peek(s):
     of '"', '\'', '`': # These may contain commas
-      return get_string(s)
+      discard get_string(s).on_err do:
+        return (err, empty_slice(s))
     of '(', '[', '{': # These may contain commas
-      return get_encapsulation(s)
+      discard get_encapsulation(s).on_err do:
+        return (err, empty_slice(s))
     else:
       while peek(s) notin {',', ':', '\0'}:
         skip(s)
 
-      result[1] = s
-      result[1].start = start
-      result[1].finish = s.start
-      result[1] = strip(result[1])
+  result[1] = s
+  result[1].start = start
+  result[1].finish = s.start
+  result[1] = strip(result[1])
 
 func get_list*(s: var stream_slice): (string, seq[stream_slice]) =
 
   let restore = s
-  let (err_msg, raw) = get_encapsulation(s)
   var list = strip(get_encapsulation(s).on_err do:
-    return (err_msg, @[])
+    return (err, @[])
   )
 
   if list[^1] == ',':
@@ -408,7 +472,7 @@ func get_list*(s: var stream_slice): (string, seq[stream_slice]) =
     let start = list.start
     let new_stream_slice = get_list_value(list).on_err do:
       s = restore
-      return (err_msg, @[])
+      return (err, @[])
     if list.start == start: 
       s = restore
       return ("Expecated a list value", @[])
@@ -427,7 +491,6 @@ func get_table*(s: var stream_slice): (string, OrderedTable[stream_slice, stream
 
   let restore = s
 
-  let (err_msg, raw) = get_encapsulation(s)
   var list = strip(get_encapsulation(s).on_err do:
     return (err, result[1])
   )

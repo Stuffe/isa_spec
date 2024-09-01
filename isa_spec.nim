@@ -261,6 +261,7 @@ func parse_isa_spec*(source: string): spec_parse_result =
   func error(input: string): spec_parse_result =
     return spec_parse_result(error: input, error_line: get_line_number(s))
 
+  result.spec.settings = default_isa_settings
   result.spec.field_types = @[
     field_type(name: "0"),
     field_type(name: "1"),
@@ -270,6 +271,49 @@ func parse_isa_spec*(source: string): spec_parse_result =
   ]
 
   skip_newlines(s)
+
+  if matches(s, "[settings]"):
+    skip_newlines(s)
+
+    while not (finished(s) or peek(s) == '[') :
+      let name = get_identifier(s)
+      if s.len == 0:
+        return error("Expected the name of an option or start of the next section")
+      skip_whitespaces(s)
+      if not s.matches("="):
+        return error("Expected an '=' here")
+      skip_whitespaces(s)
+      case $name:
+        # of "endianness":
+        #   result.spec.endianess = get_enum(s, {
+        #     "big": end_big,
+        #     "little": end_little
+        #   }).on_err do:
+        #     return error(err)
+        of "line_comments":
+          let raw_list = get_list(s).on_err do:
+            return error(err)
+          result.spec.settings.line_comments.set_len(0)
+          for entry in raw_list:
+            result.spec.settings.line_comments.add (parse_string(entry).on_err do:
+              return error(err)
+            )
+        of "block_comments":
+          let raw_table = get_table(s).on_err do:
+            return error(err)
+          result.spec.settings.block_comments.set_len(0)
+          for key, value in raw_table:
+            let start_sym = (parse_string(key).on_err do:
+              return error(err)
+            )
+            let end_sym = (parse_string(key).on_err do:
+              return error(err)
+            )
+            result.spec.settings.block_comments.add (start_sym, end_sym)
+        else:
+          return error(&"Unknown setting name {$name}")
+      skip_newlines(s)
+
 
   if matches(s, "[fields]"):
 
@@ -451,6 +495,19 @@ func `==`(a, b: operand): bool =
       return a.offset == b.offset
 
 
+# Starting here, we are parsing assembly code. Since those have custom comments, we should no longer
+# be using the simple parsing functions
+func skip_comment(s: var stream_slice) {.error, used.}
+func skip_whitespaces(s: var stream_slice) {.error, used.}
+func skip_newlines(s: var stream_slice) {.error, used.}
+
+func skip_whitespaces(isa_spec: isa_spec, s: var stream_slice) =
+  while peek(s) in {' ', '\t', '\r'}:
+    s.skip()
+  if skip_comment(s, isa_spec.settings.line_comments, isa_spec.settings.block_comments):
+    isa_spec.skip_whitespaces(s)
+
+
 func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result
 func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 func finalize(pa: pre_assembly_result): assembly_result
@@ -598,12 +655,12 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
   var i = 0
   for syntax in inst.syntax:
     if syntax == ANY_NUMBER_OF_SPACES:
-      skip_whitespaces(s)
+      p.isa_spec.skip_whitespaces(s)
       continue
 
     if syntax == AT_LEAST_ONE_SPACE:
       let start_index = s.get_index()
-      skip_whitespaces(s)
+      p.isa_spec.skip_whitespaces(s)
       if s.get_index() == start_index:
         return error("Expected whitespace here", i)
       continue
@@ -671,10 +728,9 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         continue
     doAssert false, "unreachable"
 
-  skip_whitespaces(s)
-
+  p.isa_spec.skip_whitespaces(s)
   if peek(s) notin {'\n', '\0'}:
-    return error("Expected the instruciton to end here", i)
+    return error("Expected the instruction to end here", i)
 
   result.final_index = get_index(s)
 
@@ -789,7 +845,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       if read(s) == '\n':
         line_counter += 1
         res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
-    if skip_comment(s):
+    if skip_comment(s, isa_spec.settings.line_comments, isa_spec.settings.block_comments):
       skip_and_record_newlines(s)
 
   func skip_line(s: var stream_slice) =
@@ -840,7 +896,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
     block number_literal:
       let restore = s
       let (size_error, size) = get_size(s)
-      skip_whitespaces(s)
+      isa_spec.skip_whitespaces(s)
       let (number_error, number) = get_unsigned(s)
       if number_error == "":
         if size_error != "":
@@ -900,11 +956,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       var public: bool
       if special_test == "pub":
         public = true
-        skip_whitespaces(s)
+        isa_spec.skip_whitespaces(s)
         special_test = get_identifier(s)
 
       if special_test == "include":
-        skip_whitespaces(s)
+        isa_spec.skip_whitespaces(s)
 
         var file_wo_header: string
         while peek(s) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
@@ -955,7 +1011,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         continue
 
       elif special_test == "set":
-        skip_whitespaces(s)
+        isa_spec.skip_whitespaces(s)
         let definition_name = get_identifier(s)
         if definition_name in res.pc.number_defines:
           error($definition_name & " is already declared")
@@ -969,7 +1025,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
               skip_line(s)
               continue
 
-        skip_whitespaces(s)
+        isa_spec.skip_whitespaces(s)
 
         let (number_err, number) = get_unsigned(s)
         if number_err == "":
