@@ -309,8 +309,19 @@ func get_enum*[T](s: var stream_slice, options: openArray[(string, T)]): (string
   else:
     return ("Expected one of " & joined_options, default(T))
 
+func find*(s: var stream_slice, candidates: openArray[string]): int =
+  for i, candidate in candidates:
+    if matches(s, candidate):
+      return i
+  return -1
+
 func get_bool*(s: var stream_slice): (string, bool) =
-  return get_enum(s, {"true": true, "false": false})
+  let index = find(s, ["false", "true"])
+
+  if index == -1:
+    return ("Expected a bool here.", false)
+
+  return ("", bool(index))
 
 func get_string*(s: var stream_slice): (string, stream_slice) =
   
