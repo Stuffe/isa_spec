@@ -59,7 +59,7 @@ func get_term(s: var stream_slice, operand_count: int): expression =
     skip(s, 2)
 
     let operand_index = ord(operand) - ord('a')
-    if operand_index < 0 or operand_index > operand_count: return expression(exp_kind: exp_fail)
+    if operand_index < 0 or operand_index >= operand_count: return expression(exp_kind: exp_fail)
 
     result = expression(exp_kind: exp_operand, index: operand_index)
   
