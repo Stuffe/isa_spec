@@ -71,24 +71,15 @@ type instruction* = object
   description*: string
 
 type endianness* = enum
-  end_big
   end_little
-
-type isa_settings* = object
-  line_comments*: seq[string]
-  block_comments*: seq[(string, string)]
-  endianness*: endianness
-
-const default_isa_settings* = isa_settings(
-  line_comments: @[";", "//"],
-  block_comments: @{"/*": "*/"},
-  endianness: end_little
-)
+  end_big
 
 type isa_spec* = object
   name*: string
   variant*: string
-  settings*: isa_settings
+  line_comments*: seq[string]
+  block_comments*: seq[(string, string)]
+  endianness*: endianness
   code_alignment*: int
   field_types*: seq[field_type]
   instructions*: seq[instruction]

@@ -268,7 +268,9 @@ func parse_isa_spec*(source: string): spec_parse_result =
     res
 
 
-  result.spec.settings = default_isa_settings
+  result.spec.line_comments  = @[";", "//"]
+  result.spec.block_comments = @{"/*": "*/"}
+ 
   result.spec.field_types = @[
     field_type(name: "0"),
     field_type(name: "1"),
@@ -306,22 +308,22 @@ func parse_isa_spec*(source: string): spec_parse_result =
         of "variant":
           result.spec.variant = ?descape_string_content(?get_string(s))
         of "endianness":
-          result.spec.settings.endianness = ?get_enum(s, {
+          result.spec.endianness = ?get_enum(s, {
             "big": end_big,
             "little": end_little
           })
         of "line_comments":
           let raw_list = ?get_list(s)
-          result.spec.settings.line_comments.set_len(0)
+          result.spec.line_comments.set_len(0)
           for entry in raw_list:
-            result.spec.settings.line_comments.add ?parse_string(entry)
+            result.spec.line_comments.add ?parse_string(entry)
         of "block_comments":
           let raw_table = ?get_table(s)
-          result.spec.settings.block_comments.set_len(0)
+          result.spec.block_comments.set_len(0)
           for key, value in raw_table:
             let start_sym = ?parse_string(key)
             let end_sym = ?parse_string(value)
-            result.spec.settings.block_comments.add (start_sym, end_sym)
+            result.spec.block_comments.add (start_sym, end_sym)
         else:
           return error(&"Unknown setting name {$name}")
       skip_newlines(s)
@@ -516,7 +518,7 @@ func skip_newlines(s: var stream_slice) {.error, used.}
 func skip_whitespaces(isa_spec: isa_spec, s: var stream_slice) =
   while peek(s) in {' ', '\t', '\r'}:
     s.skip()
-  if skip_comment(s, isa_spec.settings.line_comments, isa_spec.settings.block_comments):
+  if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
     isa_spec.skip_whitespaces(s)
 
 
@@ -859,7 +861,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       if read(s) == '\n':
         line_counter += 1
         res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)
-    if skip_comment(s, isa_spec.settings.line_comments, isa_spec.settings.block_comments):
+    if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
       skip_and_record_newlines(s)
 
   func skip_line(s: var stream_slice) =
@@ -1124,7 +1126,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
             if err_msg != "":
               final_err_msg = err_msg
               continue
-            if isa_spec.settings.endianness == end_little:
+            if isa_spec.endianness == end_little:
               res.segments[^1].fixed.add machine_code
             else:
               for i in countdown(machine_code.high, machine_code.low):
@@ -1208,7 +1210,7 @@ func finalize(pa: pre_assembly_result): assembly_result =
     let (err_msg, machine_code) = assemble_instruction(inst, args, result.machine_code.len)
     if err_msg != "":
       return error(err_msg, result.line_info.get_line_from_byte(result.machine_code.len))
-    if pa.pc.isa_spec.settings.endianness == end_little:
+    if pa.pc.isa_spec.endianness == end_little:
       result.machine_code.add machine_code
     else:
       for i in countdown(machine_code.high, machine_code.low):
