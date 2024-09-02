@@ -19,11 +19,6 @@ func new_stream_slice*(source: string): stream_slice =
     finish: source.len,
   )
 
-func `?`*[T](input: (string, T)): T =
-  if input[0] != "":
-    raise newException(ValueError, input[0])
-  return input[1]
-
 func empty_slice(s: stream_slice): stream_slice =
   result = s
   result.finish = s.start
@@ -236,6 +231,14 @@ func get_line_number*(s: stream_slice): int =
     if s.source[i] == '\n':
       line += 1
   return line
+
+func `?`*[T](input: (string, T)): T =
+  if input[0] != "":
+    if typeof(T) is stream_slice:
+      raise newException(ValueError, "Line " & $get_line_number(input[1]) & ": " & input[0])
+    else:
+      raise newException(ValueError, input[0])
+  return input[1]
 
 func get_size*(s: var stream_slice): (string, int) =
   let restore = s
