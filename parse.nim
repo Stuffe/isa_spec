@@ -19,6 +19,11 @@ func new_stream_slice*(source: string): stream_slice =
     finish: source.len,
   )
 
+func `?`*[T](input: (string, T)): T =
+  if input[0] != "":
+    raise newException(ValueError, input[0])
+  return input[1]
+
 func empty_slice(s: stream_slice): stream_slice =
   result = s
   result.finish = s.start
