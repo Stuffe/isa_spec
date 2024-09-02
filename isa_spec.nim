@@ -261,6 +261,13 @@ func parse_isa_spec*(source: string): spec_parse_result =
   func error(input: string): spec_parse_result =
     return spec_parse_result(error: input, error_line: get_line_number(s))
 
+  template `?`[T](input: (string, T)): T =
+    let (err, res) = input
+    if err != "":
+      return error(err)
+    res
+
+
   result.spec.settings = default_isa_settings
   result.spec.field_types = @[
     field_type(name: "0"),
@@ -274,41 +281,46 @@ func parse_isa_spec*(source: string): spec_parse_result =
 
   if matches(s, "[settings]"):
     skip_newlines(s)
+    var seen_names = newSeq[string]() # Don't think a hashset is justified here, we don't have that many settings
 
     while not (finished(s) or peek(s) == '[') :
-      let name = get_identifier(s)
+      let name = $get_identifier(s)
       if s.len == 0:
         return error("Expected the name of an option or start of the next section")
       skip_whitespaces(s)
       if not s.matches("="):
         return error("Expected an '=' here")
       skip_whitespaces(s)
-      case $name:
-        # of "endianness":
-        #   result.spec.endianess = get_enum(s, {
-        #     "big": end_big,
-        #     "little": end_little
-        #   }).on_err do:
-        #     return error(err)
+      if name in seen_names:
+        return error(&"Duplicate setting '{name}'")
+      seen_names.add name
+      case name:
+        of "name":
+          if peek(s) in {'"', '\'', '`'}:
+            result.spec.name = ?descape_string_content(?get_string(s))
+          else:
+            let raw_id = get_identifier(s)
+            if raw_id.len == 0:
+              return error("Expected string or identifier as name")
+            result.spec.name = $raw_id
+        of "variant":
+          result.spec.variant = ?descape_string_content(?get_string(s))
+        of "endianness":
+          result.spec.settings.endianness = ?get_enum(s, {
+            "big": end_big,
+            "little": end_little
+          })
         of "line_comments":
-          let raw_list = get_list(s).on_err do:
-            return error(err)
+          let raw_list = ?get_list(s)
           result.spec.settings.line_comments.set_len(0)
           for entry in raw_list:
-            result.spec.settings.line_comments.add (parse_string(entry).on_err do:
-              return error(err)
-            )
+            result.spec.settings.line_comments.add ?parse_string(entry)
         of "block_comments":
-          let raw_table = get_table(s).on_err do:
-            return error(err)
+          let raw_table = ?get_table(s)
           result.spec.settings.block_comments.set_len(0)
           for key, value in raw_table:
-            let start_sym = (parse_string(key).on_err do:
-              return error(err)
-            )
-            let end_sym = (parse_string(key).on_err do:
-              return error(err)
-            )
+            let start_sym = ?parse_string(key)
+            let end_sym = ?parse_string(value)
             result.spec.settings.block_comments.add (start_sym, end_sym)
         else:
           return error(&"Unknown setting name {$name}")
@@ -649,6 +661,12 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
     result.error_priority = priority
     result
 
+  template `?`[T](input: (string, T)): T =
+    let (err, res) = input
+    if err != "":
+      return error(err, i)
+    res
+
   func fixed(val: uint64): operand =
     return operand(kind: ok_fixed, value: val)
 
@@ -674,10 +692,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       of FIELD_LABEL:
         if peek(s) == '.':
           skip(s)
-          let jump_distance = get_unsigned(s).on_err do:
-            return error(err, i)
-          let value: uint64 = parse_unsigned(jump_distance).on_err do:
-            return error(err, i)
+          let jump_distance = ?get_unsigned(s)
+          let value: uint64 = ?parse_unsigned(jump_distance)
           result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
         else:
           let label_name = get_identifier(s)
@@ -692,9 +708,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       of FIELD_IMM:
         let (number_err, number) = get_unsigned(s)
         if number_err == "":
-          result.operands.add fixed(parse_unsigned(number).on_err do:
-            return error(err, i)
-          )
+          result.operands.add fixed(?parse_unsigned(number))
         else:
           let field_string = get_identifier(s)
           if field_string.len == 0:
@@ -1110,7 +1124,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
             if err_msg != "":
               final_err_msg = err_msg
               continue
-            res.segments[^1].fixed.add machine_code
+            if isa_spec.settings.endianness == end_little:
+              res.segments[^1].fixed.add machine_code
+            else:
+              for i in countdown(machine_code.high, machine_code.low):
+                res.segments[^1].fixed.add machine_code[i]
             final_err_msg = ""
             break
           if final_err_msg != "":
@@ -1190,7 +1208,11 @@ func finalize(pa: pre_assembly_result): assembly_result =
     let (err_msg, machine_code) = assemble_instruction(inst, args, result.machine_code.len)
     if err_msg != "":
       return error(err_msg, result.line_info.get_line_from_byte(result.machine_code.len))
-    result.machine_code &= machine_code
+    if pa.pc.isa_spec.settings.endianness == end_little:
+      result.machine_code.add machine_code
+    else:
+      for i in countdown(machine_code.high, machine_code.low):
+        result.machine_code.add machine_code[i]
   result.line_info.done(result.machine_code.len)
 
 func relax(pa: var pre_assembly_result) =

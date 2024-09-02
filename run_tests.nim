@@ -80,7 +80,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         0
       else:
         parseInt(parts[1])
-    if subid >= sub_tests[name].asm_tests.len:
+    if subid >= sub_tests[name].asm_tests.len and "spec" not_in parts[^1]:
       sub_tests[name].asm_tests.set_len(subid + 1)
 
     case parts[^1]:
