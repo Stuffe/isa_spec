@@ -663,7 +663,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
     result.error_priority = priority
     result
 
-  template `?`[T](input: (string, T)): T =
+  template check[T](input: (string, T)): T =
     let (err, res) = input
     if err != "":
       return error(err, i)
@@ -694,8 +694,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       of FIELD_LABEL:
         if peek(s) == '.':
           skip(s)
-          let jump_distance = ?get_unsigned(s)
-          let value: uint64 = ?parse_unsigned(jump_distance)
+          let jump_distance = check(get_unsigned(s))
+          let value: uint64 = check(parse_unsigned(jump_distance))
           result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
         else:
           let label_name = get_identifier(s)
@@ -710,7 +710,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       of FIELD_IMM:
         let (number_err, number) = get_unsigned(s)
         if number_err == "":
-          result.operands.add fixed(?parse_unsigned(number))
+          result.operands.add fixed(check(parse_unsigned(number)))
         else:
           let field_string = get_identifier(s)
           if field_string.len == 0:

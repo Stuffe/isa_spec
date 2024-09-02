@@ -397,7 +397,6 @@ func descape_string_content*(s: stream_slice): (string, string) =
       else:
         return (&"Invalid escape character '{nc}'", "")
 
-
 func parse_string*(s: stream_slice): (string, string) =
   # To be used with results from get_list_value
   var it = s
