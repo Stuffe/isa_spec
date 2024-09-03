@@ -48,14 +48,19 @@ proc parse_hex_string(source: string): seq[uint8] =
       result.add cast[uint8]((last shl 4) or digit)
       last = -1
 
-func format_as_hex(data: seq[uint8]): string =
+func format_as_hex(data: seq[uint8], show_diff: seq[uint8]): string =
   for i, w in data:
     if i > 0:
       if i mod 16 == 0:
         result &= '\n'
       else:
         result &= ' '
-    result &= to_hex(w, 2)
+    if i < show_diff.len and w != show_diff[i]:
+      result &= "\u001b[31m"
+      result &= to_hex(w, 2)
+      result &= "\u001b[0m"
+    else:
+      result &= to_hex(w, 2)
 
 for (kind, test_dir) in TEST_PATH.walk_dir():
   if kind != pcDir:
@@ -143,8 +148,8 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       let expected_result = parse_hex_string(result_source)
       if asm_result.machine_code != expected_result:
         fail(test_name, asm_test.source_file, &"Unexpected output. Got:\n" &
-                                              &"{format_as_hex(asm_result.machine_code)}\n" &
-                                              &"Expected:\n{format_as_hex(expected_result)}")
+                                              &"{format_as_hex(asm_result.machine_code, expected_result)}\n" &
+                                              &"Expected:\n{format_as_hex(expected_result, asm_result.machine_code)}")
         continue
       if asm_test.lines_file != "":
         let line_source = readFile(asm_test.lines_file)

@@ -50,7 +50,7 @@ mov %a(reg), %b(reg)
 bbbbaaaa00000011
 
 mov.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00000100
+????ccccbbbbaaaa00000100
 
 mov.c%a(cond) %b(reg), [%c(immediate)] 
 ccccccccccccccccbbbbaaaa00000101
@@ -107,7 +107,7 @@ add %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000010011
 
 add.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00010100
+????ccccbbbbaaaa00010100
 
 add.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00010101
@@ -134,7 +134,7 @@ sub %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000011001
 
 sub.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00011010
+????ccccbbbbaaaa00011010
 
 sub.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00011011
@@ -161,7 +161,7 @@ shl %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000011111
 
 shl.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00100000
+????ccccbbbbaaaa00100000
 
 shl.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00100001
@@ -188,7 +188,7 @@ shr %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000100101
 
 shr.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00100110
+????ccccbbbbaaaa00100110
 
 shr.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00100111
@@ -215,7 +215,7 @@ or %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000101011
 
 or.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00101100
+????ccccbbbbaaaa00101100
 
 or.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00101101
@@ -242,7 +242,7 @@ nor %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000110001
 
 nor.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00110010
+????ccccbbbbaaaa00110010
 
 nor.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00110011
@@ -269,7 +269,7 @@ nand %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000110111
 
 nand.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00111000
+????ccccbbbbaaaa00111000
 
 nand.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00111001
@@ -296,7 +296,7 @@ and %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000000111101
 
 and.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa00111110
+????ccccbbbbaaaa00111110
 
 and.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa00111111
@@ -323,7 +323,7 @@ id %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000001000011
 
 id.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa01000100
+????ccccbbbbaaaa01000100
 
 id.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa01000101
@@ -343,14 +343,14 @@ ccccccccbbbbaaaa01001000
 id %a(reg), %b(immediate) 
 bbbbbbbbaaaa000001001000
 
-xor.c%a(cond) %b(reg), %c(reg), %d(reg) 
+xor.c%a(cond) %b(reg), %c(reg), %d(reg)
 ddddccccbbbbaaaa01001001
 
-xor %a(reg), %b(reg), %c(reg) 
+xor %a(reg), %b(reg), %c(reg)
 ccccbbbbaaaa000001001001
 
-xor.c%a(cond) %b(reg), %c(reg) 
-xxxxccccbbbbaaaa01001010
+xor.c%a(cond) %b(reg), %c(reg)
+????ccccbbbbaaaa01001010
 
 xor.c%a(cond) %b(reg), %c(reg), %d(immediate) 
 ddddccccbbbbaaaa01001011
@@ -371,10 +371,10 @@ xor %a(reg), %b(immediate)
 bbbbbbbbaaaa000001001110
 
 b%a(cond) %b(label) 
-bbbbbbbbbbbbbbbbxxxxaaaa01001111
+bbbbbbbbbbbbbbbb????aaaa01001111
 
 br %a(label) 
-aaaaaaaaaaaaaaaaxxxx000001001111
+aaaaaaaaaaaaaaaa????000001001111
 
 b%a(cond) %b(reg) 
 bbbbaaaa01010000
@@ -389,31 +389,31 @@ cmp %a(reg), %b(immediate)
 bbbbaaaa01010010
 
 cmp %a(reg), %b(immediate) 
-bbbbbbbbxxxxaaaa01010011
+bbbbbbbb????aaaa01010011
 
 cmp %a(reg), %b(immediate) 
-bbbbbbbbbbbbbbbbxxxxaaaa01010100
+bbbbbbbbbbbbbbbb????aaaa01010100
 
 push %a(reg) 
-xxxxaaaa01010101
+????aaaa01010101
 
 pop %a(reg) 
-xxxxaaaa01010110
+????aaaa01010110
 
 call.c%a(cond) %b(label) 
-bbbbbbbbbbbbbbbbxxxxaaaa01010111
+bbbbbbbbbbbbbbbb????aaaa01010111
 
 call %a(label) 
-aaaaaaaaaaaaaaaaxxxx000001010111
+aaaaaaaaaaaaaaaa????000001010111
 
 ret.c%a(cond) 
-xxxxaaaa01011000
+????aaaa01011000
 
 ret 
-xxxx000001011000
+????000001011000
 
 hlt.c%a(cond) 
-xxxxaaaa01011001
+????aaaa01011001
 
 hlt 
-xxxx000001011001
+????000001011001
