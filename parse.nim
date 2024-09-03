@@ -115,11 +115,15 @@ func skip_whitespaces*(s: var stream_slice, line_comments = @[";", "//"], block_
   if skip_comment(s, line_comments, block_comments):
     skip_whitespaces(s)
 
-func skip_newlines*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}) =
+func skip_newlines*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool {.discardable.} =
+  var any_newline = false
   while peek(s) in {' ', '\r', '\n', '\t'}:
-    s.start += 1
+    if read(s) == '\n':
+      any_newline = true
   if skip_comment(s, line_comments, block_comments):
-    skip_newlines(s)
+    skip_newlines(s) or any_newline
+  else:
+    any_newline or finished(s) # If we are at the end of the file, act as if we had an infinite stream of newlines
 
 template on_err*[T](inp: (string, T), callback: untyped): T =
   let (raw_err, res) = inp
