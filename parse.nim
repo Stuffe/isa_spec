@@ -9,6 +9,7 @@ const IDENTIFIER_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM
 const IDENTIFIER_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.")
 const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
+const QUOTES* = {'"', '\'', '`'}
 
 func new_stream_slice*(source: string): stream_slice =
   var reference = new(string)
@@ -343,7 +344,7 @@ func get_string*(s: var stream_slice): (string, stream_slice) =
 
   let quote = s.read()
 
-  if quote notin {'"', '\'', '`'}: 
+  if quote notin QUOTES:
     s = restore
     return ("Expected an opening quote (one of \", ' or `)", empty_slice(s))
 
@@ -437,7 +438,7 @@ func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
       depth -= 1
       if depth == 0: break
 
-    if c in {'"', '\'', '`'}:
+    if c in QUOTES:
       s.start -= 1
       discard get_string(s).on_err do:
         s = restore
@@ -464,7 +465,7 @@ func get_list_value(s: var stream_slice): (string, stream_slice) =
   let start = s.start
 
   case peek(s):
-    of '"', '\'', '`': # These may contain commas
+    of QUOTES: # These may contain commas
       discard get_string(s).on_err do:
         return (err, empty_slice(s))
     of '(', '[', '{': # These may contain commas

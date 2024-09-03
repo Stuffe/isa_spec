@@ -153,48 +153,72 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   
   block virtual_field:
     var count = 1
-    while matches(s, '%'):
-      let operand_name = get_identifier(s)
-      let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
+    while peek(s) in {'%', '!'}:
+      if read(s) == '%':
+        let operand_name = get_identifier(s)
+        let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
 
-      if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
+        if operand_name != expected_operand_name:
+          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
-      skip_newlines(s)
-      let field_sign = block:
-        if matches(s, ':'):
-          let marker = read(s)
-          case marker:
-            of 's':
-              sk_signed
-            of 'u':
-              sk_unsigned
-            of 'i':
-              sk_either
-            else:
-              return error(&"Invalid annotation for operand %{operand_name}:{marker}")
-        else:
-          sk_unsigned # default to unsigned.
-      skip_newlines(s)
+        skip_whitespaces(s)
+        let field_sign = block:
+          if matches(s, ':'):
+            let marker = read(s)
+            case marker:
+              of 's':
+                sk_signed
+              of 'u':
+                sk_unsigned
+              of 'i':
+                sk_either
+              else:
+                return error(&"Invalid annotation for operand %{operand_name}:{marker}")
+          else:
+            sk_unsigned # default to unsigned.
+        skip_whitespaces(s)
 
-      if not matches(s, '='):
-        return error("Expected an assignment here")
+        if not matches(s, '='):
+          return error("Expected an assignment here")
 
-      skip_newlines(s)
+        skip_whitespaces(s)
 
-      let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
-      new_instruction.virtual_fields.add(virt_op)
-      new_instruction.field_sign.add(field_sign)
+        let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        new_instruction.virtual_fields.add(virt_op)
+        new_instruction.field_sign.add(field_sign)
 
-      if virt_op.exp_kind == exp_fail:
-        if instruction_name == "":
-          return error("Could not read virtual operand " & $count)
-        else:
-          return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
-      
-      count += 1
-      skip_newlines(s)
-  
+        if virt_op.exp_kind == exp_fail:
+          if instruction_name == "":
+            return error("Could not read virtual operand " & $count)
+          else:
+            return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
+
+        count += 1
+        if not skip_newlines(s):
+          return error("Expected newline after virtual field")
+      else:
+        if not matches(s, "assert"):
+          return error("Expected 'assert' here")
+        skip_whitespaces(s)
+        let lhs = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        if lhs.exp_kind == exp_fail:
+          return error("Could not parse assert expression")
+        skip_whitespaces(s)
+        if not matches(s, "=="):
+          return error("Expected an equaltiy operator in the assert expression")
+        skip_whitespaces(s)
+        let rhs = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        if rhs.exp_kind == exp_fail:
+          return error("Could not parse assert expression")
+        skip_whitespaces(s)
+        let msg = if peek(s) in QUOTES:
+            ?descape_string_content(?get_string(s))
+          else:
+            ""
+        if not skip_newlines(s):
+          return error("Expected newline after assert expression")
+        new_instruction.asserts.add (lhs, rhs, msg)
+
   block bit_pattern:
     var pattern: string
     var mask: string
@@ -299,7 +323,7 @@ func parse_isa_spec*(source: string): spec_parse_result =
       seen_names.add name
       case name:
         of "name":
-          if peek(s) in {'"', '\'', '`'}:
+          if peek(s) in QUOTES:
             result.spec.name = ?descape_string_content(?get_string(s))
           else:
             let raw_id = get_identifier(s)
@@ -774,6 +798,15 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
   for virtual_field in inst.virtual_fields:
     let new_field = eval(virtual_field, fields, ip)
     fields.add(cast[uint64](new_field))
+  for i, (lhs, rhs, msg) in inst.asserts:
+    let lhs_value = eval(lhs, fields, ip)
+    let rhs_value = eval(rhs, fields, ip)
+    if lhs_value != rhs_value:
+      if msg == "":
+        return (&"Assert {lhs} == {rhs} did not match", @[])
+      else:
+        return (msg, @[])
+
   var values = [0'u64, 0]
 
   type usage_kind = enum
@@ -965,7 +998,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         break number_literal
 
     block string:
-      if peek(s) in {'"', '\''}:
+      if peek(s) in QUOTES:
         let char = read(s)
         # TODO escape
         var literal: string
