@@ -27,7 +27,7 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   for i, bit_type in instruction.bits:
     if bit_type < FIXED_FIELDS_LEN:
       assert bit_type < 3
-      source &= "01x"[bit_type]
+      source &= "01?"[bit_type]
     else:
       source &= $char(ord('a') + bit_type - FIXED_FIELDS_LEN)
     if i mod 8 == 7:
@@ -223,7 +223,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     var pattern: string
     var mask: string
 
-    while peek(s) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
+    while peek(s) in setutils.toSet("01?abcdefghijklmnopqrstuvwxyz "):
       case peek(s):
         of '0':
           pattern.add('0')
@@ -235,7 +235,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           new_instruction.bits.add(FIELD_ONE)
         of ' ':
           discard
-        of 'x':
+        of '?':
           pattern.add('0')
           mask.add('0')
           new_instruction.bits.add(FIELD_WILDCARD)

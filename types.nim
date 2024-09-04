@@ -38,7 +38,7 @@ type op_kind* = enum
 
 const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
-const LAZY_CHARS* = setutils.toSet("+-<>|!&")
+const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
 type expression* = ref object
   case exp_kind*: exp_kind
