@@ -1,14 +1,50 @@
 
 [instructions]
 
-test %a(immediate)
-%b = %a << 0x2
-00bbbbbb
+add %a(immediate), %b(immediate)
+%c = %a + %b
+cccccccc 00000000
 
-log2 %a(immediate)
-%b = log2(%a)
-10bbbbbb
+sub %a(immediate), %b(immediate)
+%c:s = %a - %b
+cccccccc 00000001
+
+mul %a(immediate), %b(immediate)
+%c = %a * %b
+cccccccc 00000010
+
+div %a(immediate), %b(immediate)
+%c = %a / %b
+cccccccc 00000011
+
+mod %a(immediate), %b(immediate)
+%c = %a % %b
+cccccccc 00000100
+
+and %a(immediate), %b(immediate)
+%c = %a & %b
+cccccccc 00000101
+
+or %a(immediate), %b(immediate)
+%c = %a | %b
+cccccccc 00000110
+
+xor %a(immediate), %b(immediate)
+%c = %a ^ %b
+cccccccc 00000111
+
+lsl %a(immediate), %b(immediate)
+%c = %a << %b
+cccccccc 00001000
+
+lsr %a(immediate), %b(immediate)
+%c:s = %a >> %b
+cccccccc 00001001
 
 asr %a(immediate), %b(immediate)
-%c = asr(%a, %b)
-01cccccc
+%c:s = asr(%a, %b)
+cccccccc 00001010
+
+log2 %a(immediate)
+%b:s = log2(%a)
+bbbbbbbb 00001011

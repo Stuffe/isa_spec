@@ -38,7 +38,7 @@ type op_kind* = enum
 
 const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
-const LAZY_CHARS* = setutils.toSet("+-<>|!&")
+const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
 type expression* = ref object
   case exp_kind*: exp_kind
@@ -62,6 +62,7 @@ type instruction* = object
   syntax*: seq[string]
   fields*: seq[int]
   virtual_fields*: seq[expression]
+  asserts*: seq[(expression, expression, string)]
   field_sign*: seq[sign_kind]
   bits*: seq[int]
   fixed_pattern_0*: uint64

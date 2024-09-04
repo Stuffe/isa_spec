@@ -27,7 +27,7 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   for i, bit_type in instruction.bits:
     if bit_type < FIXED_FIELDS_LEN:
       assert bit_type < 3
-      source &= "01x"[bit_type]
+      source &= "01?"[bit_type]
     else:
       source &= $char(ord('a') + bit_type - FIXED_FIELDS_LEN)
     if i mod 8 == 7:
@@ -153,53 +153,77 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   
   block virtual_field:
     var count = 1
-    while matches(s, '%'):
-      let operand_name = get_identifier(s)
-      let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
+    while peek(s) in {'%', '!'}:
+      if read(s) == '%':
+        let operand_name = get_identifier(s)
+        let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
 
-      if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
+        if operand_name != expected_operand_name:
+          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
 
-      skip_newlines(s)
-      let field_sign = block:
-        if matches(s, ':'):
-          let marker = read(s)
-          case marker:
-            of 's':
-              sk_signed
-            of 'u':
-              sk_unsigned
-            of 'i':
-              sk_either
-            else:
-              return error(&"Invalid annotation for operand %{operand_name}:{marker}")
-        else:
-          sk_unsigned # default to unsigned.
-      skip_newlines(s)
+        skip_whitespaces(s)
+        let field_sign = block:
+          if matches(s, ':'):
+            let marker = read(s)
+            case marker:
+              of 's':
+                sk_signed
+              of 'u':
+                sk_unsigned
+              of 'i':
+                sk_either
+              else:
+                return error(&"Invalid annotation for operand %{operand_name}:{marker}")
+          else:
+            sk_unsigned # default to unsigned.
+        skip_whitespaces(s)
 
-      if not matches(s, '='):
-        return error("Expected an assignment here")
+        if not matches(s, '='):
+          return error("Expected an assignment here")
 
-      skip_newlines(s)
+        skip_whitespaces(s)
 
-      let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
-      new_instruction.virtual_fields.add(virt_op)
-      new_instruction.field_sign.add(field_sign)
+        let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        new_instruction.virtual_fields.add(virt_op)
+        new_instruction.field_sign.add(field_sign)
 
-      if virt_op.exp_kind == exp_fail:
-        if instruction_name == "":
-          return error("Could not read virtual operand " & $count)
-        else:
-          return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
-      
-      count += 1
-      skip_newlines(s)
-  
+        if virt_op.exp_kind == exp_fail:
+          if instruction_name == "":
+            return error("Could not read virtual operand " & $count)
+          else:
+            return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
+
+        count += 1
+        if not skip_newlines(s):
+          return error("Expected newline after virtual field")
+      else:
+        if not matches(s, "assert"):
+          return error("Expected 'assert' here")
+        skip_whitespaces(s)
+        let lhs = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        if lhs.exp_kind == exp_fail:
+          return error("Could not parse assert expression")
+        skip_whitespaces(s)
+        if not matches(s, "=="):
+          return error("Expected an equaltiy operator in the assert expression")
+        skip_whitespaces(s)
+        let rhs = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        if rhs.exp_kind == exp_fail:
+          return error("Could not parse assert expression")
+        skip_whitespaces(s)
+        let msg = if peek(s) in QUOTES:
+            ?descape_string_content(?get_string(s))
+          else:
+            ""
+        if not skip_newlines(s):
+          return error("Expected newline after assert expression")
+        new_instruction.asserts.add (lhs, rhs, msg)
+
   block bit_pattern:
     var pattern: string
     var mask: string
 
-    while peek(s) in setutils.toSet("01xabcdefghijklmnopqrstuvw "):
+    while peek(s) in setutils.toSet("01?abcdefghijklmnopqrstuvwxyz "):
       case peek(s):
         of '0':
           pattern.add('0')
@@ -211,7 +235,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           new_instruction.bits.add(FIELD_ONE)
         of ' ':
           discard
-        of 'x':
+        of '?':
           pattern.add('0')
           mask.add('0')
           new_instruction.bits.add(FIELD_WILDCARD)
@@ -282,7 +306,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
   skip_newlines(s)
 
   if matches(s, "[settings]"):
-    skip_newlines(s)
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
     var seen_names = newSeq[string]() # Don't think a hashset is justified here, we don't have that many settings
 
     while not (finished(s) or peek(s) == '[') :
@@ -298,7 +323,7 @@ func parse_isa_spec*(source: string): spec_parse_result =
       seen_names.add name
       case name:
         of "name":
-          if peek(s) in {'"', '\'', '`'}:
+          if peek(s) in QUOTES:
             result.spec.name = ?descape_string_content(?get_string(s))
           else:
             let raw_id = get_identifier(s)
@@ -326,12 +351,14 @@ func parse_isa_spec*(source: string): spec_parse_result =
             result.spec.block_comments.add (start_sym, end_sym)
         else:
           return error(&"Unknown setting name {$name}")
-      skip_newlines(s)
+      if not skip_newlines(s):
+        return error("Expected newline after setting assignment")
 
 
   if matches(s, "[fields]"):
 
-    skip_newlines(s)
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
 
     while not matches(s, "[instructions]", increment = false):
       skip_whitespaces(s)
@@ -390,7 +417,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
   if not matches(s, "[instructions]"):
     return error("Was expecting the [instructions] header here")
 
-  skip_newlines(s)
+  if not skip_newlines(s):
+    return error("Expected newline after section header")
 
   while peek(s) != '\0':
     var (new_instruction, error_message) = get_instruction(s, result.spec)
@@ -398,7 +426,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
       return error(error_message)
     result.spec.instructions.add(new_instruction)
 
-    skip_newlines(s)
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
 
 
 func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
@@ -522,12 +551,12 @@ func skip_whitespaces(isa_spec: isa_spec, s: var stream_slice) =
     isa_spec.skip_whitespaces(s)
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result
+func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result
 func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 func finalize(pa: pre_assembly_result): assembly_result
 func relax(pa: var pre_assembly_result)
 
-func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): pre_assembly_result =
+func pre_assemble_file(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included: seq[string]): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   if normal_path in already_included:
@@ -551,11 +580,6 @@ func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, lin
     let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
-func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
-  let normal_path = normalizePath(path).replace('\\', '/')
-  var pa = pre_assemble_file(base_path, normal_path, isa_spec, line, already_included)
-  relax(pa)
-  return finalize(pa)
 
 func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
@@ -723,23 +747,37 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         continue
       else: # Some user defined field type
         assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+        let pre_field_restore = s
         let field_string = get_identifier(s)
 
         if field_string in p.field_defines[field]:
           result.operands.add fixed(p.field_defines[field][field_string].value)
         else:
           var found = false
+          var value: uint64
           block search_field:
+            # First check for exact matches
             for field_value in p.isa_spec.field_types[field].values:
               if field_value.name == field_string:
                 found = true
-                var value = field_value.value
-                # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
-                # TODO: Check what the above comment means
-                result.operands.add fixed(value)
-                break
+                value = field_value.value
+                break search_field
+            if field_string.len > 0:
+              # Then search for partial matches, rewinding the
+              for field_value in p.isa_spec.field_types[field].values:
+                if ($field_string).startswith(field_value.name):
+                  s = pre_field_restore
+                  if not s.matches(field_value.name):
+                    return error("[Internal error] in partial match search", i)
+                  found = true
+                  value = field_value.value
+                  break search_field
           if not found:
             return error(&"Unknown field value {field_string} for {p.isa_spec.field_types[field].name}", i)
+          else:
+            # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
+            # TODO: Check what the above comment means
+            result.operands.add fixed(value)
         i += 1
         continue
     doAssert false, "unreachable"
@@ -755,6 +793,15 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
   for virtual_field in inst.virtual_fields:
     let new_field = eval(virtual_field, fields, ip)
     fields.add(cast[uint64](new_field))
+  for i, (lhs, rhs, msg) in inst.asserts:
+    let lhs_value = eval(lhs, fields, ip)
+    let rhs_value = eval(rhs, fields, ip)
+    if lhs_value != rhs_value:
+      if msg == "":
+        return (&"Assert {lhs} == {rhs} did not match", @[])
+      else:
+        return (msg, @[])
+
   var values = [0'u64, 0]
 
   type usage_kind = enum
@@ -838,7 +885,7 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
       shift_by -= 8
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result =
+func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   func skip_newlines(s: var stream_slice) {.error.}
@@ -946,7 +993,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         break number_literal
 
     block string:
-      if peek(s) in {'"', '\''}:
+      if peek(s) in QUOTES:
         let char = read(s)
         # TODO escape
         var literal: string
@@ -988,17 +1035,21 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         while i > 0 and normal_path[i] != '/':
           i -= 1
 
-        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter)
+        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter, already_included)
         if include_res.errors.len != 0:
           res.errors.add include_res.errors
 
         let file_first = file_wo_header.split("/")[^1]
 
         for name, lbl in include_res.labels:
-          if lbl.public:
-            var new_val = lbl
-            new_val.seg_id += res.segments.len
-            res.labels[file_first & "." & name] = new_val
+          let new_name = if lbl.public:
+              file_first & "." & name
+            else:
+               # Generate a unique, not typable name for internal labels
+              "$" & file_first & "[" & $line_counter & "]." & name
+          var new_val = lbl
+          new_val.seg_id += res.segments.len
+          res.labels[new_name] = new_val
 
         for name, val in include_res.pc.number_defines:
           if val.public:
@@ -1008,8 +1059,23 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           for name, val in field_values:
             if val.public:
               res.pc.field_defines[field][file_first & "." & name] = val
+        for segment in include_res.segments:
+          var new_segment = segment
+          for mop in new_segment.relaxable.operands.mitems():
+            if mop.kind == ok_label_ref:
+              if mop.name not_in include_res.labels:
+                res.errors.add error(
+                  loc: file_location(file: segment.file, line: segment.line_boundaries[^1][1]),
+                                    message: &"Undefined label {$mop.name}")
+                continue # This label is not gonna be renamed, but that's fine
+              let lbl = include_res.labels[mop.name]
+              mop.name = if lbl.public:
+                  file_first & "." & mop.name
+                else:
+                   # Generate a unique, not typable name for internal labels
+                  "$" & file_first & "[" & $line_counter & "]." & mop.name
+          res.segments.add(new_segment)
 
-        res.segments.add(include_res.segments)
         res.segments.add(segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
 
         skip_and_record_newlines(s)

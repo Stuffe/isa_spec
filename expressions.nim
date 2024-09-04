@@ -9,12 +9,12 @@ func `$`*(exp: expression): string =
     of exp_number: return $exp.value
     of exp_operand: 
       if exp.index == CURRENT_ADDRESS: return "$"
-      return $char(ord('a') + exp.index)
+      return "%" & $char(ord('a') + exp.index)
     of exp_operation: 
       if exp.op_kind == op_log2:
         return "log2(" & $exp.lhs & ")"
       elif exp.op_kind == op_asr:
-        return "asr(" & $exp.lhs & ")"
+        return "asr(" & $exp.lhs & "," & $exp.rhs & ")"
       return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
 
 func get_expression*(s: var stream_slice, operand_count: int): expression
