@@ -133,7 +133,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
           else:
             doAssert asm_test.result_file == "", &"Can't have both error and results for the same test ({asm_test.source_file}))"
         else:
-          fail(test_name, asm_test.source_file, &"Unexpected assemble failure: \"{asm_result.error}\" at line {asm_result.error_line}")
+          fail(test_name, asm_test.source_file, &"Unexpected assemble failure: \"{asm_result.error}\" at line {asm_result.error_line} in file \"{asm_result.error_file}\"")
         continue
       if asm_test.error_file != "":
         fail(test_name, asm_test.source_file, "Expected assemble failure")

@@ -551,12 +551,12 @@ func skip_whitespaces(isa_spec: isa_spec, s: var stream_slice) =
     isa_spec.skip_whitespaces(s)
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result
+func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result
 func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
 func finalize(pa: pre_assembly_result): assembly_result
 func relax(pa: var pre_assembly_result)
 
-func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): pre_assembly_result =
+func pre_assemble_file(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included: seq[string]): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   if normal_path in already_included:
@@ -580,11 +580,6 @@ func pre_assemble_file*(base_path: string, path: string, isa_spec: isa_spec, lin
     let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
-func assemble_file*(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included = newSeq[string]()): assembly_result =
-  let normal_path = normalizePath(path).replace('\\', '/')
-  var pa = pre_assemble_file(base_path, normal_path, isa_spec, line, already_included)
-  relax(pa)
-  return finalize(pa)
 
 func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
@@ -890,7 +885,7 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
       shift_by -= 8
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included= newSeq[string]()): pre_assembly_result =
+func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   func skip_newlines(s: var stream_slice) {.error.}
@@ -1040,17 +1035,21 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         while i > 0 and normal_path[i] != '/':
           i -= 1
 
-        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter)
+        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter, already_included)
         if include_res.errors.len != 0:
           res.errors.add include_res.errors
 
         let file_first = file_wo_header.split("/")[^1]
 
         for name, lbl in include_res.labels:
-          if lbl.public:
-            var new_val = lbl
-            new_val.seg_id += res.segments.len
-            res.labels[file_first & "." & name] = new_val
+          let new_name = if lbl.public:
+              file_first & "." & name
+            else:
+               # Generate a unique, not typable name for internal labels
+              "$" & file_first & "[" & $line_counter & "]." & name
+          var new_val = lbl
+          new_val.seg_id += res.segments.len
+          res.labels[new_name] = new_val
 
         for name, val in include_res.pc.number_defines:
           if val.public:
@@ -1060,8 +1059,23 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           for name, val in field_values:
             if val.public:
               res.pc.field_defines[field][file_first & "." & name] = val
+        for segment in include_res.segments:
+          var new_segment = segment
+          for mop in new_segment.relaxable.operands.mitems():
+            if mop.kind == ok_label_ref:
+              if mop.name not_in include_res.labels:
+                res.errors.add error(
+                  loc: file_location(file: segment.file, line: segment.line_boundaries[^1][1]),
+                                    message: &"Undefined label {$mop.name}")
+                continue # This label is not gonna be renamed, but that's fine
+              let lbl = include_res.labels[mop.name]
+              mop.name = if lbl.public:
+                  file_first & "." & mop.name
+                else:
+                   # Generate a unique, not typable name for internal labels
+                  "$" & file_first & "[" & $line_counter & "]." & mop.name
+          res.segments.add(new_segment)
 
-        res.segments.add(include_res.segments)
         res.segments.add(segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
 
         skip_and_record_newlines(s)
