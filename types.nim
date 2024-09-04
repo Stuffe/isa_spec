@@ -62,6 +62,7 @@ type instruction* = object
   syntax*: seq[string]
   fields*: seq[int]
   virtual_fields*: seq[expression]
+  asserts*: seq[(expression, expression, string)]
   field_sign*: seq[sign_kind]
   bits*: seq[int]
   fixed_pattern_0*: uint64
