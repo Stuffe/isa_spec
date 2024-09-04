@@ -84,11 +84,11 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       sub_tests[name].asm_tests.set_len(subid + 1)
 
     case parts[^1]:
-      of "spec":
-        doAssert parts.len == 2, &"spec files can't have a subid ({test_dir/file_name})"
+      of "isa":
+        doAssert parts.len == 2, &"isa files can't have a subid ({test_dir/file_name})"
         sub_tests[name].spec_file = test_dir/file_name
-      of "spec_err":
-        doAssert parts.len == 2, &"spec error files can't have a subid ({test_dir/file_name})"
+      of "isa_err":
+        doAssert parts.len == 2, &"isa error files can't have a subid ({test_dir/file_name})"
         sub_tests[name].spec_error_file = test_dir/file_name
       of "asm":
         sub_tests[name].asm_tests[subid].source_file = test_dir/file_name

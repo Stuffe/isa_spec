@@ -1026,7 +1026,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         continue
 
-      elif special_test == "set":
+      elif special_test == "const":
         isa_spec.skip_whitespaces(s)
         let definition_name = get_identifier(s)
         if definition_name in res.pc.number_defines:

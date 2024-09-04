@@ -1,4 +1,0 @@
-[settings]
-name = ETCa
-
-[instructions]
