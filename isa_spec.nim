@@ -282,7 +282,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
   skip_newlines(s)
 
   if matches(s, "[settings]"):
-    skip_newlines(s)
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
     var seen_names = newSeq[string]() # Don't think a hashset is justified here, we don't have that many settings
 
     while not (finished(s) or peek(s) == '[') :
@@ -326,12 +327,14 @@ func parse_isa_spec*(source: string): spec_parse_result =
             result.spec.block_comments.add (start_sym, end_sym)
         else:
           return error(&"Unknown setting name {$name}")
-      skip_newlines(s)
+      if not skip_newlines(s):
+        return error("Expected newline after setting assignment")
 
 
   if matches(s, "[fields]"):
 
-    skip_newlines(s)
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
 
     while not matches(s, "[instructions]", increment = false):
       skip_whitespaces(s)
@@ -390,7 +393,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
   if not matches(s, "[instructions]"):
     return error("Was expecting the [instructions] header here")
 
-  skip_newlines(s)
+  if not skip_newlines(s):
+    return error("Expected newline after section header")
 
   while peek(s) != '\0':
     var (new_instruction, error_message) = get_instruction(s, result.spec)
@@ -398,7 +402,8 @@ func parse_isa_spec*(source: string): spec_parse_result =
       return error(error_message)
     result.spec.instructions.add(new_instruction)
 
-    skip_newlines(s)
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
 
 
 func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
@@ -723,23 +728,37 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         continue
       else: # Some user defined field type
         assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+        let pre_field_restore = s
         let field_string = get_identifier(s)
 
         if field_string in p.field_defines[field]:
           result.operands.add fixed(p.field_defines[field][field_string].value)
         else:
           var found = false
+          var value: uint64
           block search_field:
+            # First check for exact matches
             for field_value in p.isa_spec.field_types[field].values:
               if field_value.name == field_string:
                 found = true
-                var value = field_value.value
-                # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
-                # TODO: Check what the above comment means
-                result.operands.add fixed(value)
-                break
+                value = field_value.value
+                break search_field
+            if field_string.len > 0:
+              # Then search for partial matches, rewinding the
+              for field_value in p.isa_spec.field_types[field].values:
+                if ($field_string).startswith(field_value.name):
+                  s = pre_field_restore
+                  if not s.matches(field_value.name):
+                    return error("[Internal error] in partial match search", i)
+                  found = true
+                  value = field_value.value
+                  break search_field
           if not found:
             return error(&"Unknown field value {field_string} for {p.isa_spec.field_types[field].name}", i)
+          else:
+            # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
+            # TODO: Check what the above comment means
+            result.operands.add fixed(value)
         i += 1
         continue
     doAssert false, "unreachable"
