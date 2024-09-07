@@ -994,14 +994,12 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
     block string:
       if peek(s) in QUOTES:
-        let char = read(s)
-        # TODO escape
-        var literal: string
-        while peek(s) notin {char, '\0'}:
-          literal.add(read(s))
-
-        if read(s) == '\0':
-          error("Missing closing " & $char & " character")
+        let raw_literal = get_string(s).on_err do:
+          error(err)
+          skip_line(s)
+          continue
+        let literal = descape_string_content(raw_literal).on_err do:
+          error(err)
           skip_line(s)
           continue
 
