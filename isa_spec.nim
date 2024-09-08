@@ -1093,6 +1093,13 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       elif special_test == "const":
         isa_spec.skip_whitespaces(s)
         let definition_name = get_identifier(s)
+
+        isa_spec.skip_whitespaces(s)
+
+        if read(s) != '=':
+          error("Missing '=' after 'const'")
+
+
         if definition_name in res.pc.number_defines:
           error($definition_name & " is already declared")
           skip_line(s)
@@ -1119,18 +1126,30 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         else:
           let define_value = get_identifier(s)
-          var found = false
-          for field_id, field_type in isa_spec.field_types:
-            for i, field in field_type.values:
-              if field.name == define_value:
-                res.pc.field_defines[field_id][definition_name] = define_value(public: public, value: field.value)
-                found = true
-                break
 
-          if not found:
-            error("Definition value must be either a number or a register")
-            skip_line(s)
-            continue
+          if define_value in res.pc.number_defines:
+            res.pc.number_defines[definition_name] = res.pc.number_defines[define_value]
+
+          else:
+
+            var found = false
+            for field_id, values in res.pc.field_defines:
+              if define_value in values:
+                res.pc.field_defines[field_id][definition_name] = res.pc.field_defines[field_id][define_value]
+                found = true
+
+            if not found:
+              for field_id, field_type in isa_spec.field_types:
+                for i, field in field_type.values:
+                  if field.name == define_value:
+                    res.pc.field_defines[field_id][definition_name] = define_value(public: public, value: field.value)
+                    found = true
+                    break
+
+            if not found:
+              error("Definition value must be either a number or a register")
+              skip_line(s)
+              continue
 
         skip_and_record_newlines(s)
         continue
