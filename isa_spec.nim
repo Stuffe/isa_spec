@@ -808,6 +808,7 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     unused
     used_no_sign_bit
     used_sign_bit
+
   var used_fields = newSeq[usage_kind](fields.len)
 
   var i = inst.bits.high
@@ -845,15 +846,15 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
   for i, field in fields:
     if used_fields[i] == unused: continue
     case inst.field_sign[i]:
-      of sk_either:
-        if field != 0 and field != uint64.high:
-          return (&"Field %{$char(ord('a') + i)} doesn't fit", @[])
-      of sk_signed:
-        if used_fields[i] != used_sign_bit:
-          return (&"Signed field %{$char(ord('a') + i)} doesn't fit", @[])
       of sk_unsigned:
         if field != 0:
-          return (&"Unsigned field %{$char(ord('a') + i)} doesn't fit", @[])
+          return (&"{args[i]} is too large for operand {i+1}", @[])
+      of sk_signed:
+        if used_fields[i] != used_sign_bit:
+          return (&"{cast[int](args[i])} is too large for operand {i+1}", @[])
+      of sk_either:
+        if field != 0 and field != uint64.high:
+          return (&"{args[i]} is too large for operand {i+1}", @[])
 
   var width_left = inst.bits.len
   result[1].set_len(width_left div 8)
