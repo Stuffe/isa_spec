@@ -13,6 +13,14 @@ const FIXED_FIELDS_LEN = 5
 const ANY_NUMBER_OF_SPACES = " "
 const AT_LEAST_ONE_SPACE   = "  "
 
+proc get_ordinal*(input: int): string =
+  let number = $(input + 1)
+  case number[^1]:
+    of '1': return number & "st"
+    of '2': return number & "nd"
+    of '3': return number & "rd"
+    else: return number & "th"
+
 func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
   var source = ""
   var field_i = 0
@@ -854,13 +862,13 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     case inst.field_sign[i]:
       of sk_unsigned:
         if field != 0:
-          return (&"{args[i]} is too large for operand {i+1}", @[])
+          return (&"{args[i]} is too large for the {get_ordinal(i)} operand", @[])
       of sk_signed:
         if used_fields[i] != used_sign_bit:
-          return (&"{cast[int](args[i])} is too large for operand {i+1}", @[])
+          return (&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand", @[])
       of sk_either:
         if field != 0 and field != uint64.high:
-          return (&"{args[i]} is too large for operand {i+1}", @[])
+          return (&"{args[i]} is too large for the {get_ordinal(i)} operand", @[])
 
   var width_left = inst.bits.len
   result[1].set_len(width_left div 8)
