@@ -711,8 +711,12 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
 
     if syntax != "":
       if not matches(s, syntax):
-        return error(&"Expected {syntax} here", i)
+        if i == 0:
+          return error(&"Unknown instruction", i)
+
+        return error(&"Expected '{syntax}' after '" & $from_line_start(s) & "'", i)
       continue
+
     let field = inst.fields[i]
     case field:
       of FIELD_LABEL:
@@ -773,7 +777,9 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
                   value = field_value.value
                   break search_field
           if not found:
-            return error(&"Unknown field value {field_string} for {p.isa_spec.field_types[field].name}", i)
+            if field_string == "":
+              return error(&"Missing a '{p.isa_spec.field_types[field].name}' operand here", i)
+            return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field].name}'", i)
           else:
             # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
             # TODO: Check what the above comment means
