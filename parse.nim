@@ -461,8 +461,19 @@ func strip*(s: stream_slice): stream_slice =
 
 func from_line_start*(s: stream_slice): stream_slice =
   result = s
+  # Go back one if we are at a newline
+  if result.start > 0 and peek(result) == '\n':
+    result.start -= 1
+  
+  # Seek backwards until the start of the line
   while result.start > 0 and peek(result) != '\n':
     result.start -= 1
+  
+  # Go forwards from the start of that line to the end
+  result.start += 1
+  result.finish = result.start
+  while result.finish < s.len and result.source[result.finish] != '\n':
+    result.finish += 1
 
 func get_list_value(s: var stream_slice): (string, stream_slice) =
   assert not isNil(s.source)

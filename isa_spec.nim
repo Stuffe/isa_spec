@@ -721,7 +721,6 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       if not matches(s, syntax):
         if i == 0:
           return error(&"Unknown instruction", i)
-
         return error(&"Expected '{syntax}' after '" & $from_line_start(s) & "'", i)
       continue
 

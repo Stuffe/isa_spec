@@ -2,7 +2,7 @@ import std/[tables, os, strutils, strformat]
 import isa_spec, types
 
 const STOP_AT_FIRST_FAIL = true
-const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
+const RUN_SINGLE_TEST    = "new_test" # Emtpy string means run all tests
 
 type asm_test_files = tuple
   source_file: string
