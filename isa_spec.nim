@@ -865,7 +865,9 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
           return (&"{args[i]} is too large for the {get_ordinal(i)} operand", @[])
       of sk_signed:
         if used_fields[i] != used_sign_bit:
-          return (&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand", @[])
+          if i < args.high:
+            return (&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand", @[])
+          return (&"Immediate is too large for {get_ordinal(i)} operand", @[])
       of sk_either:
         if field != 0 and field != uint64.high:
           return (&"{args[i]} is too large for the {get_ordinal(i)} operand", @[])
@@ -1196,9 +1198,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
             matched.operands = inst_res.operands
           else: # This is not the first instruction we found. Check that it's compatible with the first
             if matched.operands != inst_res.operands or inst_res.final_index != best_match.final_index:
-              error("Multiple instruction matched with conflicting syntax")
               skip_line(s)
-              break find_instruction
+              continue
           matched.options.add inst
         if matched.options.len == 0:
           if inst_res.error_priority > best_match.error_priority or best_match.error == "":
