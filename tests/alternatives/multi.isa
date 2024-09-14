@@ -1,0 +1,8 @@
+[fields]
+global_constants
+aaa 0100
+bbb 0101
+
+[instructions]
+load %a(immediate|label|global_constants) %b(immediate|label)
+aaaabbbb
