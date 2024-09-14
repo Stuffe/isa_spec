@@ -59,8 +59,12 @@ type sign_kind* = enum
   sk_either # -128 to 255, assumes programmers know what they are doing
 
 type instruction* = object
+  ## instructions can either be baked or raw
+  ## raw instructions have `fields` filled with `FIELD_INVALID` and raw_fields is as long as fields
+  ## baked instructions have `fields` filled correctly and raw_fields is empty
   syntax*: seq[string]
   fields*: seq[int]
+  raw_fields*: seq[seq[int]]
   virtual_fields*: seq[expression]
   asserts*: seq[(expression, expression, string)]
   field_sign*: seq[sign_kind]
@@ -75,6 +79,14 @@ type endianness* = enum
   end_little
   end_big
 
+type file_location* = object
+  file*: string
+  line*: int # We might want to expand this to start/end column
+
+type error* = object
+  loc*: file_location
+  message*: string
+
 type isa_spec* = object
   name*: string
   variant*: string
@@ -84,10 +96,10 @@ type isa_spec* = object
   code_alignment*: int
   field_types*: seq[field_type]
   instructions*: seq[instruction]
+  expanded_instructions*: seq[instruction]
 
 type spec_parse_result* = object
-  error_line*: int
-  error*: string
+  error*: error
   spec*: isa_spec
 
 type disassembled_instruction* = object
@@ -101,14 +113,6 @@ type disassembled_instruction* = object
 type define_value* = object
   public*: bool
   value*: uint64
-
-type file_location* = object
-  file*: string
-  line*: int # We might want to expand this to start/end column
-
-type error* = object
-  loc*: file_location
-  message*: string
 
 type file_line_information = object
   start_byte: int # inclusive
@@ -127,9 +131,7 @@ type complete_line_information* = object
 type assembly_result* = object
   machine_code*: seq[uint8]
   line_info*: complete_line_information
-  error*: string
-  error_line*: int
-  error_file*: string
+  errors*: seq[error]
   field_defines*: seq[Table[stream_slice, define_value]]
   number_defines*: Table[stream_slice, define_value]
   labels*: Table[stream_slice, define_value]

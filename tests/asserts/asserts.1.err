@@ -1,1 +1,1 @@
-All registers must be of equal size
+@[(loc: (file: "asserts/asserts.1.asm", line: 1), message: "All registers must be of equal size")]

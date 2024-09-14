@@ -3,6 +3,7 @@ import types, parse, expressions
 
 export parse.new_stream_slice
 
+const FIELD_INVALID    = -1
 const FIELD_ZERO       = 0
 const FIELD_ONE        = 1
 const FIELD_WILDCARD   = 2
@@ -100,6 +101,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       syntax_parts.add(this_part)
 
   var new_instruction: instruction
+  var fields: seq[seq[int]]
 
   block syntax:
     add_string_syntax(s, new_instruction.syntax)
@@ -125,30 +127,34 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
               return error(&"Invalid annotation for operand %{operand_name}: {marker}")
         else:
           sk_unsigned
-
+      new_instruction.syntax.add("")
+      new_instruction.field_sign.add(field_sign)
+      new_instruction.raw_fields.add @[]
+      new_instruction.fields.add FIELD_INVALID
       if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
+      while true:
+        let field_name = get_identifier(s)
 
-      let field_name = get_identifier(s)
+        if field_name.len == 0:
+          return error("Was expecting a field name here")
 
-      if field_name.len == 0:
-        return error("Was expecting a field name here")
+        var found = false
+
+        for i, field in isa_spec.field_types:
+          if $field_name == field.name:
+            found = true
+            new_instruction.raw_fields[^1].add i
+            break
+
+        if not found:
+          return error("Field name '" & $field_name & "' not defined")
+
+        if not s.matches('|'):
+          break
 
       if not matches(s, ')'):
         return error("Expected a closing parenthesis after the field type")
-
-      var found = false
-
-      for i, field in isa_spec.field_types:
-        if $field_name == field.name:
-          found = true
-          new_instruction.fields.add(i)
-          new_instruction.syntax.add("")
-          new_instruction.field_sign.add(field_sign)
-          break
-      
-      if not found:
-        return error("Field name '" & $field_name & "' not defined")
 
       add_string_syntax(s, new_instruction.syntax)
 
@@ -286,12 +292,17 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
   return (new_instruction, "")
 
-func parse_isa_spec*(source: string): spec_parse_result =
+func prepare_isa_spec*(isa_spec: var isa_spec): error
+
+func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
 
   var s = new_stream_slice(source)
 
   func error(input: string): spec_parse_result =
-    return spec_parse_result(error: input, error_line: get_line_number(s))
+    return spec_parse_result(
+          error: error(
+            loc: file_location(file: file_name, line: get_line_number(s)),
+            message: input))
 
   template `?`[T](input: (string, T)): T =
     let (err, res) = input
@@ -436,6 +447,41 @@ func parse_isa_spec*(source: string): spec_parse_result =
 
     if not skip_newlines(s):
       return error("Expected newline after section header")
+
+  let prepare_err = prepare_isa_spec(result.spec)
+  if prepare_err.message != "":
+    result.error = prepare_err
+    result.error.loc.file = file_name
+
+
+func prepare_isa_spec*(isa_spec: var isa_spec): error =
+  ## Rebuilds the cache based on raw instructions.
+  ## Needs to be called before `assemble` or `disassemble` can be called
+  ## after the isa spec has been modified
+  ## Return value is a potential error, although no possible error
+  ## is currently known (message == "" if no error)
+  isa_spec.expanded_instructions.setLen(0)
+  for raw_instr in isa_spec.instructions:
+    assert raw_instr.raw_fields.len == raw_instr.fields.len, "Invalid raw instruction passed to prepare_isa_spec"
+    var new_instruction = raw_instr
+    new_instruction.raw_fields.setLen(0)
+    var counters = newSeq[int](raw_instr.raw_fields.len)
+    var increment = false
+    while true:
+      for field_index in 0 .. counters.high:
+        if increment:
+          counters[field_index] += 1
+          if counters[field_index] > raw_instr.raw_fields[field_index].high:
+            counters[field_index] = 0 # Keep increment = true to also increment the next one
+          else:
+            increment = false
+        new_instruction.fields[field_index] = raw_instr.raw_fields[field_index][counters[field_index]]
+      if increment: # we are done
+        break
+      isa_spec.expanded_instructions.add new_instruction
+      increment = true
+
+
 
 
 func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
@@ -1188,7 +1234,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       var matched: matched_instruction
       let restore = s
 
-      for inst in isa_spec.instructions:
+      for inst in isa_spec.expanded_instructions:
         s = restore  # Reset to the beginning of the line
         let inst_res = parse_instruction(s, res.pc, inst)
         if inst_res.error == "": # The instruction parsed succesfully
@@ -1257,17 +1303,12 @@ func sum_segments(pa: pre_assembly_result): seq[int] =
 
 
 func finalize(pa: pre_assembly_result): assembly_result =
-  func error(msg: string, file: string, line: int): assembly_result =
-    return assembly_result(error: msg, error_file: file, error_line: line)
-
   func error(msg: string, loc: file_location): assembly_result =
-    return assembly_result(error: msg, error_file: loc.file, error_line: loc.line)
+    return assembly_result(errors: @[error(message:msg, loc: loc)])
 
-  func error(err: error): assembly_result =
-    return assembly_result(error: err.message, error_file: err.loc.file, error_line: err.loc.line)
 
   if pa.errors.len != 0:
-    return error(pa.errors[0])
+    return assembly_result(errors: pa.errors)
 
   let segment_starts = pa.sum_segments()
 
@@ -1301,7 +1342,7 @@ func finalize(pa: pre_assembly_result): assembly_result =
             if op.name in result.labels:
               result.labels[op.name].value
             else:
-              return error(&"Undefined label {$op.name}", result.line_info.get_line_from_byte(result.machine_code.len))
+              return error(&"INTERNAL ERROR: Undefined label {$op.name} (late detection)", result.line_info.get_line_from_byte(result.machine_code.len))
           of ok_relative:
             cast[uint64](result.machine_code.len + op.offset)
       values
