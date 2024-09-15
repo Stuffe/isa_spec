@@ -1,5 +1,23 @@
 import tables, std/[algorithm, setutils], parse
 
+const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
+const GREEDY_CHARS* = setutils.toSet("*/%")
+const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
+
+type field* = object
+  id*: int
+
+const FIELD_INVALID*    = field(id: -1)
+const FIELD_ZERO*       = field(id: 0)
+const FIELD_ONE*        = field(id: 1)
+const FIELD_WILDCARD*   = field(id: 2)
+const FIELD_IMM*        = field(id: 3)
+const FIELD_LABEL*      = field(id: 4)
+const FIXED_FIELDS_LEN* = 5
+
+const ANY_NUMBER_OF_SPACES* = " "
+const AT_LEAST_ONE_SPACE*   = "  "
+
 type field_value* = object
   name*: string
   value*: uint64
@@ -29,10 +47,6 @@ type op_kind* = enum
   op_asr
   op_log2
 
-const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
-const GREEDY_CHARS* = setutils.toSet("*/%")
-const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
-
 type expression* = ref object
   case exp_kind*: exp_kind
     of exp_fail:
@@ -50,10 +64,6 @@ type sign_kind* = enum
   sk_unsigned # 0 to 255
   sk_signed # -128 to 127
   sk_either # -128 to 255, assumes programmers know what they are doing
-
-type field* = object
-  id*: int
-
 
 type instruction* = object
   ## instructions can either be baked or raw
