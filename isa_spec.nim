@@ -4,6 +4,12 @@ import types, parse, expressions
 export parse.new_stream_slice
 
 func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
+  func field_define(i: int): string =
+    if instruction.field_sign[i] == sk_unsigned:
+      "%" & $char(ord('a') + i)
+    else:
+      "%" & $char(ord('a') + i) & ":" & "usi"[instruction.field_sign[i].ord]
+
   var source = ""
   var field_i = 0
   for syntax in instruction.syntax:
@@ -14,8 +20,19 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       source &= "%" & $char(ord('a') + field_i) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
-      source &= syntax
+      source &= syntax.replace("%", "%%")
   source &= "\n"
+
+  for expr in instruction.virtual_fields:
+      source &= field_define(field_i) & " = " & $expr & "\n"
+      field_i += 1
+
+  for (lhs, rhs, msg) in instruction.asserts:
+      source &= &"!assert {lhs} == {rhs}"
+      if msg != "":
+        source &= " " & make_escaped_string(msg)
+      source &= "\n"
+      field_i += 1
 
   for i, bit_type in instruction.bits:
     if bit_type.id < FIXED_FIELDS_LEN:
@@ -30,12 +47,35 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   return source
 
 func spec_to_string*(isa_spec: isa_spec): string =
-  var source = "[fields]\n"
+  var source = ""
 
-  const FIXED_FIELDS_LEN = 5
+  source &= "[settings]\n"
+
+  if isa_spec.name != "":
+    source &= &"name = {make_escaped_string(isa_spec.name)}\n"
+  if isa_spec.variant != "":
+    source &= &"variant = {make_escaped_string(isa_spec.variant)}\n"
+  if isa_spec.endianness != end_little:
+    source &= &"endianness = {($isa_spec.endianness)[4..^1]}\n"
+  if isa_spec.line_comments != @[";", "//"]:
+    source &= "line_comments = ["
+    for i, lc in isa_spec.line_comments:
+      if i != 0:
+        source &= ", "
+      source &= make_escaped_string(lc)
+    source &= "]\n"
+  if isa_spec.block_comments != @{"/*" : "*/"}:
+    source &= "block_comments = {"
+    for i, (l, r) in isa_spec.block_comments:
+      if i != 0:
+        source &= ", "
+      source &= &"{make_escaped_string(l)}: {make_escaped_string(r)}"
+    source &= "}\n"
+
+  source &= "[fields]\n"
 
   for field_type in isa_spec.field_types[FIXED_FIELDS_LEN..^1]:
-    
+
     source &= "\n" & field_type.name & "\n"
 
     for field_value in field_type.values:
@@ -287,6 +327,11 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
             message: input))
 
   template `?`[T](input: (string, T)): T =
+    let (err, res) = input
+    if err != "":
+      return error(err)
+    res
+  template `?`(input: (string, stream_slice)): stream_slice =
     let (err, res) = input
     if err != "":
       return error(err)

@@ -1,4 +1,4 @@
-import std/[tables, os, strutils, strformat, times]
+import std/[tables, os, strutils, strformat, times, monotimes]
 import isa_spec, types
 
 const STOP_AT_FIRST_FAIL = true
@@ -15,17 +15,41 @@ type test_files = object
   spec_error_file: string
   asm_tests: seq[asm_test_files]
 
+template timer(): float =
+  when defined(macosx):
+    get_time().toUnixFloat
+  else:
+    getMonoTime().ticks.float / 1e9
 
 const TEST_PATH = "tests"
 
 var global_fail: bool = false
 var local_fail: bool = false
 
-proc fail(test_name, file_name, msg: string) =
+proc fail(test_name, file_name, msg: string, extra: string = "") =
+  ## extra will only be printed of STOP_AT_FIRST_FAIL is true
   echo &"\u001b[31m[{test_name}] '{file_name}'\u001b[0m: " & msg
   local_fail = true
   global_fail = true
-  if STOP_AT_FIRST_FAIL: quit(1)
+  if STOP_AT_FIRST_FAIL:
+    if extra != "":
+      echo extra
+    quit(1)
+
+proc echo_deep_diff[T: not (object | tuple | seq)](a, b: T; path: string) =
+  if a != b:
+    echo &"{path}: {a} != {b}"
+
+proc echo_deep_diff[T: tuple | object](a, b: T; path: string) =
+  for name, af, bf in fieldPairs(a, b):
+    echo_deep_diff(af, bf, path & "." & name)
+
+proc echo_deep_diff[T: openArray](a, b: T; path: string) =
+  if a.len != b.len:
+    echo &"{path}.len: {a.len} != {b.len}"
+  else:
+    for i, av in a:
+      echo_deep_diff(av, b[i], path & &"[{i}]" )
 
 proc parse_hex_string(source: string): seq[uint8] =
   var last: int = -1
@@ -114,9 +138,9 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       continue
 
     let spec_source = readFile(tests.spec_file)
-    spec_time -= get_time().toUnixFloat
+    spec_time -= timer()
     let spec_result = parse_isa_spec(tests.spec_file, spec_source)
-    spec_time += get_time().toUnixFloat
+    spec_time += timer()
 
     let isa_spec = spec_result.spec
 
@@ -135,9 +159,9 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     for sid, asm_test in tests.asm_tests:
       doAssert asm_test.source_file != "", &"no '.asm' file for {test_name}/{sub_name}.{sid}"
       let asm_source = readFile(asm_test.source_file)
-      asm_time -= get_time().toUnixFloat
+      asm_time -= timer()
       let asm_result = assemble(TEST_PATH, asm_test.source_file.relative_path(TEST_PATH), isa_spec, asm_source)
-      asm_time += get_time().toUnixFloat
+      asm_time += timer()
 
       if asm_result.errors.len != 0:
         if asm_test.error_file != "":
@@ -186,6 +210,17 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
                                                     &"Expected {byte_index}, got {actual_start_index}")
           last_line = expected_fl
           byte_index += 1
+
+      # Check that `spec_to_string` is roundtripping.
+      let reconstructed_source = spec_to_string(isa_spec)
+      let new_spec_result = parse_isa_spec(tests.spec_file & ".rec", reconstructed_source)
+      if new_spec_result.spec != isa_spec:
+        if new_spec_result.error.message != "":
+          fail(test_name, tests.spec_file, &"Reconstructed Isa Spec Source errored with {new_spec_result.error}.", &"Reconstructed source:\n{reconstructed_source}")
+        else:
+          if STOP_AT_FIRST_FAIL:
+            echo_deep_diff(isa_spec, new_spec_result.spec, "")
+          fail(test_name, tests.spec_file, &"Isa spec did not survive roundtripping.", &"Reconstructed source:\n{reconstructed_source}")
 
   if not local_fail:
     echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} / asm {asm_time:3f}"

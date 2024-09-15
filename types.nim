@@ -60,6 +60,22 @@ type expression* = ref object
       lhs*: expression
       rhs*: expression
 
+func `==`*(a, b: expression): bool =
+  if a.isNil() or b.isNil():
+    return a.isNil() == b.isNil()
+  if a.exp_kind != b.exp_kind:
+    return false
+  case a.exp_kind:
+    of exp_fail:
+      return a.msg == b.msg
+    of exp_number:
+      return a.value == b.value
+    of exp_operand:
+      return a.index == b.index
+    of exp_operation:
+      return a.op_kind == b.op_kind and a.lhs == b.lhs and a.rhs == b.rhs
+
+
 type sign_kind* = enum
   sk_unsigned # 0 to 255
   sk_signed # -128 to 127

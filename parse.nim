@@ -402,6 +402,17 @@ func descape_string_content*(s: stream_slice): (string, string) =
       else:
         return (&"Invalid escape character '{nc}'", "")
 
+func make_escaped_string*(s: string, quote = '"'): string =
+  result &= quote
+  for c in s:
+    if c in {quote, '\\'}:
+      result &= "\\" & c
+    if c in {'\x00'..'\x19'}:
+      result &= "\\x" & toHex(c.ord, 2)
+    else:
+      result &= c
+  result &= quote
+
 func parse_string*(s: stream_slice): (string, string) =
   # To be used with results from get_list_value
   var it = s
