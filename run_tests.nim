@@ -1,4 +1,4 @@
-import std/[tables, os, strutils, strformat]
+import std/[tables, os, strutils, strformat, times]
 import isa_spec, types
 
 const STOP_AT_FIRST_FAIL = true
@@ -106,12 +106,20 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       else:
         raiseAssert &"Unknown file type {test_dir/file_name}"
 
+  var spec_time: float
+  var asm_time: float
+  
   for sub_name, tests in sub_tests:
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
+
     let spec_source = readFile(tests.spec_file)
+    spec_time -= get_time().toUnixFloat
     let spec_result = parse_isa_spec(tests.spec_file, spec_source)
+    spec_time += get_time().toUnixFloat
+
     let isa_spec = spec_result.spec
+
     if spec_result.error.message != "":
       if tests.spec_error_file != "":
         let expected_spec_error = readFile(tests.spec_error_file)
@@ -127,7 +135,10 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     for sid, asm_test in tests.asm_tests:
       doAssert asm_test.source_file != "", &"no '.asm' file for {test_name}/{sub_name}.{sid}"
       let asm_source = readFile(asm_test.source_file)
+      asm_time -= get_time().toUnixFloat
       let asm_result = assemble(TEST_PATH, asm_test.source_file.relative_path(TEST_PATH), isa_spec, asm_source)
+      asm_time += get_time().toUnixFloat
+
       if asm_result.errors.len != 0:
         if asm_test.error_file != "":
           let expected_asm_error = readFile(asm_test.error_file)
@@ -177,7 +188,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
           byte_index += 1
 
   if not local_fail:
-    echo "\u001b[32mTest '" & test_name & "' passed.\u001b[0m"
+    echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} / asm {asm_time:3f}"
 
 if global_fail:
   quit(1)
