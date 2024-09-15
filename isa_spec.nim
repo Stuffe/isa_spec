@@ -14,15 +14,10 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   var field_i = 0
   for syntax in instruction.syntax:
     if syntax == "":
-      source &= field_define(field_i) & "("
-      if instruction.raw_fields.len == 0:
-        source &= isa_spec.field_types[instruction.fields[field_i].id].name
-      else:
-        for i, field_type in instruction.raw_fields[field_i]:
-          if i != 0:
-            source &= "|"
-          source &= isa_spec.field_types[field_type.id].name
-      source &= ")"
+      var options: seq[string]
+      for field in instruction.fields[field_i]:
+        options.add(isa_spec.field_types[field.id].name)
+      source &= "%" & $char(ord('a') + field_i) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
       source &= syntax.replace("%", "%%")
@@ -158,8 +153,8 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           sk_unsigned
       new_instruction.syntax.add("")
       new_instruction.field_sign.add(field_sign)
-      new_instruction.raw_fields.add @[]
-      new_instruction.fields.add FIELD_INVALID
+      new_instruction.fields.add(@[])
+
       if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
       while true:
@@ -173,7 +168,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         for i, field in isa_spec.field_types:
           if $field_name == field.name:
             found = true
-            new_instruction.raw_fields[^1].add(field(id: i))
+            new_instruction.fields[^1].add(field(id: i))
             break
 
         if not found:
@@ -320,8 +315,6 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     new_instruction.description = description
 
   return (new_instruction, "")
-
-func prepare_isa_spec*(isa_spec: var isa_spec): error
 
 func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
 
@@ -481,41 +474,6 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
 
     if not skip_newlines(s):
       return error("Expected newline after section header")
-
-  let prepare_err = prepare_isa_spec(result.spec)
-  if prepare_err.message != "":
-    result.error = prepare_err
-    result.error.loc.file = file_name
-
-
-func prepare_isa_spec*(isa_spec: var isa_spec): error =
-  ## Rebuilds the cache based on raw instructions.
-  ## Needs to be called before `assemble` or `disassemble` can be called
-  ## after the isa spec has been modified
-  ## Return value is a potential error, although no possible error
-  ## is currently known (message == "" if no error)
-  isa_spec.expanded_instructions.setLen(0)
-  for raw_instr in isa_spec.instructions:
-    assert raw_instr.raw_fields.len == raw_instr.fields.len, "Invalid raw instruction passed to prepare_isa_spec"
-    var new_instruction = raw_instr
-    new_instruction.raw_fields.setLen(0)
-    var counters = newSeq[int](raw_instr.raw_fields.len)
-    var increment = false
-    while true:
-      for field_index in 0 .. counters.high:
-        if increment:
-          counters[field_index] += 1
-          if counters[field_index] > raw_instr.raw_fields[field_index].high:
-            counters[field_index] = 0 # Keep increment = true to also increment the next one
-          else:
-            increment = false
-        new_instruction.fields[field_index] = raw_instr.raw_fields[field_index][counters[field_index]]
-      if increment: # we are done
-        break
-      isa_spec.expanded_instructions.add new_instruction
-      increment = true
-
-
 
 
 func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =

@@ -111,7 +111,7 @@ func pre_assemble_file(base_path: string, path: string, isa_spec: isa_spec, line
     let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
-
+#[
 func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
   var operand_index = 0
 
@@ -153,7 +153,7 @@ func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
       operand_index += 1
     else:
       result &= part
-
+]#
 func `$$`[T](s: openArray[T]): seq[string] =
   if s.len == 0:
     return @["@[]"]
@@ -247,76 +247,87 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         return error(&"Expected '{syntax}' after '" & $from_line_start(s) & "'", i)
       continue
 
-    let field = inst.fields[i]
-    case field.id:
-      of FIELD_LABEL.id:
-        if peek(s) == '.':
-          skip(s)
-          let jump_distance = check(get_unsigned(s))
-          let value: uint64 = check(parse_unsigned(jump_distance))
-          result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
-        else:
-          let label_name = get_identifier(s)
-          if label_name.len == 0:
-            return error("Was expecting a label name here", i)
-          if p.is_defined(label_name):
-            return error("Was expecting a label name here", i)
-          result.operands.add operand(kind: ok_label_ref, name: label_name)
+    let restore = s
+    for j, field in inst.fields[i]:
+      let is_last = j == inst.fields[i].high
+      s = restore
 
-        i += 1
-        continue
-      of FIELD_IMM.id:
-        let (number_err, number) = get_unsigned(s)
-        if number_err == "":
-          result.operands.add fixed(check(parse_unsigned(number)))
-        else:
-          let field_string = get_identifier(s)
-          if field_string.len == 0:
-            return error("Expected either a number or a symbol", i)
-          if field_string in p.number_defines:
-            result.operands.add fixed(p.number_defines[field_string].value)
+      case field.id:
+        of FIELD_LABEL.id:
+          if peek(s) == '.':
+            skip(s)
+            let jump_distance = check(get_unsigned(s))
+            let value: uint64 = check(parse_unsigned(jump_distance))
+            result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
           else:
-            return error(&"Undefined constant {field_string}", i)
-        i += 1
-        continue
-      else: # Some user defined field type
-        assert field.id >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
-        let pre_field_restore = s
-        let field_string = get_identifier(s)
+            let label_name = get_identifier(s)
+            if label_name.len == 0:
+              if not is_last: continue
+              return error("Was expecting a label name here", i)
+            if p.is_defined(label_name):
+              if not is_last: continue
+              return error("Was expecting a label name here", i)
+            result.operands.add operand(kind: ok_label_ref, name: label_name)
 
-        if field_string in p.field_defines[field.id]:
-          result.operands.add fixed(p.field_defines[field.id][field_string].value)
-        else:
-          var found = false
-          var value: uint64
-          block search_field:
-            # First check for exact matches
-            for field_value in p.isa_spec.field_types[field.id].values:
-              if field_value.name == field_string:
-                found = true
-                value = field_value.value
-                break search_field
-            if field_string.len > 0:
-              # Then search for partial matches, rewinding the
+          i += 1
+          break
+
+        of FIELD_IMM.id:
+          let (number_err, number) = get_unsigned(s)
+          if number_err == "":
+            result.operands.add fixed(check(parse_unsigned(number)))
+          else:
+            let field_string = get_identifier(s)
+            if field_string.len == 0:
+              if not is_last: continue
+              return error("Expected either a number or a symbol", i)
+            if field_string in p.number_defines:
+              result.operands.add fixed(p.number_defines[field_string].value)
+            else:
+              if not is_last: continue
+              return error(&"Undefined constant {field_string}", i)
+          i += 1
+          break
+
+        else: # Some user defined field type
+          assert field.id >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+          let pre_field_restore = s
+          let field_string = get_identifier(s)
+
+          if field_string in p.field_defines[field.id]:
+            result.operands.add fixed(p.field_defines[field.id][field_string].value)
+          else:
+            var found = false
+            var value: uint64
+            block search_field:
+              # First check for exact matches
               for field_value in p.isa_spec.field_types[field.id].values:
-                if ($field_string).startswith(field_value.name):
-                  s = pre_field_restore
-                  if not s.matches(field_value.name):
-                    return error("[Internal error] in partial match search", i)
+                if field_value.name == field_string:
                   found = true
                   value = field_value.value
                   break search_field
-          if not found:
-            if field_string == "":
-              return error(&"Missing a '{p.isa_spec.field_types[field.id].name}' operand here", i)
-            return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.id].name}'", i)
-          else:
-            # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
-            # TODO: Check what the above comment means
-            result.operands.add fixed(value)
-        i += 1
-        continue
-    doAssert false, "unreachable"
+              if field_string.len > 0:
+                # Then search for partial matches, rewinding the
+                for field_value in p.isa_spec.field_types[field.id].values:
+                  if ($field_string).startswith(field_value.name):
+                    s = pre_field_restore
+                    if not s.matches(field_value.name):
+                      if not is_last: continue
+                      return error("[Internal error] in partial match search", i)
+                    found = true
+                    value = field_value.value
+                    break search_field
+            if not found:
+              if not is_last: continue
+              if field_string == "":
+                return error(&"Missing a '{p.isa_spec.field_types[field.id].name}' operand here", i)
+              return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.id].name}'", i)
+            else:
+              # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
+              # TODO: Check what the above comment means
+              result.operands.add fixed(value)
+          i += 1
+          break
 
   p.isa_spec.skip_whitespaces(s)
   if peek(s) notin {'\n', '\0'}:
@@ -716,7 +727,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       var matched: matched_instruction
       let restore = s
 
-      for inst in isa_spec.expanded_instructions:
+      for inst in isa_spec.instructions:
         s = restore  # Reset to the beginning of the line
         let inst_res = parse_instruction(s, res.pc, inst)
         if inst_res.error == "": # The instruction parsed succesfully
