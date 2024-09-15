@@ -8,7 +8,15 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   var field_i = 0
   for syntax in instruction.syntax:
     if syntax == "":
-      source &= "%" & $char(ord('a') + field_i) & "(" & isa_spec.field_types[instruction.fields[field_i].id].name & ")"
+      source &= "%" & $char(ord('a') + field_i) & "("
+      if instruction.raw_fields.len == 0:
+        source &= isa_spec.field_types[instruction.fields[field_i].id].name
+      else:
+        for i, field_type in instruction.raw_fields[field_i]:
+          if i != 0:
+            source &= "|"
+          source &= isa_spec.field_types[field_type.id].name
+      source &= ")"
       field_i += 1
     else:
       source &= syntax
