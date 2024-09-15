@@ -1,1 +1,1 @@
-16 is too large for the 1st operand
+@[(loc: (file: "widening/same_width.1.asm", line: 34), message: "16 is too large for the 1st operand")]

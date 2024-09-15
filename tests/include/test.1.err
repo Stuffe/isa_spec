@@ -1,1 +1,1 @@
-Recursive inclusion of: include/recursive_include.asm
+@[(loc: (file: "include/recursive_include.asm", line: 1), message: "Recursive inclusion of: include/recursive_include.asm")]

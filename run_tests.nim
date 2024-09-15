@@ -2,7 +2,7 @@ import std/[tables, os, strutils, strformat]
 import isa_spec, types
 
 const STOP_AT_FIRST_FAIL = true
-const RUN_SINGLE_TEST    = "new_test" # Emtpy string means run all tests
+const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
 
 type asm_test_files = tuple
   source_file: string
@@ -110,15 +110,15 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
     let spec_source = readFile(tests.spec_file)
-    let spec_result = parse_isa_spec(spec_source)
+    let spec_result = parse_isa_spec(tests.spec_file, spec_source)
     let isa_spec = spec_result.spec
-    if spec_result.error != "":
+    if spec_result.error.message != "":
       if tests.spec_error_file != "":
         let expected_spec_error = readFile(tests.spec_error_file)
-        if expected_spec_error != spec_result.error:
+        if expected_spec_error != spec_result.error.message:
           fail(test_name, tests.spec_file, &"Wrong error message: Got \"{spec_result.error}\", Expected \"{expected_spec_error}\"")
       else:
-        fail(test_name, tests.spec_file, &"Unexpected Spec failure: \"{spec_result.error}\" at line {spec_result.error_line}")
+        fail(test_name, tests.spec_file, &"Unexpected Spec failure: \"{spec_result.error}\"")
       continue
     if tests.spec_error_file != "":
       fail(test_name, tests.spec_file, "Expected spec parse error")
@@ -128,17 +128,17 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       doAssert asm_test.source_file != "", &"no '.asm' file for {test_name}/{sub_name}.{sid}"
       let asm_source = readFile(asm_test.source_file)
       let asm_result = assemble(TEST_PATH, asm_test.source_file.relative_path(TEST_PATH), isa_spec, asm_source)
-      if asm_result.error != "":
+      if asm_result.errors.len != 0:
         if asm_test.error_file != "":
           let expected_asm_error = readFile(asm_test.error_file)
-          if expected_asm_error != asm_result.error:
+          if expected_asm_error != $asm_result.errors:
             fail(test_name, asm_test.source_file, &"Wrong error message:\n" &
-                                                  &" Got \"{asm_result.error}\" " &
-                                                  &"Expected \"{expected_asm_error}\"")
+                                                  &" Got {asm_result.errors} \n" &
+                                                  &"Expected {expected_asm_error}")
           else:
             doAssert asm_test.result_file == "", &"Can't have both error and results for the same test ({asm_test.source_file}))"
         else:
-          fail(test_name, asm_test.source_file, &"Unexpected assemble failure: \"{asm_result.error}\" at line {asm_result.error_line} in file \"{asm_result.error_file}\"")
+          fail(test_name, asm_test.source_file, &"Unexpected assemble failure: {asm_result.errors}")
         continue
       if asm_test.error_file != "":
         fail(test_name, asm_test.source_file, "Expected assemble failure")

@@ -1,0 +1,3 @@
+[instructions]
+load %a(immediate|label)
+00aaaaaa

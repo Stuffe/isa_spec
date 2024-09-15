@@ -1,1 +1,1 @@
-Unknown instruction
+@[(loc: (file: "player_crash/test1.asm", line: 9), message: "Unknown instruction"), (loc: (file: "player_crash/test1.asm", line: 11), message: "No progress was made"), (loc: (file: "player_crash/test1.asm", line: 5), message: "Undefined label mul")]
