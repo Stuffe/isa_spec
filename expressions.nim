@@ -67,7 +67,8 @@ func get_term(s: var stream_slice, operand_count: int): expression =
     let (err, number) = get_unsigned(s)
     if err != "":
       return expression(exp_kind: exp_fail, msg: err)
-    let value: uint64 = parse_unsigned(number)
+    let value: uint64 = parse_unsigned(number).on_err() do:
+        return expression(exp_kind: exp_fail, msg: err)
     result = expression(exp_kind: exp_number, value: cast[int](value))
 
 func get_greedy_group(s: var stream_slice, operand_count: int): expression =

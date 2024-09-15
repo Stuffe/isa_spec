@@ -190,21 +190,19 @@ func xdigit_to_value(c: char): int =
     return c.ord - 'A'.ord + 10
   return c.ord - 'a'.ord + 10
 
-func parse_unsigned*(s: stream_slice): uint64 =
-
+func parse_unsigned*(s: stream_slice): (string, uint64) =
+  # TODO: Generate more correct error messages in this function and probably don't use the builtin functions
+  if s.len < 3: 
+    try:
+      return ("", cast[uint64](parseInt($s)))
+    except ValueError: return ("Invalid int literal", 0'u64)
   try:
-
-    if s.len < 3: 
-      return cast[uint64](parseInt($s))
-
     case s[1]:
-      of 'x': return fromHex[uint64]($s)
-      of 'o': return fromOct[uint64]($s)
-      of 'b': return fromBin[uint64]($s)
-      else:   return cast[uint64](parseInt($s))
-
-  except:
-    assert false, "Only call this function with output of get_signed or get_unsigned. That function would have done the error checking ensuring we never get here."
+      of 'x': return ("", fromHex[uint64]($s))
+      of 'o': return ("", fromOct[uint64]($s))
+      of 'b': return ("", fromBin[uint64]($s))
+      else:   return ("", cast[uint64](parseInt($s)))
+  except ValueError: return ("Invalid int literal", 0'u64)
 
 func get_signed*(s: var stream_slice): (string, stream_slice) =
   
@@ -220,12 +218,14 @@ func parse_signed*(s: stream_slice): (string, int) =
   if s.len == 0: return ("Invalid signed int literal", 0)
 
   if s[0] == '-':
-    let raw_uint = parse_unsigned(s[1..^1])
+    let raw_uint = parse_unsigned(s[1..^1]).on_err do:
+      return (err, 0)
     if raw_uint > int.high.uint64 + 1: # we can represent one more negative value than positive values
       return ("Literal to large for a signed int", 0)
     return ("", -1 * cast[int](raw_uint))
   else:
-    let raw_uint = parse_unsigned(s)
+    let raw_uint = parse_unsigned(s).on_err do:
+      return (err, 0)
     if raw_uint > int.high.uint64:
       return ("Literal to large for a signed int", 0)
     return ("", cast[int](raw_uint))

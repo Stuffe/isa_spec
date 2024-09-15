@@ -253,7 +253,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         if peek(s) == '.':
           skip(s)
           let jump_distance = check(get_unsigned(s))
-          let value: uint64 = parse_unsigned(jump_distance)
+          let value: uint64 = check(parse_unsigned(jump_distance))
           result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
         else:
           let label_name = get_identifier(s)
@@ -268,7 +268,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       of FIELD_IMM.id:
         let (number_err, number) = get_unsigned(s)
         if number_err == "":
-          result.operands.add fixed(parse_unsigned(number))
+          result.operands.add fixed(check(parse_unsigned(number)))
         else:
           let field_string = get_identifier(s)
           if field_string.len == 0:
@@ -516,7 +516,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           continue
         let mask = uint64.high shr (64 - size)
         var i = size div 8
-        var value = mask and parse_unsigned(number)
+        var value = mask and (parse_unsigned(number).on_err do:
+          error(err)
+          skip_line(s)
+          continue
+        )
         while i > 0:
           emit(cast[uint8](value))
           value = value shr 8
@@ -658,8 +662,11 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         if number_err == "":
           res.pc.number_defines[definition_name] = define_value(
               public: public,
-              value: parse_unsigned(number)
-          )
+              value: (parse_unsigned(number).on_err() do:
+                error(err)
+                skip_line(s)
+                continue
+          ))
 
         else:
           let define_value = get_identifier(s)
