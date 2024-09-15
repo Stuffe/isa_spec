@@ -70,8 +70,7 @@ type instruction* = object
   ## raw instructions have `fields` filled with `FIELD_INVALID` and raw_fields is as long as fields
   ## baked instructions have `fields` filled correctly and raw_fields is empty
   syntax*: seq[string]
-  fields*: seq[field]
-  raw_fields*: seq[seq[field]]
+  fields*: seq[seq[field]]
   virtual_fields*: seq[expression]
   asserts*: seq[(expression, expression, string)]
   field_sign*: seq[sign_kind]
@@ -103,7 +102,6 @@ type isa_spec* = object
   code_alignment*: int
   field_types*: seq[field_type]
   instructions*: seq[instruction]
-  expanded_instructions*: seq[instruction]
 
 type spec_parse_result* = object
   error*: error
