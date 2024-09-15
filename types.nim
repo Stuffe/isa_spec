@@ -7,7 +7,6 @@ const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 type field* = object
   id*: int
 
-const FIELD_INVALID*    = field(id: -1)
 const FIELD_ZERO*       = field(id: 0)
 const FIELD_ONE*        = field(id: 1)
 const FIELD_WILDCARD*   = field(id: 2)
@@ -82,9 +81,6 @@ type sign_kind* = enum
   sk_either # -128 to 255, assumes programmers know what they are doing
 
 type instruction* = object
-  ## instructions can either be baked or raw
-  ## raw instructions have `fields` filled with `FIELD_INVALID` and raw_fields is as long as fields
-  ## baked instructions have `fields` filled correctly and raw_fields is empty
   syntax*: seq[string]
   fields*: seq[seq[field]]
   virtual_fields*: seq[expression]
