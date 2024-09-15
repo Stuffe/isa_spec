@@ -1,17 +1,10 @@
 import tables, std/[algorithm, setutils], parse
 
-type register_kind* = enum
-  field
-  scalar_int
-  scalar_float
-  vector
-
 type field_value* = object
   name*: string
   value*: uint64
 
 type field_type* = object
-  register_kind: register_kind
   name*: string
   bit_length*: int
   values*: seq[field_value]
@@ -58,17 +51,21 @@ type sign_kind* = enum
   sk_signed # -128 to 127
   sk_either # -128 to 255, assumes programmers know what they are doing
 
+type field* = object
+  id*: int
+
+
 type instruction* = object
   ## instructions can either be baked or raw
   ## raw instructions have `fields` filled with `FIELD_INVALID` and raw_fields is as long as fields
   ## baked instructions have `fields` filled correctly and raw_fields is empty
   syntax*: seq[string]
-  fields*: seq[int]
-  raw_fields*: seq[seq[int]]
+  fields*: seq[field]
+  raw_fields*: seq[seq[field]]
   virtual_fields*: seq[expression]
   asserts*: seq[(expression, expression, string)]
   field_sign*: seq[sign_kind]
-  bits*: seq[int]
+  bits*: seq[field]
   fixed_pattern_0*: uint64
   fixed_pattern_1*: uint64
   fixed_mask_0*: uint64

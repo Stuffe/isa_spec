@@ -3,12 +3,12 @@ import types, parse, expressions
 
 export parse.new_stream_slice
 
-const FIELD_INVALID    = -1
-const FIELD_ZERO       = 0
-const FIELD_ONE        = 1
-const FIELD_WILDCARD   = 2
-const FIELD_IMM        = 3
-const FIELD_LABEL      = 4
+const FIELD_INVALID    = field(id: -1)
+const FIELD_ZERO       = field(id: 0)
+const FIELD_ONE        = field(id: 1)
+const FIELD_WILDCARD   = field(id: 2)
+const FIELD_IMM        = field(id: 3)
+const FIELD_LABEL      = field(id: 4)
 const FIXED_FIELDS_LEN = 5
 
 const ANY_NUMBER_OF_SPACES = " "
@@ -27,18 +27,18 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   var field_i = 0
   for syntax in instruction.syntax:
     if syntax == "":
-      source &= "%" & $char(ord('a') + field_i) & "(" & isa_spec.field_types[instruction.fields[field_i]].name & ")"
+      source &= "%" & $char(ord('a') + field_i) & "(" & isa_spec.field_types[instruction.fields[field_i].id].name & ")"
       field_i += 1
     else:
       source &= syntax
   source &= "\n"
 
   for i, bit_type in instruction.bits:
-    if bit_type < FIXED_FIELDS_LEN:
-      assert bit_type < 3
-      source &= "01?"[bit_type]
+    if bit_type.id < FIXED_FIELDS_LEN:
+      assert bit_type.id < 3
+      source &= "01?"[bit_type.id]
     else:
-      source &= $char(ord('a') + bit_type - FIXED_FIELDS_LEN)
+      source &= $char(ord('a') + bit_type.id - FIXED_FIELDS_LEN)
     if i mod 8 == 7:
       source &= " "
 
@@ -101,7 +101,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       syntax_parts.add(this_part)
 
   var new_instruction: instruction
-  var fields: seq[seq[int]]
+  var fields: seq[seq[field]]
 
   block syntax:
     add_string_syntax(s, new_instruction.syntax)
@@ -144,7 +144,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         for i, field in isa_spec.field_types:
           if $field_name == field.name:
             found = true
-            new_instruction.raw_fields[^1].add i
+            new_instruction.raw_fields[^1].add(field(id: i))
             break
 
         if not found:
@@ -261,7 +261,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           if field_index >= new_instruction.fields.len + new_instruction.virtual_fields.len:
             return error("Error defining '" & instruction_name & "'. Character '" & peek(s) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
           let field_real_index = field_index + FIXED_FIELDS_LEN
-          new_instruction.bits.add(field_real_index)
+          new_instruction.bits.add(field(id: field_real_index))
 
       skip(s)
     
@@ -502,8 +502,8 @@ func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
         result.add(disassembled_instruction(is_literal: false, instruction: instruction))
         var fields: seq[uint64]
         for i, t in instruction.bits:
-          if t < FIXED_FIELDS_LEN: continue
-          let idx = t - FIXED_FIELDS_LEN
+          if t.id < FIXED_FIELDS_LEN: continue
+          let idx = t.id - FIXED_FIELDS_LEN
           while idx >= fields.len:
             fields.add(0)
 
@@ -653,15 +653,15 @@ func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction
 
       let operand = disassembled_instruction.operands[operand_index]
 
-      case field_index:
-        of FIELD_ZERO, FIELD_ONE, FIELD_WILDCARD:
+      case field_index.id:
+        of FIELD_ZERO.id, FIELD_ONE.id, FIELD_WILDCARD.id:
           assert false
-        of FIELD_IMM:
+        of FIELD_IMM.id:
           result &= $operand
-        of FIELD_LABEL:
+        of FIELD_LABEL.id:
           result &= ".+" & $operand
         else:
-          let fields = isa_spec.field_types[field_index].values
+          let fields = isa_spec.field_types[field_index.id].values
           
           var found = false
           for field in fields:
@@ -771,8 +771,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       continue
 
     let field = inst.fields[i]
-    case field:
-      of FIELD_LABEL:
+    case field.id:
+      of FIELD_LABEL.id:
         if peek(s) == '.':
           skip(s)
           let jump_distance = check(get_unsigned(s))
@@ -788,7 +788,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
 
         i += 1
         continue
-      of FIELD_IMM:
+      of FIELD_IMM.id:
         let (number_err, number) = get_unsigned(s)
         if number_err == "":
           result.operands.add fixed(check(parse_unsigned(number)))
@@ -803,25 +803,25 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
         i += 1
         continue
       else: # Some user defined field type
-        assert field >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+        assert field.id >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
         let pre_field_restore = s
         let field_string = get_identifier(s)
 
-        if field_string in p.field_defines[field]:
-          result.operands.add fixed(p.field_defines[field][field_string].value)
+        if field_string in p.field_defines[field.id]:
+          result.operands.add fixed(p.field_defines[field.id][field_string].value)
         else:
           var found = false
           var value: uint64
           block search_field:
             # First check for exact matches
-            for field_value in p.isa_spec.field_types[field].values:
+            for field_value in p.isa_spec.field_types[field.id].values:
               if field_value.name == field_string:
                 found = true
                 value = field_value.value
                 break search_field
             if field_string.len > 0:
               # Then search for partial matches, rewinding the
-              for field_value in p.isa_spec.field_types[field].values:
+              for field_value in p.isa_spec.field_types[field.id].values:
                 if ($field_string).startswith(field_value.name):
                   s = pre_field_restore
                   if not s.matches(field_value.name):
@@ -831,8 +831,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
                   break search_field
           if not found:
             if field_string == "":
-              return error(&"Missing a '{p.isa_spec.field_types[field].name}' operand here", i)
-            return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field].name}'", i)
+              return error(&"Missing a '{p.isa_spec.field_types[field.id].name}' operand here", i)
+            return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.id].name}'", i)
           else:
             # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
             # TODO: Check what the above comment means
@@ -876,14 +876,14 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     let bit_index = i mod 64
     let int_index = i div 64
 
-    case bit_type:
-      of FIELD_ZERO: discard
-      of FIELD_ONE: setBit[uint64](values[int_index], bit_index)
-      of FIELD_WILDCARD: discard
-      of FIELD_IMM: assert false
-      of FIELD_LABEL: assert false
+    case bit_type.id:
+      of FIELD_ZERO.id: discard
+      of FIELD_ONE.id: setBit[uint64](values[int_index], bit_index)
+      of FIELD_WILDCARD.id: discard
+      of FIELD_IMM.id: assert false
+      of FIELD_LABEL.id: assert false
       else:
-        let index = bit_type - FIXED_FIELDS_LEN
+        let index = bit_type.id - FIXED_FIELDS_LEN
 
         let bit = (fields[index] and 1)
         if bit == 1:
