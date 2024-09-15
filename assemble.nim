@@ -324,7 +324,12 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
 
   result.final_index = get_index(s)
 
-func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (string, seq[uint8]) =
+func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
+  template error(input: string) =
+    if throw_on_error:
+      raise newException(ValueError, input)
+    return
+  
   var fields = args
   for virtual_field in inst.virtual_fields:
     let new_field = eval(virtual_field, fields, ip)
@@ -334,9 +339,9 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     let rhs_value = eval(rhs, fields, ip)
     if lhs_value != rhs_value:
       if msg == "":
-        return (&"Assert {lhs} == {rhs} did not match", @[])
+        error(&"Assert {lhs} == {rhs} did not match")
       else:
-        return (msg, @[])
+        error(msg)
 
   var values = [0'u64, 0]
 
@@ -384,18 +389,18 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     case inst.field_sign[i]:
       of sk_unsigned:
         if field != 0:
-          return (&"{args[i]} is too large for the {get_ordinal(i)} operand", @[])
+          error(&"{args[i]} is too large for the {get_ordinal(i)} operand")
       of sk_signed:
         if used_fields[i] != used_sign_bit:
           if i < args.high:
-            return (&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand", @[])
-          return (&"Immediate is too large for {get_ordinal(i)} operand", @[])
+            error(&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand")
+          error(&"Immediate is too large for {get_ordinal(i)} operand")
       of sk_either:
         if field != 0 and field != uint64.high:
-          return (&"{args[i]} is too large for the {get_ordinal(i)} operand", @[])
+          error(&"{args[i]} is too large for the {get_ordinal(i)} operand")
 
   var width_left = inst.bits.len
-  result[1].set_len(width_left div 8)
+  result.set_len(width_left div 8)
   var value_index = 0
   const big_endian = true # TODO
   var offset = if big_endian:
@@ -416,7 +421,7 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int): (strin
     var shift_by    = max_width - 8
 
     for i in 0..shift_count:
-      result[1][offset] = cast[uint8](value shr shift_by)
+      result[offset] = cast[uint8](value shr shift_by)
       if big_endian:
         offset -= 1
       else:
@@ -734,23 +739,27 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
               assert op.kind == ok_fixed, "any_pc_rel did something weird"
               t.add op.value
             t
-          var final_err_msg = ""
+          var found = false
           for inst in matched.options:
-            let (err_msg, machine_code) = assemble_instruction(inst, args, 0xDEAD)
-            if err_msg != "":
-              final_err_msg = err_msg
+            let machine_code = assemble_instruction(inst, args, 0xDEAD, false)
+            if machine_code.len == 0:
               continue
+            found = true
             if isa_spec.endianness == end_little:
               res.segments[^1].fixed.add machine_code
             else:
               for i in countdown(machine_code.high, machine_code.low):
                 res.segments[^1].fixed.add machine_code[i]
-            final_err_msg = ""
             break
-          if final_err_msg != "":
-            error(final_err_msg)
-            skip_line(s)
-            continue
+
+          if not found:
+            try: # Trigger the first error
+              discard assemble_instruction(matched.options[0], args, 0xDEAD, true)
+            except ValueError as e:
+              error(e.msg)
+              skip_line(s)
+              continue
+          
       else:
         if best_match.error != "":
           error(best_match.error)
@@ -816,9 +825,15 @@ func finalize(pa: pre_assembly_result): assembly_result =
           of ok_relative:
             cast[uint64](result.machine_code.len + op.offset)
       values
-    let (err_msg, machine_code) = assemble_instruction(inst, args, result.machine_code.len)
-    if err_msg != "":
-      return error(err_msg, result.line_info.get_line_from_byte(result.machine_code.len))
+
+
+    var err_msg: string
+    var machine_code: seq[uint8]
+    try: 
+      machine_code = assemble_instruction(inst, args, result.machine_code.len, true)
+    except ValueError as e:
+      return error(e.msg, result.line_info.get_line_from_byte(result.machine_code.len))
+
     if pa.pc.isa_spec.endianness == end_little:
       result.machine_code.add machine_code
     else:
@@ -862,7 +877,7 @@ func relax(pa: var pre_assembly_result) =
             of ok_relative:
               cast[uint64](ip + op.offset)
         values
-      let (err_msg, _) = assemble_instruction(inst, args, ip)
-      if err_msg != "":
+      let machine_code = assemble_instruction(inst, args, ip, false)
+      if machine_code.len == 0:
         segment.relaxable.selected_option += 1
         all_fit = false
