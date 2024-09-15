@@ -17,7 +17,7 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       var options: seq[string]
       for field in instruction.fields[field_i]:
         options.add(isa_spec.field_types[field.id].name)
-      source &= field_define(field_i) & "(" & options.join("|") & ")"
+      source &= field_define(field_i) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
       source &= syntax.replace("%", "%%")
@@ -174,8 +174,12 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         if not found:
           return error("Field name '" & $field_name & "' not defined")
 
+        skip_whitespaces(s)
+
         if not s.matches('|'):
           break
+
+        skip_whitespaces(s)
 
       if not matches(s, ')'):
         return error("Expected a closing parenthesis after the field type")
