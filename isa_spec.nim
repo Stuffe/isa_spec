@@ -3,30 +3,35 @@ import types, parse, expressions
 
 export parse.new_stream_slice
 
+func field_names(i: instruction): seq[string] =
+  for f in i.fields:
+    result.add f.name
+
 func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
-  func field_define(i: int): string =
-    if instruction.field_sign[i] == sk_unsigned:
-      "%" & instruction.field_names[i]
+  func field_define(f: field_def): string =
+    if (not f.is_signed) and f.size == 64:
+      "%" & f.name
     else:
-      "%" & instruction.field_names[i] & ":" & "usi"[instruction.field_sign[i].ord]
+      "%" & f.name & ":" & "US"[f.is_signed.ord] & $f.size
 
   var source = ""
   var field_i = 0
   for syntax in instruction.syntax:
     if syntax == "":
       var options: seq[string]
-      for field in instruction.fields[field_i]:
+      assert not instruction.fields[field_i].is_virtual
+      for field in instruction.fields[field_i].options:
         options.add(isa_spec.field_types[field.id].name)
-      source &= field_define(field_i) & "(" & options.join(" | ") & ")"
+      source &= field_define(instruction.fields[field_i]) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
       source &= syntax.replace("%", "%%")
   source &= "\n"
 
-  for expr in instruction.virtual_fields:
-      let expr_source = expr.expr_to_string(instruction.field_names)
-      source &= field_define(field_i) & " = " & expr_source & "\n"
-      field_i += 1
+  for vf in instruction.fields[field_i .. ^1]:
+    assert vf.is_virtual
+    let expr_source = vf.expr.expr_to_string(instruction.field_names)
+    source &= field_define(vf) & " = " & expr_source & "\n"
 
   for (lhs, rhs, msg) in instruction.asserts:
       let lhs_source = lhs.expr_to_string(instruction.field_names)
@@ -133,31 +138,28 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
-      let operand_name = get_identifier(s)
-      if operand_name.len == 0:
+      var new_field = field_def(size: 64, is_virtual: false)
+      new_field.name = $get_identifier(s)
+      if new_field.name.len == 0:
         return error("Expected an identifier after '%'")
 
-      var field_sign = block:
-        if matches(s, ':'):
-          let marker = read(s)
-          case marker:
-            of 's':
-              sk_signed
-            of 'u':
-              sk_unsigned
-            of 'i':
-              sk_either
-            else:
-              return error(&"Invalid annotation for operand %{operand_name}: {marker}")
-        else:
-          sk_unsigned
+      if matches(s, ':'):
+        let marker = read(s)
+        new_field.is_signed = case marker:
+          of 'U':
+            false
+          of 'S':
+             true
+          else:
+            return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
+        new_field.size = ?parse_signed(?get_unsigned(s))
+        if new_field.size < 1 or new_field.size > 64:
+          return error(&"Invalid size {new_field.size}")
+
       new_instruction.syntax.add("")
-      new_instruction.field_sign.add(field_sign)
-      new_instruction.fields.add(@[])
-      new_instruction.field_names.add $operand_name
 
       if not matches(s, '('):
-        return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
+        return error("Expected parenthesis after the operand name, like: " & new_field.name & "(immediate)")
       while true:
         let field_name = get_identifier(s)
 
@@ -169,7 +171,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         for i, field in isa_spec.field_types:
           if $field_name == field.name:
             found = true
-            new_instruction.fields[^1].add(field(id: i))
+            new_field.options.add(field(id: i))
             break
 
         if not found:
@@ -185,6 +187,8 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       if not matches(s, ')'):
         return error("Expected a closing parenthesis after the field type")
 
+      new_instruction.fields.add(new_field)
+
       add_string_syntax(s, new_instruction.syntax)
 
     if read(s) != '\n':
@@ -198,25 +202,23 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     var count = 1
     while peek(s) in {'%', '!'}:
       if read(s) == '%':
-        let operand_name = get_identifier(s)
-        if operand_name.len == 0:
+        var new_field = field_def(size: 64, is_virtual: true)
+        new_field.name = $get_identifier(s)
+        if new_field.name.len == 0:
           return error("Expected an identifier after '%'")
 
-        skip_whitespaces(s)
-        let field_sign = block:
-          if matches(s, ':'):
-            let marker = read(s)
-            case marker:
-              of 's':
-                sk_signed
-              of 'u':
-                sk_unsigned
-              of 'i':
-                sk_either
-              else:
-                return error(&"Invalid annotation for operand %{operand_name}:{marker}")
-          else:
-            sk_unsigned # default to unsigned.
+        if matches(s, ':'):
+          let marker = read(s)
+          new_field.is_signed = case marker:
+            of 'U':
+              false
+            of 'S':
+               true
+            else:
+              return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
+          new_field.size = ?parse_signed(?get_unsigned(s))
+          if new_field.size < 1 or new_field.size > 64:
+            return error(&"Invalid size {new_field.size}")
         skip_whitespaces(s)
 
         if not matches(s, '='):
@@ -224,12 +226,10 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
         skip_whitespaces(s)
 
-        let virt_op = get_expression(s, new_instruction.field_names)
-        new_instruction.virtual_fields.add(virt_op)
-        new_instruction.field_sign.add(field_sign)
-        new_instruction.field_names.add $operand_name
+        new_field.expr = get_expression(s, new_instruction.field_names)
+        new_instruction.fields.add(new_field)
 
-        if virt_op.exp_kind == exp_fail:
+        if new_field.expr.exp_kind == exp_fail:
           if instruction_name == "":
             return error("Could not read virtual operand " & $count)
           else:
@@ -260,7 +260,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         if not skip_newlines(s):
           return error("Expected newline after assert expression")
         new_instruction.asserts.add (lhs, rhs, msg)
-  assert new_instruction.field_names.len == new_instruction.fields.len + new_instruction.virtual_fields.len
+
   block bit_pattern:
     var pattern: string
     var mask: string
@@ -516,12 +516,14 @@ func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
             bit = uint64((machine_code_1 and (1'u64 shl (instruction.bits.high - i2))) > 0)
           
           fields[idx] = fields[idx] shl 1'u64 or bit
-        
-        for i, expression in instruction.virtual_fields:
-          let field_index = instruction.fields.len + i
+
+        for field_index in countDown(instruction.fields.high, 0):
+          if not instruction.fields[field_index].is_virtual:
+            break
+          let expression = instruction.fields[field_index].expr
           let res = cast[int](fields[field_index])
           fields[field_index] = cast[uint64](reverse_eval(expression, current_address, fields, res))
-                  
+
         result[^1].operands = fields
 
         break

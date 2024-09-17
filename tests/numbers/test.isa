@@ -3,5 +3,5 @@
 
 [instructions]
 
-load %a:s(immediate)
+load %a:S64(immediate)
 000aaaaa

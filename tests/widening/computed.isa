@@ -5,13 +5,13 @@ nop
 11111111
 
 jmp %a(label)
-%b:s = %a - $
+%b:S64= %a - $
 100000bb
 
 jmp %a(label)
-%b:s = %a - $
+%b:S64= %a - $
 10010000 00000bbb
 
 jmp %a(label)
-%b:s = %a - $
+%b:S64= %a - $
 10100000 00000000 0000bbbb

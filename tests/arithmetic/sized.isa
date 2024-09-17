@@ -1,0 +1,3 @@
+[instructions]
+mov  r%r(immediate) , %v:S16(immediate)
+0001 rrrr vvvvvvvv
