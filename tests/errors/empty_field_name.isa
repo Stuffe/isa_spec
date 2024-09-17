@@ -1,0 +1,7 @@
+[fields]
+register
+r0 0000
+
+[instructions]
+%(register) = %a(register)
+aaaaaaaa

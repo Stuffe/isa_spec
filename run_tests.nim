@@ -1,5 +1,5 @@
 import std/[tables, os, strutils, strformat, times, monotimes]
-import isa_spec, types
+import isa_spec, types, expressions
 
 const STOP_AT_FIRST_FAIL = true
 const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests

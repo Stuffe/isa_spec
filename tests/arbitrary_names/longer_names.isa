@@ -1,0 +1,9 @@
+[instructions]
+
+mov  %target(immediate) , %source(immediate)
+ssss tttt
+
+jmp  %target(immediate)
+%rel = %target - $
+0000 rrrr
+
