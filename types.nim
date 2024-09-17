@@ -31,6 +31,7 @@ type exp_kind* = enum
   exp_number
   exp_operand
   exp_operation
+  exp_bitextract
 
 type op_kind* = enum
   op_add
@@ -58,6 +59,10 @@ type expression* = ref object
       op_kind*: op_kind
       lhs*: expression
       rhs*: expression
+    of exp_bitextract:
+      base*: expression
+      top*: expression
+      bottom*: expression
 
 func `==`*(a, b: expression): bool =
   if a.isNil() or b.isNil():
@@ -73,6 +78,8 @@ func `==`*(a, b: expression): bool =
       return a.index == b.index
     of exp_operation:
       return a.op_kind == b.op_kind and a.lhs == b.lhs and a.rhs == b.rhs
+    of exp_bitextract:
+      return a.base == b.base and a.top == b.top and a.bottom == b.bottom
 
 
 type field_def* = object

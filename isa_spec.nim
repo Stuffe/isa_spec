@@ -30,12 +30,12 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
 
   for vf in instruction.fields[field_i .. ^1]:
     assert vf.is_virtual
-    let expr_source = vf.expr.expr_to_string(instruction.field_names)
+    let expr_source = vf.expr.to_str(instruction.field_names)
     source &= field_define(vf) & " = " & expr_source & "\n"
 
   for (lhs, rhs, msg) in instruction.asserts:
-      let lhs_source = lhs.expr_to_string(instruction.field_names)
-      let rhs_source = rhs.expr_to_string(instruction.field_names)
+      let lhs_source = lhs.to_str(instruction.field_names)
+      let rhs_source = rhs.to_str(instruction.field_names)
       source &= &"!assert {lhs_source} == {rhs_source}"
       if msg != "":
         source &= " " & make_escaped_string(msg)
@@ -265,7 +265,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     var pattern: string
     var mask: string
 
-    while peek(s) in setutils.toSet("01?abcdefghijklmnopqrstuvwxyz "):
+    while peek(s) in setutils.toSet("01?%abcdefghijklmnopqrstuvwxyz "):
       case peek(s):
         of '0':
           pattern.add('0')

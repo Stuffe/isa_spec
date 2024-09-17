@@ -1,7 +1,7 @@
 import std/[tables, os, strutils, strformat, times, monotimes]
 import isa_spec, types, expressions
 
-const STOP_AT_FIRST_FAIL = true
+const STOP_AT_FIRST_FAIL = false
 const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
 
 type asm_test_files = tuple

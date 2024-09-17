@@ -363,8 +363,8 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
     let rhs_value = eval(rhs, fields, ip)
     if lhs_value != rhs_value:
       if msg == "":
-        let lhs_source = lhs.expr_to_string(inst.field_names)
-        let rhs_source = rhs.expr_to_string(inst.field_names)
+        let lhs_source = lhs.to_str(inst.field_names)
+        let rhs_source = rhs.to_str(inst.field_names)
         error(&"Assert {lhs_source} == {rhs_source} did not match")
       else:
         error(msg)
@@ -498,6 +498,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         return expr.index == CURRENT_ADDRESS
       of exp_operation:
         return expr.lhs.any_pc_rel or expr.rhs.any_pc_rel
+      of exp_bitextract:
+        return expr.base.any_pc_rel or expr.top.any_pc_rel or expr.bottom.any_pc_rel
 
   func any_pc_rel(match: matched_instruction): bool =
     for op in match.operands:

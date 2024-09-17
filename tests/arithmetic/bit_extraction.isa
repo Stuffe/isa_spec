@@ -1,0 +1,5 @@
+[instructions]
+
+extract  %a(immediate) , %b(immediate) , %c(immediate)
+%d = %a[%b:%c]
+dddddddd dddddddd dddddddd dddddddd dddddddd dddddddd dddddddd dddddddd
