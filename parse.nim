@@ -252,14 +252,13 @@ func get_size*(s: var stream_slice): (string, int) =
   if peek(s) != '<' or peek(s, 1) != 'U':
     return ("Expected a size declaration here", 0)
   s.skip(2)
-  let number = $(get_unsigned(s).on_err do:
+  let number = (get_unsigned(s).on_err do:
     return (err, 0)
   )
-  if number == "" or read(s) != '>':
+  if number.len == 0 or read(s) != '>':
     s = restore
     return ("Expected a size declaration here", 0)
-
-  return ("", parseInt(number))
+  return parse_signed(number)
 
 iterator items*(s: stream_slice): char =
   var i = s.start

@@ -51,6 +51,17 @@ proc echo_deep_diff[T: openArray](a, b: T; path: string) =
     for i, av in a:
       echo_deep_diff(av, b[i], path & &"[{i}]" )
 
+proc echo_deep_diff(a, b: field_def; path: string) =
+  echo_deep_diff(a.name, b.name, path & "." & "name")
+  echo_deep_diff(a.is_signed, b.is_signed, path & "." & "is_signed")
+  echo_deep_diff(a.size, b.size, path & "." & "size")
+  echo_deep_diff(a.is_virtual, b.is_virtual, path & "." & "is_virtual")
+  if a.is_virtual == b.is_virtual:
+    if a.is_virtual:
+      echo_deep_diff(a.expr, b.expr, path & "." & "expr")
+    else:
+      echo_deep_diff(a.options, b.options, path & "." & "options")
+
 proc parse_hex_string(source: string): seq[uint8] =
   var last: int = -1
   for c in source:

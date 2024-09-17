@@ -75,18 +75,28 @@ func `==`*(a, b: expression): bool =
       return a.op_kind == b.op_kind and a.lhs == b.lhs and a.rhs == b.rhs
 
 
-type sign_kind* = enum
-  sk_unsigned # 0 to 255
-  sk_signed # -128 to 127
-  sk_either # -128 to 255, assumes programmers know what they are doing
+type field_def* = object
+  name*: string
+  is_signed*: bool
+  size*: int
+  case is_virtual*: bool
+    of false:
+      options*: seq[field]
+    of true:
+      expr*: expression
+
+func `==`*(a, b: field_def): bool =
+  if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.is_virtual != b.is_virtual:
+    return false
+  if a.is_virtual:
+    return a.expr == b.expr
+  else:
+    return a.options == b.options
 
 type instruction* = object
   syntax*: seq[string]
-  fields*: seq[seq[field]]
-  virtual_fields*: seq[expression]
-  field_names*: seq[string]
+  fields*: seq[field_def]
   asserts*: seq[(expression, expression, string)]
-  field_sign*: seq[sign_kind]
   bits*: seq[field]
   fixed_pattern_0*: uint64
   fixed_pattern_1*: uint64

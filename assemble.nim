@@ -248,8 +248,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       continue
 
     let restore = s
-    for j, field in inst.fields[i]:
-      let is_last = j == inst.fields[i].high
+    for j, field in inst.fields[i].options:
+      let is_last = j == inst.fields[i].options.high
       s = restore
 
       case field.id:
@@ -335,6 +335,10 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
 
   result.final_index = get_index(s)
 
+func field_names(i: instruction): seq[string] =
+  for f in i.fields:
+    result.add f.name
+
 func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
   template error(input: string) =
     if throw_on_error:
@@ -342,9 +346,18 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
     return
   
   var fields = args
-  for virtual_field in inst.virtual_fields:
-    let new_field = eval(virtual_field, fields, ip)
-    fields.add(cast[uint64](new_field))
+  # Compute virtual fields & Apply sizes
+  for i, field in inst.fields:
+    if field.is_virtual:
+      let new_field = eval(field.expr, fields, ip)
+      fields.add(cast[uint64](new_field))
+    if field.size != 64: # If the size is 64, there is nothing we can verify
+      let remainder = asr(fields[i], field.size.uint64) # The bits that are not part of this value
+      if not (remainder == 0 or remainder == 0xFFFF_FFFF_FFFFF_FFFF'u64):
+        error(&"Value {fields[i]} outside of range for this {field.size}-bit operand")
+      if field.is_signed and (fields[i] and (1'u64 shl (field.size - 1))) != 0:
+        # We are in signed mode and the Sign bit is set, sign extend to 64bit
+        fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl field.size)
   for i, (lhs, rhs, msg) in inst.asserts:
     let lhs_value = eval(lhs, fields, ip)
     let rhs_value = eval(rhs, fields, ip)
@@ -383,7 +396,7 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
         let bit = (fields[index] and 1)
         if bit == 1:
           setBit[uint64](values[int_index], bit_index)
-        if inst.field_sign[index] == sk_unsigned:
+        if not inst.fields[index].is_signed:
           fields[index] = fields[index] shr 1
         else:
           fields[index] = asr(fields[index], 1)
@@ -399,18 +412,14 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
 
   for i, field in fields:
     if used_fields[i] == unused: continue
-    case inst.field_sign[i]:
-      of sk_unsigned:
-        if field != 0:
-          error(&"{args[i]} is too large for the {get_ordinal(i)} operand")
-      of sk_signed:
-        if used_fields[i] != used_sign_bit:
-          if i < args.high:
-            error(&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand")
-          error(&"Immediate is too large for {get_ordinal(i)} operand")
-      of sk_either:
-        if field != 0 and field != uint64.high:
-          error(&"{args[i]} is too large for the {get_ordinal(i)} operand")
+    if inst.fields[i].is_signed:
+      if used_fields[i] != used_sign_bit:
+        if i < args.high:
+          error(&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand")
+        error(&"Immediate is too large for {get_ordinal(i)} operand")
+    else:
+      if field != 0:
+        error(&"{args[i]} is too large for the {get_ordinal(i)} operand")
 
   var width_left = inst.bits.len
   result.set_len(width_left div 8)
@@ -495,8 +504,9 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       if op.kind != ok_fixed:
         return true
     for inst in match.options:
-      for virt in inst.virtual_fields:
-        if virt.any_pc_rel:
+      for virt in inst.fields:
+        if not virt.is_virtual: continue
+        if virt.expr.any_pc_rel:
           return true
     return false
 
