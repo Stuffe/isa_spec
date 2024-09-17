@@ -1,0 +1,8 @@
+
+[instructions]
+
+// In the futher, this definition should cause an error because `reg_target` is unused
+// The point of this test is to verify that the first value is being used, which is probably what most
+// people will expect
+mov  %reg_source(immediate) , %reg_target(immediate)
+rrrr rrrr

@@ -1,0 +1,4 @@
+[instructions]
+
+mov  %t(immediate) , %s(immediate)
+ssss tttt

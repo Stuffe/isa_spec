@@ -84,6 +84,7 @@ type instruction* = object
   syntax*: seq[string]
   fields*: seq[seq[field]]
   virtual_fields*: seq[expression]
+  field_names*: seq[string]
   asserts*: seq[(expression, expression, string)]
   field_sign*: seq[sign_kind]
   bits*: seq[field]

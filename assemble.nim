@@ -350,7 +350,9 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
     let rhs_value = eval(rhs, fields, ip)
     if lhs_value != rhs_value:
       if msg == "":
-        error(&"Assert {lhs} == {rhs} did not match")
+        let lhs_source = lhs.expr_to_string(inst.field_names)
+        let rhs_source = rhs.expr_to_string(inst.field_names)
+        error(&"Assert {lhs_source} == {rhs_source} did not match")
       else:
         error(msg)
 

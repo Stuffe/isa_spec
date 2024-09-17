@@ -6,9 +6,9 @@ export parse.new_stream_slice
 func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
   func field_define(i: int): string =
     if instruction.field_sign[i] == sk_unsigned:
-      "%" & $char(ord('a') + i)
+      "%" & instruction.field_names[i]
     else:
-      "%" & $char(ord('a') + i) & ":" & "usi"[instruction.field_sign[i].ord]
+      "%" & instruction.field_names[i] & ":" & "usi"[instruction.field_sign[i].ord]
 
   var source = ""
   var field_i = 0
@@ -24,11 +24,14 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   source &= "\n"
 
   for expr in instruction.virtual_fields:
-      source &= field_define(field_i) & " = " & $expr & "\n"
+      let expr_source = expr.expr_to_string(instruction.field_names)
+      source &= field_define(field_i) & " = " & expr_source & "\n"
       field_i += 1
 
   for (lhs, rhs, msg) in instruction.asserts:
-      source &= &"!assert {lhs} == {rhs}"
+      let lhs_source = lhs.expr_to_string(instruction.field_names)
+      let rhs_source = rhs.expr_to_string(instruction.field_names)
+      source &= &"!assert {lhs_source} == {rhs_source}"
       if msg != "":
         source &= " " & make_escaped_string(msg)
       source &= "\n"
@@ -39,7 +42,7 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       assert bit_type.id < 3
       source &= "01?"[bit_type.id]
     else:
-      source &= $char(ord('a') + bit_type.id - FIXED_FIELDS_LEN)
+      source &= instruction.field_names[bit_type.id - FIXED_FIELDS_LEN][0]
     if i mod 8 == 7:
       source &= " "
 
@@ -125,17 +128,14 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       syntax_parts.add(this_part)
 
   var new_instruction: instruction
-  var fields: seq[seq[field]]
 
   block syntax:
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
       let operand_name = get_identifier(s)
-      let expected_operand_name = $char(ord('a') + new_instruction.fields.len)
-
-      if operand_name != expected_operand_name:
-        return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
+      if operand_name.len == 0:
+        return error("Expected an identifier after '%'")
 
       var field_sign = block:
         if matches(s, ':'):
@@ -154,6 +154,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       new_instruction.syntax.add("")
       new_instruction.field_sign.add(field_sign)
       new_instruction.fields.add(@[])
+      new_instruction.field_names.add $operand_name
 
       if not matches(s, '('):
         return error("Expected parenthesis after the operand name, like: " & $operand_name & "(immediate)")
@@ -198,10 +199,8 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     while peek(s) in {'%', '!'}:
       if read(s) == '%':
         let operand_name = get_identifier(s)
-        let expected_operand_name = $char(ord('a') + new_instruction.fields.len + new_instruction.virtual_fields.len)
-
-        if operand_name != expected_operand_name:
-          return error("Operand " & $(new_instruction.fields.len + 1) & " should be called %" & $expected_operand_name & ", not %" & $operand_name)
+        if operand_name.len == 0:
+          return error("Expected an identifier after '%'")
 
         skip_whitespaces(s)
         let field_sign = block:
@@ -225,9 +224,10 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
         skip_whitespaces(s)
 
-        let virt_op = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        let virt_op = get_expression(s, new_instruction.field_names)
         new_instruction.virtual_fields.add(virt_op)
         new_instruction.field_sign.add(field_sign)
+        new_instruction.field_names.add $operand_name
 
         if virt_op.exp_kind == exp_fail:
           if instruction_name == "":
@@ -242,14 +242,14 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         if not matches(s, "assert"):
           return error("Expected 'assert' here")
         skip_whitespaces(s)
-        let lhs = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        let lhs = get_expression(s, new_instruction.field_names)
         if lhs.exp_kind == exp_fail:
           return error("Could not parse assert expression")
         skip_whitespaces(s)
         if not matches(s, "=="):
           return error("Expected an equaltiy operator in the assert expression")
         skip_whitespaces(s)
-        let rhs = get_expression(s, new_instruction.fields.len + new_instruction.virtual_fields.len)
+        let rhs = get_expression(s, new_instruction.field_names)
         if rhs.exp_kind == exp_fail:
           return error("Could not parse assert expression")
         skip_whitespaces(s)
@@ -260,7 +260,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         if not skip_newlines(s):
           return error("Expected newline after assert expression")
         new_instruction.asserts.add (lhs, rhs, msg)
-
+  assert new_instruction.field_names.len == new_instruction.fields.len + new_instruction.virtual_fields.len
   block bit_pattern:
     var pattern: string
     var mask: string
@@ -284,10 +284,15 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         else:
           pattern.add('0')
           mask.add('0')
-          let field_index = ord(peek(s)) - ord('a')
+          let c = peek(s)
+          var field_index = -1
+          for i, field_name in new_instruction.field_names:
+            if field_name[0] == c:
+                field_index = i
+                break
 
-          if field_index >= new_instruction.fields.len + new_instruction.virtual_fields.len:
-            return error("Error defining '" & instruction_name & "'. Character '" & peek(s) & "' implies " & $(field_index+1) & " operands, but the instruction only has " & $(new_instruction.fields.len + new_instruction.virtual_fields.len))
+          if field_index < 0:
+            return error("Error defining '" & instruction_name & "'. No field starts with character '" & c & "'.")
           let field_real_index = field_index + FIXED_FIELDS_LEN
           new_instruction.bits.add(field(id: field_real_index))
 

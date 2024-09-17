@@ -3,39 +3,45 @@ import types, parse
 
 const CURRENT_ADDRESS* = int.high
 
-func `$`*(exp: expression): string =
+func expr_to_string*(exp: expression, operand_names: seq[string]): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
     of exp_operand: 
       if exp.index == CURRENT_ADDRESS: return "$"
-      return "%" & $char(ord('a') + exp.index)
+      if exp.index >= 0 and exp.index < operand_names.len:
+        return "%" & operand_names[exp.index]
+      else:
+        return "%" & $exp.index
     of exp_operation: 
       if exp.op_kind == op_log2:
-        return "log2(" & $exp.lhs & ")"
+        return "log2(" & exp.lhs.expr_to_string(operand_names) & ")"
       elif exp.op_kind == op_asr:
-        return "asr(" & $exp.lhs & "," & $exp.rhs & ")"
-      return "(" & $exp.lhs & " " & OP_INDEXES[ord(exp.op_kind)] & " " & $exp.rhs & ")"
+        return "asr(" & exp.lhs.expr_to_string(operand_names) & "," & exp.rhs.expr_to_string(operand_names) & ")"
+      return "(" & exp.lhs.expr_to_string(operand_names) & " " & OP_INDEXES[ord(exp.op_kind)] & " " & exp.rhs.expr_to_string(operand_names) & ")"
 
-func get_expression*(s: var stream_slice, operand_count: int): expression
+func `$`*(exp: expression): string =
+  exp.expr_to_string(@[])
 
-func get_term(s: var stream_slice, operand_count: int): expression =
+func get_expression*(s: var stream_slice, operand_names: seq[string]): expression
+
+func get_term(s: var stream_slice, operand_names: seq[string]): expression =
 
   if matches(s, "log2("):
     skip_whitespaces(s)
-    let exp = get_expression(s, operand_count)
+    let exp = get_expression(s, operand_names)
     if not matches(s, ')'):
       return expression(exp_kind: exp_fail)
     skip_whitespaces(s)
     return expression(exp_kind: exp_operation, op_kind: op_log2, lhs: exp)
 
   if matches(s, "asr("):
-    let lhs = get_expression(s, operand_count)
+    let lhs = get_expression(s, operand_names)
     skip_whitespaces(s)
     if not matches(s, ','):
       return expression(exp_kind: exp_fail)
     skip_whitespaces(s)
-    let rhs = get_expression(s, operand_count)
+    let rhs = get_expression(s, operand_names)
     skip_whitespaces(s)
     if not matches(s, ')'):
       return expression(exp_kind: exp_fail)
@@ -43,7 +49,7 @@ func get_term(s: var stream_slice, operand_count: int): expression =
   
   if matches(s, '('):
     let restore = s
-    result = get_expression(s, operand_count)
+    result = get_expression(s, operand_names)
     skip_whitespaces(s)
     if read(s) != ')':
       s = restore
@@ -53,13 +59,13 @@ func get_term(s: var stream_slice, operand_count: int): expression =
     skip(s)
     return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
 
-  elif peek(s) == '%':
-    let operand = peek(s, 1)
-    if operand notin setutils.toSet("abcdefghijklmnopqrstuvwxyz"): return expression(exp_kind: exp_fail)
-    skip(s, 2)
+  elif matches(s, '%'):
+    let operand = get_identifier(s)
+    if operand.len == 0: return expression(exp_kind: exp_fail)
 
-    let operand_index = ord(operand) - ord('a')
-    if operand_index < 0 or operand_index >= operand_count: return expression(exp_kind: exp_fail)
+    let operand_index = operand_names.find(operand)
+    if operand_index < 0 or operand_index >= operand_names.len:
+      return expression(exp_kind: exp_fail)
 
     result = expression(exp_kind: exp_operand, index: operand_index)
   
@@ -71,11 +77,11 @@ func get_term(s: var stream_slice, operand_count: int): expression =
         return expression(exp_kind: exp_fail, msg: err)
     result = expression(exp_kind: exp_number, value: cast[int](value))
 
-func get_greedy_group(s: var stream_slice, operand_count: int): expression =
+func get_greedy_group(s: var stream_slice, operand_names: seq[string]): expression =
 
   skip_whitespaces(s)
 
-  var exp = get_term(s, operand_count)
+  var exp = get_term(s, operand_names)
 
   if exp.exp_kind == exp_fail: 
     return expression(exp_kind: exp_fail)
@@ -99,7 +105,7 @@ func get_greedy_group(s: var stream_slice, operand_count: int): expression =
 
     let op = op_kind(op_index)
 
-    let rhs = get_term(s, operand_count)
+    let rhs = get_term(s, operand_names)
     if rhs.exp_kind == exp_fail:
       s = restore
       return expression(exp_kind: exp_fail)
@@ -107,11 +113,11 @@ func get_greedy_group(s: var stream_slice, operand_count: int): expression =
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
-func get_expression*(s: var stream_slice, operand_count: int): expression =
+func get_expression*(s: var stream_slice, operand_names: seq[string]): expression =
 
   skip_whitespaces(s)
 
-  var exp = get_greedy_group(s, operand_count)
+  var exp = get_greedy_group(s, operand_names)
 
   if exp.exp_kind == exp_fail: 
     return expression(exp_kind: exp_fail)
@@ -134,7 +140,7 @@ func get_expression*(s: var stream_slice, operand_count: int): expression =
 
     let op = op_kind(op_index)
 
-    let rhs = get_greedy_group(s, operand_count)
+    let rhs = get_greedy_group(s, operand_names)
     if rhs.exp_kind == exp_fail:
       s = restore
       return expression(exp_kind: exp_fail)
