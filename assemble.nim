@@ -50,6 +50,7 @@ type
     field_defines: seq[Table[stream_slice, define_value]]
     number_defines*: Table[stream_slice, define_value]
 
+
 func `==`(a, b: operand): bool =
   if a.kind != b.kind:
     return false
@@ -252,8 +253,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       let is_last = j == inst.fields[i].options.high
       s = restore
 
-      case field.id:
-        of FIELD_LABEL.id:
+      case field:
+        of FIELD_LABEL:
           if peek(s) == '.':
             skip(s)
             let jump_distance = check(get_unsigned(s))
@@ -272,7 +273,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
           i += 1
           break
 
-        of FIELD_IMM.id:
+        of FIELD_IMM:
           let (number_err, number) = get_unsigned(s)
           if number_err == "":
             result.operands.add fixed(check(parse_unsigned(number)))
@@ -290,25 +291,25 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
           break
 
         else: # Some user defined field type
-          assert field.id >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+          assert field.int >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
           let pre_field_restore = s
           let field_string = get_identifier(s)
 
-          if field_string in p.field_defines[field.id]:
-            result.operands.add fixed(p.field_defines[field.id][field_string].value)
+          if field_string in p.field_defines[field.int]:
+            result.operands.add fixed(p.field_defines[field.int][field_string].value)
           else:
             var found = false
             var value: uint64
             block search_field:
               # First check for exact matches
-              for field_value in p.isa_spec.field_types[field.id].values:
+              for field_value in p.isa_spec.field_types[field.int].values:
                 if field_value.name == field_string:
                   found = true
                   value = field_value.value
                   break search_field
               if field_string.len > 0:
                 # Then search for partial matches, rewinding the
-                for field_value in p.isa_spec.field_types[field.id].values:
+                for field_value in p.isa_spec.field_types[field.int].values:
                   if ($field_string).startswith(field_value.name):
                     s = pre_field_restore
                     if not s.matches(field_value.name):
@@ -320,8 +321,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
             if not found:
               if not is_last: continue
               if field_string == "":
-                return error(&"Missing a '{p.isa_spec.field_types[field.id].name}' operand here", i)
-              return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.id].name}'", i)
+                return error(&"Missing a '{p.isa_spec.field_types[field.int].name}' operand here", i)
+              return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.int].name}'", i)
             else:
               # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
               # TODO: Check what the above comment means
@@ -358,97 +359,55 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
       if field.is_signed and (fields[i] and (1'u64 shl (field.size - 1))) != 0:
         # We are in signed mode and the Sign bit is set, sign extend to 64bit
         fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl field.size)
+    if field.used != 0:
+      # TODO: Produce good error messages, e.g. "should be multiple of 16" if the lowest 4 bits should be 0
+      if fields[i].masked(field.unused_zero) != 0:
+        error(&"Value {fields[i]} doesn't fit (some bits should be zero aren't)")
+      if field.sign_bit != 0:
+        if (fields[i] and field.sign_bit) == 0:
+          if (fields[i] and field.unused_sign) != 0:
+            error(&"Value {fields[i]} outside of range for this {field.sign_bit.count_trailing_zero_bits()+1}-bit field 0:{field}")
+        else:
+          if (fields[i] and field.unused_sign) != field.unused_sign:
+            error(&"Value {fields[i]} outside of range for this {field.sign_bit.count_trailing_zero_bits()+1}-bit field 1:{field}")
+
   for i, (lhs, rhs, msg) in inst.asserts:
     let lhs_value = eval(lhs, fields, ip)
     let rhs_value = eval(rhs, fields, ip)
     if lhs_value != rhs_value:
       if msg == "":
-        let lhs_source = lhs.expr_to_string(inst.field_names)
-        let rhs_source = rhs.expr_to_string(inst.field_names)
+        let lhs_source = lhs.to_str(inst.field_names)
+        let rhs_source = rhs.to_str(inst.field_names)
         error(&"Assert {lhs_source} == {rhs_source} did not match")
       else:
         error(msg)
 
-  var values = [0'u64, 0]
+  var values = inst.fixed_pattern
 
-  type usage_kind = enum
-    unused
-    used_no_sign_bit
-    used_sign_bit
 
-  var used_fields = newSeq[usage_kind](fields.len)
-
-  var i = inst.bits.high
-  while i >= 0:
-    let bit_type = inst.bits[i]
+  var i = 0
+  for j in countdown(inst.bits.high, 0):
+    let bit_type = inst.bits[j]
+    if bit_type.id.int < FIXED_FIELDS_LEN:
+      i += bit_type.top - bit_type.bottom + 1
+      continue # fixed fields are either irreleant or part of the fixed_pattern above
     let bit_index = i mod 64
-    let int_index = i div 64
+    let int_index = values.high - (i div 64)
+    let index = bit_type.id.int - FIXED_FIELDS_LEN
+    let bits = fields[index].bitsliced(bit_type.bottom .. bit_type.top)
+    values[int_index] = values[int_index] or (bits shl bit_index)
+    i += bit_type.top - bit_type.bottom + 1
 
-    case bit_type.id:
-      of FIELD_ZERO.id: discard
-      of FIELD_ONE.id: setBit[uint64](values[int_index], bit_index)
-      of FIELD_WILDCARD.id: discard
-      of FIELD_IMM.id: assert false
-      of FIELD_LABEL.id: assert false
-      else:
-        let index = bit_type.id - FIXED_FIELDS_LEN
-
-        let bit = (fields[index] and 1)
-        if bit == 1:
-          setBit[uint64](values[int_index], bit_index)
-        if not inst.fields[index].is_signed:
-          fields[index] = fields[index] shr 1
-        else:
-          fields[index] = asr(fields[index], 1)
-
-        if used_fields[index] != used_sign_bit:
-          let matches_sign_bit = (bit == 0 and fields[index] == 0) or (bit == 1 and fields[index] == uint64.high)
-          if matches_sign_bit:
-            used_fields[index] = used_sign_bit
-          else:
-            used_fields[index] = used_no_sign_bit
-
-    i -= 1
-
-  for i, field in fields:
-    if used_fields[i] == unused: continue
-    if inst.fields[i].is_signed:
-      if used_fields[i] != used_sign_bit:
-        if i < args.high:
-          error(&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand")
-        error(&"Immediate is too large for {get_ordinal(i)} operand")
-    else:
-      if field != 0:
-        error(&"{args[i]} is too large for the {get_ordinal(i)} operand")
-
-  var width_left = inst.bits.len
-  result.set_len(width_left div 8)
-  var value_index = 0
-  const big_endian = true # TODO
-  var offset = if big_endian:
-      width_left div 8 - 1
-    else:
-      0
-
-  while width_left > 0:
-    var value = values[value_index]
-    let max_width = min(64, width_left)
-    value_index += 1
-    width_left -= 64
-
-    value = reverseBits(value)
-    value = value shr (64 - max_width)
-
-    var shift_count = max_width div 8 - 1
-    var shift_by    = max_width - 8
-
-    for i in 0..shift_count:
-      result[offset] = cast[uint8](value shr shift_by)
-      if big_endian:
-        offset -= 1
-      else:
-        offset += 1
-      shift_by -= 8
+  result.set_len(inst.bit_length div 8)
+  var k = 0
+  for i in countdown(values.high, 0):
+    var value = values[i]
+    for j in 0 .. 7:
+      result[k] = uint8(value and 0xFF)
+      value = value shr 8 # We should never read the sign bits anyway, so lsr or asr doesn't matter
+      k += 1
+      if k > result.high:
+        break
 
 
 func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result =
@@ -498,6 +457,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         return expr.index == CURRENT_ADDRESS
       of exp_operation:
         return expr.lhs.any_pc_rel or expr.rhs.any_pc_rel
+      of exp_bitextract:
+        return expr.base.any_pc_rel or expr.top.any_pc_rel or expr.bottom.any_pc_rel
 
   func any_pc_rel(match: matched_instruction): bool =
     for op in match.operands:
@@ -808,7 +769,7 @@ func sum_segments(pa: pre_assembly_result): seq[int] =
     result.add(ip)
     ip += seg.fixed.len
     if seg.relaxable.options.len > 0:
-      ip += seg.relaxable.options[seg.relaxable.selected_option].bits.len div 8
+      ip += seg.relaxable.options[seg.relaxable.selected_option].bit_length div 8
 
 
 func finalize(pa: pre_assembly_result): assembly_result =

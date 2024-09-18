@@ -1,0 +1,16 @@
+[settings]
+endianness = big  // To match standard assembler output
+
+[fields]
+register
+zero 00000
+x1 00001
+x2 00010
+
+[instructions]
+
+addi  %a(register) , %b(register) , %c:S64(immediate)
+cccccccccccc bbbbb 000 aaaaa 0010011
+
+li  %a(register), %b:S64(immediate)
+bbbbbbbbbbbb 00000 000 aaaaa 0010011

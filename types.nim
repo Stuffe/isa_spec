@@ -4,14 +4,18 @@ const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
-type field* = object
-  id*: int
+type field_id* = distinct int
 
-const FIELD_ZERO*       = field(id: 0)
-const FIELD_ONE*        = field(id: 1)
-const FIELD_WILDCARD*   = field(id: 2)
-const FIELD_IMM*        = field(id: 3)
-const FIELD_LABEL*      = field(id: 4)
+func `==`*(a, b: field_id): bool {.borrow.}
+func `$`*(a: field_id): string =
+  "field_id(" & $a.int & ")"
+
+const FIELD_INVALID*    = field_id(-1)
+const FIELD_ZERO*       = field_id(0)
+const FIELD_ONE*        = field_id(1)
+const FIELD_WILDCARD*   = field_id(2)
+const FIELD_IMM*        = field_id(3)
+const FIELD_LABEL*      = field_id(4)
 const FIXED_FIELDS_LEN* = 5
 
 const ANY_NUMBER_OF_SPACES* = " "
@@ -31,6 +35,7 @@ type exp_kind* = enum
   exp_number
   exp_operand
   exp_operation
+  exp_bitextract
 
 type op_kind* = enum
   op_add
@@ -58,6 +63,10 @@ type expression* = ref object
       op_kind*: op_kind
       lhs*: expression
       rhs*: expression
+    of exp_bitextract:
+      base*: expression
+      top*: expression
+      bottom*: expression
 
 func `==`*(a, b: expression): bool =
   if a.isNil() or b.isNil():
@@ -73,6 +82,8 @@ func `==`*(a, b: expression): bool =
       return a.index == b.index
     of exp_operation:
       return a.op_kind == b.op_kind and a.lhs == b.lhs and a.rhs == b.rhs
+    of exp_bitextract:
+      return a.base == b.base and a.top == b.top and a.bottom == b.bottom
 
 
 type field_def* = object
@@ -81,9 +92,27 @@ type field_def* = object
   size*: int
   case is_virtual*: bool
     of false:
-      options*: seq[field]
+      options*: seq[field_id]
     of true:
       expr*: expression
+
+  # if used == 0, the other 3 fields are irreleavnt
+  used*: uint64 # bit mask of bits that are used directly in the final result
+  sign_bit*: uint64 # bit mask of the sign bit or 0 if unsigned
+  unused_zero*: uint64 # bit mask of the bits that have to be zero
+  unused_sign*: uint64 # bit mask of the bits that have to match the sign_bit
+
+  # Example: A field that has to be a multiple of 16 that get's stored as shifted 6 bit immediate
+  # If it is unsigned (i.e. zero extended):
+  # used          = ...001111110000
+  # sign_bit      = ...000000000000
+  # unused_zero   = ...110000001111
+  # unused_sign   = ...000000000000
+  # If it is signed (i.e. sign extended):
+  # used          = ...001111110000
+  # sign_bit      = ...001000000000
+  # unused_zero   = ...000000001111
+  # unused_sign   = ...110000000000
 
 func `==`*(a, b: field_def): bool =
   if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.is_virtual != b.is_virtual:
@@ -93,15 +122,23 @@ func `==`*(a, b: field_def): bool =
   else:
     return a.options == b.options
 
+type bitfield* = object
+  id*: field_id
+  top*: int
+  bottom*: int
+  is_direct*: bool
+  is_continue*: bool # This field is broken up by a 64bit boundary
+
 type instruction* = object
   syntax*: seq[string]
   fields*: seq[field_def]
   asserts*: seq[(expression, expression, string)]
-  bits*: seq[field]
-  fixed_pattern_0*: uint64
-  fixed_pattern_1*: uint64
-  fixed_mask_0*: uint64
-  fixed_mask_1*: uint64
+  bits*: seq[bitfield]
+  bit_length*: int
+  # These are both bit endian lists of 64bit words
+  # If bit_length is not a multiple of 64, the first word is the partial one
+  fixed_pattern*: seq[uint64]
+  fixed_mask*: seq[uint64]
   description*: string
 
 type endianness* = enum

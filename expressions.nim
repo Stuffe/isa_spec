@@ -1,9 +1,9 @@
-import std/setutils, strutils, math
+import std/setutils, strutils, math, bitops
 import types, parse
 
 const CURRENT_ADDRESS* = int.high
 
-func expr_to_string*(exp: expression, operand_names: seq[string]): string =
+func to_str*(exp: expression, operand_names: seq[string]): string =
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
@@ -15,17 +15,22 @@ func expr_to_string*(exp: expression, operand_names: seq[string]): string =
         return "%" & $exp.index
     of exp_operation: 
       if exp.op_kind == op_log2:
-        return "log2(" & exp.lhs.expr_to_string(operand_names) & ")"
+        return "log2(" & exp.lhs.to_str(operand_names) & ")"
       elif exp.op_kind == op_asr:
-        return "asr(" & exp.lhs.expr_to_string(operand_names) & "," & exp.rhs.expr_to_string(operand_names) & ")"
-      return "(" & exp.lhs.expr_to_string(operand_names) & " " & OP_INDEXES[ord(exp.op_kind)] & " " & exp.rhs.expr_to_string(operand_names) & ")"
+        return "asr(" & exp.lhs.to_str(operand_names) & "," & exp.rhs.to_str(operand_names) & ")"
+      return "(" & exp.lhs.to_str(operand_names) & " " & OP_INDEXES[ord(exp.op_kind)] & " " & exp.rhs.to_str(operand_names) & ")"
+    of exp_bitextract:
+      if exp.bottom.is_nil:
+        return exp.base.to_str(operand_names) & "[" & exp.top.to_str(operand_names)  & "]"
+      else:
+        return exp.base.to_str(operand_names) & "[" & exp.top.to_str(operand_names) & ":" & exp.bottom.to_str(operand_names) & "]"
 
 func `$`*(exp: expression): string =
-  exp.expr_to_string(@[])
+  exp.to_str(@[])
 
 func get_expression*(s: var stream_slice, operand_names: seq[string]): expression
 
-func get_term(s: var stream_slice, operand_names: seq[string]): expression =
+func get_atom(s: var stream_slice, operand_names: seq[string]): expression =
 
   if matches(s, "log2("):
     skip_whitespaces(s)
@@ -76,6 +81,31 @@ func get_term(s: var stream_slice, operand_names: seq[string]): expression =
     let value: uint64 = parse_unsigned(number).on_err() do:
         return expression(exp_kind: exp_fail, msg: err)
     result = expression(exp_kind: exp_number, value: cast[int](value))
+
+func get_term(s: var stream_slice, operand_names: seq[string]): expression =
+  let atom = get_atom(s, operand_names)
+  if atom.exp_kind == exp_fail:
+    return atom
+  skip_whitespaces(s)
+  if s.peek() == '[':
+    skip(s)
+    skip_whitespaces(s)
+    let top = get_expression(s, operand_names)
+    if top.exp_kind == exp_fail:
+      return top
+    let bottom = if s.peek() == ':':
+        skip(s)
+        skip_whitespaces(s)
+        get_expression(s, operand_names)
+      else:
+        nil
+    if not bottom.isNil and bottom.exp_kind == exp_fail:
+      return bottom
+    if s.read() != ']':
+      return expression(exp_kind: exp_fail, msg: "Expected ']'")
+    return expression(exp_kind: exp_bitextract, base: atom, top: top, bottom: bottom)
+  return atom
+
 
 func get_greedy_group(s: var stream_slice, operand_names: seq[string]): expression =
 
@@ -180,6 +210,14 @@ func eval*(input: expression, operands: seq[uint64], current_address: int): int 
           while (number shr shifts) > 0:
             shifts += 1
           return shifts - 1
+    of exp_bitextract:
+      let base = eval(input.base, operands, current_address)
+      let top = eval(input.top, operands, current_address)
+      let bottom = if input.bottom.is_nil:
+          top
+        else:
+          eval(input.bottom, operands, current_address)
+      return cast[int](cast[uint64](base).bitsliced(bottom .. top))
 
 func is_known_leaf(input: expression): bool =
   return input.exp_kind == exp_number or (input.exp_kind == exp_operand and input.index == CURRENT_ADDRESS)
@@ -209,7 +247,10 @@ func reverse_single(fields: var seq[uint64], current_address: int, op_kind: op_k
     of op_log2: assert false
 
 func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int =
-  
+  # TODO: This entire function is the wrong approach to this problem
+  #       We have to take all virtual fields and asserts into account at the same time
+  #       Just blindly trying to reverse a single expression is never going to work
+  #       E.g. this fails to take into account the cases where some fields are already guranteed to be known
   case input.exp_kind:
     of exp_fail:    assert false
     of exp_number:  return input.value
@@ -233,4 +274,12 @@ func reverse_eval*(input: expression, current_address: int, fields: var seq[uint
         return result
 
       # TODO, really we are assuming one equation with at most one unknown here. Rewrite this so it can solve more complex systems of equations
-    
+    of exp_bitextract:
+      if is_known_leaf(input.top) and is_known_leaf(input.bottom):
+        if is_known_leaf(input.base):
+          return eval(input, fields, current_address)
+        else:
+          let orig = res shl get_leaf_value(input.bottom, fields, current_address)
+          return reverse_eval(input.base, current_address, fields, orig)
+      # TODO, if the bounds are not known, I am really not sure how we can reverse that...
+
