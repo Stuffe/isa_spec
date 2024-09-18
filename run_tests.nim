@@ -3,6 +3,7 @@ import isa_spec, types, expressions
 
 const STOP_AT_FIRST_FAIL = false
 const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
+const CHECK_ROUNDTRIP    = true
 
 type asm_test_files = tuple
   source_file: string
@@ -222,16 +223,17 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
           last_line = expected_fl
           byte_index += 1
 
-      # Check that `spec_to_string` is roundtripping.
-      let reconstructed_source = spec_to_string(isa_spec)
-      let new_spec_result = parse_isa_spec(tests.spec_file & ".rec", reconstructed_source)
-      if new_spec_result.spec != isa_spec:
-        if new_spec_result.error.message != "":
-          fail(test_name, tests.spec_file, &"Reconstructed Isa Spec Source errored with {new_spec_result.error}.", &"Reconstructed source:\n{reconstructed_source}")
-        else:
-          if STOP_AT_FIRST_FAIL:
-            echo_deep_diff(isa_spec, new_spec_result.spec, "")
-          fail(test_name, tests.spec_file, &"Isa spec did not survive roundtripping.", &"Reconstructed source:\n{reconstructed_source}")
+      when CHECK_ROUNDTRIP:
+        # Check that `spec_to_string` is roundtripping.
+        let reconstructed_source = spec_to_string(isa_spec)
+        let new_spec_result = parse_isa_spec(tests.spec_file & ".rec", reconstructed_source)
+        if new_spec_result.spec != isa_spec:
+          if new_spec_result.error.message != "":
+            fail(test_name, tests.spec_file, &"Reconstructed Isa Spec Source errored with {new_spec_result.error}.", &"Reconstructed source:\n{reconstructed_source}")
+          else:
+            if STOP_AT_FIRST_FAIL:
+              echo_deep_diff(isa_spec, new_spec_result.spec, "")
+            fail(test_name, tests.spec_file, &"Isa spec did not survive roundtripping.", &"Reconstructed source:\n{reconstructed_source}")
 
   if not local_fail:
     echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} / asm {asm_time:3f}"

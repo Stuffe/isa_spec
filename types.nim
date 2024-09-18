@@ -4,14 +4,18 @@ const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
-type field* = object
-  id*: int
+type field_id* = distinct int
 
-const FIELD_ZERO*       = field(id: 0)
-const FIELD_ONE*        = field(id: 1)
-const FIELD_WILDCARD*   = field(id: 2)
-const FIELD_IMM*        = field(id: 3)
-const FIELD_LABEL*      = field(id: 4)
+func `==`*(a, b: field_id): bool {.borrow.}
+func `$`*(a: field_id): string =
+  "field_id(" & $a.int & ")"
+
+const FIELD_INVALID*    = field_id(-1)
+const FIELD_ZERO*       = field_id(0)
+const FIELD_ONE*        = field_id(1)
+const FIELD_WILDCARD*   = field_id(2)
+const FIELD_IMM*        = field_id(3)
+const FIELD_LABEL*      = field_id(4)
 const FIXED_FIELDS_LEN* = 5
 
 const ANY_NUMBER_OF_SPACES* = " "
@@ -88,7 +92,7 @@ type field_def* = object
   size*: int
   case is_virtual*: bool
     of false:
-      options*: seq[field]
+      options*: seq[field_id]
     of true:
       expr*: expression
 
@@ -100,15 +104,23 @@ func `==`*(a, b: field_def): bool =
   else:
     return a.options == b.options
 
+type bitfield* = object
+  id*: field_id
+  top*: int
+  bottom*: int
+  is_direct*: bool
+  is_continue*: bool # This field is broken up by a 64bit boundary
+
 type instruction* = object
   syntax*: seq[string]
   fields*: seq[field_def]
   asserts*: seq[(expression, expression, string)]
-  bits*: seq[field]
-  fixed_pattern_0*: uint64
-  fixed_pattern_1*: uint64
-  fixed_mask_0*: uint64
-  fixed_mask_1*: uint64
+  bits*: seq[bitfield]
+  bit_length*: int
+  # These are both bit endian lists of 64bit words
+  # If bit_length is not a multiple of 64, the first word is the partial one
+  fixed_pattern*: seq[uint64]
+  fixed_mask*: seq[uint64]
   description*: string
 
 type endianness* = enum

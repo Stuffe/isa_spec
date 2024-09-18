@@ -1,4 +1,4 @@
-import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils
+import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm
 import types, parse, expressions
 
 export parse.new_stream_slice
@@ -21,7 +21,7 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       var options: seq[string]
       assert not instruction.fields[field_i].is_virtual
       for field in instruction.fields[field_i].options:
-        options.add(isa_spec.field_types[field.id].name)
+        options.add(isa_spec.field_types[field.ord].name)
       source &= field_define(instruction.fields[field_i]) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
@@ -42,12 +42,15 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       source &= "\n"
       field_i += 1
 
-  for i, bit_type in instruction.bits:
-    if bit_type.id < FIXED_FIELDS_LEN:
-      assert bit_type.id < 3
-      source &= "01?"[bit_type.id]
+  for i, field in instruction.bits:
+    assert field.is_direct
+    if field.id.int < FIXED_FIELDS_LEN:
+      assert field.id.int < 3
+      for _ in field.bottom .. field.top:
+        source &= "01?"[field.id.int]
     else:
-      source &= instruction.field_names[bit_type.id - FIXED_FIELDS_LEN][0]
+      for _ in field.bottom .. field.top:
+        source &= instruction.field_names[field.id.int - FIXED_FIELDS_LEN][0]
     if i mod 8 == 7:
       source &= " "
 
@@ -171,7 +174,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         for i, field in isa_spec.field_types:
           if $field_name == field.name:
             found = true
-            new_field.options.add(field(id: i))
+            new_field.options.add(field_id(i))
             break
 
         if not found:
@@ -264,50 +267,105 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   block bit_pattern:
     var pattern: string
     var mask: string
+    var new_bits: seq[bitfield]
+    # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
+    # nvalid indecies. They are instead used to track the length of the field before being updated
+    # to the correct bounds in a seperate pass
+    var current = bitfield(id: FIELD_INVALID)
 
     while peek(s) in setutils.toSet("01?%abcdefghijklmnopqrstuvwxyz "):
-      case peek(s):
-        of '0':
-          pattern.add('0')
-          mask.add('1')
-          new_instruction.bits.add(FIELD_ZERO)
-        of '1':
-          pattern.add('1')
-          mask.add('1')
-          new_instruction.bits.add(FIELD_ONE)
-        of ' ':
-          discard
-        of '?':
-          pattern.add('0')
-          mask.add('0')
-          new_instruction.bits.add(FIELD_WILDCARD)
+      if peek(s) != '%':
+        let bit_id = case peek(s):
+          of '0':
+            pattern.add('0')
+            mask.add('1')
+            FIELD_ZERO
+          of '1':
+            pattern.add('1')
+            mask.add('1')
+            FIELD_ONE
+          of ' ':
+            skip(s)
+            continue
+          of '?':
+            pattern.add('0')
+            mask.add('0')
+            FIELD_WILDCARD
+          else:
+            pattern.add('0')
+            mask.add('0')
+            let c = peek(s)
+            var field_index = -1
+            for i, field_name in new_instruction.field_names:
+              if field_name[0] == c:
+                  field_index = i
+                  break
+
+            if field_index < 0:
+              return error("Error defining '" & instruction_name & "'. No field starts with character '" & c & "'.")
+            let field_real_index = field_index + FIXED_FIELDS_LEN
+            field_id(field_real_index)
+        if bit_id != current.id:
+          if current.id != FIELD_INVALID:
+            new_bits.add(current)
+          current = bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
         else:
-          pattern.add('0')
-          mask.add('0')
-          let c = peek(s)
-          var field_index = -1
-          for i, field_name in new_instruction.field_names:
-            if field_name[0] == c:
-                field_index = i
-                break
-
-          if field_index < 0:
-            return error("Error defining '" & instruction_name & "'. No field starts with character '" & c & "'.")
-          let field_real_index = field_index + FIXED_FIELDS_LEN
-          new_instruction.bits.add(field(id: field_real_index))
-
+          current.top += 1
+      else:
+        return error("Not implemented")
       skip(s)
-    
-    if new_instruction.bits.len ==  0:
+
+    if current.id != FIELD_INVALID:
+      new_bits.add(current)
+
+    let total_length = mask.len
+    var current_length = 0
+    var consumed_bits = newSeq[int](new_instruction.fields.len)
+    for i in countdown(new_bits.high, 0):
+      var bits = new_bits[i]
+      if bits.is_direct and bits.id.int >= FIXED_FIELDS_LEN:
+        # We need to adjust this for the case of non-consecutive bit fields of the same operand
+        bits.top += consumed_bits[bits.id.int - FIXED_FIELDS_LEN]
+        bits.bottom += consumed_bits[bits.id.int - FIXED_FIELDS_LEN]
+        consumed_bits[bits.id.int - FIXED_FIELDS_LEN] += bits.top - bits.bottom + 1
+
+      let new_length = current_length + bits.top - bits.bottom + 1
+      if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
+        let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
+        if bits.top - bits.bottom + 1 > 64 and bits.id.int > FIXED_FIELDS_LEN:
+          return error("Bit pattern for field " & new_instruction.fields[bits.id.int - FIXED_FIELDS_LEN].name & " longer than 64bit")
+        var right = bits
+        var left = bits
+        right.top = bits.bottom + fit_count - 1
+        left.bottom = right.top + 1
+        new_instruction.bits.add right
+        new_instruction.bits.add left
+      else:
+        new_instruction.bits.add bits
+      current_length = new_length
+    reverse(new_instruction.bits)
+    if total_length ==  0:
       return error("Instruction '" & instruction_name & "' is missing the bit field definition")
-    if new_instruction.bits.len mod 8 != 0:
-      return error("The width of instruction '" & instruction_name & "' is " & $new_instruction.bits.len & " bits, but only multiples of 8 are supported")
-    
-    discard parseBin(pattern[0..min(7, pattern.high)], new_instruction.fixed_pattern_0)
-    discard parseBin(mask[0..min(7, mask.high)], new_instruction.fixed_mask_0)
-    if pattern.len > 8:
-      discard parseBin(pattern[8..^1], new_instruction.fixed_pattern_1)
-      discard parseBin(mask[8..^1], new_instruction.fixed_mask_1)
+    if total_length mod 8 != 0:
+      return error("The width of instruction '" & instruction_name & "' is " & $total_length & " bits, but only multiples of 8 are supported")
+    new_instruction.bit_length = total_length
+    assert total_length == mask.len and total_length == pattern.len
+
+    let word_count = (total_length + 63) div 64
+    new_instruction.fixed_pattern.set_len(word_count)
+    new_instruction.fixed_mask.set_len(word_count)
+    var r = total_length mod 64
+    if r == 0:
+      r = 63
+    else:
+      r -= 1
+    discard parseBin(pattern[0..r], new_instruction.fixed_pattern[0])
+    discard parseBin(mask[0..r], new_instruction.fixed_mask[0])
+    for i in 1 ..< word_count:
+      let s = r + 1 + (i-1) * 64
+      let e = s+63
+      discard parseBin(pattern[s..e], new_instruction.fixed_pattern[i])
+      discard parseBin(mask[s..e], new_instruction.fixed_mask[i])
 
     skip_whitespaces(s)
 
@@ -484,7 +542,7 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
     if not skip_newlines(s):
       return error("Expected newline after section header")
 
-
+#[
 func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
   var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing
   var index = 0
@@ -498,13 +556,13 @@ func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
     for instruction in isa_spec.instructions:
       let current_address = index
       if (machine_code_0 and instruction.fixed_mask_0) == instruction.fixed_pattern_0 and (machine_code_1 and instruction.fixed_mask_1) == instruction.fixed_pattern_1:
-        index += (instruction.bits.len + 7) div 8
+        index += (instruction.bit_length + 7) div 8
         anything_found = true
         result.add(disassembled_instruction(is_literal: false, instruction: instruction))
         var fields: seq[uint64]
         for i, t in instruction.bits:
-          if t.id < FIXED_FIELDS_LEN: continue
-          let idx = t.id - FIXED_FIELDS_LEN
+          if t.id.int < FIXED_FIELDS_LEN: continue
+          let idx = t.id.int - FIXED_FIELDS_LEN
           while idx >= fields.len:
             fields.add(0)
 
@@ -534,7 +592,7 @@ func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassemble
       while index < top:
         result[^1].value.add(machine_code_pad[index])
         index += 1
-
+]#
 
 import assemble
 export assemble
