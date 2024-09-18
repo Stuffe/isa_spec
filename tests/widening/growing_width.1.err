@@ -1,1 +1,1 @@
-@[(loc: (file: "widening/growing_width.1.asm", line: 20), message: "17 is too large for the 1st operand")]
+@[(loc: (file: "widening/growing_width.1.asm", line: 20), message: "Value 17 doesn\'t fit (some bits should be zero aren\'t)")]

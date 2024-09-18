@@ -1,4 +1,4 @@
-import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm
+import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm, bitops
 import types, parse, expressions
 
 export parse.new_stream_slice
@@ -319,21 +319,30 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       new_bits.add(current)
 
     let total_length = mask.len
+    if total_length ==  0:
+      return error("Instruction '" & instruction_name & "' is missing the bit field definition")
+    if total_length mod 8 != 0:
+      return error("The width of instruction '" & instruction_name & "' is " & $total_length & " bits, but only multiples of 8 are supported")
+    new_instruction.bit_length = total_length
+
     var current_length = 0
     var consumed_bits = newSeq[int](new_instruction.fields.len)
     for i in countdown(new_bits.high, 0):
       var bits = new_bits[i]
-      if bits.is_direct and bits.id.int >= FIXED_FIELDS_LEN:
+      let index = bits.id.int - FIXED_FIELDS_LEN
+      if bits.is_direct and index >= 0:
         # We need to adjust this for the case of non-consecutive bit fields of the same operand
-        bits.top += consumed_bits[bits.id.int - FIXED_FIELDS_LEN]
-        bits.bottom += consumed_bits[bits.id.int - FIXED_FIELDS_LEN]
-        consumed_bits[bits.id.int - FIXED_FIELDS_LEN] += bits.top - bits.bottom + 1
+        bits.top += consumed_bits[index]
+        bits.bottom += consumed_bits[index]
+        consumed_bits[index] += bits.top - bits.bottom + 1
+      if index >= 0:
+        new_instruction.fields[index].used = new_instruction.fields[index].used or toMask[uint64](bits.bottom .. bits.top)
 
       let new_length = current_length + bits.top - bits.bottom + 1
       if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
         let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
-        if bits.top - bits.bottom + 1 > 64 and bits.id.int > FIXED_FIELDS_LEN:
-          return error("Bit pattern for field " & new_instruction.fields[bits.id.int - FIXED_FIELDS_LEN].name & " longer than 64bit")
+        if bits.top - bits.bottom + 1 > 64 and index >= 0:
+          return error("Bit pattern for field " & new_instruction.fields[index].name & " longer than 64bit")
         var right = bits
         var left = bits
         right.top = bits.bottom + fit_count - 1
@@ -344,12 +353,18 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         new_instruction.bits.add bits
       current_length = new_length
     reverse(new_instruction.bits)
-    if total_length ==  0:
-      return error("Instruction '" & instruction_name & "' is missing the bit field definition")
-    if total_length mod 8 != 0:
-      return error("The width of instruction '" & instruction_name & "' is " & $total_length & " bits, but only multiples of 8 are supported")
-    new_instruction.bit_length = total_length
-    assert total_length == mask.len and total_length == pattern.len
+
+    for f in new_instruction.fields.mitems:
+      if f.used != 0:
+        let unused_mask = not f.used
+        f.unused_zero = unused_mask
+        if f.is_signed:
+          let sign_bit_index = 63 - f.used.count_leading_zero_bits()
+          if sign_bit_index != 63:
+            let sign_mask = toMask[uint64]((sign_bit_index + 1) .. 63)
+            f.unused_zero = unused_mask.clearMasked(sign_mask)
+            f.unused_sign = sign_mask
+            f.sign_bit = 1'u64 shl sign_bit_index
 
     let word_count = (total_length + 63) div 64
     new_instruction.fixed_pattern.set_len(word_count)

@@ -359,6 +359,18 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
       if field.is_signed and (fields[i] and (1'u64 shl (field.size - 1))) != 0:
         # We are in signed mode and the Sign bit is set, sign extend to 64bit
         fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl field.size)
+    if field.used != 0:
+      # TODO: Produce good error messages, e.g. "should be multiple of 16" if the lowest 4 bits should be 0
+      if fields[i].masked(field.unused_zero) != 0:
+        error(&"Value {fields[i]} doesn't fit (some bits should be zero aren't)")
+      if field.sign_bit != 0:
+        if (fields[i] and field.sign_bit) == 0:
+          if (fields[i] and field.unused_sign) != 0:
+            error(&"Value {fields[i]} outside of range for this {field.sign_bit.count_trailing_zero_bits()+1}-bit field 0:{field}")
+        else:
+          if (fields[i] and field.unused_sign) != field.unused_sign:
+            error(&"Value {fields[i]} outside of range for this {field.sign_bit.count_trailing_zero_bits()+1}-bit field 1:{field}")
+
   for i, (lhs, rhs, msg) in inst.asserts:
     let lhs_value = eval(lhs, fields, ip)
     let rhs_value = eval(rhs, fields, ip)
@@ -372,56 +384,19 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
 
   var values = inst.fixed_pattern
 
-  type usage_kind = enum
-    unused
-    used_no_sign_bit
-    used_sign_bit
-
-  var used_fields = newSeq[usage_kind](fields.len)
 
   var i = 0
   for j in countdown(inst.bits.high, 0):
+    if bit_type.id.int < FIXED_FIELDS_LEN:
+      continue # fixed fields are either irreleant or part of the fixed_pattern above
+
     let bit_type = inst.bits[j]
     let bit_index = i mod 64
     let int_index = values.high - (i div 64)
-
-    case bit_type.id:
-      of FIELD_ZERO: discard
-      of FIELD_ONE: discard # handled via the fixed pattern above
-      of FIELD_WILDCARD: discard
-      of FIELD_IMM: assert false
-      of FIELD_LABEL: assert false
-      else:
-        let index = bit_type.id.int - FIXED_FIELDS_LEN
-        let bits = fields[index].bitsliced(bit_type.bottom .. bit_type.top)
-        values[int_index] = values[int_index] or (bits shl bit_index)
-        # if not inst.fields[index].is_signed:
-        #   fields[index] = fields[index] shr (bit_type.top - bit_type.bottom + 1)
-        # else:
-        #   fields[index] = asr(fields[index], (bit_type.top - bit_type.bottom + 1))
-        #
-        # if used_fields[index] != used_sign_bit:
-        #   let bit = bits.get
-        #   let matches_sign_bit = (bit == 0 and fields[index] == 0) or (bit == 1 and fields[index] == uint64.high)
-        #   if matches_sign_bit:
-        #     used_fields[index] = used_sign_bit
-        #   else:
-        #     used_fields[index] = used_no_sign_bit
+    let index = bit_type.id.int - FIXED_FIELDS_LEN
+    let bits = fields[index].bitsliced(bit_type.bottom .. bit_type.top)
+    values[int_index] = values[int_index] or (bits shl bit_index)
     i += bit_type.top - bit_type.bottom + 1
-
-
-  # for i, field in fields:
-  #   if used_fields[i] == unused: continue
-  #   if inst.fields[i].is_signed:
-  #     if used_fields[i] != used_sign_bit:
-  #       if i < args.high:
-  #         error(&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand")
-  #       error(&"Immediate is too large for {get_ordinal(i)} operand")
-  #   else:
-  #     if field != 0:
-  #       if i < args.high:
-  #         error(&"{cast[int](args[i])} is too large for {get_ordinal(i)} operand")
-  #       error(&"Immediate is too large for {get_ordinal(i)} operand")
 
   result.set_len(inst.bit_length div 8)
   var k = 0
