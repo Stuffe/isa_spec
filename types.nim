@@ -96,7 +96,7 @@ type field_def* = object
     of true:
       expr*: expression
 
-  # if directly_used == 0, the other 3 fields are irreleavnt
+  # if used == 0, the other 3 fields are irreleavnt
   used*: uint64 # bit mask of bits that are used directly in the final result
   sign_bit*: uint64 # bit mask of the sign bit or 0 if unsigned
   unused_zero*: uint64 # bit mask of the bits that have to be zero
@@ -104,12 +104,12 @@ type field_def* = object
 
   # Example: A field that has to be a multiple of 16 that get's stored as shifted 6 bit immediate
   # If it is unsigned (i.e. zero extended):
-  # directly_used = ...001111110000
+  # used          = ...001111110000
   # sign_bit      = ...000000000000
   # unused_zero   = ...110000001111
   # unused_sign   = ...000000000000
   # If it is signed (i.e. sign extended):
-  # directly_used = ...001111110000
+  # used          = ...001111110000
   # sign_bit      = ...001000000000
   # unused_zero   = ...000000001111
   # unused_sign   = ...110000000000

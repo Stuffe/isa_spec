@@ -387,10 +387,10 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
 
   var i = 0
   for j in countdown(inst.bits.high, 0):
-    if bit_type.id.int < FIXED_FIELDS_LEN:
-      continue # fixed fields are either irreleant or part of the fixed_pattern above
-
     let bit_type = inst.bits[j]
+    if bit_type.id.int < FIXED_FIELDS_LEN:
+      i += bit_type.top - bit_type.bottom + 1
+      continue # fixed fields are either irreleant or part of the fixed_pattern above
     let bit_index = i mod 64
     let int_index = values.high - (i div 64)
     let index = bit_type.id.int - FIXED_FIELDS_LEN

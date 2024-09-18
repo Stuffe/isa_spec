@@ -42,17 +42,24 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
       source &= "\n"
       field_i += 1
 
+  var j = 0
   for i, field in instruction.bits:
-    assert field.is_direct
-    if field.id.int < FIXED_FIELDS_LEN:
-      assert field.id.int < 3
+    if field.is_direct:
+      let c = if field.id.int < FIXED_FIELDS_LEN:
+          assert field.id.int < 3
+          "01?"[field.id.int]
+        else:
+          instruction.fields[field.id.int - FIXED_FIELDS_LEN].name[0]
       for _ in field.bottom .. field.top:
-        source &= "01?"[field.id.int]
+        source &= c
+        if j mod 8 == 7:
+          source &= " "
+        j += 1
     else:
-      for _ in field.bottom .. field.top:
-        source &= instruction.field_names[field.id.int - FIXED_FIELDS_LEN][0]
-    if i mod 8 == 7:
-      source &= " "
+      assert field.id.int >= FIXED_FIELDS_LEN
+      let field_name = instruction.fields[field.id.int - FIXED_FIELDS_LEN].name
+      source &= " %" & field_name & "[" & $field.top & ":" & $field.bottom & "] "
+      j += field.top - field.bottom + 1
 
   source &= "\n" & instruction.description
   return source
@@ -311,9 +318,38 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           current = bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
         else:
           current.top += 1
+        skip(s)
       else:
-        return error("Not implemented")
-      skip(s)
+        skip(s)
+        let field_name = get_identifier(s)
+        if field_name.len == 0:
+          return error("Expected an identifier after '%'")
+        var field_index = -1
+        for i, field in new_instruction.fields:
+          if field.name == field_name:
+              field_index = i
+              break
+        let field_real_index = field_index + FIXED_FIELDS_LEN
+        if read(s) != '[':
+          return error("Expected slice syntax after field reference in bit pattern")
+        skip_whitespaces(s)
+        let top = ?parse_signed(?get_unsigned(s))
+        skip_whitespaces(s)
+        if read(s) != ':':
+          return error("Expected slice syntax after field reference in bit pattern")
+        skip_whitespaces(s)
+        let bottom = ?parse_signed(?get_unsigned(s))
+        skip_whitespaces(s)
+        if read(s) != ']':
+          return error("Expected slice syntax after field reference in bit pattern")
+        if current.id != FIELD_INVALID:
+          new_bits.add(current)
+          current = bitfield(id: FIELD_INVALID)
+        new_bits.add(bitfield(id: field_id(field_real_index), top: top, bottom: bottom))
+        for _ in bottom .. top:
+          mask.add '0'
+          pattern.add '0'
+
 
     if current.id != FIELD_INVALID:
       new_bits.add(current)
