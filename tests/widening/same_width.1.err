@@ -1,1 +1,1 @@
-@[(loc: (file: "widening/same_width.1.asm", line: 34), message: "Value 16 doesn\'t fit (some bits should be zero aren\'t)")]
+(loc: (file: "widening/same_width.1.asm", line: 34), message: "Value 16 outside of range for this 4-bit zero-extended field")

@@ -1,1 +1,1 @@
-@[(loc: (file: "arithmetic/sized.1.asm", line: 1), message: "Value 65536 outside of range for this 16-bit operand")]
+(loc: (file: "arithmetic/sized.1.asm", line: 1), message: "Value 65536 outside of range for this 16-bit operand")

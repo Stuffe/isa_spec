@@ -1,1 +1,1 @@
-@[(loc: (file: "alternatives/multi.1.asm", line: 1), message: "Was expecting a label name here")]
+(loc: (file: "alternatives/multi.1.asm", line: 1), message: "Was expecting a label name here")

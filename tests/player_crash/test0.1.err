@@ -1,1 +1,1 @@
-@[(loc: (file: "player_crash/test0.1.asm", line: 7), message: "Undefined label some_other_label")]
+(loc: (file: "player_crash/test0.1.asm", line: 7), message: "Undefined label some_other_label")
