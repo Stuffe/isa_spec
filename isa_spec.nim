@@ -392,15 +392,11 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
     for f in new_instruction.fields.mitems:
       if f.used != 0:
-        let unused_mask = not f.used
-        f.unused_zero = unused_mask
-        f.sign_bit = -1
-        if f.is_signed:
-          let sign_bit_index = 63 - f.used.count_leading_zero_bits()
-          if sign_bit_index != 63:
-            let sign_mask = toMask[uint64]((sign_bit_index + 1) .. 63)
-            f.unused_zero = unused_mask.clearMasked(sign_mask)
-            f.sign_bit = sign_bit_index.int8
+        f.unused_zero = not f.used
+        f.highest_bit = (63 - f.used.count_leading_zero_bits()).int8
+        if f.is_signed and f.highest_bit != 63:
+          let sign_mask = toMask[uint64]((f.highest_bit + 1).int .. 63)
+          f.unused_zero = f.unused_zero.clearMasked(sign_mask)
 
     let word_count = (total_length + 63) div 64
     new_instruction.fixed_pattern.set_len(word_count)

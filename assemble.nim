@@ -345,7 +345,13 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
     if throw_on_error:
       raise newException(ValueError, input)
     return
-  
+
+  func describe(f: field_def): string =
+    if f.is_signed:
+      &"{f.highest_bit+1}-bit sign-extended field"
+    else:
+      &"{f.highest_bit+1}-bit zero-extended field"
+
   var fields = args
   # Compute virtual fields & Apply sizes
   for i, field in inst.fields:
@@ -356,20 +362,24 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
       let remainder = asr(fields[i], field.size.uint64) # The bits that are not part of this value
       if not (remainder == 0 or remainder == 0xFFFF_FFFF_FFFFF_FFFF'u64):
         error(&"Value {fields[i]} outside of range for this {field.size}-bit operand")
-      if field.is_signed and (fields[i] and (1'u64 shl (field.size - 1))) != 0:
+      if field.is_signed and fields[i].test_bit(field.size - 1):
         # We are in signed mode and the Sign bit is set, sign extend to 64bit
         fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl field.size)
     if field.used != 0:
+      if field.highest_bit < 63:
+        if field.is_signed:
+          if fields[i].test_bit(field.highest_bit):
+            if asr(fields[i], field.highest_bit.uint64) != uint64.high:
+              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(field)}")
+          else:
+            if asr(fields[i], field.highest_bit.uint64) != 0:
+              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(field)}")
+        else:
+          if asr(fields[i], field.highest_bit.uint64 + 1) != 0:
+            error(&"Value {cast[int64](fields[i])} outside of range for this {describe(field)}")
       # TODO: Produce good error messages, e.g. "should be multiple of 16" if the lowest 4 bits should be 0
       if fields[i].masked(field.unused_zero) != 0:
-        error(&"Value {fields[i]} doesn't fit (some bits should be zero aren't)")
-      if field.sign_bit >= 0:
-        if fields[i].test_bit(field.sign_bit):
-          if asr(fields[i], field.sign_bit.uint64) != uint64.high:
-            error(&"Value {fields[i]} outside of range for this {field.sign_bit+1}-bit field")
-        else:
-          if asr(fields[i], field.sign_bit.uint64) != 0:
-            error(&"Value {fields[i]} outside of range for this {field.sign_bit+1}-bit field")
+        error(&"Value {cast[int64](fields[i])} doesn't fit (some bits should be zero aren't)")
 
   for i, (lhs, rhs, msg) in inst.asserts:
     let lhs_value = eval(lhs, fields, ip)

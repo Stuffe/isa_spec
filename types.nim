@@ -99,13 +99,13 @@ type field_def* = object
   # if used == 0, the other 3 fields are irreleavnt
   used*: uint64 # bit mask of bits that are used directly in the final result
   unused_zero*: uint64 # bit mask of the bits that have to be zero
-  sign_bit*: int8 # bit index of the sign bit or -1 if unsigned
+  highest_bit*: int8 # bit index of the higest bit, i.e. the sign bit if is_signed
 
   # Example: A field that has to be a multiple of 16 that get's stored as shifted 6 bit immediate
   # If it is unsigned (i.e. zero extended):
   # used          = ...001111110000
   # unused_zero   = ...110000001111
-  # sign_bit      = -1
+  # sign_bit      = 9
   # If it is signed (i.e. sign extended):
   # used          = ...001111110000
   # unused_zero   = ...000000001111
