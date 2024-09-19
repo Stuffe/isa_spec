@@ -177,13 +177,16 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
 
       if asm_result.errors.len != 0:
         if asm_test.error_file != "":
-          let expected_asm_error = readFile(asm_test.error_file)
-          if expected_asm_error != $asm_result.errors:
-            fail(test_name, asm_test.source_file, &"Wrong error message:\n" &
-                                                  &" Got {asm_result.errors} \n" &
-                                                  &"Expected {expected_asm_error}")
-          else:
-            doAssert asm_test.result_file == "", &"Can't have both error and results for the same test ({asm_test.source_file}))"
+          let expected_asm_error = readFile(asm_test.error_file).split_lines()
+          for i, expected in expected_asm_error:
+            if i > asm_result.errors.high:
+              fail(test_name, asm_test.source_file, &"Expected more error messages, at least {expected}")
+            if expected.strip() != $asm_result.errors[i]:
+              fail(test_name, asm_test.source_file, &"Wrong error message:\n" &
+                                                    &" Got {asm_result.errors[i]} \n" &
+                                                    &"Expected {expected}")
+              break
+          doAssert asm_test.result_file == "", &"Can't have both error and results for the same test ({asm_test.source_file}))"
         else:
           fail(test_name, asm_test.source_file, &"Unexpected assemble failure: {asm_result.errors}")
         continue

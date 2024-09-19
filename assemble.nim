@@ -363,13 +363,13 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
       # TODO: Produce good error messages, e.g. "should be multiple of 16" if the lowest 4 bits should be 0
       if fields[i].masked(field.unused_zero) != 0:
         error(&"Value {fields[i]} doesn't fit (some bits should be zero aren't)")
-      if field.sign_bit != 0:
-        if (fields[i] and field.sign_bit) == 0:
-          if (fields[i] and field.unused_sign) != 0:
-            error(&"Value {fields[i]} outside of range for this {field.sign_bit.count_trailing_zero_bits()+1}-bit field 0:{field}")
+      if field.sign_bit >= 0:
+        if fields[i].test_bit(field.sign_bit):
+          if asr(fields[i], field.sign_bit.uint64) != uint64.high:
+            error(&"Value {fields[i]} outside of range for this {field.sign_bit+1}-bit field")
         else:
-          if (fields[i] and field.unused_sign) != field.unused_sign:
-            error(&"Value {fields[i]} outside of range for this {field.sign_bit.count_trailing_zero_bits()+1}-bit field 1:{field}")
+          if asr(fields[i], field.sign_bit.uint64) != 0:
+            error(&"Value {fields[i]} outside of range for this {field.sign_bit+1}-bit field")
 
   for i, (lhs, rhs, msg) in inst.asserts:
     let lhs_value = eval(lhs, fields, ip)
