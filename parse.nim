@@ -64,6 +64,14 @@ func set_index*(s: var stream_slice, value: int) =
   assert not isNil(s.source)
   s.start = value
 
+func get_slice*(s: stream_slice, start: int, finish: int): stream_slice =
+  result = s
+  result.start = start
+  result.finish = finish
+
+func get_string*(s: stream_slice, start: int, finish: int): string =
+  return $s.source[start..finish - 1]
+
 func dbg*(s: stream_slice): string =
   return s.source[0..s.start - 1] & "\u001b[31m" & s.source[s.start..s.finish - 1] & "\u001b[0m" & s.source[s.finish..^1]
 
@@ -329,6 +337,12 @@ func find*(s: var stream_slice, candidates: openArray[string]): int =
       return i
   return -1
 
+func find*(s: var stream_slice, candidates: openArray[char]): int =
+  for i, candidate in candidates:
+    if matches(s, candidate):
+      return i
+  return -1
+
 func get_bool*(s: var stream_slice): (string, bool) =
   let index = find(s, ["false", "true"])
 
@@ -418,7 +432,6 @@ func parse_string*(s: stream_slice): (string, string) =
   let content = it.get_string().on_err do:
     return (err, "")
   return descape_string_content(content)
-
 
 
 func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
