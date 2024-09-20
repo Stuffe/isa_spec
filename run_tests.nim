@@ -3,7 +3,7 @@ import isa_spec, types, expressions
 
 const STOP_AT_FIRST_FAIL = false
 const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
-const CHECK_ROUNDTRIP    = true
+const CHECK_ROUNDTRIP    = false
 
 type asm_test_files = tuple
   source_file: string

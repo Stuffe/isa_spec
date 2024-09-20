@@ -142,7 +142,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     if this_part != "":
       syntax_parts.add(this_part)
 
-  var new_instruction: instruction
+  var new_instruction = instruction(start_char_offset: get_index(s))
 
   block syntax:
     add_string_syntax(s, new_instruction.syntax)

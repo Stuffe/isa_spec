@@ -137,6 +137,7 @@ type instruction* = object
   fixed_pattern*: seq[uint64]
   fixed_mask*: seq[uint64]
   description*: string
+  start_char_offset*: int
 
 type endianness* = enum
   end_little
