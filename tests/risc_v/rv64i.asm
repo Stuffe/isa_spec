@@ -119,6 +119,13 @@ jump_label_a:
 	jump jump_label_b, a0  ; jump  8, a0
 jump_label_b:
 
+li a0, 0x7ff        ; Positive immediate with [11:0] significant bits -> addi
+li a0, -1           ; Negative immediate with [11:0] significant bits -> addi
+li a0, 0x7ffff000   ; Positive immediate with [31:12] significant bits -> lui
+li a0, -4096        ; Negative immediate with [31:12] significant bits -> lui
+li a0, 0x7fffffff   ; Positive immediate with [31:0] significant bits -> lui; addi
+li a0, -2147479553  ; Negative immediate with [31:0] significant bits -> lui; addi
+
 lla_label_a:
 	nop
 	lla a0, lla_label_a  ; jump -4, a0

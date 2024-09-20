@@ -149,7 +149,7 @@ h 001
 w 010
 
 [instructions]
-auipc  %rd(register) , %imm:S20(immediate)
+auipc  %rd(register) , %imm:S64(immediate)
 %imm[19:0] %rd[4:0] 0010111
 
 b%op(branch_funct3)  %src1(register) , %src2(register) , %label(label)
@@ -204,7 +204,7 @@ jalr  ( %base(register) )
 000000000000 %base[4:0] 000 00001 1100111
 jalr ra, 0(%base)
 
-jalr  %offset:S12(immediate) ( %base(register) )
+jalr  %offset:S64(immediate) ( %base(register) )
 %offset[11:0] %base[4:0] 000 00001 1100111
 jalr ra, %offset(%base)
 
@@ -216,7 +216,7 @@ jalr  %dest(register) , ( %base(register) )
 000000000000 %base[4:0] 000 %dest[4:0] 1100111
 jalr %dest, 0(%base)
 
-jalr  %dest(register) , %offset:S12(immediate) ( %base(register) )
+jalr  %dest(register) , %offset:S64(immediate) ( %base(register) )
 %offset[11:0] %base[4:0] 000 %dest[4:0] 1100111
 
 jalr  %base(register)
@@ -234,6 +234,20 @@ jump  %label(label) , %scratch(register)
 %label_pcrel_hi[19:0] %scratch[4:0] 0010111 %label_pcrel_lo[11:0] %scratch[4:0] 000 00000 1100111
 auipc %scratch, pcrel_hi(%label); jalr zero, pcrel_lo(%label)(%scratch)
 
+li  %dest(register) , %imm:S64(immediate)
+%imm[11:0] 00000 000 %dest[4:0] 0010011
+addi %dest, zero, %imm
+
+li  %dest(register) , %imm:S64(immediate)
+%imm[31:12] %dest[4:0] 0110111
+lui %dest, %imm
+
+li  %dest(register) , %imm:S64(immediate)
+%imm_lui:S20 = (%imm[31:12] + %imm[11:11]) & ((1 << 20) - 1)
+%imm_addi:S12 = %imm[11:0]
+%imm_lui[19:0] %dest[4:0] 0110111 %imm_addi[11:0] %dest[4:0] 000 %dest[4:0] 0010011
+lui %dest, %hi(%imm); addi %dest, %lo(%imm)
+
 lla  %dest(register) , %label(label)
 %label_pcrel:S32 = %label - $
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
@@ -241,7 +255,7 @@ lla  %dest(register) , %label(label)
 %label_pcrel_hi[19:0] %dest[4:0] 0010111 %label_pcrel_lo[11:0] %dest[4:0] 000 %dest[4:0] 0010011
 auipc %dest, pcrel_hi(%label); addi %dest, %dest, pcrel_lo(%label)
 
-lui  %dest(register) , %imm:S20(immediate)
+lui  %dest(register) , %imm:S64(immediate)
 %imm[19:0] %dest[4:0] 0110111
 lui %dest, %imm
 
@@ -252,7 +266,7 @@ l%width(load_funct3)  %dest(register) , %label(label)
 %label_pcrel_hi[19:0] %dest[4:0] 0010111 %label_pcrel_lo[11:0] %dest[4:0] %width[2:0] %dest[4:0] 0000011
 auipc %dest, pcrel_hi(%label); lb/lbu/ld/lh/lhu/lw/lwu %dest, pcrel_lo(%label)(%dest)
 
-l%width(load_funct3)  %dest(register) , %offset:S12(immediate) ( %base(register) )
+l%width(load_funct3)  %dest(register) , %offset:S64(immediate) ( %base(register) )
 %offset[11:0] %base[4:0] %width[2:0] %dest[4:0] 0000011
 lb/lbu/ld/lh/lhu/lw/lwu %dest, %offset(%base)
 
@@ -308,7 +322,7 @@ snez  %dest(register) , %src(register)
 0000000 %src[4:0] 00000 011 %dest[4:0] 0110011
 sltu %dest, zero, %src
 
-s%width(store_funct3)  %src(register) , %offset:S12(immediate) ( %base(register) )
+s%width(store_funct3)  %src(register) , %offset:S64(immediate) ( %base(register) )
 %offset[11:5] %src[4:0] %base[4:0] %width[2:0] %offset[4:0] 0100011
 sb/sd/sh/sw %src, %offset(%base)
 
@@ -339,11 +353,11 @@ add/and/or/sll/slt/sltu/sra/srl/sub/xor %dest, %src1, %src2
 %op[9:3] %src2[4:0] %src1[4:0] %op[2:0] %dest[4:0] 0111011
 addw/sllw/sraw/srlw/subw %dest, %src1, %src2
 
-%op(op_imm_funct3)  %dest(register) , %src(register) , %imm:S12(immediate)
+%op(op_imm_funct3)  %dest(register) , %src(register) , %imm:S64(immediate)
 %imm[11:0] %src[4:0] %op[2:0] %dest[4:0] 0010011
 addi/andi/ori/slti/sltiu/xori %dest, %src, %imm
 
-%op(op_imm_32_funct3)  %dest(register) , %src(register) , %imm:S12(immediate)
+%op(op_imm_32_funct3)  %dest(register) , %src(register) , %imm:S64(immediate)
 %imm[11:0] %src[4:0] %op[2:0] %dest[4:0] 0011011
 addiw %dest, %src, %imm
 
