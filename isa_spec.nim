@@ -211,11 +211,15 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   block virtual_field:
     var count = 1
     while peek(s) in {'%', '!'}:
+      let restore = s
       if read(s) == '%':
         var new_field = field_def(size: 64, is_virtual: true)
         new_field.name = $get_identifier(s)
         if new_field.name.len == 0:
           return error("Expected an identifier after '%'")
+        if peek(s) == '[': # This is probably the bitpattern which happens to start with a slice, so backtrack
+          s = restore
+          break
 
         if matches(s, ':'):
           let marker = read(s)
