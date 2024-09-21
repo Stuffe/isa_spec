@@ -87,9 +87,3 @@ Here the expression inside {} is evaluated first and the range specified inside 
 
 
 TODO: finish this
-
-# License
-This project is CC0.
-
-https://pages.github.com/](https://creativecommons.org/public-domain/cc0/
-

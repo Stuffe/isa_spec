@@ -315,7 +315,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
                   break
 
             if field_index < 0:
-              return error("Error defining '" & instruction_name & "'. No field starts with character '" & c & "'.")
+              return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
             let field_real_index = field_index + FIXED_FIELDS_LEN
             field_id(field_real_index)
         if bit_id != current.id:
