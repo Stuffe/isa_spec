@@ -486,7 +486,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
   while not finished(s):
     if get_index(s) <= progress_index:
       # No progress made, advance to newline
-      error("No progress was made")
+      error("Can't understand this line")
       set_index(s, progress_index)
       skip_line(s)
       break
@@ -526,6 +526,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         error("Expected a number after a size declaration")
         skip_line(s)
         continue
+
       else:
         s = restore
         break number_literal

@@ -1,0 +1,88 @@
+[settings]
+endianness = big
+ 
+[fields]
+
+register_64
+x0 00000
+x1 00001
+x2 00010
+x3 00011
+x4 00100
+x5 00101
+x6 00110
+x7 00111
+x8 01000
+x9 01001
+x10 01010
+x11 01011
+x12 01100
+x13 01101
+x14 01110
+x15 01111
+x16 10000
+x17 10001
+x18 10010
+x19 10011
+x20 10100
+x21 10101
+x22 10110
+x23 10111
+x24 11000
+x25 11001
+x26 11010
+x27 11011
+x28 11100
+x29 11101
+x30 11110
+
+[instructions]
+
+orr %xd(register_64), %xn(register_64), %xm(register_64)
+10101010 000 %xm[4:0] 000000 %xn[4:0] %xd[4:0]
+Bitwise OR (shifted register) performs a bitwise (inclusive) OR of a register value and an optionally-shifted register value, and writes the result to the destination register. This instruction is used by the alias MOV (register).
+
+bl .%imm:S25(immediate)
+%offset:S26 = asr(%imm, 2)
+100101 %offset[25:0]
+Branch with Link branches to a PC-relative offset, setting the register X30 to PC+4. It provides a hint that this is a subroutine call.
+
+bl %label(label)
+%offset:S26 = asr(%imm, 2)
+100101 %offset[25:0]
+Branch with Link branches to a PC-relative offset, setting the register X30 to PC+4. It provides a hint that this is a subroutine call.
+
+ret %reg(register_64)
+11010110 01011111 000000 %reg[4:0] 00000
+Return from subroutine branches unconditionally to an address in a register, with a hint that this is a subroutine return.
+
+br %reg(register_64)
+11010110 00011111 000000 %reg[4:0] 00000
+Branch to Register branches unconditionally to an address in a register, with a hint that this is not a subroutine return.
+
+add %xd(register_64), %xn(register_64), %xm(register_64)
+10001011 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
+Add (shifted register) adds a register value and an optionally-shifted register value, and writes the result to the destination register.
+
+add %xd(register_64), %xn(register_64), %imm(immediate)
+10010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
+Add (immediate), setting flags, adds a register value and an optionally-shifted immediate value, and writes the result to the destination register. It updates the condition flags based on the result.
+
+
+sub %xd(register_64), %xn(register_64), %xm(register_64)
+11001011 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
+Subtract (shifted register) subtracts an optionally-shifted register value from a register value, and writes the result to the destination register.
+
+sub %xd(register_64), %xn(register_64), %imm(immediate)
+11010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
+Subtract (immediate) subtracts an optionally-shifted immediate value from a register value, and writes the result to the destination register.
+
+b .%imm:S25(immediate|label)
+%offset:S26 = asr(%imm, 2)
+000101 %offset[25:0]
+Branch causes an unconditional branch to a label at a PC-relative offset, with a hint that this is not a subroutine call or return.
+
+b %label(label)
+%offset:S26 = asr(%imm, 2)
+000101 %offset[25:0]
+Branch causes an unconditional branch to a label at a PC-relative offset, with a hint that this is not a subroutine call or return.
