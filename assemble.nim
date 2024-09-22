@@ -294,38 +294,26 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
           assert field.int >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
           let pre_field_restore = s
           let field_string = get_identifier(s)
+          s = pre_field_restore
 
           if field_string in p.field_defines[field.int]:
             result.operands.add fixed(p.field_defines[field.int][field_string].value)
+            s.skip(field_string.len)
           else:
-            var found = false
+            var found = -1
             var value: uint64
-            block search_field:
-              # First check for exact matches
-              for field_value in p.isa_spec.field_types[field.int].values:
-                if field_value.name == field_string:
-                  found = true
-                  value = field_value.value
-                  break search_field
-              if field_string.len > 0:
-                # Then search for partial matches, rewinding the
-                for field_value in p.isa_spec.field_types[field.int].values:
-                  if ($field_string).startswith(field_value.name):
-                    s = pre_field_restore
-                    if not s.matches(field_value.name):
-                      if not is_last: continue
-                      return error("[Internal error] in partial match search", i)
-                    found = true
-                    value = field_value.value
-                    break search_field
-            if not found:
+            for field_value in p.isa_spec.field_types[field.int].values:
+              if field_value.name.len > found and s.matches(field_value.name, false):
+                found = field_value.name.len
+                value = field_value.value
+            if found < 0:
               if not is_last: continue
-              if field_string == "":
+              # TODO: Add multiple field types to error message if multiple are allowed
+              if field_string.len == 0:
                 return error(&"Missing a '{p.isa_spec.field_types[field.int].name}' operand here", i)
               return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.int].name}'", i)
             else:
-              # Reversing it here so it can be filled in from lowest bits, without having to pass around the length
-              # TODO: Check what the above comment means
+              s.skip(found)
               result.operands.add fixed(value)
           i += 1
           break

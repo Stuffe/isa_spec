@@ -112,6 +112,13 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   func error(input: string): (instruction, string) =
     return (instruction(), input)
 
+
+  template check[T](input: (string, T)): T =
+    let (err, res) = input
+    if err != "":
+      return error(err)
+    res
+
   func add_string_syntax(s: var stream_slice, syntax_parts: var seq[string]) =
     var this_part: string
     while peek(s) notin {'\0', '\n'}:
@@ -162,7 +169,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
              true
           else:
             return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
-        new_field.size = ?parse_signed(?get_unsigned(s))
+        new_field.size = check(parse_signed(check(get_unsigned(s))))
         if new_field.size < 1 or new_field.size > 64:
           return error(&"Invalid size {new_field.size}")
 
@@ -230,7 +237,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
                true
             else:
               return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
-          new_field.size = ?parse_signed(?get_unsigned(s))
+          new_field.size = check(parse_signed(check(get_unsigned(s))))
           if new_field.size < 1 or new_field.size > 64:
             return error(&"Invalid size {new_field.size}")
         skip_whitespaces(s)
@@ -268,7 +275,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           return error("Could not parse assert expression")
         skip_whitespaces(s)
         let msg = if peek(s) in QUOTES:
-            ?descape_string_content(?get_string(s))
+            check(descape_string_content(check(get_string(s))))
           else:
             ""
         if not skip_newlines(s):
@@ -339,12 +346,12 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         if read(s) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
-        let top = ?parse_signed(?get_unsigned(s))
+        let top = check(parse_signed(check(get_unsigned(s))))
         skip_whitespaces(s)
         if read(s) != ':':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
-        let bottom = ?parse_signed(?get_unsigned(s))
+        let bottom = check(parse_signed(check(get_unsigned(s))))
         skip_whitespaces(s)
         if read(s) != ']':
           return error("Expected slice syntax after field reference in bit pattern")
@@ -446,17 +453,11 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
             loc: file_location(file: file_name, line: get_line_number(s)),
             message: input))
 
-  template `?`[T](input: (string, T)): T =
+  template check[T](input: (string, T)): T =
     let (err, res) = input
     if err != "":
       return error(err)
     res
-  template `?`(input: (string, stream_slice)): stream_slice =
-    let (err, res) = input
-    if err != "":
-      return error(err)
-    res
-
 
   result.spec.line_comments  = @[";", "//"]
   result.spec.block_comments = @{"/*": "*/"}
@@ -490,30 +491,30 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
       case name:
         of "name":
           if peek(s) in QUOTES:
-            result.spec.name = ?descape_string_content(?get_string(s))
+            result.spec.name = check(descape_string_content(check(get_string(s))))
           else:
             let raw_id = get_identifier(s)
             if raw_id.len == 0:
               return error("Expected string or identifier as name")
             result.spec.name = $raw_id
         of "variant":
-          result.spec.variant = ?descape_string_content(?get_string(s))
+          result.spec.variant = check(descape_string_content(check(get_string(s))))
         of "endianness":
-          result.spec.endianness = ?get_enum(s, {
+          result.spec.endianness = check(get_enum(s, {
             "big": end_big,
             "little": end_little
-          })
+          }))
         of "line_comments":
-          let raw_list = ?get_list(s)
+          let raw_list = check(get_list(s))
           result.spec.line_comments.set_len(0)
           for entry in raw_list:
-            result.spec.line_comments.add ?parse_string(entry)
+            result.spec.line_comments.add check(parse_string(entry))
         of "block_comments":
-          let raw_table = ?get_table(s)
+          let raw_table = check(get_table(s))
           result.spec.block_comments.set_len(0)
           for key, value in raw_table:
-            let start_sym = ?parse_string(key)
-            let end_sym = ?parse_string(value)
+            let start_sym = check(parse_string(key))
+            let end_sym = check(parse_string(value))
             result.spec.block_comments.add (start_sym, end_sym)
         else:
           return error(&"Unknown setting name {$name}")
@@ -537,10 +538,27 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
 
       block outer:
         while read(s) == '\n':
-
-          let field_name = get_identifier(s)
+           # If the line starts with a comment, continue on to the next line
+           # We don't use skip_newlines because we don't want to allow empty lines in the middle of a field type def
+          if skip_comment(s):
+            skip_whitespaces(s)
+            continue
+          let field_name = if peek(s) in QUOTES:
+              let temp = check(descape_string_content(check(get_string(s))))
+              for c in temp:
+                if c in WHITESPACE:
+                  return error("Field names can not contain whitespace characters")
+              temp
+            else:
+              let temp = get_identifier(s)
+              skip_whitespaces(s)
+              if temp.len == 0:
+                if peek(s) in {'\n', '\0'}:
+                  break outer
+                else:
+                  return error("Expected a field value name")
+              $temp
           skip_whitespaces(s)
-          if field_name.len == 0 and peek(s) in {'\n', '\0'}: break outer
 
           var bits: string
 
@@ -550,7 +568,7 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
           if bits.len == 0:
             return error("Expected a bit pattern for " & $field_name)
           if bits.len > 64:
-            return error("Only up to 64 bit field lengths supported")
+            return error("Only up to 64-bit field lengths supported")
           
           if bit_length == 0:
             bit_length = bits.len

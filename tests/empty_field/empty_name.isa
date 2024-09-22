@@ -1,7 +1,7 @@
 [fields]
 
 size
-    01
+""  01
 h   00
 x   01
 d   10
