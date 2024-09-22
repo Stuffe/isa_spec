@@ -1,0 +1,26 @@
+[fields]
+register
+// The basic generic names
+r0 000
+r1 001
+r2 010
+r3 011
+r4 100
+r5 101
+r6 110
+r7 111
+// The names introduced by stack-and-functions
+a0 000
+v0 000
+a1 001
+v1 001
+a2 010
+s0 011
+s1 100
+bp 101
+sp 110
+ln 111
+
+[instructions]
+check %a(register), %b(register)
+0aaa0bbb

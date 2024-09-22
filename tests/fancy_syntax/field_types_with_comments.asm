@@ -1,0 +1,10 @@
+check r0, a0
+check r0, v0
+check r1, a1
+check r1, v1
+check r2, a2
+check r3, s0
+check r4, s1
+check r5, bp
+check r6, sp
+check r7, ln

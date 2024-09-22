@@ -1,0 +1,33 @@
+[fields]
+register
+r0 000
+r1 001
+r2 010
+r3 011
+r4 100
+r5 101
+r6 110
+r7 111
+
+operator
+"+"  000
+"-"  001
+"&"  010
+"|"  011
+"&&" 110
+"||" 111
+
+shift_amount
+"1"  00
+"2"  01
+"4"  10
+"8"  11
+
+[instructions]
+%t(register) = %a(register) %o(operator) %b(register)
+0ooo 0ttt 0aaa 0bbb
+
+
+%t(register) = mem[%b(register) + %s(shift_amount) * %o(register)]
+10ss 0ttt 0bbb 0ooo
+
