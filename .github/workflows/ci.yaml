@@ -1,0 +1,24 @@
+name: 'CI'
+
+on:
+- 'pull_request'
+- 'push'
+
+jobs:
+  tests:
+    runs-on: 'ubuntu-22.04'
+
+    steps:
+    - uses: 'actions/checkout@v4'
+
+    - run: |
+        NIM_VERSION='1.6.12'
+
+        pushd /tmp
+        curl -Lo /tmp/nim-linux_x64.tar.xz "https://nim-lang.org/download/nim-${NIM_VERSION}-linux_x64.tar.xz"
+        tar xf /tmp/nim-linux_x64.tar.xz
+        export PATH="$PATH:/tmp/nim-${NIM_VERSION}/bin"
+        hash -r
+        popd
+
+        nim r run_tests.nim
