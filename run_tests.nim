@@ -1,4 +1,4 @@
-import std/[tables, os, strutils, strformat, times, monotimes, paths]
+import std/[tables, os, strutils, strformat, times, monotimes]
 import isa_spec, types, expressions
 
 const STOP_AT_FIRST_FAIL = false
@@ -23,7 +23,7 @@ template timer(): float =
     getMonoTime().ticks.float / 1e9
 
 const TEST_PATH = "tests"
-const SPEC_LIB_PATH = "spec_lib".Path
+const SPEC_LIB_PATH = "spec_lib"
 
 var global_fail: bool = false
 var local_fail: bool = false
@@ -147,7 +147,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       # If we don't have a spec file yet, use it from SPEC_LIB_PATH if it exists there.
       # If a spec file does get found under TEST_PATH later, it will override the SPEC_LIB_PATH file.
 
-      let spec_lib_spec_file = (SPEC_LIB_PATH/(test_name.Path)/((name & ".isa").Path)).string
+      let spec_lib_spec_file = (SPEC_LIB_PATH/test_name/(name & ".isa")).string
       if spec_lib_spec_file.fileExists():
         sub_tests[name].spec_file = spec_lib_spec_file
 
