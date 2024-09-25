@@ -497,16 +497,27 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           skip_line(s)
           continue
         let mask = uint64.high shr (64 - size)
-        var i = size div 8
         var value = mask and (parse_unsigned(number).on_err do:
           error(err)
           skip_line(s)
           continue
         )
-        while i > 0:
-          emit(cast[uint8](value))
-          value = value shr 8
-          i -= 1
+        
+
+        case isa_spec.endianness:
+          of end_little:
+            var i = size div 8
+            while i > 0:
+              emit(cast[uint8](value))
+              value = value shr 8
+              i -= 1
+
+          of end_big:
+            var i = size div 8 - 1
+            while i >= 0:
+              emit(cast[uint8](value shr (i * 8)))
+              i -= 1
+
         skip_and_record_newlines(s)
         continue
 
@@ -735,11 +746,12 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
             if machine_code.len == 0:
               continue
             found = true
-            if isa_spec.endianness == end_little:
-              res.segments[^1].fixed.add machine_code
-            else:
-              for i in countdown(machine_code.high, machine_code.low):
-                res.segments[^1].fixed.add machine_code[i]
+            case isa_spec.endianness:
+              of end_little:
+                res.segments[^1].fixed.add machine_code
+              of end_big:
+                for i in countdown(machine_code.high, machine_code.low):
+                  res.segments[^1].fixed.add machine_code[i]
             break
 
           if not found:
