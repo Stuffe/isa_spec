@@ -1,2 +1,5 @@
+[settings]
+endianness = little
+
 
 [instructions]

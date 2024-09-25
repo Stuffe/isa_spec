@@ -1,3 +1,6 @@
+[settings]
+endianness = little
+
 [instructions]
 
 extract  %a(immediate) , %b(immediate) , %c(immediate)

@@ -141,8 +141,8 @@ type instruction* = object
   bitfield_char_offset*: int # (Not always the next line)
 
 type endianness* = enum
-  end_little
   end_big
+  end_little
 
 type file_location* = object
   file*: string

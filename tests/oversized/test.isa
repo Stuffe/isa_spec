@@ -1,3 +1,5 @@
+[settings]
+endianness = little
 
 [fields]
 

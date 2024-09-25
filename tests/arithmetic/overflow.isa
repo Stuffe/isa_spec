@@ -1,3 +1,6 @@
+[settings]
+endianness = little
+
 [instructions]
 
 loads64 %a:S64(immediate)
