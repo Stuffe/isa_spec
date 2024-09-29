@@ -3,55 +3,55 @@ import types, parse, expressions
 
 
 type
-  label_ref = object
+  LabelRef = object
     public: bool
     seg_id: int
     offset: int
 
-  pre_assembly_result = object
-    errors: seq[error]
-    segments: seq[segment]
-    labels: Table[stream_slice, label_ref]
-    pc: parse_context
-
-  segment = object
+  Segment = object
     file: string
     line_boundaries: seq[(int, int)]
     fixed: seq[uint8]
-    relaxable: matched_instruction
+    relaxable: MatchedInstruction
 
-  operand_kind = enum
+  PreAssemblyResult = object
+    errors: seq[Error]
+    segments: seq[Segment]
+    labels: Table[StreamSlice, LabelRef]
+    pc: ParseContext
+
+  OperandKind = enum
     ok_fixed
     ok_label_ref
     ok_relative
 
-  operand = object
-    case kind: operand_kind
+  Operand = object
+    case kind: OperandKind
     of ok_fixed:
       value: uint64
     of ok_label_ref:
-      name: stream_slice
+      name: StreamSlice
     of ok_relative:
       offset: int64
 
-  matched_instruction = object
+  MatchedInstruction = object
     selected_option: int
-    options: seq[instruction]
-    operands: seq[operand]
+    options: seq[Instruction]
+    operands: seq[Operand]
 
-  inst_parse_result = object
+  InstParseResult = object
     error: string
     error_priority: int
-    operands: seq[operand]
+    operands: seq[Operand]
     final_index: int
 
-  parse_context = object
-    isa_spec: isa_spec
-    field_defines: seq[Table[stream_slice, define_value]]
-    number_defines*: Table[stream_slice, define_value]
+  ParseContext = object
+    isa_spec: IsaSpec
+    field_defines: seq[Table[StreamSlice, DefineValue]]
+    number_defines*: Table[StreamSlice, DefineValue]
 
 
-func `==`(a, b: operand): bool =
+func `==`(a, b: Operand): bool =
   if a.kind != b.kind:
     return false
   case a.kind:
@@ -72,30 +72,30 @@ proc get_ordinal*(input: int): string =
 
 # Since we can have custom comments, we should no longer be using the simple parsing functions
 
-func skip_comment(s: var stream_slice) {.error, used.}
-func skip_whitespaces(s: var stream_slice) {.error, used.}
-func skip_newlines(s: var stream_slice) {.error, used.}
+func skip_comment(s: var StreamSlice) {.error, used.}
+func skip_whitespaces(s: var StreamSlice) {.error, used.}
+func skip_newlines(s: var StreamSlice) {.error, used.}
 
-func skip_whitespaces(isa_spec: isa_spec, s: var stream_slice) =
+func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
   while peek(s) in {' ', '\t', '\r'}:
     s.skip()
   if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
     isa_spec.skip_whitespaces(s)
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result
-func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result
-func finalize(pa: pre_assembly_result): assembly_result
-func relax(pa: var pre_assembly_result)
+func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string]): PreAssemblyResult
+func assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult
+func finalize(pa: PreAssemblyResult): AssemblyResult
+func relax(pa: var PreAssemblyResult)
 
-func pre_assemble_file(base_path: string, path: string, isa_spec: isa_spec, line: int, already_included: seq[string]): pre_assembly_result =
+func pre_assemble_file(base_path: string, path: string, isa_spec: IsaSpec, line: int, already_included: seq[string]): PreAssemblyResult =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   if normal_path in already_included:
-    return pre_assembly_result(
-      errors: @[error(
+    return PreAssemblyResult(
+      errors: @[Error(
         message: "Recursive inclusion of: " & normal_path,
-        loc: file_location(line: line, file: normal_path)
+        loc: FileLocation(line: line, file: normal_path)
     )])
 
   var already_included_new = already_included
@@ -103,105 +103,23 @@ func pre_assemble_file(base_path: string, path: string, isa_spec: isa_spec, line
 
   {.noSideEffect.}:
     if not fileExists(base_path / normal_path):
-      return pre_assembly_result(
-        errors: @[error(
+      return PreAssemblyResult(
+        errors: @[Error(
           message: "File does not exist: " & normal_path,
-          loc: file_location(line: line, file: normal_path)
+          loc: FileLocation(line: line, file: normal_path)
       )])
 
     let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
 
-#[
-func str*(isa_spec: isa_spec, disassembled_instruction: disassembled_instruction): string =
-  var operand_index = 0
-
-  if disassembled_instruction.is_literal:
-    var value = disassembled_instruction.value
-    case value.len:
-      of 1: return "<U8> " & $value[0]
-      of 2: return "<U16> " & $cast[ptr uint16](addr value[0])[]
-      of 4: return "<U32> " & $cast[ptr uint32](addr value[0])[]
-      of 8: return "<U64> " & $cast[ptr uint64](addr value[0])[]
-      else: assert false, "TODO, support"
-  
-  for part in disassembled_instruction.instruction.syntax:
-    if part == "":
-      let field_index = disassembled_instruction.instruction.fields[operand_index]
-
-      let operand = disassembled_instruction.operands[operand_index]
-
-      case field_index.id:
-        of FIELD_ZERO.id, FIELD_ONE.id, FIELD_WILDCARD.id:
-          assert false
-        of FIELD_IMM.id:
-          result &= $operand
-        of FIELD_LABEL.id:
-          result &= ".+" & $operand
-        else:
-          let fields = isa_spec.field_types[field_index.id].values
-          
-          var found = false
-          for field in fields:
-            if field.value == operand:
-              result &= field.name
-              found = true
-              break
-
-          if not found:
-            return ""
-
-      operand_index += 1
-    else:
-      result &= part
-]#
-func `$$`[T](s: openArray[T]): seq[string] =
-  if s.len == 0:
-    return @["@[]"]
-  else:
-    for value in s:
-      when compiles($$value):
-        let lines = $$value
-        if lines.len == 0:
-          result.add name & "- <nothing>"
-        elif lines.len == 1:
-          result.add name & "- " & lines[0]
-        else:
-          result.add name & "- "
-          for line in lines:
-            result.add "    " & line
-      else:
-        result.add "- " & $value
-
-func `$$`(i: isa_spec): seq[string] =
-  return @["<isa_spec>"]
-
-func `$$`(t: Table): seq[string] =
-  return $t
-
-func `$$`(o: object | tuple): seq[string] =
-  for name, value in o.field_pairs:
-    when compiles($$value):
-      let lines = $$value
-      if lines.len == 0:
-        result.add name & ": <nothing>"
-      elif lines.len == 1:
-        result.add name & ": " & lines[0]
-      else:
-        result.add name & ": "
-        for line in lines:
-          result.add "    " & line
-    else:
-      result.add name & ": " & $value
-
-func assemble*(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included = newSeq[string]()): assembly_result =
+func assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult =
 
   let normal_path = normalizePath(path).replace('\\', '/')
   var pa = pre_assemble(base_path, normal_path, isa_spec, source, already_included)
   pa.relax()
   return finalize(pa)
 
-func is_defined(p: parse_context, name: stream_slice): bool =
+func is_defined(p: ParseContext, name: StreamSlice): bool =
   if name in p.number_defines:
     return true
   for field, field_values in p.field_defines:
@@ -212,9 +130,9 @@ func is_defined(p: parse_context, name: stream_slice): bool =
         return true
   return false
 
-func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction): inst_parse_result =
+func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): InstParseResult =
 
-  template error(msg: string, priority: int): inst_parse_result =
+  template error(msg: string, priority: int): InstParseResult =
     result.error = msg
     result.error_priority = priority
     result
@@ -225,8 +143,8 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
       return error(err, i)
     res
 
-  func fixed(val: uint64): operand =
-    return operand(kind: ok_fixed, value: val)
+  func fixed(val: uint64): Operand =
+    return Operand(kind: ok_fixed, value: val)
 
   var i = 0
   for syntax in inst.syntax:
@@ -259,7 +177,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
             skip(s)
             let jump_distance = check(get_unsigned(s))
             let value: uint64 = check(parse_unsigned(jump_distance))
-            result.operands.add operand(kind: ok_relative, offset: cast[int64](value))
+            result.operands.add(Operand(kind: ok_relative, offset: cast[int64](value)))
           else:
             let label_name = get_identifier(s)
             if label_name.len == 0:
@@ -268,7 +186,7 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
             if p.is_defined(label_name):
               if not is_last: continue
               return error("Was expecting a label name here", i)
-            result.operands.add operand(kind: ok_label_ref, name: label_name)
+            result.operands.add(Operand(kind: ok_label_ref, name: label_name))
 
           i += 1
           break
@@ -324,17 +242,17 @@ func parse_instruction(s: var stream_slice, p: parse_context, inst: instruction)
 
   result.final_index = get_index(s)
 
-func field_names(i: instruction): seq[string] =
+func field_names(i: Instruction): seq[string] =
   for f in i.fields:
     result.add f.name
 
-func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
+func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
   template error(input: string) =
     if throw_on_error:
       raise newException(ValueError, input)
     return
 
-  func describe(f: field_def): string =
+  func describe(f: FieldDef): string =
     if f.is_signed:
       &"{f.highest_bit+1}-bit sign-extended field"
     else:
@@ -408,25 +326,25 @@ func assemble_instruction(inst: instruction, args: seq[uint64], ip: int, throw_o
         break
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: string, already_included: seq[string]): pre_assembly_result =
+func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string]): PreAssemblyResult =
   let normal_path = normalizePath(path).replace('\\', '/')
 
-  func skip_newlines(s: var stream_slice) {.error.}
+  func skip_newlines(s: var StreamSlice) {.error.}
     # Shadows parse.skip_newlines()
 
 
-  var res: pre_assembly_result
+  var res: PreAssemblyResult
 
   res.pc.isa_spec = isa_spec
   res.pc.field_defines.setLen(isa_spec.field_types.len)
 
-  var s = new_stream_slice(source)
+  var s = new_StreamSlice(source)
   var line_counter = 1
 
-  res.segments.add segment(file: normal_path, line_boundaries: @[(0, line_counter)])
+  res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
 
 
-  func skip_and_record_newlines(s: var stream_slice) =
+  func skip_and_record_newlines(s: var StreamSlice) =
     while peek(s) in {' ', '\r', '\n', '\t'}:
       if read(s) == '\n':
         line_counter += 1
@@ -434,13 +352,13 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
     if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
       skip_and_record_newlines(s)
 
-  func skip_line(s: var stream_slice) =
+  func skip_line(s: var StreamSlice) =
     while peek(s) not_in {'\0', '\n'}:
       discard read(s)
     skip_and_record_newlines(s)
 
   func error(message: string) =
-    res.errors.add error(loc: file_location(file: normal_path, line: line_counter), message: message)
+    res.errors.add(Error(loc: FileLocation(file: normal_path, line: line_counter), message: message))
 
   func emit(val: uint8) =
     res.segments[^1].fixed.add val
@@ -458,7 +376,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
       of exp_bitextract:
         return expr.base.any_pc_rel or expr.top.any_pc_rel or expr.bottom.any_pc_rel
 
-  func any_pc_rel(match: matched_instruction): bool =
+  func any_pc_rel(match: MatchedInstruction): bool =
     for op in match.operands:
       if op.kind != ok_fixed:
         return true
@@ -600,9 +518,9 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           for mop in new_segment.relaxable.operands.mitems():
             if mop.kind == ok_label_ref:
               if mop.name not_in include_res.labels:
-                res.errors.add error(
-                  loc: file_location(file: segment.file, line: segment.line_boundaries[^1][1]),
-                                    message: &"Undefined label {$mop.name}")
+                res.errors.add(Error(
+                  loc: FileLocation(file: segment.file, line: segment.line_boundaries[^1][1]),
+                                    message: &"Undefined label {$mop.name}"))
                 continue # This label is not gonna be renamed, but that's fine
               let lbl = include_res.labels[mop.name]
               mop.name = if lbl.public:
@@ -612,7 +530,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
                   "$" & file_first & "[" & $line_counter & "]." & mop.name
           res.segments.add(new_segment)
 
-        res.segments.add(segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
+        res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
 
         skip_and_record_newlines(s)
         continue
@@ -622,7 +540,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
           error("Label " & $special_test & " is already declared")
           skip_line(s)
           continue
-        res.labels[special_test] = label_ref(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
+        res.labels[special_test] = LabelRef(public: public, seg_id: res.segments.high, offset: res.segments[^1].fixed.len)
         skip(s)
         skip_and_record_newlines(s)
 
@@ -654,7 +572,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
         let (number_err, number) = get_unsigned(s)
         if number_err == "":
-          res.pc.number_defines[definition_name] = define_value(
+          res.pc.number_defines[definition_name] = DefineValue(
               public: public,
               value: (parse_unsigned(number).on_err() do:
                 error(err)
@@ -680,7 +598,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
               for field_id, field_type in isa_spec.field_types:
                 for i, field in field_type.values:
                   if field.name == define_value:
-                    res.pc.field_defines[field_id][definition_name] = define_value(public: public, value: field.value)
+                    res.pc.field_defines[field_id][definition_name] = DefineValue(public: public, value: field.value)
                     found = true
                     break
 
@@ -706,8 +624,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
          and that they produce the same list of operands.
          This could at some point be checked statically for better error messages
        ]#
-      var best_match = inst_parse_result()
-      var matched: matched_instruction
+      var best_match = InstParseResult()
+      var matched: MatchedInstruction
       let restore = s
 
       for inst in isa_spec.instructions:
@@ -732,13 +650,13 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
         if matched.any_pc_rel:
           # If the instruction is position relative (either in operands or virtual fields) we need to make it relaxable
           res.segments[^1].relaxable = matched
-          res.segments.add segment(file: normal_path, line_boundaries: @[(0, line_counter)])
+          res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
         else:
           let args = block:
             var t: seq[uint64] = @[]
             for op in matched.operands:
               assert op.kind == ok_fixed, "any_pc_rel did something weird"
-              t.add op.value
+              t.add(op.value)
             t
           var found = false
           for inst in matched.options:
@@ -774,7 +692,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: isa_spec, source: s
 
   return res
 
-func sum_segments(pa: pre_assembly_result): seq[int] =
+func sum_segments(pa: PreAssemblyResult): seq[int] =
   var ip: int
   for seg in pa.segments:
     result.add(ip)
@@ -783,13 +701,13 @@ func sum_segments(pa: pre_assembly_result): seq[int] =
       ip += seg.relaxable.options[seg.relaxable.selected_option].bit_length div 8
 
 
-func finalize(pa: pre_assembly_result): assembly_result =
-  func error(msg: string, loc: file_location): assembly_result =
-    return assembly_result(errors: @[error(message:msg, loc: loc)])
+func finalize(pa: PreAssemblyResult): AssemblyResult =
+  func error(msg: string, loc: FileLocation): AssemblyResult =
+    return AssemblyResult(errors: @[Error(message:msg, loc: loc)])
 
 
   if pa.errors.len != 0:
-    return assembly_result(errors: pa.errors)
+    return AssemblyResult(errors: pa.errors)
 
   let segment_starts = pa.sum_segments()
 
@@ -798,7 +716,7 @@ func finalize(pa: pre_assembly_result): assembly_result =
 
   for label_name, label in pa.labels:
     let address = segment_starts[label.seg_id] + label.offset
-    result.labels[label_name] = define_value(public: label.public, value: cast[uint64](address))
+    result.labels[label_name] = DefineValue(public: label.public, value: cast[uint64](address))
 
   result.field_defines = pa.pc.field_defines
   result.number_defines = pa.pc.number_defines
@@ -843,14 +761,14 @@ func finalize(pa: pre_assembly_result): assembly_result =
         result.machine_code.add machine_code[i]
   result.line_info.done(result.machine_code.len)
 
-func relax(pa: var pre_assembly_result) =
+func relax(pa: var PreAssemblyResult) =
   var any_undefined = false
   for segment in pa.segments: # Check that all labels are defined
     for operand in segment.relaxable.operands:
       if operand.kind == ok_label_ref:
         if operand.name not_in pa.labels:
-          pa.errors.add error(loc: file_location(file: segment.file, line: segment.line_boundaries[^1][1]),
-                              message: &"Undefined label {$operand.name}")
+          pa.errors.add(Error(loc: FileLocation(file: segment.file, line: segment.line_boundaries[^1][1]),
+                              message: &"Undefined label {$operand.name}"))
           any_undefined = true
   if any_undefined:
     return
@@ -859,7 +777,7 @@ func relax(pa: var pre_assembly_result) =
   while not all_fit:
     var any_failed = false
     all_fit = true
-    var label_targets = newTable[stream_slice, int]()
+    var label_targets = newTable[StreamSlice, int]()
     let segment_starts = pa.sum_segments()
     for i, segment in pa.segments.mpairs:
       if segment.relaxable.selected_option >= segment.relaxable.options.len - 1:

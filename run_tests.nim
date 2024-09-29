@@ -5,16 +5,16 @@ const STOP_AT_FIRST_FAIL = true
 const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
 const CHECK_ROUNDTRIP    = false
 
-type asm_test_files = tuple
+type AsmTestFile = tuple
   source_file: string
   error_file: string
   result_file: string
   lines_file: string
 
-type test_files = object
+type TestFiles = object
   spec_file: string
   spec_error_file: string
-  asm_tests: seq[asm_test_files]
+  asm_tests: seq[AsmTestFile]
 
 template timer(): float =
   when defined(macosx):
@@ -53,7 +53,7 @@ proc echo_deep_diff[T: openArray](a, b: T; path: string) =
     for i, av in a:
       echo_deep_diff(av, b[i], path & &"[{i}]" )
 
-proc echo_deep_diff(a, b: field_def; path: string) =
+proc echo_deep_diff(a, b: FieldDef; path: string) =
   echo_deep_diff(a.name, b.name, path & "." & "name")
   echo_deep_diff(a.is_signed, b.is_signed, path & "." & "is_signed")
   echo_deep_diff(a.size, b.size, path & "." & "size")
@@ -107,7 +107,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     continue
   if RUN_SINGLE_TEST != "" and test_name != RUN_SINGLE_TEST:
     continue
-  var sub_tests: Table[string, test_files]
+  var sub_tests: Table[string, TestFiles]
   local_fail = false
   for (kind, file_name) in test_dir.walk_dir(relative=true):
     if file_name == ".DS_Store": continue
@@ -117,7 +117,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     if parts.len notin [2, 3]:
       raiseAssert(&"Tests file names should have format `{{name}}[.{{subid}}].{{kind}}` ({test_dir/file_name})")
     let name = parts[0]
-    discard sub_tests.hasKeyOrPut(name, default(test_files))
+    discard sub_tests.hasKeyOrPut(name, default(TestFiles))
     let subid = if parts.len == 2:
         0
       else:
@@ -215,10 +215,10 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         # In a lines file, each line corresponds to a single byte,
         # marking the file and line that is expected for that byte
         var byte_index = 0
-        var last_line = file_location()
+        var last_line = FileLocation()
         for line_text in splitLines(line_source):
           doAssert line_text.split(':').len == 2, &"Each line in a `.lines` file should have the form 'file.asm:n' ({asm_test.lines_file})"
-          let expected_fl = file_location(
+          let expected_fl = FileLocation(
                   file: line_text.split(":")[0],
                   line: parseInt(line_text.split(":")[1])
                 )

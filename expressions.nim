@@ -28,9 +28,9 @@ func to_str*(exp: expression, operand_names: seq[string]): string =
 func `$`*(exp: expression): string =
   exp.to_str(@[])
 
-func get_expression*(s: var stream_slice, operand_names: seq[string]): expression
+func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression
 
-func get_atom(s: var stream_slice, operand_names: seq[string]): expression =
+func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
 
   if matches(s, "log2("):
     skip_whitespaces(s)
@@ -82,7 +82,7 @@ func get_atom(s: var stream_slice, operand_names: seq[string]): expression =
         return expression(exp_kind: exp_fail, msg: err)
     result = expression(exp_kind: exp_number, value: cast[int](value))
 
-func get_term(s: var stream_slice, operand_names: seq[string]): expression =
+func get_term(s: var StreamSlice, operand_names: seq[string]): expression =
   let atom = get_atom(s, operand_names)
   if atom.exp_kind == exp_fail:
     return atom
@@ -107,7 +107,7 @@ func get_term(s: var stream_slice, operand_names: seq[string]): expression =
   return atom
 
 
-func get_greedy_group(s: var stream_slice, operand_names: seq[string]): expression =
+func get_greedy_group(s: var StreamSlice, operand_names: seq[string]): expression =
 
   skip_whitespaces(s)
 
@@ -133,7 +133,7 @@ func get_greedy_group(s: var stream_slice, operand_names: seq[string]): expressi
     if op_index == -1: return exp
     skip_whitespaces(s)
 
-    let op = op_kind(op_index)
+    let op = OpKind(op_index)
 
     let rhs = get_term(s, operand_names)
     if rhs.exp_kind == exp_fail:
@@ -143,7 +143,7 @@ func get_greedy_group(s: var stream_slice, operand_names: seq[string]): expressi
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
 
-func get_expression*(s: var stream_slice, operand_names: seq[string]): expression =
+func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression =
 
   skip_whitespaces(s)
 
@@ -168,7 +168,7 @@ func get_expression*(s: var stream_slice, operand_names: seq[string]): expressio
     if op_index == -1: return exp
     skip_whitespaces(s)
 
-    let op = op_kind(op_index)
+    let op = OpKind(op_index)
 
     let rhs = get_greedy_group(s, operand_names)
     if rhs.exp_kind == exp_fail:
@@ -231,7 +231,7 @@ func get_leaf_value(input: expression, operands: seq[uint64], current_address: i
     else: assert false
 
 func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int
-func reverse_single(fields: var seq[uint64], current_address: int, op_kind: op_kind, known: int, unknown: expression, res: int): int =
+func reverse_single(fields: var seq[uint64], current_address: int, op_kind: OpKind, known: int, unknown: expression, res: int): int =
   case op_kind:
     of op_add: return reverse_eval(unknown, current_address, fields, res -   known)
     of op_sub: return reverse_eval(unknown, current_address, fields, res +   known)

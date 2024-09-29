@@ -3,7 +3,7 @@ import std/strformat
 import std/os
 import isa_spec
 
-type arguments = object
+type Arguments = object
     exit_code: int
     message: string
 

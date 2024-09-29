@@ -4,40 +4,40 @@ const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
-type field_id* = distinct int
+type FieldID* = distinct int
 
-func `==`*(a, b: field_id): bool {.borrow.}
-func `$`*(a: field_id): string =
-  "field_id(" & $a.int & ")"
+func `==`*(a, b: FieldID): bool {.borrow.}
+func `$`*(a: FieldID): string =
+  "FieldID(" & $a.int & ")"
 
-const FIELD_INVALID*    = field_id(-1)
-const FIELD_ZERO*       = field_id(0)
-const FIELD_ONE*        = field_id(1)
-const FIELD_WILDCARD*   = field_id(2)
-const FIELD_IMM*        = field_id(3)
-const FIELD_LABEL*      = field_id(4)
+const FIELD_INVALID*    = FieldID(-1)
+const FIELD_ZERO*       = FieldID(0)
+const FIELD_ONE*        = FieldID(1)
+const FIELD_WILDCARD*   = FieldID(2)
+const FIELD_IMM*        = FieldID(3)
+const FIELD_LABEL*      = FieldID(4)
 const FIXED_FIELDS_LEN* = 5
 
 const ANY_NUMBER_OF_SPACES* = " "
 const AT_LEAST_ONE_SPACE*   = "  "
 
-type field_value* = object
+type FieldValue* = object
   name*: string
   value*: uint64
 
-type field_type* = object
+type FieldType* = object
   name*: string
   bit_length*: int
-  values*: seq[field_value]
+  values*: seq[FieldValue]
 
-type exp_kind* = enum
+type ExpKind* = enum
   exp_fail
   exp_number
   exp_operand
   exp_operation
   exp_bitextract
 
-type op_kind* = enum
+type OpKind* = enum
   op_add
   op_sub
   op_mul
@@ -52,7 +52,7 @@ type op_kind* = enum
   op_log2
 
 type expression* = ref object
-  case exp_kind*: exp_kind
+  case exp_kind*: ExpKind
     of exp_fail:
       msg*: string
     of exp_number:
@@ -60,7 +60,7 @@ type expression* = ref object
     of exp_operand:
       index*: int
     of exp_operation:
-      op_kind*: op_kind
+      op_kind*: OpKind
       lhs*: expression
       rhs*: expression
     of exp_bitextract:
@@ -86,13 +86,13 @@ func `==`*(a, b: expression): bool =
       return a.base == b.base and a.top == b.top and a.bottom == b.bottom
 
 
-type field_def* = object
+type FieldDef* = object
   name*: string
   is_signed*: bool
   size*: int
   case is_virtual*: bool
     of false:
-      options*: seq[field_id]
+      options*: seq[FieldID]
     of true:
       expr*: expression
 
@@ -111,7 +111,7 @@ type field_def* = object
   # unused_zero   = ...000000001111
   # sign_bit      = 9
 
-func `==`*(a, b: field_def): bool =
+func `==`*(a, b: FieldDef): bool =
   if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.is_virtual != b.is_virtual:
     return false
   if a.is_virtual:
@@ -119,18 +119,18 @@ func `==`*(a, b: field_def): bool =
   else:
     return a.options == b.options
 
-type bitfield* = object
-  id*: field_id
+type Bitfield* = object
+  id*: FieldID
   top*: int
   bottom*: int
   is_direct*: bool
   is_continue*: bool # This field is broken up by a 64bit boundary
 
-type instruction* = object
+type Instruction* = object
   syntax*: seq[string]
-  fields*: seq[field_def]
+  fields*: seq[FieldDef]
   asserts*: seq[(expression, expression, string)]
-  bits*: seq[bitfield]
+  bits*: seq[Bitfield]
   bit_length*: int
   # These are both bit endian lists of 64bit words
   # If bit_length is not a multiple of 64, the first word is the partial one
@@ -140,45 +140,45 @@ type instruction* = object
   syntax_char_offset*: int
   bitfield_char_offset*: int # (Not always the next line)
 
-type endianness* = enum
+type Endianness* = enum
   end_big
   end_little
 
-type file_location* = object
+type FileLocation* = object
   file*: string
   line*: int # We might want to expand this to start/end column
 
-type error* = object
-  loc*: file_location
+type Error* = object
+  loc*: FileLocation
   message*: string
 
-type isa_spec* = object
+type IsaSpec* = object
   name*: string
   variant*: string
   line_comments*: seq[string]
   block_comments*: seq[(string, string)]
-  endianness*: endianness
+  endianness*: Endianness
   code_alignment*: int
-  field_types*: seq[field_type]
-  instructions*: seq[instruction]
+  field_types*: seq[FieldType]
+  instructions*: seq[Instruction]
 
-type spec_parse_result* = object
-  error*: error
-  spec*: isa_spec
+type SpecParseResult* = object
+  error*: Error
+  spec*: IsaSpec
 
-type disassembled_instruction* = object
+type DisassembledInstruction* = object
   case is_literal*: bool
     of false:
-      instruction*: instruction
+      instruction*: Instruction
       operands*: seq[uint64]
     of true:
       value*: seq[uint8]
 
-type define_value* = object
+type DefineValue* = object
   public*: bool
   value*: uint64
 
-type file_line_information = object
+type FileLineInformation = object
   start_byte: int # inclusive
   end_byte: int # exclusive
   file_name: string
@@ -186,24 +186,24 @@ type file_line_information = object
   # some segments will not actually start at line 1 (e.g. portion in a main file after an include)
   l2b: seq[int] # line_to_byte @[start_line_1, start_line_2, start_line_2]
 
-type complete_line_information* = object
+type CompleteLineInformation* = object
   # Because we use binary search on this list, various invariants have to be held up.
   # Additionally, the techincally non-required property that all bytes are covered
   # should be enforced by the construction methods
-  segments: seq[file_line_information]
+  segments: seq[FileLineInformation]
 
-type assembly_result* = object
+type AssemblyResult* = object
   machine_code*: seq[uint8]
-  line_info*: complete_line_information
-  errors*: seq[error]
-  field_defines*: seq[Table[stream_slice, define_value]]
-  number_defines*: Table[stream_slice, define_value]
-  labels*: Table[stream_slice, define_value]
+  line_info*: CompleteLineInformation
+  errors*: seq[Error]
+  field_defines*: seq[Table[StreamSlice, DefineValue]]
+  number_defines*: Table[StreamSlice, DefineValue]
+  labels*: Table[StreamSlice, DefineValue]
 
-func new_line_info*(): complete_line_information =
-  return default(complete_line_information)
+func new_line_info*(): CompleteLineInformation =
+  return default(CompleteLineInformation)
 
-func add_line*(li: var complete_line_information, file_name: string, start_byte: int, line: int) =
+func add_line*(li: var CompleteLineInformation, file_name: string, start_byte: int, line: int) =
   if (li.segments.len == 0 or # This is the first segment
       li.segments[^1].file_name != file_name or # This is a new file
       line <= li.segments[^1].l2b.len): # We jumped back inside the file, e.g. because of duplicate includes
@@ -212,7 +212,7 @@ func add_line*(li: var complete_line_information, file_name: string, start_byte:
       li.segments[^1].end_byte = start_byte
     else:
       assert start_byte == 0, "Output should start at byte 0"
-    li.segments.add file_line_information(file_name: file_name, start_byte: start_byte)
+    li.segments.add(FileLineInformation(file_name: file_name, start_byte: start_byte))
 
   assert line > li.segments[^1].l2b.len, "Duplicate line insertion for " & $line
   if li.segments[^1].l2b.len > 0:
@@ -228,25 +228,25 @@ func add_line*(li: var complete_line_information, file_name: string, start_byte:
   assert start_byte >= li.segments[^1].end_byte - 1
   li.segments[^1].end_byte = start_byte + 1
 
-func done*(li: var complete_line_information, total_length: int) =
+func done*(li: var CompleteLineInformation, total_length: int) =
   if li.segments.len != 0:
     li.segments[^1].end_byte = total_length
     if li.segments[^1].l2b.len > 0:
       assert li.segments[^1].l2b[^1] <= total_length, "Invalid total_length"
 
-func get_line_from_byte*(li: complete_line_information, target: int): file_location =
-  let seg_index = lowerBound(li.segments, target) do (segment: file_line_information, byte_index: int) -> int:
+func get_line_from_byte*(li: CompleteLineInformation, target: int): FileLocation =
+  let seg_index = lowerBound(li.segments, target) do (segment: FileLineInformation, byte_index: int) -> int:
     if byte_index < segment.start_byte:
       return 1  # byte_index is larger
     if segment.end_byte <= byte_index:
       return -1  # byte_index is smaller
     return 0
   if seg_index > li.segments.high or target < li.segments[seg_index].start_byte:
-    return file_location(line: 0)
+    return FileLocation(line: 0)
   let line = upperBound(li.segments[seg_index].l2b, target)
-  return file_location(file: li.segments[seg_index].file_name, line: line)
+  return FileLocation(file: li.segments[seg_index].file_name, line: line)
 
-func get_byte_from_line*(line_info: complete_line_information, target: file_location): seq[int] =
+func get_byte_from_line*(line_info: CompleteLineInformation, target: FileLocation): seq[int] =
   if target.line < 1:
     return
   for segment in line_info.segments:

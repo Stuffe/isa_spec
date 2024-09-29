@@ -1,6 +1,6 @@
 import std/setutils, strutils, hashes, tables, strformat
 
-type stream_slice* = object
+type StreamSlice* = object
   source: ref string
   start: int
   finish: int
@@ -11,89 +11,89 @@ const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 const QUOTES* = {'"', '\'', '`'}
 
-func new_stream_slice*(source: string): stream_slice =
+func new_StreamSlice*(source: string): StreamSlice =
   var reference = new(string)
   reference[] = source
-  return stream_slice(
+  return StreamSlice(
     source: reference,
     start: 0,
     finish: source.len,
   )
 
-func empty_slice(s: stream_slice): stream_slice =
+func empty_slice(s: StreamSlice): StreamSlice =
   result = s
   result.finish = s.start
 
-func finished*(s: stream_slice): bool =
+func finished*(s: StreamSlice): bool =
   assert not isNil(s.source)
   return s.start >= s.finish
 
-func len*(s: stream_slice): int =
+func len*(s: StreamSlice): int =
   assert not isNil(s.source)
   return s.finish - s.start
 
-func `$`*(s: stream_slice): string =
+func `$`*(s: StreamSlice): string =
   assert not isNil(s.source)
   return s.source[s.start..s.finish - 1]
 
-func `[]`*(s: stream_slice, index: int): char =
+func `[]`*(s: StreamSlice, index: int): char =
   assert not isNil(s.source)
   return s.source[s.start + index]
 
-func `[]`*(s: stream_slice, index: BackwardsIndex): char =
+func `[]`*(s: StreamSlice, index: BackwardsIndex): char =
   assert not isNil(s.source)
   let i = s.finish - index.int
   if i < 0: return
   return s.source[i]
 
-func `[]`*(s: stream_slice, index: HSlice): stream_slice =
+func `[]`*(s: StreamSlice, index: HSlice): StreamSlice =
   assert not isNil(s.source)
   result = s
   result.start  += index.a
   result.finish -= index.b.int - 1
 
-func skip*(s: var stream_slice, amount = 1) =
+func skip*(s: var StreamSlice, amount = 1) =
   assert not isNil(s.source)
   s.start += amount
 
-func get_index*(s: stream_slice): int =
+func get_index*(s: StreamSlice): int =
   assert not isNil(s.source)
   return s.start
 
-func set_index*(s: var stream_slice, value: int) =
+func set_index*(s: var StreamSlice, value: int) =
   assert not isNil(s.source)
   s.start = value
 
-func get_slice*(s: stream_slice, start: int, finish: int): stream_slice =
+func get_slice*(s: StreamSlice, start: int, finish: int): StreamSlice =
   result = s
   result.start = start
   result.finish = finish
 
-func get_string*(s: stream_slice, start: int, finish: int): string =
+func get_string*(s: StreamSlice, start: int, finish: int): string =
   return $s.source[start..finish - 1]
 
-func dbg*(s: stream_slice): string =
+func dbg*(s: StreamSlice): string =
   return s.source[0..s.start - 1] & "\u001b[31m" & s.source[s.start..s.finish - 1] & "\u001b[0m" & s.source[s.finish..^1]
 
-func peek*(s: stream_slice): char =
+func peek*(s: StreamSlice): char =
   assert not isNil(s.source)
   if s.start >= s.finish: return
   return s.source[s.start]
 
-func peek*(s: stream_slice, offset: int): char =
+func peek*(s: StreamSlice, offset: int): char =
   assert not isNil(s.source)
   let i = s.start + offset
   if i > s.source[].high: return
   return s.source[i]
 
-func read*(s: var stream_slice): char =
+func read*(s: var StreamSlice): char =
   assert not isNil(s.source)
   if s.start > s.source[].high: return
   result = s.source[s.start]
   if result != '\0':
     s.start += 1
 
-func matches*(s: var stream_slice, value: string, increment = true): bool =
+func matches*(s: var StreamSlice, value: string, increment = true): bool =
   for i in 0..value.high:
     if peek(s, i) != value[i]:
       return false
@@ -101,12 +101,12 @@ func matches*(s: var stream_slice, value: string, increment = true): bool =
     s.start += value.len
   return true
 
-func matches*(s: var stream_slice, value: char): bool =
+func matches*(s: var StreamSlice, value: char): bool =
   if peek(s) == value:
     s.start += 1
     return true
 
-func skip_comment*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool =
+func skip_comment*(s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool =
   for (start_sym, end_sym) in block_comments:
     if s.matches(start_sym):
       while not finished(s) and not s.matches(end_sym):
@@ -118,13 +118,13 @@ func skip_comment*(s: var stream_slice, line_comments = @[";", "//"], block_comm
         s.start += 1
       return true
 
-func skip_whitespaces*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}) =
+func skip_whitespaces*(s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}) =
   while peek(s) in {' ', '\t', '\r'}:
     s.start += 1
   if skip_comment(s, line_comments, block_comments):
     skip_whitespaces(s)
 
-func skip_newlines*(s: var stream_slice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool {.discardable.} =
+func skip_newlines*(s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool {.discardable.} =
   var any_newline = false
   while peek(s) in {' ', '\r', '\n', '\t'}:
     if read(s) == '\n':
@@ -142,7 +142,7 @@ template on_err*[T](inp: (string, T), callback: untyped): T =
   else:
     res
 
-func get_identifier*(s: var stream_slice): stream_slice =
+func get_identifier*(s: var StreamSlice): StreamSlice =
   result = s
   result.finish = s.start
 
@@ -156,7 +156,7 @@ func get_identifier*(s: var stream_slice): stream_slice =
     skip(s)
     result.finish += 1
 
-func get_unsigned*(s: var stream_slice): (string, stream_slice) =
+func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
   if peek(s) == '0':
@@ -198,7 +198,7 @@ func xdigit_to_value(c: char): int =
     return c.ord - 'A'.ord + 10
   return c.ord - 'a'.ord + 10
 
-func parse_unsigned*(s: stream_slice): (string, uint64) =
+func parse_unsigned*(s: StreamSlice): (string, uint64) =
   # TODO: Generate more correct error messages in this function and probably don't use the builtin functions
   if s.len < 3: 
     try:
@@ -212,7 +212,7 @@ func parse_unsigned*(s: stream_slice): (string, uint64) =
       else:   return ("", cast[uint64](parseInt($s)))
   except ValueError: return ("Invalid int literal", 0'u64)
 
-func get_signed*(s: var stream_slice): (string, stream_slice) =
+func get_signed*(s: var StreamSlice): (string, StreamSlice) =
   
   let negative = s.peek() == '-'
   if negative:
@@ -222,7 +222,7 @@ func get_signed*(s: var stream_slice): (string, stream_slice) =
   if negative and result[0] == "":
     result[1].start -= 1
 
-func parse_signed*(s: stream_slice): (string, int) =
+func parse_signed*(s: StreamSlice): (string, int) =
   if s.len == 0: return ("Invalid signed int literal", 0)
 
   if s[0] == '-':
@@ -238,7 +238,7 @@ func parse_signed*(s: stream_slice): (string, int) =
       return ("Literal to large for a signed int", 0)
     return ("", cast[int](raw_uint))
 
-func get_line_number*(s: stream_slice): int =
+func get_line_number*(s: StreamSlice): int =
   var line = 1
   for i in 0..s.start - 1:
     if s.source[i] == '\n':
@@ -250,12 +250,12 @@ func `?`*[T](input: (string, T)): T =
     raise newException(ValueError, input[0])
   return input[1]
 
-func `?`*(input: (string, stream_slice)): stream_slice =
+func `?`*(input: (string, StreamSlice)): StreamSlice =
   if input[0] != "":
     raise newException(ValueError, "Line " & $get_line_number(input[1]) & ": " & input[0])
   return input[1]
 
-func get_size*(s: var stream_slice): (string, int) =
+func get_size*(s: var StreamSlice): (string, int) =
   let restore = s
   if peek(s) != '<' or peek(s, 1) != 'U':
     return ("Expected a size declaration here", 0)
@@ -268,51 +268,51 @@ func get_size*(s: var stream_slice): (string, int) =
     return ("Expected a size declaration here", 0)
   return parse_signed(number)
 
-iterator items*(s: stream_slice): char =
+iterator items*(s: StreamSlice): char =
   var i = s.start
   while i < s.finish:
     yield s.source[i]
     i += 1
 
-iterator pairs*(s: stream_slice): (int, char) =
+iterator pairs*(s: StreamSlice): (int, char) =
   var i = s.start
   while i < s.finish:
     yield (i - s.start, s.source[i])
     i += 1
 
-func `==`*(a: stream_slice, b: stream_slice): bool =
+func `==`*(a: StreamSlice, b: StreamSlice): bool =
   if a.source == b.source and a.start == b.start and a.finish == b.finish: return true
   if a.len != b.len: return false
   for i, c in a:
     if b[i] != c: return false
   return true
 
-func `==`*(a: stream_slice, b: string): bool =
+func `==`*(a: StreamSlice, b: string): bool =
   if a.len != b.len: return false
   for i, c in a:
     if b[i] != c: return false
   return true
 
-func `==`*(a: string, b: stream_slice): bool =
+func `==`*(a: string, b: StreamSlice): bool =
   return b == a
 
-func `&`*(a: stream_slice, b: stream_slice): stream_slice =
-  return new_stream_slice($a & $b)
+func `&`*(a: StreamSlice, b: StreamSlice): StreamSlice =
+  return new_StreamSlice($a & $b)
 
-func `&`*(a: stream_slice, b: string): stream_slice =
-  return new_stream_slice($a & $b)
+func `&`*(a: StreamSlice, b: string): StreamSlice =
+  return new_StreamSlice($a & $b)
 
-func `&`*(a: string, b: stream_slice): stream_slice =
-  return new_stream_slice($a & $b)
+func `&`*(a: string, b: StreamSlice): StreamSlice =
+  return new_StreamSlice($a & $b)
 
-func hash*(s: stream_slice): Hash =
+func hash*(s: StreamSlice): Hash =
   # Needed for contexts to be keys in maps
   var h: Hash = 0
   for c in s:
     h = h !& hash(c)
   result = !$h  
 
-func get_enum*[T](s: var stream_slice, options: openArray[(string, T)]): (string, T) =
+func get_enum*[T](s: var StreamSlice, options: openArray[(string, T)]): (string, T) =
   for (str, value) in options:
     if s.matches(str):
       return ("", value)
@@ -331,19 +331,19 @@ func get_enum*[T](s: var stream_slice, options: openArray[(string, T)]): (string
   else:
     return ("Expected one of " & joined_options, default(T))
 
-func find*(s: var stream_slice, candidates: openArray[string]): int =
+func find*(s: var StreamSlice, candidates: openArray[string]): int =
   for i, candidate in candidates:
     if matches(s, candidate):
       return i
   return -1
 
-func find*(s: var stream_slice, candidates: openArray[char]): int =
+func find*(s: var StreamSlice, candidates: openArray[char]): int =
   for i, candidate in candidates:
     if matches(s, candidate):
       return i
   return -1
 
-func get_bool*(s: var stream_slice): (string, bool) =
+func get_bool*(s: var StreamSlice): (string, bool) =
   let index = find(s, ["false", "true"])
 
   if index == -1:
@@ -351,7 +351,7 @@ func get_bool*(s: var stream_slice): (string, bool) =
 
   return ("", bool(index))
 
-func get_string*(s: var stream_slice): (string, stream_slice) =
+func get_string*(s: var StreamSlice): (string, StreamSlice) =
   
   let restore = s
 
@@ -374,7 +374,7 @@ func get_string*(s: var stream_slice): (string, stream_slice) =
   result[1].start  = restore.start + 1
   result[1].finish = s.start - 1
 
-func descape_string_content*(s: stream_slice): (string, string) =
+func descape_string_content*(s: StreamSlice): (string, string) =
   var it = s
   while not it.finished():
     let c = it.read()
@@ -426,7 +426,7 @@ func make_escaped_string*(s: string, quote = '"'): string =
       result &= c
   result &= quote
 
-func parse_string*(s: stream_slice): (string, string) =
+func parse_string*(s: StreamSlice): (string, string) =
   # To be used with results from get_list_value
   var it = s
   let content = it.get_string().on_err do:
@@ -434,7 +434,7 @@ func parse_string*(s: stream_slice): (string, string) =
   return descape_string_content(content)
 
 
-func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
+func get_encapsulation*(s: var StreamSlice): (string, StreamSlice) =
   assert not isNil(s.source)
 
   let restore = s
@@ -475,14 +475,14 @@ func get_encapsulation*(s: var stream_slice): (string, stream_slice) =
   result[1].start  = start
   result[1].finish = s.start - 1
 
-func strip*(s: stream_slice): stream_slice =
+func strip*(s: StreamSlice): StreamSlice =
   result = s
   while peek(result) in {' ', '\t', '\r', '\n'}:
     skip(result)
   while result.finish - 1 > 0 and result.source[][result.finish - 1] in {' ', '\t', '\r', '\n'}:
     result.finish -= 1
 
-func from_line_start*(s: stream_slice): stream_slice =
+func from_line_start*(s: StreamSlice): StreamSlice =
   result = s
   # Go back one if we are at a newline
   if result.start > 0 and peek(result) == '\n':
@@ -498,7 +498,7 @@ func from_line_start*(s: stream_slice): stream_slice =
   while result.finish < s.len and result.source[result.finish] != '\n':
     result.finish += 1
 
-func get_list_value(s: var stream_slice): (string, stream_slice) =
+func get_list_value(s: var StreamSlice): (string, StreamSlice) =
   assert not isNil(s.source)
 
   let start = s.start
@@ -519,7 +519,7 @@ func get_list_value(s: var stream_slice): (string, stream_slice) =
   result[1].finish = s.start
   result[1] = strip(result[1])
 
-func get_list*(s: var stream_slice): (string, seq[stream_slice]) =
+func get_list*(s: var StreamSlice): (string, seq[StreamSlice]) =
 
   let restore = s
   var list = strip(get_encapsulation(s).on_err do:
@@ -534,14 +534,14 @@ func get_list*(s: var stream_slice): (string, seq[stream_slice]) =
     skip_whitespaces(list)
 
     let start = list.start
-    let new_stream_slice = get_list_value(list).on_err do:
+    let new_StreamSlice = get_list_value(list).on_err do:
       s = restore
       return (err, @[])
     if list.start == start: 
       s = restore
       return ("Expecated a list value", @[])
 
-    result[1].add(new_stream_slice)
+    result[1].add(new_StreamSlice)
 
     skip_whitespaces(list)
 
@@ -551,7 +551,7 @@ func get_list*(s: var stream_slice): (string, seq[stream_slice]) =
     list = strip(list)
 
 
-func get_table*(s: var stream_slice): (string, OrderedTable[stream_slice, stream_slice]) =
+func get_table*(s: var StreamSlice): (string, OrderedTable[StreamSlice, StreamSlice]) =
 
   let restore = s
 

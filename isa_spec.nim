@@ -1,14 +1,14 @@
 import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm, bitops
 import types, parse, expressions
 
-export parse.new_stream_slice
+export parse.new_StreamSlice
 
-func field_names(i: instruction): seq[string] =
+func field_names(i: Instruction): seq[string] =
   for f in i.fields:
     result.add f.name
 
-func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): string =
-  func field_define(f: field_def): string =
+func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string =
+  func field_define(f: FieldDef): string =
     if (not f.is_signed) and f.size == 64:
       "%" & f.name
     else:
@@ -64,7 +64,7 @@ func instruction_to_string*(isa_spec: isa_spec, instruction: instruction): strin
   source &= "\n" & instruction.description
   return source
 
-func spec_to_string*(isa_spec: isa_spec): string =
+func spec_to_string*(isa_spec: IsaSpec): string =
   var source = ""
 
   source &= "[settings]\n"
@@ -106,11 +106,11 @@ func spec_to_string*(isa_spec: isa_spec): string =
 
   return source
 
-func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, string) =
+func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, string) =
   # Being able to reparse a single instruction is needed for Turing Complete
 
-  func error(input: string): (instruction, string) =
-    return (instruction(), input)
+  func error(input: string): (Instruction, string) =
+    return (Instruction(), input)
 
 
   template check[T](input: (string, T)): T =
@@ -119,7 +119,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
       return error(err)
     res
 
-  func add_string_syntax(s: var stream_slice, syntax_parts: var seq[string]) =
+  func add_string_syntax(s: var StreamSlice, syntax_parts: var seq[string]) =
     var this_part: string
     while peek(s) notin {'\0', '\n'}:
       if peek(s) == '%':
@@ -149,13 +149,13 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     if this_part != "":
       syntax_parts.add(this_part)
 
-  var new_instruction = instruction(syntax_char_offset: get_index(s))
+  var new_instruction = Instruction(syntax_char_offset: get_index(s))
 
   block syntax:
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
-      var new_field = field_def(size: 64, is_virtual: false)
+      var new_field = FieldDef(size: 64, is_virtual: false)
       new_field.name = $get_identifier(s)
       if new_field.name.len == 0:
         return error("Expected an identifier after '%'")
@@ -188,7 +188,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
         for i, field in isa_spec.field_types:
           if $field_name == field.name:
             found = true
-            new_field.options.add(field_id(i))
+            new_field.options.add(FieldId(i))
             break
 
         if not found:
@@ -220,7 +220,7 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
     while peek(s) in {'%', '!'}:
       let restore = s
       if read(s) == '%':
-        var new_field = field_def(size: 64, is_virtual: true)
+        var new_field = FieldDef(size: 64, is_virtual: true)
         new_field.name = $get_identifier(s)
         if new_field.name.len == 0:
           return error("Expected an identifier after '%'")
@@ -285,11 +285,11 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
   block bit_pattern:
     var pattern: string
     var mask: string
-    var new_bits: seq[bitfield]
+    var new_bits: seq[Bitfield]
     # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
     # nvalid indecies. They are instead used to track the length of the field before being updated
     # to the correct bounds in a seperate pass
-    var current = bitfield(id: FIELD_INVALID)
+    var current = Bitfield(id: FIELD_INVALID)
 
     new_instruction.bitfield_char_offset = get_index(s)
 
@@ -324,11 +324,11 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
             if field_index < 0:
               return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
             let field_real_index = field_index + FIXED_FIELDS_LEN
-            field_id(field_real_index)
+            FieldId(field_real_index)
         if bit_id != current.id:
           if current.id != FIELD_INVALID:
             new_bits.add(current)
-          current = bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
+          current = Bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
         else:
           current.top += 1
         skip(s)
@@ -357,8 +357,8 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
           return error("Expected slice syntax after field reference in bit pattern")
         if current.id != FIELD_INVALID:
           new_bits.add(current)
-          current = bitfield(id: FIELD_INVALID)
-        new_bits.add(bitfield(id: field_id(field_real_index), top: top, bottom: bottom))
+          current = Bitfield(id: FIELD_INVALID)
+        new_bits.add(Bitfield(id: FieldId(field_real_index), top: top, bottom: bottom))
         for _ in bottom .. top:
           mask.add '0'
           pattern.add '0'
@@ -443,14 +443,14 @@ func get_instruction*(s: var stream_slice, isa_spec: isa_spec): (instruction, st
 
   return (new_instruction, "")
 
-func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
+func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
 
-  var s = new_stream_slice(source)
+  var s = new_StreamSlice(source)
 
-  func error(input: string): spec_parse_result =
-    return spec_parse_result(
-          error: error(
-            loc: file_location(file: file_name, line: get_line_number(s)),
+  func error(input: string): SpecParseResult =
+    return SpecParseResult(
+          error: Error(
+            loc: FileLocation(file: file_name, line: get_line_number(s)),
             message: input))
 
   template check[T](input: (string, T)): T =
@@ -463,11 +463,11 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
   result.spec.block_comments = @{"/*": "*/"}
  
   result.spec.field_types = @[
-    field_type(name: "0"),
-    field_type(name: "1"),
-    field_type(name: "x"),
-    field_type(name: "immediate"),
-    field_type(name: "label"),
+    FieldType(name: "0"),
+    FieldType(name: "1"),
+    FieldType(name: "x"),
+    FieldType(name: "immediate"),
+    FieldType(name: "label"),
   ]
 
   skip_newlines(s)
@@ -533,7 +533,7 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
       if field_type_name.len == 0: return error("Expected a name for the field type")
       skip_whitespaces(s)
 
-      var new_field_types: Table[string, field_type]
+      var new_field_types: Table[string, FieldType]
       var bit_length = 0
 
       block outer:
@@ -582,16 +582,16 @@ func parse_isa_spec*(file_name: string, source: string): spec_parse_result =
           skip_whitespaces(s)
 
           if $field_type_name notin new_field_types:
-            new_field_types[$field_type_name] = field_type(name: $field_type_name, bit_length: bit_length)
+            new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: bit_length)
             
-          new_field_types[$field_type_name].values.add(field_value(
+          new_field_types[$field_type_name].values.add(FieldValue(
             name: $field_name,
             value: cast[uint64](bit_value),
           ))
 
       if $field_type_name notin new_field_types:
         # Nonsensical, but will otherwise render some specs unusable in TC
-        new_field_types[$field_type_name] = field_type(name: $field_type_name, bit_length: 3)
+        new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
         result.spec.field_types.add(field_type)
