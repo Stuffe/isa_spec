@@ -1,2 +1,2 @@
-ldr X2, [X1]
-ldr X8, [X0]
+ldr x2, [x1]
+ldr x8, [x0]

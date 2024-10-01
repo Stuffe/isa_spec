@@ -1,3 +1,3 @@
-mrs X0, TPIDRRO_EL0
-mrs X0, TPIDR_EL1
-mrs X0, CNTVCT_EL0
+mrs x0, tpidrro_el0
+mrs x0, tpidr_el1
+mrs x0, cntvct_el0

@@ -1,2 +1,2 @@
-ldrb W2, [X1]
-ldrb W8, [X0]
+ldrb w2, [x1]
+ldrb w8, [x0]

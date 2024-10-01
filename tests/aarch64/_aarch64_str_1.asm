@@ -1,2 +1,2 @@
-str X2, [X1]
-str X8, [X0]
+str x2, [x1]
+str x8, [x0]

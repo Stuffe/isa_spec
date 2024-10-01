@@ -2,7 +2,7 @@ import std/[tables, os, strutils, strformat, times, monotimes]
 import isa_spec, types, expressions
 
 const STOP_AT_FIRST_FAIL = true
-const RUN_SINGLE_TEST    = "aarch64" # Emtpy string means run all tests
+const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
 const CHECK_ROUNDTRIP    = false
 
 type AsmTestFile = tuple

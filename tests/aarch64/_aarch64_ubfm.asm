@@ -1,3 +1,3 @@
-ubfm X0, X0, #0, #0
-ubfm X1, X0, #0, #0
-ubfm X1, X3, #0, #0
+ubfm x0, x0, #0, #0
+ubfm x1, x0, #0, #0
+ubfm x1, x3, #0, #0

@@ -1,6 +1,6 @@
-madd X0, X0, X0, X0
-madd X1, X0, X0, X0
-madd X1, X3, X0, X0
-madd X1, X3, X7, X0
-madd X1, X3, X7, X13
-madd X8, X15, X20, X30
+madd x0, x0, x0, x0
+madd x1, x0, x0, x0
+madd x1, x3, x0, x0
+madd x1, x3, x7, x0
+madd x1, x3, x7, x13
+madd x8, x15, x20, x30

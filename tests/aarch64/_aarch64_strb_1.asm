@@ -1,2 +1,2 @@
-strb W2, [X1]
-strb W8, [X0]
+strb w2, [x1]
+strb w8, [x0]

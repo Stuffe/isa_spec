@@ -1,2 +1,2 @@
-mvn X1, X3
-mvn X8, X30
+mvn x1, x3
+mvn x8, x30
