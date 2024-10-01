@@ -1,0 +1,9 @@
+cbz X1, .-20
+cbz X0, .0
+cbz X0, .4
+cbz X0, .12
+cbz X0, .-4
+cbz X0, .-12
+cbz X1, .0
+cbz X1, .4
+cbz X1, .12

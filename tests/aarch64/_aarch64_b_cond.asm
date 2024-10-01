@@ -1,0 +1,12 @@
+b.eq .0
+b.eq .4
+b.eq .12
+b.eq .-4
+b.eq .-8
+b.eq .-12
+b.ne .0
+b.ne .4
+b.ne .12
+b.ne .-4
+b.ne .-8
+b.ne .-12

@@ -1,0 +1,9 @@
+cbnz X1, .-20
+cbnz X0, .0
+cbnz X0, .4
+cbnz X0, .12
+cbnz X0, .-4
+cbnz X0, .-12
+cbnz X1, .0
+cbnz X1, .4
+cbnz X1, .12

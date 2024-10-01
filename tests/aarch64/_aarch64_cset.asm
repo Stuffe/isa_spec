@@ -1,0 +1,13 @@
+cset X0, eq
+cset X15, eq
+cset X15, ne
+cset X15, cs
+cset X15, cc
+cset X15, mi
+cset X15, pl
+cset X15, vs
+cset X15, vc
+cset X15, hi
+cset X15, ls
+cset X15, ge
+cset X15, lt

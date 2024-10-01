@@ -1,0 +1,12 @@
+adr X1, .-20
+adr X0, .0
+adr X0, .4
+adr X0, .12
+adr X0, .-4
+adr X0, .-4
+adr X0, .-8
+adr X1, .0
+adr X1, .4
+adr X1, .12
+adr X1, .-4
+adr X1, .-12
