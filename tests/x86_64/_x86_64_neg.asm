@@ -1,0 +1,16 @@
+neg rax
+neg rcx
+neg rdx
+neg rbx
+neg rsp
+neg rbp
+neg rsi
+neg rdi
+neg r8
+neg r9
+neg r10
+neg r11
+neg r12
+neg r13
+neg r14
+neg r15

@@ -1,0 +1,16 @@
+div rax
+div rcx
+div rdx
+div rbx
+div rsp
+div rbp
+div rsi
+div rdi
+div r8
+div r9
+div r10
+div r11
+div r12
+div r13
+div r14
+div r15

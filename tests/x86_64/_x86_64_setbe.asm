@@ -1,0 +1,16 @@
+setbe al
+setbe cl
+setbe dl
+setbe bl
+setbe spl
+setbe bpl
+setbe sil
+setbe dil
+setbe r8b
+setbe r9b
+setbe r10b
+setbe r11b
+setbe r12b
+setbe r13b
+setbe r14b
+setbe r15b

@@ -1,0 +1,16 @@
+sete al
+sete cl
+sete dl
+sete bl
+sete spl
+sete bpl
+sete sil
+sete dil
+sete r8b
+sete r9b
+sete r10b
+sete r11b
+sete r12b
+sete r13b
+sete r14b
+sete r15b

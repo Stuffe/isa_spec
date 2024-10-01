@@ -1,0 +1,16 @@
+setb al
+setb cl
+setb dl
+setb bl
+setb spl
+setb bpl
+setb sil
+setb dil
+setb r8b
+setb r9b
+setb r10b
+setb r11b
+setb r12b
+setb r13b
+setb r14b
+setb r15b

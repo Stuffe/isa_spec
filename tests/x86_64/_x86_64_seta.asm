@@ -1,0 +1,16 @@
+seta al
+seta cl
+seta dl
+seta bl
+seta spl
+seta bpl
+seta sil
+seta dil
+seta r8b
+seta r9b
+seta r10b
+seta r11b
+seta r12b
+seta r13b
+seta r14b
+seta r15b

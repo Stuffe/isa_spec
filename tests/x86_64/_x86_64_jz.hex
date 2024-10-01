@@ -1,0 +1,15 @@
+0f, 84, fc, ff, ff, ff
+0f, 84, fd, ff, ff, ff
+0f, 84, fa, 00, 00, 00
+0f, 84, fb, 00, 00, 00
+0f, 84, fc, 00, 00, 00
+0f, 84, fb, ff, 00, 00
+0f, 84, fa, ff, 00, 00
+0f, 84, fc, ff, 00, 00
+0f, 84, fb, ff, ff, 7f
+0f, 84, fa, ff, ff, 7f
+0f, 84, 7c, ff, ff, ff
+0f, 84, 7b, ff, ff, ff
+0f, 84, fc, 7f, ff, ff
+0f, 84, fb, 7f, ff, ff
+0f, 84, fc, ff, ff, 7f

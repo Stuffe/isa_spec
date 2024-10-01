@@ -1,0 +1,16 @@
+setne al
+setne cl
+setne dl
+setne bl
+setne spl
+setne bpl
+setne sil
+setne dil
+setne r8b
+setne r9b
+setne r10b
+setne r11b
+setne r12b
+setne r13b
+setne r14b
+setne r15b

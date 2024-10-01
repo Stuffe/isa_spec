@@ -1,0 +1,15 @@
+e8, fc, ff, ff, ff
+e8, fd, ff, ff, ff
+e8, fa, 00, 00, 00
+e8, fb, 00, 00, 00
+e8, fc, 00, 00, 00
+e8, fb, ff, 00, 00
+e8, fa, ff, 00, 00
+e8, fc, ff, 00, 00
+e8, fb, ff, ff, 7f
+e8, fa, ff, ff, 7f
+e8, 7c, ff, ff, ff
+e8, 7b, ff, ff, ff
+e8, fc, 7f, ff, ff
+e8, fb, 7f, ff, ff
+e8, fc, ff, ff, 7f

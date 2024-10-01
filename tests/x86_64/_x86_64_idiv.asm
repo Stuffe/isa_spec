@@ -1,0 +1,16 @@
+idiv rax
+idiv rcx
+idiv rdx
+idiv rbx
+idiv rsp
+idiv rbp
+idiv rsi
+idiv rdi
+idiv r8
+idiv r9
+idiv r10
+idiv r11
+idiv r12
+idiv r13
+idiv r14
+idiv r15
