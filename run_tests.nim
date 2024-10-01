@@ -2,7 +2,7 @@ import std/[tables, os, strutils, strformat, times, monotimes]
 import isa_spec, types, expressions
 
 const STOP_AT_FIRST_FAIL = true
-const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
+const RUN_SINGLE_TEST    = "aarch64" # Emtpy string means run all tests
 const CHECK_ROUNDTRIP    = false
 
 type AsmTestFile = tuple
@@ -148,8 +148,13 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       # If a spec file does get found under TEST_PATH later, it will override the SPEC_LIB_PATH file.
 
       let spec_lib_spec_file = (SPEC_LIB_PATH/test_name/(name & ".isa")).string
-      if spec_lib_spec_file.fileExists():
+      let alt_name = (SPEC_LIB_PATH/test_name/(test_name & ".isa")).string
+
+      if fileExists(spec_lib_spec_file):
         sub_tests[name].spec_file = spec_lib_spec_file
+
+      elif name[0] != '_' and fileExists(alt_name):
+        sub_tests[name].spec_file = alt_name
 
   var spec_time: float
   var asm_time: float
@@ -157,6 +162,8 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
   for sub_name, tests in sub_tests:
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
+
+    echo sub_name, tests
 
     let spec_source = readFile(tests.spec_file)
     spec_time -= timer()
