@@ -39,15 +39,8 @@ cmp x8, #2048
 cmp x8, #2049
 cmp x8, #4095
 cmp x8, #4096
-cmp x8, #4097
-cmp x8, #8191
 cmp x8, #8192
-cmp x8, #8193
-cmp x8, #16383
 cmp x8, #16384
-cmp x8, #16385
-cmp x8, #32767
 cmp x8, #32768
-cmp x8, #32769
 cmp x1, x3
 cmp x8, x30
