@@ -90,8 +90,7 @@ func read*(s: var StreamSlice): char =
   assert not isNil(s.source)
   if s.start > s.source[].high: return
   result = s.source[s.start]
-  if result != '\0':
-    s.start += 1
+  s.start += 1
 
 func matches*(s: var StreamSlice, value: string, increment = true): bool =
   for i in 0..value.high:

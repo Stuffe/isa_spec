@@ -50,6 +50,8 @@ type OpKind* = enum
   op_lsr
   op_asr
   op_log2
+  op_popcount
+  op_trailing_zeros
 
 type expression* = ref object
   case exp_kind*: ExpKind

@@ -14,7 +14,7 @@ type AsmTestFile = tuple
 type TestFiles = object
   spec_file: string
   spec_error_file: string
-  asm_tests: seq[AsmTestFile]
+  asm_tests: Table[string, AsmTestFile]
 
 template timer(): float =
   when defined(macosx):
@@ -119,11 +119,11 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     let name = parts[0]
     discard sub_tests.hasKeyOrPut(name, default(TestFiles))
     let subid = if parts.len == 2:
-        0
+        ""
       else:
-        parseInt(parts[1])
-    if subid >= sub_tests[name].asm_tests.len and "spec" not_in parts[^1]:
-      sub_tests[name].asm_tests.set_len(subid + 1)
+        parts[1]
+    if "isa" not_in parts[^1]:
+      discard sub_tests[name].asm_tests.hasKeyOrPut(subid, default(AsmTestFile))
 
     case parts[^1]:
       of "isa":
@@ -148,22 +148,17 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       # If a spec file does get found under TEST_PATH later, it will override the SPEC_LIB_PATH file.
 
       let spec_lib_spec_file = (SPEC_LIB_PATH/test_name/(name & ".isa")).string
-      let alt_name = (SPEC_LIB_PATH/test_name/(test_name & ".isa")).string
 
       if fileExists(spec_lib_spec_file):
         sub_tests[name].spec_file = spec_lib_spec_file
-
-      elif name[0] != '_' and fileExists(alt_name):
-        sub_tests[name].spec_file = alt_name
 
   var spec_time: float
   var asm_time: float
   
   for sub_name, tests in sub_tests:
+
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
-
-    echo sub_name, tests
 
     let spec_source = readFile(tests.spec_file)
     spec_time -= timer()
