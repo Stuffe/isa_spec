@@ -1,0 +1,23 @@
+	add x0, x1, x2
+	add x3, x4, x5
+	add x6, x7, x8
+	add x9, x10, x11
+	add x12, x13, x14
+	add x15, x16, x17
+	add x18, x19, x20
+	add x21, x22, x23
+	add x24, x25, x26
+	add x27, x28, x29
+	add x30, x31, x8
+
+	add zero, ra, sp
+	add gp, tp, t0
+	add t1, t2, s0
+	add x1, a0, a1
+	add a2, a3, a4
+	add a5, a6, a7
+	add s2, s3, s4
+	add s5, s6, s7
+	add s8, s9, s10
+	add s11, t3, t4
+	add t5, t6, fp
