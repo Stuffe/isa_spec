@@ -39,13 +39,6 @@ cmn x8, #2048
 cmn x8, #2049
 cmn x8, #4095
 cmn x8, #4096
-cmn x8, #4097
-cmn x8, #8191
 cmn x8, #8192
-cmn x8, #8193
-cmn x8, #16383
 cmn x8, #16384
-cmn x8, #16385
-cmn x8, #32767
 cmn x8, #32768
-cmn x8, #32769

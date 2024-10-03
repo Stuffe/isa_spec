@@ -641,39 +641,39 @@ vttbr_el2 110000100001000
 
 
 // add shifted 64-bit register (without the actual shift)
-add  %xd(register_64), %xn(register_64), %xm(register_64)
+add  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10001011 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
 Adds %xn and %xm, writing the result to %xd.
 
 // add immediate to 64-bit register
-add  %xd(register_64sp), %xn(register_64sp), %_(pound) %imm(immediate)
+add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
 10010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
 Add %imm to %xn, writing the result to %xd.
 
 // add large immediate to 64-bit register
-add  %xd(register_64sp), %xn(register_64sp), %_(pound) %imm(immediate)
+add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
 10010001 01 %imm[23:12] %xn[4:0] %xd[4:0]
 Add %imm to %xn, writing the result to %xd.
 
 
 // calculate pc-relative address
-adr  %xd(register_64), .%imm:S21(immediate|label)
+adr  %xd(register_64) , .%imm:S21(immediate|label)
 0 %imm[1:0] 10000 %imm[20:2] %xd[4:0]
 Write the absolute address of the program-counter relative immediate or label %imm in %xd.
 
 
 // and shifted 64-bit register (without the actual shift)
-and  %xd(register_64), %xn(register_64), %xm(register_64)
+and  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10001010 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
 Calculates the bitwise and of %xn and %xm, writing the result to %xd.
 
 // 64-bit and with logical immediate.
 // uses simplified logical immediate encoding
-and %xd(register_64sp), %xn(register_64), %imm:U64(immediate)
+and  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U64(immediate)
 %N = 1
-%immr = trailing_zeros(%imm)
-%imms = popcount(%imm)
-!assert %imm == (((1 << %imms) - 1) << %immr)
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
 10010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 Calculates the bitwise and of %xn and %imm, writing the result to %xd.
 
@@ -691,12 +691,12 @@ Calculates the bitwise and of %xn and %imm, writing the result to %xd.
 
 
 // arithmetic right shift register
-asr  %xd(register_64), %xn(register_64), %xm(register_64)
+asr  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10011010 110 %xm[4:0] 001010 %xn[4:0] %xd[4:0]
 Right shifts %xn by %xm % 64, preserving the sign of %xn. The result is stored in %xd.
 
 // arithmetic right shift immediate
-asr  %xd(register_64sp), %xn(register_64), %_(pound) %imm(immediate)
+asr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm(immediate)
 10010011 01 %imm[5:0] 111111 %xn[4:0] %xd[4:0]
 Right shifts %xn by %imm, preserving the sign of %xn. The result is stored in %xd.
 
@@ -738,167 +738,177 @@ Raises a breakpoint exception. The user can put any value in %imm.
 
 
 // compare and branch if nonzero
-cbnz  %xn(register_64), .%imm:S21(immediate|label)
+cbnz  %xn(register_64) , .%imm:S21(immediate|label)
 10110101 %imm[20:2] %xn[4:0]
 Branches to the PC-relative offset or label %imm, if %xn is not zero.
 
 
 // compare and branch if zero
-cbz  %xn(register_64), .%imm:S21(immediate|label)
+cbz  %xn(register_64) , .%imm:S21(immediate|label)
 10110100 %imm[20:2] %xn[4:0]
 Branches to the PC-relative offset or label %imm, if %xn is zero.
 
 
+// compare negative registers
+cmn  %xn(register_64) , %xm(register_64)
+10101011 000 %xm[4:0] 000 000 %xn[4:0] 11111
+Compares the value of -%xn with %xm, setting the condition flags.
+
 // compare negative immediate.
-cmn  %xn(register_64sp), %_(pound) %imm:U12(immediate)
+cmn  %xn(register_64sp) , %_(pound) %imm:U12(immediate)
 10110001 00 %imm[11:0] %xn[4:0] 11111
 Compares the value of -%xn with %imm, setting the condition flags.
 
 // compare negative large immediate.
-cmn  %xn(register_64sp), %_(pound) %imm:U24(immediate)
+cmn  %xn(register_64sp) , %_(pound) %imm:U24(immediate)
 10110001 01 %imm[23:12] %xn[4:0] 11111
 Compares the value of -%xn with %imm, setting the condition flags.
 
 
+// compare positive register
+cmp  %xn(register_64) , %xm(register_64)
+11101011 000 %xm[4:0] 000 000 %xn[4:0] 11111
+Compares the value in %xn with %xm, setting the condition flags.
+
 // compare positive immediate.
-cmp  %xn(register_64sp), %_(pound) %imm:U12(immediate)
+cmp  %xn(register_64sp) , %_(pound) %imm:U12(immediate)
 11110001 00 %imm[11:0] %xn[4:0] 11111
 Compares the value in %xn with %imm, setting the condition flags.
 
 // compare positive large immediate
-cmp  %xn(register_64sp), %_(pound) %imm:U24(immediate)
+cmp  %xn(register_64sp) , %_(pound) %imm:U24(immediate)
 11110001 01 %imm[23:12] %xn[4:0] 11111
 Compares the value in %xn with %imm, setting the condition flags.
 
 
 // conditional move
-csel  %xd(register_64), %xn(register_64), %xm(register_64), %cond(condition_code)
+csel  %xd(register_64) , %xn(register_64) , %xm(register_64) , %cond(condition_code)
 10011010 100 %xm[4:0] %cond[3:0] 00 %xn[4:0] %xd[4:0]
 If the given condition is true, sets %xd to %xn. Else, it writes %xm to %xd.
 
 
 // conditional set
-cset  %xd(register_64), %cond(condition_code)
+cset  %xd(register_64) , %cond(condition_code)
 %inv = %cond ^ 1
 10011010 10011111 %inv[3:0] 0111 111 %xd[4:0]
 
 
 // xor shifted 64-bit register (without the actual shift)
-eor  %xd(register_64), %xn(register_64), %xm(register_64)
+eor  %xd(register_64) , %xn(register_64) , %xm(register_64)
 11001010 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
 Calculates %xn xor %xm, writing the result to %xd.
 
 // 64-bit xor with logical immediate.
 // uses simplified logical immediate encoding
-eor %xd(register_64sp), %xn(register_64), %imm:U64(immediate)
+eor  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U64(immediate)
 %N = 1
-%immr = trailing_zeros(%imm)
-%imms = popcount(%imm)
-!assert %imm == (((1 << %imms) - 1) << %immr)
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
 11010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 Calculates %xn xor %imm, writing the result to %xd.
 
 
 // load register indexed, not extended
-ldr  %xt(register_64), [ %xn(register_64sp), %xm(register_64) ]
+ldr  %xt(register_64) , [ %xn(register_64sp) , %xm(register_64) ]
 11111000 011 %xm[4:0] 011010 %xn[4:0] %xt[4:0]
 Loads a 64-bit value from the address %xn + %xm.
 
 // load register direct
-ldr  %xt(register_64), [ %xn(register_64sp) ]
+ldr  %xt(register_64) , [ %xn(register_64sp) ]
 11111001 01000000 000000 %xn[4:0] %xt[4:0]
 Loads a 64-bit value from the address %xn.
 
 // load register scaled offset
-ldr  %xt(register_64), [ %xn(register_64sp), %_(pound) %imm:U15(immediate) ]
+ldr  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:U15(immediate) ]
 11111001 01 %imm[14:3] %xn[4:0] %xt[4:0]
 Loads a 64-bit value from the address %xn + %imm.
 
 // load register unscaled offset. this uses the ldur instruction underneath
-ldr  %xt(register_64), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]
+ldr  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
 11111000 010 %imm[8:0] 00 %xn[4:0] %xt[4:0]
 Loads a 64-bit value from the address %xn + %imm.
 
 // load register post index
-ldr  %xt(register_64), [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+ldr  %xt(register_64) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
 11111000 010 %imm[8:0] 01 %xn[4:0] %xt[4:0]
 Loads a 64-bit value from the address %xn + %imm. Then sets %xn to this address.
 
 // load register pre index
-ldr  %xt(register_64), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]!
+ldr  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
 11111000 010 %imm[8:0] 11 %xn[4:0] %xt[4:0]
 Adds %imm to %xn and stores it in %xn. Then loads a 64-bit value from this address.
 
 
 // load byte register indexed, not extended
-ldrb  %wt(register_32), [ %xn(register_64sp), %xm(register_64) ]
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
 00111000 011 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
 Loads an 8-bit value from the address %xn + %xm.
 
 // load byte register direct
-ldrb  %wt(register_32), [ %xn(register_64sp) ]
+ldrb  %wt(register_32) , [ %xn(register_64sp) ]
 00111001 01000000 000000 %xn[4:0] %wt[4:0]
 Loads an 8-bit value from the address %xn.
 
 // load byte register scaled offset
-ldrb  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:U12(immediate) ]
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U12(immediate) ]
 00111001 01 %imm[11:0] %xn[4:0] %wt[4:0]
 Loads an 8-bit value from the address %xn + %imm.
 
 // load byte register unscaled offset. this uses the ldurb instruction underneath
-ldrb  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
 00111000 010 %imm[8:0] 00 %xn[4:0] %wt[4:0]
 Loads an 8-bit value from the address %xn + %imm.
 
 // load byte register post index
-ldrb  %wt(register_32), [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+ldrb  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
 00111000 010 %imm[8:0] 01 %xn[4:0] %wt[4:0]
 Loads an 8-bit value from the address %xn + %imm. Then sets %xn to this address.
 
 // load byte register pre index
-ldrb  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]!
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
 00111000 010 %imm[8:0] 11 %xn[4:0] %wt[4:0]
 Adds %imm to %xn and stores it in %xn. Then loads an 8-bit value from this address.
 
 
 // load halfword register indexed, not extended
-ldrh  %wt(register_32), [ %xn(register_64sp), %xm(register_64) ]
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
 01111000 011 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
 Loads a 16-bit value from the address %xn + %xm.
 
 // load halfword register direct
-ldrh  %wt(register_32), [ %xn(register_64sp) ]
+ldrh  %wt(register_32) , [ %xn(register_64sp) ]
 01111001 01000000 000000 %xn[4:0] %wt[4:0]
 Loads a 16-bit value from the address %xn.
 
 // load halfword register scaled offset
-ldrh  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:U13(immediate) ]
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U13(immediate) ]
 01111001 01 %imm[12:1] %xn[4:0] %wt[4:0]
 Loads a 16-bit value from the address %xn + %imm.
 
 // load halfword register unscaled offset. this uses the ldurb instruction underneath
-ldrh  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
 01111000 010 %imm[8:0] 00 %xn[4:0] %wt[4:0]
 Loads a 16-bit value from the address %xn + %imm.
 
 // load halfword register post index
-ldrh  %wt(register_32), [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+ldrh  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
 01111000 010 %imm[8:0] 01 %xn[4:0] %wt[4:0]
 Loads a 16-bit value from the address %xn + %imm. Then sets %xn to this address.
 
 // load halfword register pre index
-ldrh  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]!
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
 01111000 010 %imm[8:0] 11 %xn[4:0] %wt[4:0]
 Adds %imm to %xn and stores it in %xn. Then loads a 16-bit value from this address.
 
 
 // left shift register
-lsl  %xd(register_64), %xn(register_64), %xm(register_64)
+lsl  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10011010 110 %xm[4:0] 001000 %xn[4:0] %xd[4:0]
 Left shifts %xn by %xm % 64. The result is stored in %xd.
 
 // left shift immediate
-lsl  %xd(register_64), %xn(register_64), %_(pound) %imm(immediate)
+lsl  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
 %immr = (0 - %imm) & 0x3F
 %imms = 63 - %imm
 11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
@@ -906,122 +916,122 @@ Left shifts %xn by %imm. The result is stored in %xd.
 
 
 // right shift register
-lsr  %xd(register_64), %xn(register_64), %xm(register_64)
+lsr  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10011010 110 %xm[4:0] 001001 %xn[4:0] %xd[4:0]
 Right shifts %xn by %xm % 64. The result is stored in %xd.
 
 // right shift immediate
-lsr  %xd(register_64), %xn(register_64), %_(pound) %imm(immediate)
+lsr  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
 11010011 01 %imm[5:0] 111111 %xn[4:0] %xd[4:0]
 Right shifts %xn by %imm. The result is stored in %xd.
 
 
 // fused multiply add
-madd  %xd(register_64), %xn(register_64), %xm(register_64sp), %xa(register_64)
+madd  %xd(register_64) , %xn(register_64) , %xm(register_64sp) , %xa(register_64)
 10011011 000 %xm[4:0] 0 %xa[4:0] %xn[4:0] %xd[4:0]
 Computes (%xn * %xm) + %xa, then writes the result to %xd.
 
 
 // move register
-mov  %xd(register_64), %xn(register_64)
+mov  %xd(register_64) , %xn(register_64)
 10101010 000 %xn[4:0] 00000011 111 %xd[4:0]
 Copies %xn to %xd.
 
 // move register sp
-mov  %xd(register_64sp), %xn(register_64sp)
+mov  %xd(register_64sp) , %xn(register_64sp)
 10010001 00000000 000000 %xn[4:0] %xd[4:0]
 Copies %xn to %xd.
 
 // move wide immediate 0
-mov  %xd(register_64), %_(pound) %imm:U16(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U16(immediate)
 11010010 1 00 %imm[15:0] %xd[4:0]
 Copies %imm to %xd.
 
 // move wide immediate 1
-mov  %xd(register_64), %_(pound) %imm:U32(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U32(immediate)
 11010010 1 01 %imm[31:16] %xd[4:0]
 Copies %imm to %xd.
 
 // move wide immediate 2
-mov  %xd(register_64), %_(pound) %imm:U48(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U48(immediate)
 11010010 1 10 %imm[47:32] %xd[4:0]
 Copies %imm to %xd.
 
 // move wide immediate 3
-mov  %xd(register_64), %_(pound) %imm:U64(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
 11010010 1 11 %imm[63:48] %xd[4:0]
 Copies %imm to %xd.
 
 // move inverted wide immediate 0
-mov  %xd(register_64), %_(pound) %imm:U64(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
 %inv = %imm ^ 0xFFFFFFFFFFFFFFFF
 11010010 1 00 %inv[15:0] %xd[4:0]
 Copies %imm to %xd.
 
 // move inverted wide immediate 1
-mov  %xd(register_64), %_(pound) %imm:U64(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
 %inv = %imm ^ 0xFFFFFFFFFFFFFFFF
 11010010 1 01 %inv[31:16] %xd[4:0]
 Copies %imm to %xd.
 
 // move inverted wide immediate 2
-mov  %xd(register_64), %_(pound) %imm:U64(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
 %inv = %imm ^ 0xFFFFFFFFFFFFFFFF
 11010010 1 10 %inv[47:32] %xd[4:0]
 Copies %imm to %xd.
 
 // move inverted wide immediate 3
-mov  %xd(register_64), %_(pound) %imm:U64(immediate)
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
 %inv = %imm ^ 0xFFFFFFFFFFFFFFFF
 11010010 1 11 %inv[63:48] %xd[4:0]
 Copies %imm to %xd.
 
 // move logical immediate
-mov %xd(register_64sp), %imm:U64(immediate)
+mov  %xd(register_64sp) , %imm:U64(immediate)
 %N = 1
-%immr = trailing_zeros(%imm)
-%imms = popcount(%imm)
-!assert %imm == (((1 << %imms) - 1) << %immr)
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
 10110010 0 %N[0:0] %immr[5:0] %imms[5:0] 11111 %xd[4:0]
 Copies %imm to %xd.
 
 
 // read system register
-mrs %xd(register_64), %sys(system_regs)
+mrs  %xd(register_64) , %sys(system_regs)
 11010101 0011 %sys[14:0] %xd[4:0]
 Copies the value of system register %sys to %xd
 
 
 // fused multiply subtract
-msub  %xd(register_64), %xn(register_64), %xm(register_64sp), %xa(register_64)
+msub  %xd(register_64) , %xn(register_64) , %xm(register_64sp) , %xa(register_64)
 10011011 000 %xm[4:0] 1 %xa[4:0] %xn[4:0] %xd[4:0]
 Computes %xa - (%xn * %xm)
 
 
 // multiply
-mul  %xd(register_64), %xn(register_64), %xm(register_64sp)
+mul  %xd(register_64) , %xn(register_64) , %xm(register_64sp)
 10011011 000 %xm[4:0] 011111 %xn[4:0] %xd[4:0]
 Multiplies %xn with %xm, writing the result to %xd.
 
 
 // invert
-mvn  %xd(register_64), %xn(register_64)
+mvn  %xd(register_64) , %xn(register_64)
 10101010 001 %xn[4:0] 00000011 111 %xd[4:0]
 Computes the bitwise inverse of %xn, writing it to %xd.
 
 
 // or shifted 64-bit register (without the actual shift)
-orr  %xd(register_64), %xn(register_64), %xm(register_64)
+orr  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10101010 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
 Ors %xn with %xm, writing the result to %xd. Calculates the bitwise or of %xn and %xm, writing the result to %xd
 
 // 64-bit or with logical immediate.
 // uses simplified logical immediate encoding
-orr %xd(register_64sp), %xn(register_64), %imm:U64(immediate)
+orr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U64(immediate)
 %N = 1
-%immr = trailing_zeros(%imm)
-%imms = popcount(%imm)
-!assert %imm == (((1 << %imms) - 1) << %immr)
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
 10110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 Calculates the bitwise or of %xn and %imm, writing the result to %xd
 
@@ -1038,146 +1048,145 @@ Branches to the value contained in %xd, which should contain the return address.
 
 
 // rotate right register
-ror  %xd(register_64), %xn(register_64), %xm(register_64)
+ror  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10011010 110 %xm[4:0] 001011 %xn[4:0] %xd[4:0]
 Rotates %xn right by %xm % 64, writing the result to %xd.
 
 // rotate right immediate
-ror  %xd(register_64), %xn(register_64), %_(pound) %imm(immediate)
+ror  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
 10010011 110 %xn[4:0] %imm[5:0] %xn[4:0] %xd[4:0]
 Rotates %xn right by %imm, writing the result to %xd.
 
 
 // signed division
-sdiv  %xd(register_64), %xn(register_64), %xm(register_64sp)
+sdiv  %xd(register_64) , %xn(register_64) , %xm(register_64sp)
 10011010 110 %xm[4:0] 000011 %xn[4:0] %xd[4:0]
 Performes signed division of %xn by %xm, writing the result to %xd.
 
 
 // store register indexed, not extended
-str  %xt(register_64), [ %xn(register_64sp), %xm(register_64) ]
+str  %xt(register_64) , [ %xn(register_64sp) , %xm(register_64) ]
 11111000 001 %xm[4:0] 011010 %xn[4:0] %xt[4:0]
 Stores a 64-bit value to the address %xn + %xm.
 
 // store register direct
-str  %xt(register_64), [ %xn(register_64sp) ]
+str  %xt(register_64) , [ %xn(register_64sp) ]
 11111001 00000000 000000 %xn[4:0] %xt[4:0]
 Stores a 64-bit value to the address %xn.
 
 // store register scaled offset
-str  %xt(register_64), [ %xn(register_64sp), %_(pound) %imm:U15(immediate) ]
+str  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:U15(immediate) ]
 11111001 00 %imm[14:3] %xn[4:0] %xt[4:0]
 Stores a 64-bit value to the address %xn + %imm.
 
 // store register unscaled offset. this uses the ldur instruction underneath
-str  %xt(register_64), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]
+str  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
 11111000 000 %imm[8:0] 00 %xn[4:0] %xt[4:0]
 Stores a 64-bit value to the address %xn + %imm.
 
 // store register post index
-str  %xt(register_64), [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+str  %xt(register_64) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
 11111000 000 %imm[8:0] 01 %xn[4:0] %xt[4:0]
 Stores a 64-bit value to the address %xn + %imm. Then sets %xn to this address.
 
 // store register pre index
-str  %xt(register_64), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]!
+str  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
 11111000 000 %imm[8:0] 11 %xn[4:0] %xt[4:0]
 Adds %imm to %xn and stores it in %xn. Then stores a 64-bit value to this address.
 
 
 // store byte register indexed, not extended
-strb  %wt(register_32), [ %xn(register_64sp), %xm(register_64) ]
+strb  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
 00111000 001 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
 Stores an 8-bit value to the address %xn + %xm.
 
 // store byte register direct
-strb  %wt(register_32), [ %xn(register_64sp) ]
+strb  %wt(register_32) , [ %xn(register_64sp) ]
 00111001 00000000 000000 %xn[4:0] %wt[4:0]
 Stores an 8-bit value to the address %xn.
 
 // store byte register scaled offset
-strb  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:U12(immediate) ]
+strb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U12(immediate) ]
 00111001 00 %imm[11:0] %xn[4:0] %wt[4:0]
 Stores an 8-bit value to the address %xn + %imm.
 
 // store byte register unscaled offset. this uses the ldurb instruction underneath
-strb  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]
+strb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
 00111000 000 %imm[8:0] 00 %xn[4:0] %wt[4:0]
 Stores an 8-bit value to the address %xn + %imm.
 
 // store byte register post index
-strb  %wt(register_32), [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+strb  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
 00111000 000 %imm[8:0] 01 %xn[4:0] %wt[4:0]
 Stores an 8-bit value to the address %xn + %imm. Then sets %xn to this address.
 
 // store byte register pre index
-strb  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]!
+strb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
 00111000 000 %imm[8:0] 11 %xn[4:0] %wt[4:0]
 Adds %imm to %xn and stores it in %xn. Then stores an 8-bit value to this address.
 
 
 // store halfword register indexed, not extended
-strh  %wt(register_32), [ %xn(register_64sp), %xm(register_64) ]
+strh  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
 01111000 001 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
 Stores a 16-bit value to the address %xn + %xm.
 
 // store halfword register direct
-strh  %wt(register_32), [ %xn(register_64sp) ]
+strh  %wt(register_32) , [ %xn(register_64sp) ]
 01111001 00000000 000000 %xn[4:0] %wt[4:0]
 Stores a 16-bit value to the address %xn.
 
 // store halfword register scaled offset
-strh  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:U13(immediate) ]
+strh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U13(immediate) ]
 01111001 00 %imm[12:1] %xn[4:0] %wt[4:0]
 Stores a 16-bit value to the address %xn + %imm.
 
 // store halfword register unscaled offset. this uses the ldurb instruction underneath
-strh  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]
+strh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
 01111000 000 %imm[8:0] 00 %xn[4:0] %wt[4:0]
 Stores a 16-bit value to the address %xn + %imm.
 
 // store halfword register post index
-strh  %wt(register_32), [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+strh  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
 01111000 000 %imm[8:0] 01 %xn[4:0] %wt[4:0]
 Stores a 16-bit value to the address %xn + %imm. Then sets %xn to this address.
 
 // store halfword register pre index
-strh  %wt(register_32), [ %xn(register_64sp), %_(pound) %imm:S9(immediate) ]!
+strh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
 01111000 000 %imm[8:0] 11 %xn[4:0] %wt[4:0]
 Adds %imm to %xn and stores it in %xn. Then stores a 16-bit value to this address.
 
 
 // subtract shifted 64-bit register (without the actual shift)
-sub  %xd(register_64), %xn(register_64), %xm(register_64)
+sub  %xd(register_64) , %xn(register_64) , %xm(register_64)
 11001011 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
 Subtracts %xm from %xn, writing the result to %xd.
 
 // subtract immediate from 64-bit register
-sub  %xd(register_64sp), %xn(register_64sp), %_(pound) %imm(immediate)
+sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
 11010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
 Subtracts %imm from %xn, writing the result to %xd.
 
 // subtract large immediate from 64-bit register
-sub  %xd(register_64sp), %xn(register_64sp), %_(pound) %imm(immediate)
+sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
 11010001 01 %imm[23:12] %xn[4:0] %xd[4:0]
 Subtracts %imm from %xn, writing the result to %xd.
 
 
 // test shifted 64-bit register (without the actual shift)
-tst  %xd(register_64), %xn(register_64), %xm(register_64)
-10001010 000 %xm[4:0] 000 000 %xn[4:0] 11111
+tst  %xn(register_64) , %xm(register_64)
+11101010 000 %xm[4:0] 000 000 %xn[4:0] 11111
 Calculates the bitwise and of %xn and %xm, setting flags.
 
 // 64-bit test with logical immediate.
 // uses simplified logical immediate encoding
-tst %xd(register_64sp), %xn(register_64), %imm:U64(immediate)
+tst  %xn(register_64) , %_(pound) %imm:U64(immediate)
 %N = 1
-%immr = trailing_zeros(%imm)
-%imms = popcount(%imm)
-!assert %imm == (((1 << %imms) - 1) << %immr)
-10010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] 11111
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
+11110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] 11111
 Calculates the bitwise and of %xn and %imm, setting flags.
-
 
 // syscall
 svc  %_(pound) %imm:U16(immediate)
@@ -1186,12 +1195,12 @@ Performs a supervisor call. The data in %imm can be set by the user and read by 
 
 
 // bitfield move
-ubfm %xd(register_64), %xn(register_64), %_(pound) %immr(immediate), %_(pound) %imms(immediate)
+ubfm  %xd(register_64) , %xn(register_64) , %_(pound) %immr(immediate) , %_(pound) %imms(immediate)
 11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 Copies a bitfield from %xn to %xd. The source and destination bits are determined by %immr and %imms. If %imms >= %immr, this copies a bitfield starting at %immr to the least significant bits of the destination register. The size of the bitfield is (%imms - %immr + 1). If %imms < %immr, this copies a bitfield starting at the least significant bits from the source register to 64-%immr of the destination register. The size of the bitfield is (%imms + 1).
 
 
 // unsigned division
-udiv  %xd(register_64), %xn(register_64), %xm(register_64sp)
+udiv  %xd(register_64) , %xn(register_64) , %xm(register_64sp)
 10011010 110 %xm[4:0] 000010 %xn[4:0] %xd[4:0]
 Calculates unsigned division of %xn by %xm, writing the result to %xd.
