@@ -47,40 +47,44 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
 
   for name, kind in SINGLE_ARG:
 
-    if matches(s, name & "("):
+    if matches(s, name, tk=tk_directive):
+      if not matches(s, '(', tk=tk_bracket):
+        return expression(exp_kind: exp_fail)
       skip_whitespaces(s)
       let exp = get_expression(s, operand_names)
-      if not matches(s, ')'):
+      if not matches(s, ')', tk=tk_bracket):
         return expression(exp_kind: exp_fail)
       skip_whitespaces(s)
       return expression(exp_kind: exp_operation, op_kind: kind, lhs: exp)
 
-  if matches(s, "asr("):
+  if matches(s, "asr", tk=tk_directive):
+    if not matches(s, '(', tk=tk_bracket):
+      return expression(exp_kind: exp_fail)
     let lhs = get_expression(s, operand_names)
     skip_whitespaces(s)
-    if not matches(s, ','):
+    if not matches(s, ',', tk=tk_seperator):
       return expression(exp_kind: exp_fail)
     skip_whitespaces(s)
     let rhs = get_expression(s, operand_names)
     skip_whitespaces(s)
-    if not matches(s, ')'):
+    if not matches(s, ')', tk=tk_bracket):
       return expression(exp_kind: exp_fail)
     return expression(exp_kind: exp_operation, op_kind: op_asr, lhs: lhs, rhs: rhs)
   
-  if matches(s, '('):
-    let restore = s
+  if matches(s, '(', tk=tk_bracket):
+    let cp = checkpoint(s)
     result = get_expression(s, operand_names)
     skip_whitespaces(s)
-    if read(s) != ')':
-      s = restore
+    if read(s, tk=tk_bracket) != ')':
+      s.restore(cp)
       return expression(exp_kind: exp_fail)
 
   elif peek(s) == '$':
-    skip(s)
+    skip(s, tk=tk_literal)
     return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
 
   elif matches(s, '%'):
-    let operand = get_identifier(s)
+    let operand = get_identifier(s, tk=tk_field_ref)
     if operand.len == 0: return expression(exp_kind: exp_fail)
 
     let operand_index = operand_names.find(operand)
@@ -103,20 +107,20 @@ func get_term(s: var StreamSlice, operand_names: seq[string]): expression =
     return atom
   skip_whitespaces(s)
   if s.peek() == '[':
-    skip(s)
+    skip(s, tk=tk_bracket)
     skip_whitespaces(s)
     let top = get_expression(s, operand_names)
     if top.exp_kind == exp_fail:
       return top
     let bottom = if s.peek() == ':':
-        skip(s)
+        skip(s, tk=tk_seperator)
         skip_whitespaces(s)
         get_expression(s, operand_names)
       else:
         nil
     if not bottom.isNil and bottom.exp_kind == exp_fail:
       return bottom
-    if s.read() != ']':
+    if s.read(tk=tk_bracket) != ']':
       return expression(exp_kind: exp_fail, msg: "Expected ']'")
     return expression(exp_kind: exp_bitextract, base: atom, top: top, bottom: bottom)
   return atom
@@ -135,13 +139,13 @@ func get_greedy_group(s: var StreamSlice, operand_names: seq[string]): expressio
 
     skip_whitespaces(s)
 
-    let restore = s
+    let cp = checkpoint(s)
 
     var next_token: string
     
     while peek(s) in GREEDY_CHARS and peek(s, 1) != '%': # The '%' in '%reg' is not an operator!
       next_token.add(peek(s))
-      skip(s)
+      skip(s, tk=tk_operator)
 
     let op_index = OP_INDEXES.find(next_token)
 
@@ -152,7 +156,7 @@ func get_greedy_group(s: var StreamSlice, operand_names: seq[string]): expressio
 
     let rhs = get_term(s, operand_names)
     if rhs.exp_kind == exp_fail:
-      s = restore
+      s.restore(cp)
       return expression(exp_kind: exp_fail)
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
@@ -171,12 +175,12 @@ func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression
 
     skip_whitespaces(s)
 
-    let restore = s
+    let cp = checkpoint(s)
 
     var next_token: string
     
     while peek(s) in LAZY_CHARS:
-      next_token.add(read(s))
+      next_token.add(read(s, tk=tk_operator))
 
     let op_index = OP_INDEXES.find(next_token)
 
@@ -187,7 +191,7 @@ func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression
 
     let rhs = get_greedy_group(s, operand_names)
     if rhs.exp_kind == exp_fail:
-      s = restore
+      s.restore(cp)
       return expression(exp_kind: exp_fail)
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)

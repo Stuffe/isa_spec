@@ -79,6 +79,7 @@ type TokenKind* = enum
   tk_unknown # Will not be skipped by `add_token`, use for e.g. unknown characters
   tk_whitespace
   tk_comment
+  tk_text # Generic text, i.e. descriptions
 
   tk_number
   tk_string
@@ -90,8 +91,9 @@ type TokenKind* = enum
   tk_mnenomic
   tk_directive
   tk_literal # false, true, big, little, ...
-  tk_type_name
-  tk_field_ref
+  tk_type_name # S64, immediate, custom field names
+  tk_field_name # The names defined within custom fields
+  tk_field_ref # %a, %some_name
   tk_register_1 # Normal register names
   tk_register_2 # Special register names (e.g. sp, ip)
   tk_register_3 # Control register names (e.g. control registers)

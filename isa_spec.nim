@@ -124,14 +124,14 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     while peek(s) notin {'\0', '\n'}:
       if peek(s) == '%':
         if peek(s, 1) == '%':
-          doAssert matches(s, "%%")
+          doAssert matches(s, "%%", tk=tk_mnenomic)
           this_part.add('%')
           continue
         else:
           break
-      let char = read(s, tk_mnenomic)
+      let char = read(s)
       if char in {'\r', '\t', ' '}:
-        change_token_kind(tk_mnenomic, tk_whitespace)
+        add_token(s, tk_whitespace)
         if this_part != "":
           syntax_parts.add(this_part)
           this_part = ""
@@ -145,6 +145,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
             else:
               syntax_parts.add(ANY_NUMBER_OF_SPACES)
       else:
+        add_token(s, tk_mnenomic)
         this_part.add(char)
 
     if this_part != "":
@@ -161,7 +162,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
       if new_field.name.len == 0:
         return error("Expected an identifier after '%'")
 
-      if matches(s, ':'):
+      if matches(s, ':', tk=tk_seperator):
         let marker = read(s)
         new_field.is_signed = case marker:
           of 'U':
@@ -171,6 +172,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           else:
             return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
         new_field.size = check(parse_signed(check(get_unsigned(s))))
+        change_token_kind(tk_number, tk_type_name)
         if new_field.size < 1 or new_field.size > 64:
           return error(&"Invalid size {new_field.size}")
 
@@ -229,7 +231,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           s = restore
           break
 
-        if matches(s, ':'):
+        if matches(s, ':', tk=tk_seperator):
           let marker = read(s)
           new_field.is_signed = case marker:
             of 'U':
@@ -239,11 +241,12 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
             else:
               return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
           new_field.size = check(parse_signed(check(get_unsigned(s))))
+          change_token_kind(tk_number, tk_type_name)
           if new_field.size < 1 or new_field.size > 64:
             return error(&"Invalid size {new_field.size}")
         skip_whitespaces(s)
 
-        if not matches(s, '='):
+        if not matches(s, '=', tk=tk_operator):
           return error("Expected an assignment here")
 
         skip_whitespaces(s)
@@ -318,7 +321,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           else:
             pattern.add('0')
             mask.add('0')
-            let c = read(s, tk=tk_field_ref)
+            let c = read(s, tk=tk_field_name)
             var field_index = -1
             for i, field_name in new_instruction.field_names:
               if field_name[0] == c:
@@ -346,17 +349,17 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
               field_index = i
               break
         let field_real_index = field_index + FIXED_FIELDS_LEN
-        if read(s) != '[':
+        if read(s, tk=tk_bracket) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
         let top = check(parse_signed(check(get_unsigned(s))))
         skip_whitespaces(s)
-        if read(s) != ':':
+        if read(s, tk=tk_seperator) != ':':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
         let bottom = check(parse_signed(check(get_unsigned(s))))
         skip_whitespaces(s)
-        if read(s) != ']':
+        if read(s, tk=tk_bracket) != ']':
           return error("Expected slice syntax after field reference in bit pattern")
         if current.id != FIELD_INVALID:
           new_bits.add(current)
@@ -432,16 +435,15 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
     skip_whitespaces(s)
 
-    if read(s) notin {'\n', '\0'}:
+    if read(s, tk=tk_whitespace) notin {'\n', '\0'}:
       return error("Was expecting a newline here")
 
   block get_description:
     var description: string
     while peek(s) notin {'\n', '\0'}:
-      let char = peek(s)
+      let char = read(s, tk=tk_text)
       if char notin {'\r'}:
         description.add(char)
-      skip(s)
     new_instruction.description = description
 
   return (new_instruction, "")
@@ -532,9 +534,9 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
     if not skip_newlines(s):
       return error("Expected newline after section header")
 
-    while not matches(s, "[instructions]", increment = false):
+    while not matches(s, "[", increment = false):
       skip_whitespaces(s)
-      var field_type_name = get_identifier(s)
+      var field_type_name = get_identifier(s, tk=tk_type_name)
       if field_type_name.len == 0: return error("Expected a name for the field type")
       skip_whitespaces(s)
 
@@ -542,7 +544,8 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
       var bit_length = 0
 
       block outer:
-        while read(s) == '\n':
+        while peek(s) == '\n':
+          skip(s, tk=tk_whitespace)
            # If the line starts with a comment, continue on to the next line
            # We don't use skip_newlines because we don't want to allow empty lines in the middle of a field type def
           if skip_comment(s):
@@ -555,7 +558,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
                   return error("Field names can not contain whitespace characters")
               temp
             else:
-              let temp = get_identifier(s)
+              let temp = get_identifier(s, tk=tk_field_name)
               skip_whitespaces(s)
               if temp.len == 0:
                 if peek(s) in {'\n', '\0'}:
@@ -568,7 +571,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
           var bits: string
 
           while peek(s) in {'0','1'}:
-            bits.add(read(s))
+            bits.add(read(s, tk_number))
         
           if bits.len == 0:
             return error("Expected a bit pattern for " & $field_name)

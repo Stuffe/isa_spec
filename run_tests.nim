@@ -1,11 +1,19 @@
 import std/[tables, os, strutils, strformat, times, monotimes]
 import isa_spec, types, expressions, parse
 
-const STOP_AT_FIRST_FAIL  = true
-const RUN_SINGLE_TEST     = "" # Emtpy string means run all tests
-const SKIP_TESTS          = @["x86_64"]
-const CHECK_ROUNDTRIP     = false
-const GENERATE_TOKEN_LIST = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
+
+when existsEnv("CI"): # if we are running in Contious Integeration testing (e.g. Github actions), run all tests
+  const STOP_AT_FIRST_FAIL      = false
+  const RUN_SINGLE_TEST         = ""
+  const SKIP_TESTS: seq[string] = @[]
+  const CHECK_ROUNDTRIP         = false
+  const GENERATE_TOKEN_LIST     = false
+else:
+  const STOP_AT_FIRST_FAIL      = false
+  const RUN_SINGLE_TEST         = "" # Emtpy string means run all tests
+  const SKIP_TESTS: seq[string] = @["x86_64"]
+  const CHECK_ROUNDTRIP         = false
+  const GENERATE_TOKEN_LIST     = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
 
 type AsmTestFile = tuple
   source_file: string
@@ -173,21 +181,31 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
 
     let isa_spec = spec_result.spec
     if tests.spec_tokens_file != "":
-      let expected_tokens = readFile(tests.spec_tokens_file).splitLines()
       when GENERATE_TOKEN_LIST:
-        echo &"\u001b[34m[{test_name}] '{tests.spec_file}' token list\u001b[0m: "
+        echo &"\u001b[34m[{test_name}] Writing '{tests.spec_file}' token list to '{tests.spec_tokens_file}'\u001b[0m"
+        var write_target = open(tests.spec_tokens_file, fmWrite)
+      else:
+        let expected_tokens = readFile(tests.spec_tokens_file).splitLines()
+        var error_count = 0
       for i, token in spec_result.tokens:
         let text = ($token.s).replace("\n", "\\n").replace("\r", "\\r")
         let expected_line = &"{token.tk}: `{text}`"
         when GENERATE_TOKEN_LIST:
-          echo expected_line
+          if i != 0:
+            write_target.write "\n"
+          write_target.write expected_line
         else:
           if i > expected_tokens.high:
             fail(test_name, tests.spec_file, &"To many tokens: Got extra\n{expected_line}")
+            break
           if expected_tokens[i] != expected_line:
             fail(test_name, tests.spec_file, &"Incorrect token: Got\n{expected_line}, Expected\n{expected_tokens[i]}")
+            error_count += 1
+            if error_count > 10:
+              fail(test_name, tests.spec_file, &"Too many incorrect tokens, not checking further")
+              break
       when GENERATE_TOKEN_LIST:
-        echo "\n"
+        write_target.close()
 
     if spec_result.error.message != "":
       if tests.spec_error_file != "":
