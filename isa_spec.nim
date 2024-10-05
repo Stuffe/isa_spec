@@ -1,4 +1,4 @@
-import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm, bitops
+import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm
 import types, parse, expressions
 
 export parse.new_StreamSlice
@@ -129,8 +129,9 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           continue
         else:
           break
-      let char = read(s)
+      let char = read(s, tk_mnenomic)
       if char in {'\r', '\t', ' '}:
+        change_token_kind(tk_mnenomic, tk_whitespace)
         if this_part != "":
           syntax_parts.add(this_part)
           this_part = ""
@@ -175,10 +176,10 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
       new_instruction.syntax.add("")
 
-      if not matches(s, '('):
+      if not matches(s, '(', tk=tk_bracket):
         return error("Expected parenthesis after the operand name, like: " & new_field.name & "(immediate)")
       while true:
-        let field_name = get_identifier(s)
+        let field_name = get_identifier(s, tk=tk_type_name)
 
         if field_name.len == 0:
           return error("Was expecting a field name here")
@@ -196,19 +197,19 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
         skip_whitespaces(s)
 
-        if not s.matches('|'):
+        if not s.matches('|', tk=tk_seperator):
           break
 
         skip_whitespaces(s)
 
-      if not matches(s, ')'):
+      if not matches(s, ')', tk=tk_bracket):
         return error("Expected a closing parenthesis after the field type")
 
       new_instruction.fields.add(new_field)
 
       add_string_syntax(s, new_instruction.syntax)
 
-    if read(s) != '\n':
+    if read(s, tk_whitespace) != '\n':
       return error("Was expecting a newline here")
 
   var instruction_name: string
@@ -299,22 +300,25 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           of '0':
             pattern.add('0')
             mask.add('1')
+            skip(s, tk=tk_number)
             FIELD_ZERO
           of '1':
             pattern.add('1')
             mask.add('1')
+            skip(s, tk=tk_number)
             FIELD_ONE
           of ' ':
-            skip(s)
+            skip(s, tk=tk_whitespace)
             continue
           of '?':
             pattern.add('0')
             mask.add('0')
+            skip(s, tk=tk_number)
             FIELD_WILDCARD
           else:
             pattern.add('0')
             mask.add('0')
-            let c = peek(s)
+            let c = read(s, tk=tk_field_ref)
             var field_index = -1
             for i, field_name in new_instruction.field_names:
               if field_name[0] == c:
@@ -331,7 +335,6 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           current = Bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
         else:
           current.top += 1
-        skip(s)
       else:
         skip(s)
         let field_name = get_identifier(s)
@@ -443,9 +446,10 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
   return (new_instruction, "")
 
-func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
+func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
 
   var s = new_StreamSlice(source)
+  start_tokenize(s)
 
   func error(input: string): SpecParseResult =
     return SpecParseResult(
@@ -472,7 +476,7 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
 
   skip_newlines(s)
 
-  if matches(s, "[settings]"):
+  if matches(s, "[settings]", tk=tk_header):
     if not skip_newlines(s):
       return error("Expected newline after section header")
     var seen_names = newSeq[string]() # Don't think a hashset is justified here, we don't have that many settings
@@ -482,7 +486,7 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
       if s.len == 0:
         return error("Expected the name of an option or start of the next section")
       skip_whitespaces(s)
-      if not s.matches("="):
+      if not s.matches("=", tk=tk_operator):
         return error("Expected an '=' here")
       skip_whitespaces(s)
       if name in seen_names:
@@ -505,24 +509,25 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
             "little": end_little
           }))
         of "line_comments":
-          let raw_list = check(get_list(s))
           result.spec.line_comments.set_len(0)
-          for entry in raw_list:
+          for entry in get_list(s):
             result.spec.line_comments.add check(parse_string(entry))
         of "block_comments":
-          let raw_table = check(get_table(s))
           result.spec.block_comments.set_len(0)
-          for key, value in raw_table:
-            let start_sym = check(parse_string(key))
-            let end_sym = check(parse_string(value))
-            result.spec.block_comments.add (start_sym, end_sym)
+          var start_sym: string
+          for is_value, text in get_table(s):
+            if not is_value:
+              start_sym = check(parse_string(text))
+            else:
+              let end_sym = check(parse_string(text))
+              result.spec.block_comments.add (start_sym, end_sym)
         else:
           return error(&"Unknown setting name {$name}")
       if not skip_newlines(s):
         return error("Expected newline after setting assignment")
 
 
-  if matches(s, "[fields]"):
+  if matches(s, "[fields]", tk=tk_header):
 
     if not skip_newlines(s):
       return error("Expected newline after section header")
@@ -598,7 +603,7 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
 
       skip_newlines(s)
   
-  if not matches(s, "[instructions]"):
+  if not matches(s, "[instructions]", tk=tk_header):
     return error("Was expecting the [instructions] header here")
 
   if not skip_newlines(s):
@@ -612,7 +617,14 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
 
     if not skip_newlines(s):
       return error("Expected newline after section header")
+  result.tokens = collect_tokens(s)
+  start_tokenize(nil)
 
+func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
+  try:
+    return parse_isa_spec_inner(file_name, source)
+  except ParseError as e:
+    return SpecParseResult(error: Error(loc:FileLocation(file:file_name, line:e.line), message: e.msg))
 #[
 func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
   var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing

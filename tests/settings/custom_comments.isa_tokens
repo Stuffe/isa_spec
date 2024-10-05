@@ -1,0 +1,26 @@
+tk_header: `[settings]`
+tk_whitespace: `\n`
+tk_identifier: `line_comments`
+tk_whitespace: ` `
+tk_operator: `=`
+tk_whitespace: ` `
+tk_bracket: `[`
+tk_string: `"#"`
+tk_bracket: `]`
+tk_whitespace: `\n`
+tk_identifier: `block_comments`
+tk_whitespace: ` `
+tk_operator: `=`
+tk_whitespace: ` `
+tk_bracket: `{`
+tk_string: `"#["`
+tk_seperator: `:`
+tk_whitespace: ` `
+tk_string: `"]#"`
+tk_bracket: `}`
+tk_whitespace: `\n\n`
+tk_header: `[instructions]`
+tk_whitespace: `\n`
+tk_mnenomic: `nop`
+tk_whitespace: `\n`
+tk_number: `00000000`
