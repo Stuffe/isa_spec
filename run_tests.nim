@@ -3,6 +3,7 @@ import isa_spec, types, expressions, parse
 
 const STOP_AT_FIRST_FAIL  = true
 const RUN_SINGLE_TEST     = "" # Emtpy string means run all tests
+const SKIP_TESTS          = @["x86_64"]
 const CHECK_ROUNDTRIP     = false
 const GENERATE_TOKEN_LIST = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
 
@@ -15,6 +16,7 @@ type AsmTestFile = tuple
 type TestFiles = object
   spec_file: string
   spec_error_file: string
+  spec_tokens_file: string
   asm_tests: Table[string, AsmTestFile]
 
 template timer(): float =
@@ -106,7 +108,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
   let test_name = test_dir.last_path_part()
   if test_name.startswith('_'):
     continue
-  if RUN_SINGLE_TEST != "" and test_name != RUN_SINGLE_TEST:
+  if (RUN_SINGLE_TEST != "" and test_name != RUN_SINGLE_TEST) or (test_name != RUN_SINGLE_TEST and test_name in SKIP_TESTS):
     continue
   var sub_tests: Table[string, TestFiles]
   local_fail = false

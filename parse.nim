@@ -192,6 +192,7 @@ func read*(s: var StreamSlice, tk=tk_none): char =
   if s.start > s.source[].high: return
   result = s.source[s.start]
   s.start += 1
+  add_token(s, tk)
 
 func matches*(s: var StreamSlice, value: string, increment = true, tk = tk_none): bool =
   for i in 0..value.high:

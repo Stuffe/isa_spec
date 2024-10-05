@@ -507,7 +507,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
           result.spec.endianness = check(get_enum(s, {
             "big": end_big,
             "little": end_little
-          }))
+          }, tk=tk_literal))
         of "line_comments":
           result.spec.line_comments.set_len(0)
           for entry in get_list(s):
