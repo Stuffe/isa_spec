@@ -1,0 +1,2810 @@
+tk_comment: `; RISC-V RV64I Base Integer Instruction Set, Version 2.1, and associated pseudo-instructions`
+tk_whitespace: `\n`
+tk_comment: `;`
+tk_whitespace: `\n`
+tk_comment: `; Based on:`
+tk_whitespace: `\n`
+tk_comment: `;`
+tk_whitespace: `\n`
+tk_comment: `; - RISC-V Unprivileged ISA, Version 20240411`
+tk_whitespace: `\n`
+tk_comment: `;   https://github.com/riscv/riscv-isa-manual/releases/tag/20240411`
+tk_whitespace: `\n`
+tk_comment: `;`
+tk_whitespace: `\n`
+tk_comment: `; - RISC-V Assembly Programmer's Manual`
+tk_whitespace: `\n`
+tk_comment: `;   https://github.com/riscv-non-isa/riscv-asm-manual/blob/ad0de8c004e29c9a7ac33cfd054f4d4f9392f2fb/src/asm-manual.adoc`
+tk_whitespace: `\n\n`
+tk_header: `[settings]`
+tk_whitespace: `\n`
+tk_identifier: `endianness`
+tk_whitespace: ` `
+tk_operator: `=`
+tk_whitespace: ` `
+tk_literal: `big`
+tk_whitespace: `  `
+tk_comment: `// To match standard assembler output`
+tk_whitespace: `\n\n`
+tk_header: `[fields]`
+tk_whitespace: `\n`
+tk_identifier: `register\nx0`
+tk_whitespace: `   00000`
+tk_identifier: `\nzero`
+tk_whitespace: ` 00000`
+tk_identifier: `\nx1`
+tk_whitespace: `   00001`
+tk_identifier: `\nra`
+tk_whitespace: `   00001`
+tk_identifier: `\nx2`
+tk_whitespace: `   00010`
+tk_identifier: `\nsp`
+tk_whitespace: `   00010`
+tk_identifier: `\nx3`
+tk_whitespace: `   00011`
+tk_identifier: `\ngp`
+tk_whitespace: `   00011`
+tk_identifier: `\nx4`
+tk_whitespace: `   00100`
+tk_identifier: `\ntp`
+tk_whitespace: `   00100`
+tk_identifier: `\nx5`
+tk_whitespace: `   00101`
+tk_identifier: `\nt0`
+tk_whitespace: `   00101`
+tk_identifier: `\nx6`
+tk_whitespace: `   00110`
+tk_identifier: `\nt1`
+tk_whitespace: `   00110`
+tk_identifier: `\nx7`
+tk_whitespace: `   00111`
+tk_identifier: `\nt2`
+tk_whitespace: `   00111`
+tk_identifier: `\nx8`
+tk_whitespace: `   01000`
+tk_identifier: `\ns0`
+tk_whitespace: `   01000`
+tk_identifier: `\nfp`
+tk_whitespace: `   01000`
+tk_identifier: `\nx9`
+tk_whitespace: `   01001`
+tk_identifier: `\ns1`
+tk_whitespace: `   01001`
+tk_identifier: `\nx10`
+tk_whitespace: `  01010`
+tk_identifier: `\na0`
+tk_whitespace: `   01010`
+tk_identifier: `\nx11`
+tk_whitespace: `  01011`
+tk_identifier: `\na1`
+tk_whitespace: `   01011`
+tk_identifier: `\nx12`
+tk_whitespace: `  01100`
+tk_identifier: `\na2`
+tk_whitespace: `   01100`
+tk_identifier: `\nx13`
+tk_whitespace: `  01101`
+tk_identifier: `\na3`
+tk_whitespace: `   01101`
+tk_identifier: `\nx14`
+tk_whitespace: `  01110`
+tk_identifier: `\na4`
+tk_whitespace: `   01110`
+tk_identifier: `\nx15`
+tk_whitespace: `  01111`
+tk_identifier: `\na5`
+tk_whitespace: `   01111`
+tk_identifier: `\nx16`
+tk_whitespace: `  10000`
+tk_identifier: `\na6`
+tk_whitespace: `   10000`
+tk_identifier: `\nx17`
+tk_whitespace: `  10001`
+tk_identifier: `\na7`
+tk_whitespace: `   10001`
+tk_identifier: `\nx18`
+tk_whitespace: `  10010`
+tk_identifier: `\ns2`
+tk_whitespace: `   10010`
+tk_identifier: `\nx19`
+tk_whitespace: `  10011`
+tk_identifier: `\ns3`
+tk_whitespace: `   10011`
+tk_identifier: `\nx20`
+tk_whitespace: `  10100`
+tk_identifier: `\ns4`
+tk_whitespace: `   10100`
+tk_identifier: `\nx21`
+tk_whitespace: `  10101`
+tk_identifier: `\ns5`
+tk_whitespace: `   10101`
+tk_identifier: `\nx22`
+tk_whitespace: `  10110`
+tk_identifier: `\ns6`
+tk_whitespace: `   10110`
+tk_identifier: `\nx23`
+tk_whitespace: `  10111`
+tk_identifier: `\ns7`
+tk_whitespace: `   10111`
+tk_identifier: `\nx24`
+tk_whitespace: `  11000`
+tk_identifier: `\ns8`
+tk_whitespace: `   11000`
+tk_identifier: `\nx25`
+tk_whitespace: `  11001`
+tk_identifier: `\ns9`
+tk_whitespace: `   11001`
+tk_identifier: `\nx26`
+tk_whitespace: `  11010`
+tk_identifier: `\ns10`
+tk_whitespace: `  11010`
+tk_identifier: `\nx27`
+tk_whitespace: `  11011`
+tk_identifier: `\ns11`
+tk_whitespace: `  11011`
+tk_identifier: `\nx28`
+tk_whitespace: `  11100`
+tk_identifier: `\nt3`
+tk_whitespace: `   11100`
+tk_identifier: `\nx29`
+tk_whitespace: `  11101`
+tk_identifier: `\nt4`
+tk_whitespace: `   11101`
+tk_identifier: `\nx30`
+tk_whitespace: `  11110`
+tk_identifier: `\nt5`
+tk_whitespace: `   11110`
+tk_identifier: `\nx31`
+tk_whitespace: `  11111`
+tk_identifier: `\nt6`
+tk_whitespace: `   11111\n\n`
+tk_identifier: `branch_funct3\neq`
+tk_whitespace: `  000`
+tk_identifier: `\nge`
+tk_whitespace: `  101`
+tk_identifier: `\ngeu`
+tk_whitespace: ` 111`
+tk_identifier: `\nlt`
+tk_whitespace: `  100`
+tk_identifier: `\nltu`
+tk_whitespace: ` 110`
+tk_identifier: `\nne`
+tk_whitespace: `  001\n\n`
+tk_identifier: `branch_z_funct3\neqz`
+tk_whitespace: ` 000`
+tk_identifier: `\ngez`
+tk_whitespace: ` 101`
+tk_identifier: `\nltz`
+tk_whitespace: ` 100`
+tk_identifier: `\nnez`
+tk_whitespace: ` 001\n\n`
+tk_identifier: `branch_opposite_funct3\ngt`
+tk_whitespace: `  100`
+tk_identifier: `\ngtu`
+tk_whitespace: ` 110`
+tk_identifier: `\nle`
+tk_whitespace: `  101`
+tk_identifier: `\nleu`
+tk_whitespace: ` 111\n\n`
+tk_identifier: `branch_opposite_z_funct3\ngtz`
+tk_whitespace: ` 100`
+tk_identifier: `\nlez`
+tk_whitespace: ` 101\n\n`
+tk_identifier: `fence_set\ni`
+tk_whitespace: `    1000`
+tk_identifier: `\no`
+tk_whitespace: `    0100`
+tk_identifier: `\nr`
+tk_whitespace: `    0010`
+tk_identifier: `\nw`
+tk_whitespace: `    0001`
+tk_identifier: `\nio`
+tk_whitespace: `   1100`
+tk_identifier: `\nir`
+tk_whitespace: `   1010`
+tk_identifier: `\niw`
+tk_whitespace: `   1001`
+tk_identifier: `\nor`
+tk_whitespace: `   0110`
+tk_identifier: `\now`
+tk_whitespace: `   0101`
+tk_identifier: `\nrw`
+tk_whitespace: `   0011`
+tk_identifier: `\nior`
+tk_whitespace: `  1110`
+tk_identifier: `\niow`
+tk_whitespace: `  1101`
+tk_identifier: `\nirw`
+tk_whitespace: `  1011`
+tk_identifier: `\norw`
+tk_whitespace: `  0111`
+tk_identifier: `\niorw`
+tk_whitespace: ` 1111\n\n`
+tk_identifier: `load_funct3\nb`
+tk_whitespace: `  000`
+tk_identifier: `\nbu`
+tk_whitespace: ` 100`
+tk_identifier: `\nd`
+tk_whitespace: `  011`
+tk_identifier: `\nh`
+tk_whitespace: `  001`
+tk_identifier: `\nhu`
+tk_whitespace: ` 101`
+tk_identifier: `\nw`
+tk_whitespace: `  010`
+tk_identifier: `\nwu`
+tk_whitespace: ` 110\n\n`
+tk_identifier: `op_funct7_funct3\nadd`
+tk_whitespace: `  0000000000`
+tk_identifier: `\nand`
+tk_whitespace: `  0000000111`
+tk_identifier: `\nor`
+tk_whitespace: `   0000000110`
+tk_identifier: `\nsll`
+tk_whitespace: `  0000000001`
+tk_identifier: `\nslt`
+tk_whitespace: `  0000000010`
+tk_identifier: `\nsltu`
+tk_whitespace: ` 0000000011`
+tk_identifier: `\nsra`
+tk_whitespace: `  0100000101`
+tk_identifier: `\nsrl`
+tk_whitespace: `  0000000101`
+tk_identifier: `\nsub`
+tk_whitespace: `  0100000000`
+tk_identifier: `\nxor`
+tk_whitespace: `  0000000100\n\n`
+tk_identifier: `op_32_funct7_funct3\naddw`
+tk_whitespace: ` 0000000000`
+tk_identifier: `\nsllw`
+tk_whitespace: ` 0000000001`
+tk_identifier: `\nsraw`
+tk_whitespace: ` 0100000101`
+tk_identifier: `\nsrlw`
+tk_whitespace: ` 0000000101`
+tk_identifier: `\nsubw`
+tk_whitespace: ` 0100000000\n\n`
+tk_identifier: `op_imm_funct3\naddi`
+tk_whitespace: `  000`
+tk_identifier: `\nandi`
+tk_whitespace: `  111`
+tk_identifier: `\nori`
+tk_whitespace: `   110`
+tk_identifier: `\nslti`
+tk_whitespace: `  010`
+tk_identifier: `\nsltiu`
+tk_whitespace: ` 011`
+tk_identifier: `\nxori`
+tk_whitespace: `  100\n\n`
+tk_identifier: `op_imm_32_funct3\naddiw`
+tk_whitespace: ` 000\n\n`
+tk_identifier: `op_imm_shift_funct6_funct3\nslli`
+tk_whitespace: ` 000000001`
+tk_identifier: `\nsrai`
+tk_whitespace: ` 010000101`
+tk_identifier: `\nsrli`
+tk_whitespace: ` 000000101\n\n`
+tk_identifier: `op_imm_32_shift_funct7_funct3\nslliw`
+tk_whitespace: ` 0000000001`
+tk_identifier: `\nsraiw`
+tk_whitespace: ` 0100000101`
+tk_identifier: `\nsrliw`
+tk_whitespace: ` 0000000101\n\n`
+tk_identifier: `store_funct3\nb`
+tk_whitespace: ` 000`
+tk_identifier: `\nd`
+tk_whitespace: ` 011`
+tk_identifier: `\nh`
+tk_whitespace: ` 001`
+tk_identifier: `\nw`
+tk_whitespace: ` 010\n\n`
+tk_header: `[instructions]`
+tk_whitespace: `\n`
+tk_whitespace: `auipc `
+tk_whitespace: ` `
+tk_identifier: `%rd`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%rd`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010111`
+tk_whitespace: `\n\n`
+tk_mnenomic: `b`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `branch_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%src1`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src2`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S13`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `12`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `5`
+tk_whitespace: `] `
+tk_identifier: `%src2`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src1`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_number: `1100011`
+tk_whitespace: `\nbeq/bge/bgeu/blt/bltu/bne %src1, %src2, %label\n\n`
+tk_mnenomic: `b`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `branch_z_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S13`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `12`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `5`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_number: `1100011`
+tk_whitespace: `\nbeqz/bgez/bltz/bnez %src, %label -> beq/bge/blt/bne %src, zero, %label\n\n`
+tk_mnenomic: `b`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `branch_opposite_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%src1`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src2`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S13`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `12`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `5`
+tk_whitespace: `] `
+tk_identifier: `%src1`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src2`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_number: `1100011`
+tk_whitespace: `\nbgt/bgtu/ble/bleu %src1, %src2, %label -> blt/bltu/bge/bgeu %src2, %src1, %label\n\n`
+tk_mnenomic: `b`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `branch_opposite_z_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S13`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `12`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `5`
+tk_whitespace: `] `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_number: `1100011`
+tk_whitespace: `\nbgtz/blez %src, %label -> blt/bge zero, %src, %label\n\n`
+tk_whitespace: `call `
+tk_whitespace: ` `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S32`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel_hi`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%label_pcrel_lo`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%label_pcrel_hi`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `0010111`
+tk_whitespace: ` `
+tk_identifier: `%label_pcrel_lo`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\nauipc ra, pcrel_hi(%label); jalr ra, pcrel_lo(%label)(ra)\n\n`
+tk_whitespace: `call `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S32`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel_hi`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%label_pcrel_lo`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%label_pcrel_hi`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010111`
+tk_whitespace: ` `
+tk_identifier: `%label_pcrel_lo`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `1100111`
+tk_whitespace: `\nauipc ra, pcrel_hi(%a); jalr ra, pcrel_lo(%a)(ra)\n\n`
+tk_mnenomic: `ebreak`
+tk_whitespace: `\n`
+tk_number: `000000000001`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1110011`
+tk_whitespace: `\n\n`
+tk_mnenomic: `ecall`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1110011`
+tk_whitespace: `\n\n`
+tk_whitespace: `fence `
+tk_whitespace: ` `
+tk_identifier: `%predecessor_set`
+tk_bracket: `(`
+tk_type_name: `fence_set`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%successor_set`
+tk_bracket: `(`
+tk_type_name: `fence_set`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0000`
+tk_whitespace: ` `
+tk_identifier: `%predecessor_set`
+tk_whitespace: `[`
+tk_number: `3`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%successor_set`
+tk_whitespace: `[`
+tk_number: `3`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\n\n`
+tk_whitespace: `fence `
+tk_whitespace: ` `
+tk_whitespace: `0 `
+tk_whitespace: `, `
+tk_identifier: `%successor_set`
+tk_bracket: `(`
+tk_type_name: `fence_set`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `0000`
+tk_whitespace: ` `
+tk_identifier: `%successor_set`
+tk_whitespace: `[`
+tk_number: `3`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\n\n`
+tk_whitespace: `fence `
+tk_whitespace: ` `
+tk_identifier: `%predecessor_set`
+tk_bracket: `(`
+tk_type_name: `fence_set`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_mnenomic: `0`
+tk_whitespace: `\n`
+tk_number: `0000`
+tk_whitespace: ` `
+tk_identifier: `%predecessor_set`
+tk_whitespace: `[`
+tk_number: `3`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\n\n`
+tk_whitespace: `fence `
+tk_whitespace: ` `
+tk_whitespace: `0 `
+tk_whitespace: `, `
+tk_mnenomic: `0`
+tk_whitespace: `\n`
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\n\n`
+tk_mnenomic: `fence`
+tk_whitespace: `\n`
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `0011`
+tk_whitespace: ` `
+tk_number: `0011`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\nfence rw, rw\n\n`
+tk_mnenomic: `fence.tso`
+tk_whitespace: `\n`
+tk_number: `1000`
+tk_whitespace: ` `
+tk_number: `0011`
+tk_whitespace: ` `
+tk_number: `0011`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\n\n`
+tk_whitespace: `j `
+tk_whitespace: ` `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S21`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `20`
+tk_whitespace: `:`
+tk_number: `20`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1101111`
+tk_whitespace: `\njal zero, %label\n\n`
+tk_whitespace: `jal `
+tk_whitespace: ` `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S21`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `20`
+tk_whitespace: `:`
+tk_number: `20`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `1101111`
+tk_whitespace: `\njal ra, %a\n\n`
+tk_whitespace: `jal `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S21`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `20`
+tk_whitespace: `:`
+tk_number: `20`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `10`
+tk_whitespace: `:`
+tk_number: `1`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `] `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `1101111`
+tk_whitespace: `\n\n`
+tk_whitespace: `jalr `
+tk_whitespace: ` `
+tk_whitespace: `( `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_mnenomic: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\njalr ra, 0(%base)\n\n`
+tk_whitespace: `jalr `
+tk_whitespace: ` `
+tk_identifier: `%offset`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `( `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_mnenomic: `)`
+tk_whitespace: `\n`
+tk_identifier: `%offset`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\njalr ra, %offset(%base)\n\n`
+tk_whitespace: `jalr `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `1100111`
+tk_whitespace: `\njalr %dest, 0(%base)\n\n`
+tk_whitespace: `jalr `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_whitespace: `( `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_mnenomic: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `1100111`
+tk_whitespace: `\njalr %dest, 0(%base)\n\n`
+tk_whitespace: `jalr `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%offset`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `( `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_mnenomic: `)`
+tk_whitespace: `\n`
+tk_identifier: `%offset`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `1100111`
+tk_whitespace: `\n\n`
+tk_whitespace: `jalr `
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\njalr ra, 0(%base)\n\n`
+tk_whitespace: `jr `
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\njalr zero, 0(%base)\n\n`
+tk_whitespace: `jump `
+tk_whitespace: ` `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%scratch`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S32`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel_hi`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%label_pcrel_lo`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%label_pcrel_hi`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%scratch`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010111`
+tk_whitespace: ` `
+tk_identifier: `%label_pcrel_lo`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%scratch`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\nauipc %scratch, pcrel_hi(%label); jalr zero, pcrel_lo(%label)(%scratch)\n\n`
+tk_whitespace: `li `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\naddi %dest, zero, %imm\n\n`
+tk_whitespace: `li `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110111`
+tk_whitespace: `\nlui %dest, %imm\n\n`
+tk_whitespace: `li `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm_lui`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%imm_addi`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%imm_lui`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110111`
+tk_whitespace: ` `
+tk_identifier: `%imm_addi`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nlui %dest, %hi(%imm); addi %dest, %lo(%imm)\n\n`
+tk_whitespace: `lla `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S32`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel_hi`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%label_pcrel_lo`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%label_pcrel_hi`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010111`
+tk_whitespace: ` `
+tk_identifier: `%label_pcrel_lo`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nauipc %dest, pcrel_hi(%label); addi %dest, %dest, pcrel_lo(%label)\n\n`
+tk_whitespace: `lui `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110111`
+tk_whitespace: `\nlui %dest, %imm\n\n`
+tk_mnenomic: `l`
+tk_identifier: `%width`
+tk_bracket: `(`
+tk_type_name: `load_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S32`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel_hi`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%label_pcrel_lo`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%label_pcrel_hi`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010111`
+tk_whitespace: ` `
+tk_identifier: `%label_pcrel_lo`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%width`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0000011`
+tk_whitespace: `\nauipc %dest, pcrel_hi(%label); lb/lbu/ld/lh/lhu/lw/lwu %dest, pcrel_lo(%label)(%dest)\n\n`
+tk_mnenomic: `l`
+tk_identifier: `%width`
+tk_bracket: `(`
+tk_type_name: `load_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%offset`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `( `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_mnenomic: `)`
+tk_whitespace: `\n`
+tk_identifier: `%offset`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%width`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0000011`
+tk_whitespace: `\nlb/lbu/ld/lh/lhu/lw/lwu %dest, %offset(%base)\n\n`
+tk_whitespace: `mv `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\naddi %dest, %src, 0\n\n`
+tk_whitespace: `neg `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0100000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110011`
+tk_whitespace: `\nsub %dest, zero, %src\n\n`
+tk_whitespace: `negw `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0100000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0111011`
+tk_whitespace: `\nsubw %dest, zero, %src\n\n`
+tk_mnenomic: `nop`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0010011`
+tk_whitespace: `\naddi zero, zero, 0\n\n`
+tk_whitespace: `not `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `111111111111`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `100`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nxori %dest, %src, -1\n\n`
+tk_mnenomic: `ntl.all`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_number: `00101`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0110011`
+tk_whitespace: `\nadd x0, x0, x5\n\n`
+tk_mnenomic: `ntl.p1`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_number: `00010`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0110011`
+tk_whitespace: `\nadd x0, x0, x2\n\n`
+tk_mnenomic: `ntl.pall`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_number: `00011`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0110011`
+tk_whitespace: `\nadd x0, x0, x3\n\n`
+tk_mnenomic: `ntl.s1`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_number: `00100`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0110011`
+tk_whitespace: `\nadd x0, x0, x4\n\n`
+tk_mnenomic: `pause`
+tk_whitespace: `\n`
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `0001`
+tk_whitespace: ` `
+tk_number: `0000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `0001111`
+tk_whitespace: `\nfence w, 0\n\n`
+tk_mnenomic: `ret`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_number: `00001`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\njalr zero, 0(ra)\n\n`
+tk_whitespace: `seqz `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000000001`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `011`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nsltiu %dest, %src, 1\n\n`
+tk_whitespace: `sext.b `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000`
+tk_whitespace: ` `
+tk_number: `111000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `001`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: ` `
+tk_number: `010000`
+tk_whitespace: ` `
+tk_number: `111000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `101`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nslli %dest, %src, (64 - 8); srai %dest, %dest, (64 - 8)\n\n`
+tk_whitespace: `sext.h `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000`
+tk_whitespace: ` `
+tk_number: `110000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `001`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: ` `
+tk_number: `010000`
+tk_whitespace: ` `
+tk_number: `110000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `101`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nslli %dest, %src, (64 - 16); srai %dest, %dest, (64 - 16)\n\n`
+tk_whitespace: `sext.w `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000000000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0011011`
+tk_whitespace: `\naddiw %dest, %src, 0\n\n`
+tk_whitespace: `sgtz `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `010`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110011`
+tk_whitespace: `\nslt %dest, zero, %src\n\n`
+tk_whitespace: `sltz `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `010`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110011`
+tk_whitespace: `\nslt %dest, %src, zero\n\n`
+tk_whitespace: `snez `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `0000000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `011`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110011`
+tk_whitespace: `\nsltu %dest, zero, %src\n\n`
+tk_mnenomic: `s`
+tk_identifier: `%width`
+tk_bracket: `(`
+tk_type_name: `store_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%offset`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `( `
+tk_identifier: `%base`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_mnenomic: `)`
+tk_whitespace: `\n`
+tk_identifier: `%offset`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `5`
+tk_whitespace: `] `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%base`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%width`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%offset`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0100011`
+tk_whitespace: `\nsb/sd/sh/sw %src, %offset(%base)\n\n`
+tk_whitespace: `tail `
+tk_whitespace: ` `
+tk_identifier: `%label`
+tk_bracket: `(`
+tk_type_name: `label`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%label_pcrel`
+tk_number: `:S32`
+tk_whitespace: ` = `
+tk_identifier: `%label`
+tk_whitespace: ` - $\n`
+tk_identifier: `%label_pcrel_hi`
+tk_number: `:S20`
+tk_whitespace: ` = (`
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `31`
+tk_whitespace: `:`
+tk_number: `12`
+tk_whitespace: `] + `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `11`
+tk_whitespace: `]) & ((`
+tk_number: `1`
+tk_whitespace: ` << `
+tk_number: `20`
+tk_whitespace: `) - `
+tk_number: `1`
+tk_whitespace: `)\n`
+tk_identifier: `%label_pcrel_lo`
+tk_number: `:S12`
+tk_whitespace: ` = `
+tk_identifier: `%label_pcrel`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `]\n`
+tk_identifier: `%label_pcrel_hi`
+tk_whitespace: `[`
+tk_number: `19`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00110`
+tk_whitespace: ` `
+tk_number: `0010111`
+tk_whitespace: ` `
+tk_identifier: `%label_pcrel_lo`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `00110`
+tk_whitespace: ` `
+tk_number: `000`
+tk_whitespace: ` `
+tk_number: `00000`
+tk_whitespace: ` `
+tk_number: `1100111`
+tk_whitespace: `\nauipc t1, pcrel_hi(%label); jalr zero, pcrel_lo(%label)(t1)\n\n`
+tk_whitespace: `zext.b `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000011111111`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `111`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nandi %dest, %src, 0xff\n\n`
+tk_whitespace: `zext.h `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000`
+tk_whitespace: ` `
+tk_number: `110000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `001`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: ` `
+tk_number: `000000`
+tk_whitespace: ` `
+tk_number: `110000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `101`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nslli %dest, %src, (64 - 16); srli %dest, %dest, (64 - 16)\n\n`
+tk_whitespace: `zext.w `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_number: `000000`
+tk_whitespace: ` `
+tk_number: `100000`
+tk_whitespace: ` `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `001`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: ` `
+tk_number: `000000`
+tk_whitespace: ` `
+tk_number: `100000`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `101`
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nslli %dest, %src, (64 - 32); srli %dest, %dest, (64 - 32)\n\n`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `op_funct7_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src1`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src2`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `9`
+tk_whitespace: `:`
+tk_number: `3`
+tk_whitespace: `] `
+tk_identifier: `%src2`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src1`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0110011`
+tk_whitespace: `\nadd/and/or/sll/slt/sltu/sra/srl/sub/xor %dest, %src1, %src2\n\n`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `op_32_funct7_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src1`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src2`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `9`
+tk_whitespace: `:`
+tk_number: `3`
+tk_whitespace: `] `
+tk_identifier: `%src2`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src1`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0111011`
+tk_whitespace: `\naddw/sllw/sraw/srlw/subw %dest, %src1, %src2\n\n`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `op_imm_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\naddi/andi/ori/slti/sltiu/xori %dest, %src, %imm\n\n`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `op_imm_32_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:S64`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `11`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0011011`
+tk_whitespace: `\naddiw %dest, %src, %imm\n\n`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `op_imm_shift_funct6_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:U6`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `8`
+tk_whitespace: `:`
+tk_number: `3`
+tk_whitespace: `] `
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `5`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0010011`
+tk_whitespace: `\nslli/srai/srli %dest, %src, %imm\n\n`
+tk_identifier: `%op`
+tk_bracket: `(`
+tk_type_name: `op_imm_32_shift_funct7_funct3`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: ` `
+tk_identifier: `%dest`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%src`
+tk_bracket: `(`
+tk_type_name: `register`
+tk_bracket: `)`
+tk_whitespace: ` `
+tk_whitespace: `, `
+tk_identifier: `%imm`
+tk_number: `:U5`
+tk_bracket: `(`
+tk_type_name: `immediate`
+tk_bracket: `)`
+tk_whitespace: `\n`
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `9`
+tk_whitespace: `:`
+tk_number: `3`
+tk_whitespace: `] `
+tk_identifier: `%imm`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%src`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%op`
+tk_whitespace: `[`
+tk_number: `2`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_identifier: `%dest`
+tk_whitespace: `[`
+tk_number: `4`
+tk_whitespace: `:`
+tk_number: `0`
+tk_whitespace: `] `
+tk_number: `0011011`
+tk_whitespace: `\nslliw/sraiw/srliw %dest, %src, %imm\n`

@@ -167,6 +167,7 @@ type IsaSpec* = object
 type SpecParseResult* = object
   error*: Error
   spec*: IsaSpec
+  tokens*: seq[Token]
 
 type DisassembledInstruction* = object
   case is_literal*: bool
