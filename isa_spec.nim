@@ -613,6 +613,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
     return error("Expected newline after section header")
 
   while peek(s) != '\0':
+    add_token(s, tk_new_instruction)
     var (new_instruction, error_message) = get_instruction(s, result.spec)
     if error_message != "":
       return error(error_message)

@@ -102,6 +102,11 @@ type TokenKind* = enum
 
   tk_header # [settings], [fields], [instructions]
 
+  # Control instructions
+  tk_new_instruction
+
+const CONTROL_TOKENS = {tk_new_instruction}
+
 type Token* = object
   s*: StreamSlice
   tk*: TokenKind
@@ -153,13 +158,22 @@ func add_token*(s: StreamSlice, tk: TokenKind) =
   {.noSideEffect.}:
     if tk == tk_none:
       return
+
     if tracked_source != s.source:
       return
+
     let start = if tokens.len == 0:
         0
       else:
         tokens[^1].s.finish
+
     let finish = s.start
+
+    if tk in CONTROL_TOKENS:
+      assert start == finish
+      tokens.add Token(s: StreamSlice(source: s.source, start: start, finish: finish), tk: tk)
+      return
+
     if start == finish: # Token would be zero length, don't generate it at all
       return
     assert finish > start, &"Invalid call to add_token, forgot to restore properly? (start={start}, finish={finish})"

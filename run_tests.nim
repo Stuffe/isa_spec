@@ -199,7 +199,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
             fail(test_name, tests.spec_file, &"To many tokens: Got extra\n{expected_line}")
             break
           if expected_tokens[i] != expected_line:
-            fail(test_name, tests.spec_file, &"Incorrect token: Got\n{expected_line}, Expected\n{expected_tokens[i]}")
+            fail(test_name, tests.spec_file, &"Incorrect token on line {i+1}\nGot:      {expected_line}\nExpected: {expected_tokens[i]}\n")
             error_count += 1
             if error_count > 10:
               fail(test_name, tests.spec_file, &"Too many incorrect tokens, not checking further")

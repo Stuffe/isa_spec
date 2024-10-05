@@ -598,6 +598,7 @@ tk_number: `010`
 tk_whitespace: `\n\n`
 tk_header: `[instructions]`
 tk_whitespace: `\n`
+tk_new_instruction: ``
 tk_mnenomic: `auipc`
 tk_whitespace: `  `
 tk_identifier: `%rd`
@@ -630,6 +631,7 @@ tk_bracket: `]`
 tk_whitespace: ` `
 tk_number: `0010111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `b`
 tk_identifier: `%op`
 tk_bracket: `(`
@@ -720,6 +722,7 @@ tk_number: `1100011`
 tk_whitespace: `\n`
 tk_text: `beq/bge/bgeu/blt/bltu/bne %src1, %src2, %label`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `b`
 tk_identifier: `%op`
 tk_bracket: `(`
@@ -798,6 +801,7 @@ tk_number: `1100011`
 tk_whitespace: `\n`
 tk_text: `beqz/bgez/bltz/bnez %src, %label -> beq/bge/blt/bne %src, zero, %label`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `b`
 tk_identifier: `%op`
 tk_bracket: `(`
@@ -888,6 +892,7 @@ tk_number: `1100011`
 tk_whitespace: `\n`
 tk_text: `bgt/bgtu/ble/bleu %src1, %src2, %label -> blt/bltu/bge/bgeu %src2, %src1, %label`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `b`
 tk_identifier: `%op`
 tk_bracket: `(`
@@ -966,6 +971,7 @@ tk_number: `1100011`
 tk_whitespace: `\n`
 tk_text: `bgtz/blez %src, %label -> blt/bge zero, %src, %label`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `call`
 tk_whitespace: `  `
 tk_identifier: `%label`
@@ -1064,6 +1070,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `auipc ra, pcrel_hi(%label); jalr ra, pcrel_lo(%label)(ra)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `call`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1184,6 +1191,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `auipc ra, pcrel_hi(%a); jalr ra, pcrel_lo(%a)(ra)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ebreak`
 tk_whitespace: `\n`
 tk_number: `000000000001`
@@ -1196,6 +1204,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `1110011`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ecall`
 tk_whitespace: `\n`
 tk_number: `000000000000`
@@ -1208,6 +1217,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `1110011`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `fence`
 tk_whitespace: `  `
 tk_identifier: `%predecessor_set`
@@ -1246,6 +1256,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `0001111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `fence`
 tk_whitespace: `  `
 tk_mnenomic: `0`
@@ -1276,6 +1287,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `0001111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `fence`
 tk_whitespace: `  `
 tk_identifier: `%predecessor_set`
@@ -1306,6 +1318,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `0001111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `fence`
 tk_whitespace: `  `
 tk_mnenomic: `0`
@@ -1328,6 +1341,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `0001111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `fence`
 tk_whitespace: `\n`
 tk_number: `0000`
@@ -1346,6 +1360,7 @@ tk_number: `0001111`
 tk_whitespace: `\n`
 tk_text: `fence rw, rw`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `fence.tso`
 tk_whitespace: `\n`
 tk_number: `1000`
@@ -1362,6 +1377,7 @@ tk_number: `00000`
 tk_whitespace: ` `
 tk_number: `0001111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `j`
 tk_whitespace: `  `
 tk_identifier: `%label`
@@ -1415,6 +1431,7 @@ tk_number: `1101111`
 tk_whitespace: `\n`
 tk_text: `jal zero, %label`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jal`
 tk_whitespace: `  `
 tk_identifier: `%label`
@@ -1468,6 +1485,7 @@ tk_number: `1101111`
 tk_whitespace: `\n`
 tk_text: `jal ra, %a`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jal`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1531,6 +1549,7 @@ tk_bracket: `]`
 tk_whitespace: ` `
 tk_number: `1101111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jalr`
 tk_whitespace: `  `
 tk_mnenomic: `(`
@@ -1559,6 +1578,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr ra, 0(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jalr`
 tk_whitespace: `  `
 tk_identifier: `%offset`
@@ -1599,6 +1619,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr ra, %offset(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jalr`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1635,6 +1656,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr %dest, 0(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jalr`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1675,6 +1697,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr %dest, 0(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jalr`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1725,6 +1748,7 @@ tk_bracket: `]`
 tk_whitespace: ` `
 tk_number: `1100111`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jalr`
 tk_whitespace: `  `
 tk_identifier: `%base`
@@ -1749,6 +1773,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr ra, 0(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jr`
 tk_whitespace: `  `
 tk_identifier: `%base`
@@ -1773,6 +1798,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr zero, 0(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `jump`
 tk_whitespace: `  `
 tk_identifier: `%label`
@@ -1888,6 +1914,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `auipc %scratch, pcrel_hi(%label); jalr zero, pcrel_lo(%label)(%scratch)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `li`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1926,6 +1953,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `addi %dest, zero, %imm`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `li`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -1960,6 +1988,7 @@ tk_number: `0110111`
 tk_whitespace: `\n`
 tk_text: `lui %dest, %imm`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `li`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2070,6 +2099,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `lui %dest, %hi(%imm); addi %dest, %lo(%imm)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `lla`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2190,6 +2220,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `auipc %dest, pcrel_hi(%label); addi %dest, %dest, pcrel_lo(%label)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `lui`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2224,6 +2255,7 @@ tk_number: `0110111`
 tk_whitespace: `\n`
 tk_text: `lui %dest, %imm`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `l`
 tk_identifier: `%width`
 tk_bracket: `(`
@@ -2353,6 +2385,7 @@ tk_number: `0000011`
 tk_whitespace: `\n`
 tk_text: `auipc %dest, pcrel_hi(%label); lb/lbu/ld/lh/lhu/lw/lwu %dest, pcrel_lo(%label)(%dest)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `l`
 tk_identifier: `%width`
 tk_bracket: `(`
@@ -2414,6 +2447,7 @@ tk_number: `0000011`
 tk_whitespace: `\n`
 tk_text: `lb/lbu/ld/lh/lhu/lw/lwu %dest, %offset(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `mv`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2450,6 +2484,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `addi %dest, %src, 0`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `neg`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2488,6 +2523,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `sub %dest, zero, %src`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `negw`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2526,6 +2562,7 @@ tk_number: `0111011`
 tk_whitespace: `\n`
 tk_text: `subw %dest, zero, %src`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `nop`
 tk_whitespace: `\n`
 tk_number: `000000000000`
@@ -2540,6 +2577,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `addi zero, zero, 0`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `not`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2576,6 +2614,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `xori %dest, %src, -1`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ntl.all`
 tk_whitespace: `\n`
 tk_number: `0000000`
@@ -2592,6 +2631,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `add x0, x0, x5`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ntl.p1`
 tk_whitespace: `\n`
 tk_number: `0000000`
@@ -2608,6 +2648,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `add x0, x0, x2`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ntl.pall`
 tk_whitespace: `\n`
 tk_number: `0000000`
@@ -2624,6 +2665,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `add x0, x0, x3`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ntl.s1`
 tk_whitespace: `\n`
 tk_number: `0000000`
@@ -2640,6 +2682,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `add x0, x0, x4`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `pause`
 tk_whitespace: `\n`
 tk_number: `0000`
@@ -2658,6 +2701,7 @@ tk_number: `0001111`
 tk_whitespace: `\n`
 tk_text: `fence w, 0`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `ret`
 tk_whitespace: `\n`
 tk_number: `000000000000`
@@ -2672,6 +2716,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `jalr zero, 0(ra)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `seqz`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2708,6 +2753,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `sltiu %dest, %src, 1`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `sext.b`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2768,6 +2814,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `slli %dest, %src, (64 - 8); srai %dest, %dest, (64 - 8)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `sext.h`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2828,6 +2875,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `slli %dest, %src, (64 - 16); srai %dest, %dest, (64 - 16)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `sext.w`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2864,6 +2912,7 @@ tk_number: `0011011`
 tk_whitespace: `\n`
 tk_text: `addiw %dest, %src, 0`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `sgtz`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2902,6 +2951,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `slt %dest, zero, %src`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `sltz`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2940,6 +2990,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `slt %dest, %src, zero`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `snez`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -2978,6 +3029,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `sltu %dest, zero, %src`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `s`
 tk_identifier: `%width`
 tk_bracket: `(`
@@ -3046,6 +3098,7 @@ tk_number: `0100011`
 tk_whitespace: `\n`
 tk_text: `sb/sd/sh/sw %src, %offset(%base)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `tail`
 tk_whitespace: `  `
 tk_identifier: `%label`
@@ -3144,6 +3197,7 @@ tk_number: `1100111`
 tk_whitespace: `\n`
 tk_text: `auipc t1, pcrel_hi(%label); jalr zero, pcrel_lo(%label)(t1)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `zext.b`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -3180,6 +3234,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `andi %dest, %src, 0xff`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `zext.h`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -3240,6 +3295,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `slli %dest, %src, (64 - 16); srli %dest, %dest, (64 - 16)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_mnenomic: `zext.w`
 tk_whitespace: `  `
 tk_identifier: `%dest`
@@ -3300,6 +3356,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `slli %dest, %src, (64 - 32); srli %dest, %dest, (64 - 32)`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_identifier: `%op`
 tk_bracket: `(`
 tk_type_name: `op_funct7_funct3`
@@ -3363,6 +3420,7 @@ tk_number: `0110011`
 tk_whitespace: `\n`
 tk_text: `add/and/or/sll/slt/sltu/sra/srl/sub/xor %dest, %src1, %src2`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_identifier: `%op`
 tk_bracket: `(`
 tk_type_name: `op_32_funct7_funct3`
@@ -3426,6 +3484,7 @@ tk_number: `0111011`
 tk_whitespace: `\n`
 tk_text: `addw/sllw/sraw/srlw/subw %dest, %src1, %src2`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_identifier: `%op`
 tk_bracket: `(`
 tk_type_name: `op_imm_funct3`
@@ -3484,6 +3543,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `addi/andi/ori/slti/sltiu/xori %dest, %src, %imm`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_identifier: `%op`
 tk_bracket: `(`
 tk_type_name: `op_imm_32_funct3`
@@ -3542,6 +3602,7 @@ tk_number: `0011011`
 tk_whitespace: `\n`
 tk_text: `addiw %dest, %src, %imm`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_identifier: `%op`
 tk_bracket: `(`
 tk_type_name: `op_imm_shift_funct6_funct3`
@@ -3607,6 +3668,7 @@ tk_number: `0010011`
 tk_whitespace: `\n`
 tk_text: `slli/srai/srli %dest, %src, %imm`
 tk_whitespace: `\n\n`
+tk_new_instruction: ``
 tk_identifier: `%op`
 tk_bracket: `(`
 tk_type_name: `op_imm_32_shift_funct7_funct3`

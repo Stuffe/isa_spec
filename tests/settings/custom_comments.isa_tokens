@@ -21,6 +21,7 @@ tk_bracket: `}`
 tk_whitespace: `\n\n`
 tk_header: `[instructions]`
 tk_whitespace: `\n`
+tk_new_instruction: ``
 tk_mnenomic: `nop`
 tk_whitespace: `\n`
 tk_number: `00000000`
