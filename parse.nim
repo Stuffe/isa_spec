@@ -646,7 +646,7 @@ iterator get_list*(s: var StreamSlice): StreamSlice =
   for raw_inner in get_encapsulation(s):
     var list = raw_inner
     while not finished(list):
-      skip_whitespaces(list)
+      skip_newlines(list)
 
       let start = list.start
       let element = get_list_value(list).on_err do:
@@ -658,17 +658,15 @@ iterator get_list*(s: var StreamSlice): StreamSlice =
 
       yield element
 
-      skip_whitespaces(list)
+      skip_newlines(list)
 
       if peek(list) == ',':
         skip(list, tk=tk_seperator)
-        skip_whitespaces(list)
+        skip_newlines(list)
 
 proc get_whole_list*(s: var StreamSlice): seq[StreamSlice] =
-  try:
-    for value in get_list(s):
-      result.add(value)
-  except: discard
+  for value in get_list(s):
+    result.add(value)
 
 iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
   ## yields (is_value, text). Will always generate a key followed by a value unless an exception is raised
@@ -706,7 +704,7 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
       skip_whitespaces(list)
       if peek(list) == ',':
         skip(list, tk=tk_seperator)
-        skip_whitespaces(list)
+        skip_newlines(list)
       elif not finished(list):
         s = restore
         raise newParseError(s, "Expected a ',' or end of table")
@@ -714,11 +712,10 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
 proc get_whole_table*(s: var StreamSlice): OrderedTable[StreamSlice, StreamSlice] =
   var key: StreamSlice
 
-  try:
-    for is_value, value in get_table(s):
-      if not is_value:
-        key = value
-      else:
-        result[key] = value
+  for is_value, value in get_table(s):
+    if not is_value:
+      key = value
+    else:
+      result[key] = value
 
-  except: discard
+      
