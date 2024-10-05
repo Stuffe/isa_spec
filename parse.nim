@@ -664,6 +664,11 @@ iterator get_list*(s: var StreamSlice): StreamSlice =
         skip(list, tk=tk_seperator)
         skip_whitespaces(list)
 
+proc get_whole_list*(s: var StreamSlice): seq[StreamSlice] =
+  try:
+    for value in get_list(s):
+      result.add(value)
+  except: discard
 
 iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
   ## yields (is_value, text). Will always generate a key followed by a value unless an exception is raised
@@ -706,4 +711,14 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
         s = restore
         raise newParseError(s, "Expected a ',' or end of table")
 
+proc get_whole_table*(s: var StreamSlice): OrderedTable[StreamSlice, StreamSlice] =
+  var key: StreamSlice
 
+  try:
+    for is_value, value in get_table(s):
+      if not is_value:
+        key = value
+      else:
+        result[key] = value
+
+  except: discard
