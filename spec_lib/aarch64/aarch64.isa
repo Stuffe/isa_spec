@@ -35,54 +35,1172 @@ x27 11011
 x28 11100
 x29 11101
 x30 11110
+xzr 11111
+
+register_64sp
+x0 00000
+x1 00001
+x2 00010
+x3 00011
+x4 00100
+x5 00101
+x6 00110
+x7 00111
+x8 01000
+x9 01001
+x10 01010
+x11 01011
+x12 01100
+x13 01101
+x14 01110
+x15 01111
+x16 10000
+x17 10001
+x18 10010
+x19 10011
+x20 10100
+x21 10101
+x22 10110
+x23 10111
+x24 11000
+x25 11001
+x26 11010
+x27 11011
+x28 11100
+x29 11101
+x30 11110
+sp 11111
+
+register_32
+w0 00000
+w1 00001
+w2 00010
+w3 00011
+w4 00100
+w5 00101
+w6 00110
+w7 00111
+w8 01000
+w9 01001
+w10 01010
+w11 01011
+w12 01100
+w13 01101
+w14 01110
+w15 01111
+w16 10000
+w17 10001
+w18 10010
+w19 10011
+w20 10100
+w21 10101
+w22 10110
+w23 10111
+w24 11000
+w25 11001
+w26 11010
+w27 11011
+w28 11100
+w29 11101
+w30 11110
+wzr 11111
+
+register_32sp
+w0 00000
+w1 00001
+w2 00010
+w3 00011
+w4 00100
+w5 00101
+w6 00110
+w7 00111
+w8 01000
+w9 01001
+w10 01010
+w11 01011
+w12 01100
+w13 01101
+w14 01110
+w15 01111
+w16 10000
+w17 10001
+w18 10010
+w19 10011
+w20 10100
+w21 10101
+w22 10110
+w23 10111
+w24 11000
+w25 11001
+w26 11010
+w27 11011
+w28 11100
+w29 11101
+w30 11110
+wsp 11111
+
+pound
+"#" 0
+"" 0
+
+// rotates is a superset of shifts, they both share the same encoding
+shifts
+lsl 00
+lsr 01
+asr 10
+"" 00 // defaults to LSL if not used
+
+rotates
+lsl 00
+lsr 01
+asr 10
+ror 11
+"" 00 // defaults to LSL if not used
+
+// the encodings for extend operators are slightly different for 32-bit operand size instructions
+// and 64-bit operand size instructions. This only affects lsl, which is encoded as 010 for
+// 32-bit size instructions, and 011 for 64-bit instructions.
+extends_32
+uxtb 000
+uxth 001
+uxtw 010
+uxtx 011
+sxtb 100
+sxth 101
+sxtw 110
+sxtx 111
+lsl  010
+""   010 // defaults to LSL if not used
+
+extends_64
+uxtb 000
+uxth 001
+uxtw 010
+uxtx 011
+sxtb 100
+sxth 101
+sxtw 110
+sxtx 111
+lsl  011
+""   011 // defaults to LSL if not used
+
+// there's also some extend subsets
+extends_32_x
+uxtx 011
+sxtx 111
+lsl  010
+""   010 // defaults to LSL if not used
+
+extends_64_x
+uxtx 011
+sxtx 111
+lsl  011
+""   011 // defaults to LSL if not used
+
+extends_32_w
+uxtb 000
+uxth 001
+uxtw 010
+sxtb 100
+sxth 101
+sxtw 110
+
+extends_64_w
+uxtb 000
+uxth 001
+uxtw 010
+sxtb 100
+sxth 101
+sxtw 110
+
+condition_code
+eq 0000
+ne 0001
+cs 0010
+hs 0010
+cc 0011
+lo 0011
+mi 0100
+pl 0101
+vs 0110
+vc 0111
+hi 1000
+ls 1001
+ge 1010
+lt 1011
+gt 1100
+le 1101
+al 1110
+nv 1111
+
+system_regs
+actlr_el1 100000010000001
+actlr_el2 110000010000001
+actlr_el3 111000010000001
+afsr0_el1 100001010001000
+afsr0_el2 110001010001000
+afsr0_el3 111001010001000
+afsr1_el1 100001010001001
+afsr1_el2 110001010001001
+afsr1_el3 111001010001001
+aidr_el1 100100000000111
+amair_el1 100010100011000
+amair_el2 110010100011000
+amair_el3 111010100011000
+ccsidr_el1 100100000000000
+clidr_el1 100100000000001
+cntfrq_el0 101111100000000
+cnthctl_el2 110011100001000
+cnthp_ctl_el2 110011100010001
+cnthp_cval_el2 110011100010010
+cnthp_tval_el2 110011100010000
+cnthv_ctl_el2 110011100011001
+cnthv_cval_el2 110011100011010
+cnthv_tval_el2 110011100011000
+cntkctl_el1 100011100001000
+cntpct_el0 101111100000001
+cntps_ctl_el1 111111100010001
+cntps_cval_el1 111111100010010
+cntps_tval_el1 111111100010000
+cntp_ctl_el0 101111100010001
+cntp_cval_el0 101111100010010
+cntp_tval_el0 101111100010000
+cntvct_el0 101111100000010
+cntvoff_el2 110011100000011
+cntv_ctl_el0 101111100011001
+cntv_cval_el0 101111100011010
+cntv_tval_el0 101111100011000
+contextidr_el1 100011010000001
+contextidr_el2 110011010000001
+cpacr_el1 100000010000010
+cptr_el2 110000010001010
+cptr_el3 111000010001010
+csselr_el1 101000000000000
+ctr_el0 101100000000001
+currentel 100001000010010
+dacr32_el2 110000110000000
+daif 101101000010001
+dbgauthstatus_el1 000001111110110
+dbgbcr0_el1  000000000000101
+dbgbcr1_el1  000000000001101
+dbgbcr2_el1  000000000010101
+dbgbcr3_el1  000000000011101
+dbgbcr4_el1  000000000100101
+dbgbcr5_el1  000000000101101
+dbgbcr6_el1  000000000110101
+dbgbcr7_el1  000000000111101
+dbgbcr8_el1  000000001000101
+dbgbcr9_el1  000000001001101
+dbgbcr10_el1 000000001010101
+dbgbcr11_el1 000000001011101
+dbgbcr12_el1 000000001100101
+dbgbcr13_el1 000000001101101
+dbgbcr14_el1 000000001110101
+dbgbcr15_el1 000000001111101
+dbgbvr0_el1  000000000000100
+dbgbvr1_el1  000000000001100
+dbgbvr2_el1  000000000010100
+dbgbvr3_el1  000000000011100
+dbgbvr4_el1  000000000100100
+dbgbvr5_el1  000000000101100
+dbgbvr6_el1  000000000110100
+dbgbvr7_el1  000000000111100
+dbgbvr8_el1  000000001000100
+dbgbvr9_el1  000000001001100
+dbgbvr10_el1 000000001010100
+dbgbvr11_el1 000000001011100
+dbgbvr12_el1 000000001100100
+dbgbvr13_el1 000000001101100
+dbgbvr14_el1 000000001110100
+dbgbvr15_el1 000000001111100
+dbgclaimclr_el1 000001111001110
+dbgclaimset_el1 000001111000110
+dbgdtrrx_el0 001100000101000
+dbgdtrtx_el0 001100000101000
+dbgdtr_el0 001100000100000
+dbgprcr_el1 000000010100100
+dbgvcr32_el2 010000000111000
+dbgwcr0_el1  000000000000111
+dbgwcr1_el1  000000000001111
+dbgwcr2_el1  000000000010111
+dbgwcr3_el1  000000000011111
+dbgwcr4_el1  000000000100111
+dbgwcr5_el1  000000000101111
+dbgwcr6_el1  000000000110111
+dbgwcr7_el1  000000000111111
+dbgwcr8_el1  000000001000111
+dbgwcr9_el1  000000001001111
+dbgwcr10_el1 000000001010111
+dbgwcr11_el1 000000001011111
+dbgwcr12_el1 000000001100111
+dbgwcr13_el1 000000001101111
+dbgwcr14_el1 000000001110111
+dbgwcr15_el1 000000001111111
+dbgwvr0_el1  000000000000110
+dbgwvr1_el1  000000000001110
+dbgwvr2_el1  000000000010110
+dbgwvr3_el1  000000000011110
+dbgwvr4_el1  000000000100110
+dbgwvr5_el1  000000000101110
+dbgwvr6_el1  000000000110110
+dbgwvr7_el1  000000000111110
+dbgwvr8_el1  000000001000110
+dbgwvr9_el1  000000001001110
+dbgwvr10_el1 000000001010110
+dbgwvr11_el1 000000001011110
+dbgwvr12_el1 000000001100110
+dbgwvr13_el1 000000001101110
+dbgwvr14_el1 000000001110110
+dbgwvr15_el1 000000001111110
+dczid_el0 101100000000111
+dlr_el0 101101000101001
+dspsr_el0 101101000101000
+elr_el1 100001000000001
+elr_el2 110001000000001
+elr_el3 111001000000001
+esr_el1 100001010010000
+esr_el2 110001010010000
+esr_el3 111001010010000
+far_el1 100001100000000
+far_el2 110001100000000
+far_el3 111001100000000
+fpcr 101101000100000
+fpexc32_el2 110001010011000
+fpsr 101101000100001
+hacr_el2 110000010001111
+hcr_el2 110000010001000
+hpfar_el2 110001100000100
+hstr_el2 110000010001011
+icc_ap0r0_el1 100011001000100
+icc_ap0r1_el1 100011001000101
+icc_ap0r2_el1 100011001000110
+icc_ap0r3_el1 100011001000111
+icc_ap1r0_el1 100011001001000
+icc_ap1r1_el1 100011001001001
+icc_ap1r2_el1 100011001001010
+icc_ap1r3_el1 100011001001011
+icc_asgi1r_el1 100011001011110
+icc_bpr0_el1 100011001000011
+icc_bpr1_el1 100011001100011
+icc_ctlr_el1 100011001100100
+icc_ctlr_el3 111011001100100
+icc_dir_el1 100011001011001
+icc_eoir0_el1 100011001000001
+icc_eoir1_el1 100011001100001
+icc_hppir0_el1 100011001000010
+icc_hppir1_el1 100011001100010
+icc_iar0_el1 100011001000000
+icc_iar1_el1 100011001100000
+icc_igrpen0_el1 100011001100110
+icc_igrpen1_el1 100011001100111
+icc_igrpen1_el3 111011001100111
+icc_pmr_el1 100001000110000
+icc_rpr_el1 100011001011011
+icc_sgi0r_el1 100011001011111
+icc_sgi1r_el1 100011001011101
+icc_sre_el1 100011001100101
+icc_sre_el2 110011001001101
+icc_sre_el3 111011001100101
+ich_ap0r0_el2 110011001000000
+ich_ap0r1_el2 110011001000001
+ich_ap0r2_el2 110011001000010
+ich_ap0r3_el2 110011001000011
+ich_ap1r0_el2 110011001001000
+ich_ap1r1_el2 110011001001001
+ich_ap1r2_el2 110011001001010
+ich_ap1r3_el2 110011001001011
+ich_eisr_el2 110011001011011
+ich_elrsr_el2 110011001011101
+ich_hcr_el2 110011001011000
+ich_lr0_el2 110011001100000
+ich_lr1_el2 110011001100001
+ich_lr2_el2 110011001100010
+ich_lr3_el2 110011001100011
+ich_lr4_el2 110011001100100
+ich_lr5_el2 110011001100101
+ich_lr6_el2 110011001100110
+ich_lr7_el2 110011001100111
+ich_lr8_el2 110011001101000
+ich_lr9_el2 110011001101001
+ich_lr10_el2 110011001101010
+ich_lr11_el2 110011001101011
+ich_lr12_el2 110011001101100
+ich_lr13_el2 110011001101101
+ich_lr14_el2 110011001101110
+ich_lr15_el2 110011001101111
+ich_misr_el2 110011001011010
+ich_vmcr_el2 110011001011111
+ich_vtr_el2 110011001011001
+icv_ap0r0_el1 100011001000100
+icv_ap0r1_el1 100011001000101
+icv_ap0r2_el1 100011001000110
+icv_ap0r3_el1 100011001000111
+icv_ap1r0_el1 100011001001000
+icv_ap1r1_el1 100011001001001
+icv_ap1r2_el1 100011001001010
+icv_ap1r3_el1 100011001001011
+icv_bpr0_el1 100011001000011
+icv_bpr1_el1 100011001100011
+icv_ctlr_el1 100011001100100
+icv_dir_el1 100011001011001
+icv_eoir0_el1 100011001000001
+icv_eoir1_el1 100011001100001
+icv_hppir0_el1 100011001000010
+icv_hppir1_el1 100011001100010
+icv_iar0_el1 100011001000000
+icv_iar1_el1 100011001100000
+icv_igrpen0_el1 100011001100110
+icv_igrpen1_el1 100011001100111
+icv_pmr_el1 100001000110000
+icv_rpr_el1 100011001011011
+id_aa64afr0_el1 100000000101100
+id_aa64afr1_el1 100000000101101
+id_aa64dfr0_el1 100000000101000
+id_aa64dfr1_el1 100000000101001
+id_aa64isar0_el1 100000000110000
+id_aa64isar1_el1 100000000110001
+id_aa64mmfr0_el1 100000000111000
+id_aa64mmfr1_el1 100000000111001
+id_aa64mmfr2_el1 100000000111010
+id_aa64pfr0_el1 100000000100000
+id_aa64pfr1_el1 100000000100001
+id_afr0_el1 100000000001011
+id_dfr0_el1 100000000001010
+id_isar0_el1 100000000010000
+id_isar1_el1 100000000010001
+id_isar2_el1 100000000010010
+id_isar3_el1 100000000010011
+id_isar4_el1 100000000010100
+id_isar5_el1 100000000010101
+id_mmfr0_el1 100000000001100
+id_mmfr1_el1 100000000001101
+id_mmfr2_el1 100000000001110
+id_mmfr3_el1 100000000001111
+id_mmfr4_el1 100000000010110
+id_pfr0_el1 100000000001000
+id_pfr1_el1 100000000001001
+ifsr32_el2 110001010000001
+isr_el1 100011000001000
+lorc_el1 100010100100011
+lorea_el1 100010100100001
+lorid_el1 100010100100111
+lorn_el1 100010100100010
+lorsa_el1 100010100100000
+mair_el1 100010100010000
+mair_el2 110010100010000
+mair_el3 111010100010000
+mdccint_el1 000000000010000
+mdccsr_el0 001100000001000
+mdcr_el2 110000010001001
+mdcr_el3 111000010011001
+mdrar_el1 000000010000000
+mdscr_el1 000000000010010
+midr_el1 100000000000000
+mpidr_el1 100000000000101
+mvfr0_el1 100000000011000
+mvfr1_el1 100000000011001
+mvfr2_el1 100000000011010
+nzcv 101101000010000
+osdlr_el1 000000010011100
+osdtrrx_el1 000000000000010
+osdtrtx_el1 000000000011010
+oseccr_el1 000000000110010
+oslar_el1 000000010000100
+oslsr_el1 000000010001100
+pan 100001000010011
+par_el1 100001110100000
+pmccfiltr_el0 101111101111111
+pmccntr_el0 101110011101000
+pmceid0_el0 101110011100110
+pmceid1_el0 101110011100111
+pmcntenclr_el0 101110011100010
+pmcntenset_el0 101110011100001
+pmcr_el0 101110011100000
+pmevcntr0_el0  101111101000000
+pmevcntr1_el0  101111101000001
+pmevcntr2_el0  101111101000010
+pmevcntr3_el0  101111101000011
+pmevcntr4_el0  101111101000100
+pmevcntr5_el0  101111101000101
+pmevcntr6_el0  101111101000110
+pmevcntr7_el0  101111101000111
+pmevcntr8_el0  101111101001000
+pmevcntr9_el0  101111101001001
+pmevcntr10_el0 101111101001010
+pmevcntr11_el0 101111101001011
+pmevcntr12_el0 101111101001100
+pmevcntr13_el0 101111101001101
+pmevcntr14_el0 101111101001110
+pmevcntr15_el0 101111101001111
+pmevcntr16_el0 101111101010000
+pmevcntr17_el0 101111101010001
+pmevcntr18_el0 101111101010010
+pmevcntr19_el0 101111101010011
+pmevcntr20_el0 101111101010100
+pmevcntr21_el0 101111101010101
+pmevcntr22_el0 101111101010110
+pmevcntr23_el0 101111101010111
+pmevcntr24_el0 101111101011000
+pmevcntr25_el0 101111101011001
+pmevcntr26_el0 101111101011010
+pmevcntr27_el0 101111101011011
+pmevcntr28_el0 101111101011100
+pmevcntr29_el0 101111101011101
+pmevcntr30_el0 101111101011110
+pmevcntr31_el0 101111101011111
+pmevtyper0_el0  101111101100000
+pmevtyper1_el0  101111101100001
+pmevtyper2_el0  101111101100010
+pmevtyper3_el0  101111101100011
+pmevtyper4_el0  101111101100100
+pmevtyper5_el0  101111101100101
+pmevtyper6_el0  101111101100110
+pmevtyper7_el0  101111101100111
+pmevtyper8_el0  101111101101000
+pmevtyper9_el0  101111101101001
+pmevtyper10_el0 101111101101010
+pmevtyper11_el0 101111101101011
+pmevtyper12_el0 101111101101100
+pmevtyper13_el0 101111101101101
+pmevtyper14_el0 101111101101110
+pmevtyper15_el0 101111101101111
+pmevtyper16_el0 101111101110000
+pmevtyper17_el0 101111101110001
+pmevtyper18_el0 101111101110010
+pmevtyper19_el0 101111101110011
+pmevtyper20_el0 101111101110100
+pmevtyper21_el0 101111101110101
+pmevtyper22_el0 101111101110110
+pmevtyper23_el0 101111101110111
+pmevtyper24_el0 101111101111000
+pmevtyper25_el0 101111101111001
+pmevtyper26_el0 101111101111010
+pmevtyper27_el0 101111101111011
+pmevtyper28_el0 101111101111100
+pmevtyper29_el0 101111101111101
+pmevtyper30_el0 101111101111110
+pmevtyper31_el0 101111101111111
+pmintenclr_el1 100010011110010
+pmintenset_el1 100010011110001
+pmovsclr_el0 101110011100011
+pmovsset_el0 101110011110011
+pmselr_el0 101110011100101
+pmswinc_el0 101110011100100
+pmuserenr_el0 101110011110000
+pmxevcntr_el0 101110011101010
+pmxevtyper_el0 101110011101001
+revidr_el1 100000000000110
+rmr_el1 100011000000010
+rmr_el2 110011000000010
+rmr_el3 111011000000010
+rvbar_el1 100011000000001
+rvbar_el2 110011000000001
+rvbar_el3 111011000000001
+scr_el3 111000010001000
+sctlr_el1 100000010000000
+sctlr_el2 110000010000000
+sctlr_el3 111000010000000
+sder32_el3 111000010001001
+spsel 100001000010000
+spsr_abt 110001000011001
+spsr_el1 100001000000000
+spsr_el2 110001000000000
+spsr_el3 111001000000000
+spsr_fiq 110001000011011
+spsr_irq 110001000011000
+spsr_und 110001000011010
+sp_el0 100001000001000
+sp_el1 110001000001000
+sp_el2 111001000001000
+tcr_el1 100000100000010
+tcr_el2 110000100000010
+tcr_el3 111000100000010
+tpidrro_el0 101111010000011
+tpidr_el0 101111010000010
+tpidr_el1 100011010000100
+tpidr_el2 110011010000010
+tpidr_el3 111011010000010
+ttbr0_el1 100000100000000
+ttbr0_el2 110000100000000
+ttbr0_el3 111000100000000
+ttbr1_el1 100000100000001
+ttbr1_el2 110000100000001
+uao 100001000010100
+vbar_el1 100011000000000
+vbar_el2 110011000000000
+vbar_el3 111011000000000
+vmpidr_el2 110000000000101
+vpidr_el2 110000000000000
+vtcr_el2 110000100001010
+vttbr_el2 110000100001000
+
+
+
 
 [instructions]
 
-orr %xd(register_64), %xn(register_64), %xm(register_64)
-10101010 000 %xm[4:0] 000000 %xn[4:0] %xd[4:0]
-Bitwise OR (shifted register) performs a bitwise (inclusive) OR of a register value and an optionally-shifted register value, and writes the result to the destination register. This instruction is used by the alias MOV (register).
 
-bl .%imm:S25(immediate)
-%offset:S26 = asr(%imm, 2)
-100101 %offset[25:0]
-Branch with Link branches to a PC-relative offset, setting the register X30 to PC+4. It provides a hint that this is a subroutine call.
-
-bl %label(label)
-%offset:S26 = asr(%imm, 2)
-100101 %offset[25:0]
-Branch with Link branches to a PC-relative offset, setting the register X30 to PC+4. It provides a hint that this is a subroutine call.
-
-ret %reg(register_64)
-11010110 01011111 000000 %reg[4:0] 00000
-Return from subroutine branches unconditionally to an address in a register, with a hint that this is a subroutine return.
-
-br %reg(register_64)
-11010110 00011111 000000 %reg[4:0] 00000
-Branch to Register branches unconditionally to an address in a register, with a hint that this is not a subroutine return.
-
-add %xd(register_64), %xn(register_64), %xm(register_64)
+// add shifted 64-bit register (without the actual shift)
+add  %xd(register_64) , %xn(register_64) , %xm(register_64)
 10001011 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
-Add (shifted register) adds a register value and an optionally-shifted register value, and writes the result to the destination register.
+Adds %xn and %xm, writing the result to %xd.
 
-add %xd(register_64), %xn(register_64), %imm(immediate)
+// add immediate to 64-bit register
+add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
 10010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
-Add (immediate), setting flags, adds a register value and an optionally-shifted immediate value, and writes the result to the destination register. It updates the condition flags based on the result.
+Add %imm to %xn, writing the result to %xd.
+
+// add large immediate to 64-bit register
+add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
+10010001 01 %imm[23:12] %xn[4:0] %xd[4:0]
+Add %imm to %xn, writing the result to %xd.
 
 
-sub %xd(register_64), %xn(register_64), %xm(register_64)
+// calculate pc-relative address
+adr  %xd(register_64) , .%imm:S21(immediate|label)
+0 %imm[1:0] 10000 %imm[20:2] %xd[4:0]
+Write the absolute address of the program-counter relative immediate or label %imm in %xd.
+
+
+// and shifted 64-bit register (without the actual shift)
+and  %xd(register_64) , %xn(register_64) , %xm(register_64)
+10001010 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
+Calculates the bitwise and of %xn and %xm, writing the result to %xd.
+
+// 64-bit and with logical immediate.
+// uses simplified logical immediate encoding
+and  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U64(immediate)
+%N = 1
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
+10010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
+Calculates the bitwise and of %xn and %imm, writing the result to %xd.
+
+
+// alternative: full logical immediate encoding would go like this:
+//%transitions = %imm ^ ror(%imm, 1)
+//%element_size = 1 << (7 - log2(%transitions))
+//!assert %imm == ror(%imm, %element_size) "Not a logical immediate"
+//%element = %imm & ((1 << %element_size) - 1)
+//%ones = count_ones(%element)
+//%imms = (!(%element_size * 2 - 1) & 0x7F) | (%ones - 1)
+//%immr = %element[0] ? (%ones - trailing_zeros(!%element)) : (%element_size - trailing_zeros(%element))
+//%n = !%imms[6]
+// 10010010 0 %imms[6] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
+
+
+// arithmetic right shift register
+asr  %xd(register_64) , %xn(register_64) , %xm(register_64)
+10011010 110 %xm[4:0] 001010 %xn[4:0] %xd[4:0]
+Right shifts %xn by %xm % 64, preserving the sign of %xn. The result is stored in %xd.
+
+// arithmetic right shift immediate
+asr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm(immediate)
+10010011 01 %imm[5:0] 111111 %xn[4:0] %xd[4:0]
+Right shifts %xn by %imm, preserving the sign of %xn. The result is stored in %xd.
+
+
+// unconditional branch
+b  .%offset:S28(immediate|label)
+000101 %offset[27:2]
+Branches unconditionally to a PC-relative offset or label.
+
+
+// conditional branch
+b.%cond(condition_code)  .%offset:S21(immediate|label)
+01010100 %offset[20:2] 0 %cond[3:0]
+Branches conditionally to a PC-relative offset or label.
+
+
+// branch with link (static call)
+bl  .%offset:S28(immediate|label)
+100101 %offset[27:2]
+Branches to a PC-relative offset or label, storing the next program counter into the link register.
+
+
+// branch with link register (dynamic call)
+blr  %xn(register_64)
+11010110 00111111 000000 %xn[4:0] 00000
+Branches to the given address in %xn, storing the next program counter into the link register.
+
+
+// branch register
+br  %xn(register_64)
+11010110 00011111 000000 %xn[4:0] 00000 
+Branches unconditionally to the given address in %xn.
+
+
+// break
+brk  %_(pound) %imm(immediate)
+11010100 001 %imm[15:0] 00000
+Raises a breakpoint exception. The user can put any value in %imm.
+
+
+// compare and branch if nonzero
+cbnz  %xn(register_64) , .%imm:S21(immediate|label)
+10110101 %imm[20:2] %xn[4:0]
+Branches to the PC-relative offset or label %imm, if %xn is not zero.
+
+
+// compare and branch if zero
+cbz  %xn(register_64) , .%imm:S21(immediate|label)
+10110100 %imm[20:2] %xn[4:0]
+Branches to the PC-relative offset or label %imm, if %xn is zero.
+
+
+// compare negative registers
+cmn  %xn(register_64) , %xm(register_64)
+10101011 000 %xm[4:0] 000 000 %xn[4:0] 11111
+Compares the value of -%xn with %xm, setting the condition flags.
+
+// compare negative immediate.
+cmn  %xn(register_64sp) , %_(pound) %imm:U12(immediate)
+10110001 00 %imm[11:0] %xn[4:0] 11111
+Compares the value of -%xn with %imm, setting the condition flags.
+
+// compare negative large immediate.
+cmn  %xn(register_64sp) , %_(pound) %imm:U24(immediate)
+10110001 01 %imm[23:12] %xn[4:0] 11111
+Compares the value of -%xn with %imm, setting the condition flags.
+
+
+// compare positive register
+cmp  %xn(register_64) , %xm(register_64)
+11101011 000 %xm[4:0] 000 000 %xn[4:0] 11111
+Compares the value in %xn with %xm, setting the condition flags.
+
+// compare positive immediate.
+cmp  %xn(register_64sp) , %_(pound) %imm:U12(immediate)
+11110001 00 %imm[11:0] %xn[4:0] 11111
+Compares the value in %xn with %imm, setting the condition flags.
+
+// compare positive large immediate
+cmp  %xn(register_64sp) , %_(pound) %imm:U24(immediate)
+11110001 01 %imm[23:12] %xn[4:0] 11111
+Compares the value in %xn with %imm, setting the condition flags.
+
+
+// conditional move
+csel  %xd(register_64) , %xn(register_64) , %xm(register_64) , %cond(condition_code)
+10011010 100 %xm[4:0] %cond[3:0] 00 %xn[4:0] %xd[4:0]
+If the given condition is true, sets %xd to %xn. Else, it writes %xm to %xd.
+
+
+// conditional set
+cset  %xd(register_64) , %cond(condition_code)
+%inv = %cond ^ 1
+10011010 10011111 %inv[3:0] 0111 111 %xd[4:0]
+
+
+// xor shifted 64-bit register (without the actual shift)
+eor  %xd(register_64) , %xn(register_64) , %xm(register_64)
+11001010 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
+Calculates %xn xor %xm, writing the result to %xd.
+
+// 64-bit xor with logical immediate.
+// uses simplified logical immediate encoding
+eor  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U64(immediate)
+%N = 1
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
+11010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
+Calculates %xn xor %imm, writing the result to %xd.
+
+
+// load register indexed, not extended
+ldr  %xt(register_64) , [ %xn(register_64sp) , %xm(register_64) ]
+11111000 011 %xm[4:0] 011010 %xn[4:0] %xt[4:0]
+Loads a 64-bit value from the address %xn + %xm.
+
+// load register direct
+ldr  %xt(register_64) , [ %xn(register_64sp) ]
+11111001 01000000 000000 %xn[4:0] %xt[4:0]
+Loads a 64-bit value from the address %xn.
+
+// load register scaled offset
+ldr  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:U15(immediate) ]
+11111001 01 %imm[14:3] %xn[4:0] %xt[4:0]
+Loads a 64-bit value from the address %xn + %imm.
+
+// load register unscaled offset. this uses the ldur instruction underneath
+ldr  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
+11111000 010 %imm[8:0] 00 %xn[4:0] %xt[4:0]
+Loads a 64-bit value from the address %xn + %imm.
+
+// load register post index
+ldr  %xt(register_64) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+11111000 010 %imm[8:0] 01 %xn[4:0] %xt[4:0]
+Loads a 64-bit value from the address %xn + %imm. Then sets %xn to this address.
+
+// load register pre index
+ldr  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
+11111000 010 %imm[8:0] 11 %xn[4:0] %xt[4:0]
+Adds %imm to %xn and stores it in %xn. Then loads a 64-bit value from this address.
+
+
+// load byte register indexed, not extended
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
+00111000 011 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
+Loads an 8-bit value from the address %xn + %xm.
+
+// load byte register direct
+ldrb  %wt(register_32) , [ %xn(register_64sp) ]
+00111001 01000000 000000 %xn[4:0] %wt[4:0]
+Loads an 8-bit value from the address %xn.
+
+// load byte register scaled offset
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U12(immediate) ]
+00111001 01 %imm[11:0] %xn[4:0] %wt[4:0]
+Loads an 8-bit value from the address %xn + %imm.
+
+// load byte register unscaled offset. this uses the ldurb instruction underneath
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
+00111000 010 %imm[8:0] 00 %xn[4:0] %wt[4:0]
+Loads an 8-bit value from the address %xn + %imm.
+
+// load byte register post index
+ldrb  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+00111000 010 %imm[8:0] 01 %xn[4:0] %wt[4:0]
+Loads an 8-bit value from the address %xn + %imm. Then sets %xn to this address.
+
+// load byte register pre index
+ldrb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
+00111000 010 %imm[8:0] 11 %xn[4:0] %wt[4:0]
+Adds %imm to %xn and stores it in %xn. Then loads an 8-bit value from this address.
+
+
+// load halfword register indexed, not extended
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
+01111000 011 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
+Loads a 16-bit value from the address %xn + %xm.
+
+// load halfword register direct
+ldrh  %wt(register_32) , [ %xn(register_64sp) ]
+01111001 01000000 000000 %xn[4:0] %wt[4:0]
+Loads a 16-bit value from the address %xn.
+
+// load halfword register scaled offset
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U13(immediate) ]
+01111001 01 %imm[12:1] %xn[4:0] %wt[4:0]
+Loads a 16-bit value from the address %xn + %imm.
+
+// load halfword register unscaled offset. this uses the ldurb instruction underneath
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
+01111000 010 %imm[8:0] 00 %xn[4:0] %wt[4:0]
+Loads a 16-bit value from the address %xn + %imm.
+
+// load halfword register post index
+ldrh  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+01111000 010 %imm[8:0] 01 %xn[4:0] %wt[4:0]
+Loads a 16-bit value from the address %xn + %imm. Then sets %xn to this address.
+
+// load halfword register pre index
+ldrh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
+01111000 010 %imm[8:0] 11 %xn[4:0] %wt[4:0]
+Adds %imm to %xn and stores it in %xn. Then loads a 16-bit value from this address.
+
+
+// left shift register
+lsl  %xd(register_64) , %xn(register_64) , %xm(register_64)
+10011010 110 %xm[4:0] 001000 %xn[4:0] %xd[4:0]
+Left shifts %xn by %xm % 64. The result is stored in %xd.
+
+// left shift immediate
+lsl  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
+%immr = (0 - %imm) & 0x3F
+%imms = 63 - %imm
+11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
+Left shifts %xn by %imm. The result is stored in %xd.
+
+
+// right shift register
+lsr  %xd(register_64) , %xn(register_64) , %xm(register_64)
+10011010 110 %xm[4:0] 001001 %xn[4:0] %xd[4:0]
+Right shifts %xn by %xm % 64. The result is stored in %xd.
+
+// right shift immediate
+lsr  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
+11010011 01 %imm[5:0] 111111 %xn[4:0] %xd[4:0]
+Right shifts %xn by %imm. The result is stored in %xd.
+
+
+// fused multiply add
+madd  %xd(register_64) , %xn(register_64) , %xm(register_64sp) , %xa(register_64)
+10011011 000 %xm[4:0] 0 %xa[4:0] %xn[4:0] %xd[4:0]
+Computes (%xn * %xm) + %xa, then writes the result to %xd.
+
+
+// move register
+mov  %xd(register_64) , %xn(register_64)
+10101010 000 %xn[4:0] 00000011 111 %xd[4:0]
+Copies %xn to %xd.
+
+// move register sp
+mov  %xd(register_64sp) , %xn(register_64sp)
+10010001 00000000 000000 %xn[4:0] %xd[4:0]
+Copies %xn to %xd.
+
+// move wide immediate 0
+mov  %xd(register_64) , %_(pound) %imm:U16(immediate)
+11010010 1 00 %imm[15:0] %xd[4:0]
+Copies %imm to %xd.
+
+// move wide immediate 1
+mov  %xd(register_64) , %_(pound) %imm:U32(immediate)
+11010010 1 01 %imm[31:16] %xd[4:0]
+Copies %imm to %xd.
+
+// move wide immediate 2
+mov  %xd(register_64) , %_(pound) %imm:U48(immediate)
+11010010 1 10 %imm[47:32] %xd[4:0]
+Copies %imm to %xd.
+
+// move wide immediate 3
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
+11010010 1 11 %imm[63:48] %xd[4:0]
+Copies %imm to %xd.
+
+// move inverted wide immediate 0
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
+%inv = %imm ^ 0xFFFFFFFFFFFFFFFF
+11010010 1 00 %inv[15:0] %xd[4:0]
+Copies %imm to %xd.
+
+// move inverted wide immediate 1
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
+%inv = %imm ^ 0xFFFFFFFFFFFFFFFF
+11010010 1 01 %inv[31:16] %xd[4:0]
+Copies %imm to %xd.
+
+// move inverted wide immediate 2
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
+%inv = %imm ^ 0xFFFFFFFFFFFFFFFF
+11010010 1 10 %inv[47:32] %xd[4:0]
+Copies %imm to %xd.
+
+// move inverted wide immediate 3
+mov  %xd(register_64) , %_(pound) %imm:U64(immediate)
+%inv = %imm ^ 0xFFFFFFFFFFFFFFFF
+11010010 1 11 %inv[63:48] %xd[4:0]
+Copies %imm to %xd.
+
+// move logical immediate
+mov  %xd(register_64sp) , %imm:U64(immediate)
+%N = 1
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
+10110010 0 %N[0:0] %immr[5:0] %imms[5:0] 11111 %xd[4:0]
+Copies %imm to %xd.
+
+
+// read system register
+mrs  %xd(register_64) , %sys(system_regs)
+11010101 0011 %sys[14:0] %xd[4:0]
+Copies the value of system register %sys to %xd
+
+
+// fused multiply subtract
+msub  %xd(register_64) , %xn(register_64) , %xm(register_64sp) , %xa(register_64)
+10011011 000 %xm[4:0] 1 %xa[4:0] %xn[4:0] %xd[4:0]
+Computes %xa - (%xn * %xm)
+
+
+// multiply
+mul  %xd(register_64) , %xn(register_64) , %xm(register_64sp)
+10011011 000 %xm[4:0] 011111 %xn[4:0] %xd[4:0]
+Multiplies %xn with %xm, writing the result to %xd.
+
+
+// invert
+mvn  %xd(register_64) , %xn(register_64)
+10101010 001 %xn[4:0] 00000011 111 %xd[4:0]
+Computes the bitwise inverse of %xn, writing it to %xd.
+
+
+// or shifted 64-bit register (without the actual shift)
+orr  %xd(register_64) , %xn(register_64) , %xm(register_64)
+10101010 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
+Ors %xn with %xm, writing the result to %xd. Calculates the bitwise or of %xn and %xm, writing the result to %xd
+
+// 64-bit or with logical immediate.
+// uses simplified logical immediate encoding
+orr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U64(immediate)
+%N = 1
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
+10110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
+Calculates the bitwise or of %xn and %imm, writing the result to %xd
+
+
+// return to link register
+ret
+11010110 01011111 00000011 11000000
+Branches to the value contained in the link register x30, which contains the return address.
+
+// return to register
+ret  %xd(register_64)
+11010110 01011111 000000 %xd[4:0] 00000
+Branches to the value contained in %xd, which should contain the return address.
+
+
+// rotate right register
+ror  %xd(register_64) , %xn(register_64) , %xm(register_64)
+10011010 110 %xm[4:0] 001011 %xn[4:0] %xd[4:0]
+Rotates %xn right by %xm % 64, writing the result to %xd.
+
+// rotate right immediate
+ror  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
+10010011 110 %xn[4:0] %imm[5:0] %xn[4:0] %xd[4:0]
+Rotates %xn right by %imm, writing the result to %xd.
+
+
+// signed division
+sdiv  %xd(register_64) , %xn(register_64) , %xm(register_64sp)
+10011010 110 %xm[4:0] 000011 %xn[4:0] %xd[4:0]
+Performes signed division of %xn by %xm, writing the result to %xd.
+
+
+// store register indexed, not extended
+str  %xt(register_64) , [ %xn(register_64sp) , %xm(register_64) ]
+11111000 001 %xm[4:0] 011010 %xn[4:0] %xt[4:0]
+Stores a 64-bit value to the address %xn + %xm.
+
+// store register direct
+str  %xt(register_64) , [ %xn(register_64sp) ]
+11111001 00000000 000000 %xn[4:0] %xt[4:0]
+Stores a 64-bit value to the address %xn.
+
+// store register scaled offset
+str  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:U15(immediate) ]
+11111001 00 %imm[14:3] %xn[4:0] %xt[4:0]
+Stores a 64-bit value to the address %xn + %imm.
+
+// store register unscaled offset. this uses the ldur instruction underneath
+str  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
+11111000 000 %imm[8:0] 00 %xn[4:0] %xt[4:0]
+Stores a 64-bit value to the address %xn + %imm.
+
+// store register post index
+str  %xt(register_64) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+11111000 000 %imm[8:0] 01 %xn[4:0] %xt[4:0]
+Stores a 64-bit value to the address %xn + %imm. Then sets %xn to this address.
+
+// store register pre index
+str  %xt(register_64) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
+11111000 000 %imm[8:0] 11 %xn[4:0] %xt[4:0]
+Adds %imm to %xn and stores it in %xn. Then stores a 64-bit value to this address.
+
+
+// store byte register indexed, not extended
+strb  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
+00111000 001 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
+Stores an 8-bit value to the address %xn + %xm.
+
+// store byte register direct
+strb  %wt(register_32) , [ %xn(register_64sp) ]
+00111001 00000000 000000 %xn[4:0] %wt[4:0]
+Stores an 8-bit value to the address %xn.
+
+// store byte register scaled offset
+strb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U12(immediate) ]
+00111001 00 %imm[11:0] %xn[4:0] %wt[4:0]
+Stores an 8-bit value to the address %xn + %imm.
+
+// store byte register unscaled offset. this uses the ldurb instruction underneath
+strb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
+00111000 000 %imm[8:0] 00 %xn[4:0] %wt[4:0]
+Stores an 8-bit value to the address %xn + %imm.
+
+// store byte register post index
+strb  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+00111000 000 %imm[8:0] 01 %xn[4:0] %wt[4:0]
+Stores an 8-bit value to the address %xn + %imm. Then sets %xn to this address.
+
+// store byte register pre index
+strb  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
+00111000 000 %imm[8:0] 11 %xn[4:0] %wt[4:0]
+Adds %imm to %xn and stores it in %xn. Then stores an 8-bit value to this address.
+
+
+// store halfword register indexed, not extended
+strh  %wt(register_32) , [ %xn(register_64sp) , %xm(register_64) ]
+01111000 001 %xm[4:0] 011010 %xn[4:0] %wt[4:0]
+Stores a 16-bit value to the address %xn + %xm.
+
+// store halfword register direct
+strh  %wt(register_32) , [ %xn(register_64sp) ]
+01111001 00000000 000000 %xn[4:0] %wt[4:0]
+Stores a 16-bit value to the address %xn.
+
+// store halfword register scaled offset
+strh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:U13(immediate) ]
+01111001 00 %imm[12:1] %xn[4:0] %wt[4:0]
+Stores a 16-bit value to the address %xn + %imm.
+
+// store halfword register unscaled offset. this uses the ldurb instruction underneath
+strh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]
+01111000 000 %imm[8:0] 00 %xn[4:0] %wt[4:0]
+Stores a 16-bit value to the address %xn + %imm.
+
+// store halfword register post index
+strh  %wt(register_32) , [ %xn(register_64sp) ], %_(pound) %imm:S9(immediate)
+01111000 000 %imm[8:0] 01 %xn[4:0] %wt[4:0]
+Stores a 16-bit value to the address %xn + %imm. Then sets %xn to this address.
+
+// store halfword register pre index
+strh  %wt(register_32) , [ %xn(register_64sp) , %_(pound) %imm:S9(immediate) ]!
+01111000 000 %imm[8:0] 11 %xn[4:0] %wt[4:0]
+Adds %imm to %xn and stores it in %xn. Then stores a 16-bit value to this address.
+
+
+// subtract shifted 64-bit register (without the actual shift)
+sub  %xd(register_64) , %xn(register_64) , %xm(register_64)
 11001011 000 %xm[4:0] 000 000 %xn[4:0] %xd[4:0]
-Subtract (shifted register) subtracts an optionally-shifted register value from a register value, and writes the result to the destination register.
+Subtracts %xm from %xn, writing the result to %xd.
 
-sub %xd(register_64), %xn(register_64), %imm(immediate)
+// subtract immediate from 64-bit register
+sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
 11010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
-Subtract (immediate) subtracts an optionally-shifted immediate value from a register value, and writes the result to the destination register.
+Subtracts %imm from %xn, writing the result to %xd.
 
-b .%imm:S25(immediate|label)
-%offset:S26 = asr(%imm, 2)
-000101 %offset[25:0]
-Branch causes an unconditional branch to a label at a PC-relative offset, with a hint that this is not a subroutine call or return.
+// subtract large immediate from 64-bit register
+sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
+11010001 01 %imm[23:12] %xn[4:0] %xd[4:0]
+Subtracts %imm from %xn, writing the result to %xd.
 
-b %label(label)
-%offset:S26 = asr(%imm, 2)
-000101 %offset[25:0]
-Branch causes an unconditional branch to a label at a PC-relative offset, with a hint that this is not a subroutine call or return.
+
+// test shifted 64-bit register (without the actual shift)
+tst  %xn(register_64) , %xm(register_64)
+11101010 000 %xm[4:0] 000 000 %xn[4:0] 11111
+Calculates the bitwise and of %xn and %xm, setting flags.
+
+// 64-bit test with logical immediate.
+// uses simplified logical immediate encoding
+tst  %xn(register_64) , %_(pound) %imm:U64(immediate)
+%N = 1
+%immr = (64 - trailing_zeros(%imm)) & 0x3F
+%imms = popcount(%imm) - 1
+!assert %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F)
+11110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] 11111
+Calculates the bitwise and of %xn and %imm, setting flags.
+
+// syscall
+svc  %_(pound) %imm:U16(immediate)
+11010100 000 %imm[15:0] 00001
+Performs a supervisor call. The data in %imm can be set by the user and read by the supervisor.
+
+
+// bitfield move
+ubfm  %xd(register_64) , %xn(register_64) , %_(pound) %immr(immediate) , %_(pound) %imms(immediate)
+11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
+Copies a bitfield from %xn to %xd. The source and destination bits are determined by %immr and %imms. If %imms >= %immr, this copies a bitfield starting at %immr to the least significant bits of the destination register. The size of the bitfield is (%imms - %immr + 1). If %imms < %immr, this copies a bitfield starting at the least significant bits from the source register to 64-%immr of the destination register. The size of the bitfield is (%imms + 1).
+
+
+// unsigned division
+udiv  %xd(register_64) , %xn(register_64) , %xm(register_64sp)
+10011010 110 %xm[4:0] 000010 %xn[4:0] %xd[4:0]
+Calculates unsigned division of %xn by %xm, writing the result to %xd.

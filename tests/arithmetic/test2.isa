@@ -1,0 +1,14 @@
+[settings]
+endianness = little
+
+
+[instructions]
+
+zeros %a(immediate)
+%b = trailing_zeros(%a)
+bbbbbbbb
+
+popcount %a(immediate)
+%b = popcount(%a)
+bbbbbbbb
+

@@ -1,0 +1,1737 @@
+[settings]
+endianness = big
+
+// this file implements a subset of x86_64 assembly. This subset includes purely 64-bit integer register
+// operations, and only performs memory references in load/store/address generation instructions
+
+[fields]
+qreg
+rax 0000
+rcx 0001
+rdx 0010
+rbx 0011
+rsp 0100
+rbp 0101
+rsi 0110
+rdi 0111
+r0  0000
+r1  0001
+r2  0010
+r3  0011
+r4  0100
+r5  0101
+r6  0110
+r7  0111
+r8  1000
+r9  1001
+r10 1010
+r11 1011
+r12 1100
+r13 1101
+r14 1110
+r15 1111
+
+qreg_low
+rax 0000
+rcx 0001
+rdx 0010
+rbx 0011
+rsp 0100
+rbp 0101
+rsi 0110
+rdi 0111
+r0  0000
+r1  0001
+r2  0010
+r3  0011
+r4  0100
+r5  0101
+r6  0110
+r7  0111
+
+// qreg, but without rsp/r12
+qreg_no_4
+rax 0000
+rcx 0001
+rdx 0010
+rbx 0011
+rbp 0101
+rsi 0110
+rdi 0111
+r0  0000
+r1  0001
+r2  0010
+r3  0011
+r4  0100
+r5  0101
+r6  0110
+r7  0111
+r8  1000
+r9  1001
+r10 1010
+r11 1011
+r13 1101
+r14 1110
+r15 1111
+
+// qreg, but without rbp/r13
+qreg_no_5
+rax 0000
+rcx 0001
+rdx 0010
+rbx 0011
+rsp 0100
+rsi 0110
+rdi 0111
+r0  0000
+r1  0001
+r2  0010
+r3  0011
+r4  0100
+r5  0101
+r6  0110
+r7  0111
+r8  1000
+r9  1001
+r10 1010
+r11 1011
+r12 1100
+r14 1110
+r15 1111
+
+// qreg, but without rsp/rbp/r12/r13
+qreg_no_45
+rax 0000
+rcx 0001
+rdx 0010
+rbx 0011
+rsi 0110
+rdi 0111
+r0  0000
+r1  0001
+r2  0010
+r3  0011
+r4  0100
+r5  0101
+r6  0110
+r7  0111
+r8  1000
+r9  1001
+r10 1010
+r11 1011
+r14 1110
+r15 1111
+
+// qreg, but without rsp
+qreg_no_sp
+rax 0000
+rcx 0001
+rdx 0010
+rbx 0011
+rbp 0101
+rsi 0110
+rdi 0111
+r0  0000
+r1  0001
+r2  0010
+r3  0011
+r4  0100
+r5  0101
+r6  0110
+r7  0111
+r8  1000
+r9  1001
+r10 1010
+r11 1011
+r12 1100
+r13 1101
+r14 1110
+r15 1111
+
+dreg
+eax  0000
+ecx  0001
+edx  0010
+ebx  0011
+esp  0100
+ebp  0101
+esi  0110
+edi  0111
+r0d  0000
+r1d  0001
+r2d  0010
+r3d  0011
+r4d  0100
+r5d  0101
+r6d  0110
+r7d  0111
+r8d  1000
+r9d  1001
+r10d 1010
+r11d 1011
+r12d 1100
+r13d 1101
+r14d 1110
+r15d 1111
+
+wreg
+ax   0000
+cx   0001
+dx   0010
+bx   0011
+sp   0100
+bp   0101
+si   0110
+di   0111
+r0w  0000
+r1w  0001
+r2w  0010
+r3w  0011
+r4w  0100
+r5w  0101
+r6w  0110
+r7w  0111
+r8w  1000
+r9w  1001
+r10w 1010
+r11w 1011
+r12w 1100
+r13w 1101
+r14w 1110
+r15w 1111
+
+breg
+al   0000
+cl   0001
+dl   0010
+bl   0011
+spl  0100
+bpl  0101
+sil  0110
+dil  0111
+r0b  0000
+r1b  0001
+r2b  0010
+r3b  0011
+r4b  0100
+r5b  0101
+r6b  0110
+r7b  0111
+r8b  1000
+r9b  1001
+r10b 1010
+r11b 1011
+r12b 1100
+r13b 1101
+r14b 1110
+r15b 1111
+
+breg_norex
+al   0000
+cl   0001
+dl   0010
+bl   0011
+r0b  0000
+r1b  0001
+r2b  0010
+r3b  0011
+
+hreg
+ah 0100
+ch 0101
+dh 0110
+bh 0111
+
+byte_ptr
+byte 0
+"" 0
+
+word_ptr
+word 0
+"" 0
+
+dword_ptr
+dword 0
+"" 0
+
+qword_ptr
+qword 0
+"" 0
+
+rax
+rax 0000
+
+eax
+eax 0000
+
+ax
+ax 0000
+
+al
+al 0000
+
+[instructions]
+// notes
+// rex = 0100qrxb (q = 64-bit opsize, r = reg[3:3], x = index[3:3], b = base[3:3] or rm[3:3])
+// 16-bit opsize = 01100110
+// rm byte = mod[1:0] reg[2:0] rm[2:0]
+// mod = 00 => no displacement, 01 => 8-bit displacement, 10 => 32-bit displacement, 11 => direct (no SIB)
+// rm[2:0] == 100 escapes into SIB
+// sib byte = scale[1:0] index[2:0] base[2:0]
+// index cannot be sp (100), as that escapes to no index
+//     workaround: use sp as the base
+// base cannot be bp, if mod = 00 (no displacment)
+//     workaround: use 8-bit displacement
+// finally, it is impossible to have [sp + sp] as address
+
+
+// add qreg, simm
+add  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000011 11 000 %rm[2:0] %imm[7:0]
+
+add  %_(rax) , %imm:S64(immediate)
+01001000 00000101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+add  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000001 11 000 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+
+// add qreg, qreg
+add  %rm(qreg), %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00000001 11 %reg[2:0] %rm[2:0]
+
+
+// and qreg, imm
+and  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000011 11 100 %rm[2:0] %imm[7:0]
+
+and  %_(rax) , %imm:S64(immediate)
+01001000 00100101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+and  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000001 11 100 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// and qreg, qreg
+and  %rm(qreg) , %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00100001 11 %reg[2:0] %rm[2:0]
+
+
+// cmova qreg, qreg
+cmova  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01000111 11 %reg[2:0] %rm[2:0]
+
+// cmovae qreg, qreg
+cmovae  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01000011 11 %reg[2:0] %rm[2:0]
+
+// cmove qreg, qreg
+cmove  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01000100 11 %reg[2:0] %rm[2:0]
+
+// cmovg qreg, qreg
+cmovg  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01001111 11 %reg[2:0] %rm[2:0]
+
+// cmovge qreg, qreg
+cmovge  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01001101 11 %reg[2:0] %rm[2:0]
+
+// cmovne qreg, qreg
+cmovne  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01000101 11 %reg[2:0] %rm[2:0]
+
+// cmovz qreg, qreg
+cmovz  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 01000100 11 %reg[2:0] %rm[2:0]
+
+
+// cmp qreg, simm
+cmp  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000011 11 111 %rm[2:0] %imm[7:0]
+
+cmp  %_(rax) , %imm:S64(immediate)
+01001000 00111101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+cmp  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000001 11 111 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// cmp qreg, qreg
+cmp  %rm(qreg), %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00111001 11 %reg[2:0] %rm[2:0]
+
+// cmp dreg, imm
+cmp  %rm(dreg) , %imm:S32(immediate)
+10000011 11 111 %rm[2:0] %imm[7:0]
+
+cmp  %rm(dreg) , %imm:S32(immediate)
+0100000 %rm[3:3] 10000011 11 111 %rm[2:0] %imm[7:0]
+
+cmp  %_(eax) , %imm:S32(immediate)
+00111101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+cmp  %rm(dreg) , %imm:S32(immediate)
+10000001 11 111 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+cmp  %rm(dreg) , %imm:S32(immediate)
+0100000 %rm[3:3] 10000001 11 111 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// cmp dreg, dreg
+cmp  %rm(dreg), %reg(dreg)
+00111001 11 %reg[2:0] %rm[2:0]
+
+cmp  %rm(dreg), %reg(dreg)
+01000 %reg[3:3] 0 %rm[3:3] 00111001 11 %reg[2:0] %rm[2:0]
+
+// cmp wreg, imm
+cmp  %rm(wreg) , %imm:S16(immediate)
+01100110 10000011 11 111 %rm[2:0] %imm[7:0]
+
+cmp  %rm(wreg) , %imm:S16(immediate)
+01100110 0100000 %rm[3:3] 10000011 11 111 %rm[2:0] %imm[7:0]
+
+cmp  %_(ax) , %imm:S16(immediate)
+01100110 00111101 %imm[7:0] %imm[15:8]
+
+cmp  %rm(wreg) , %imm:S16(immediate)
+01100110 10000001 11 111 %rm[2:0] %imm[7:0] %imm[15:8]
+
+cmp  %rm(wreg) , %imm:S16(immediate)
+01100110 0100000 %rm[3:3] 10000001 11 111 %rm[2:0] %imm[7:0] %imm[15:8]
+
+// cmp wreg, wreg
+cmp  %rm(wreg), %reg(wreg)
+01100110 00111001 11 %reg[2:0] %rm[2:0]
+
+cmp  %rm(wreg), %reg(wreg)
+01100110 01000 %reg[3:3] 0 %rm[3:3] 00111001 11 %reg[2:0] %rm[2:0]
+
+// cmp breg, imm
+cmp  %_(al) , %imm:S8(immediate)
+00111100 %imm[7:0]
+
+cmp  %rm(breg_norex) , %imm:S8(immediate)
+10000000 11 111 %rm[2:0] %imm[7:0]
+
+cmp  %rm(breg) , %imm:S8(immediate)
+0100000 %rm[3:3] 10000000 11 111 %rm[2:0] %imm[7:0]
+
+// cmp breg, breg
+cmp  %rm(breg_norex), %reg(breg_norex)
+00111000 11 %reg[2:0] %rm[2:0]
+
+cmp  %rm(breg), %reg(breg)
+01000 %reg[3:3] 0 %rm[3:3] 00111000 11 %reg[2:0] %rm[2:0]
+
+
+// cqo
+cqo
+01001000 10011001
+
+
+// div qreg
+div  %rm(qreg)
+0100100 %rm[3:3] 11110111 11 110 %rm[2:0] 
+
+
+// call imm
+// AMD64 actually defines a 16-bit call opcode, but intel doesn't implement this
+// call  $ + %addr:S64(immediate|label)
+// %imm:S64 = %off - 4
+// 01100110 11101000 %imm[7:0] %imm[15:8]
+
+call  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 5
+11101000 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// call qreg
+call  %rm(qreg)
+11111111 11 010 %rm[2:0]
+
+call  %rm(qreg)
+0100000 %rm[3:3] 11111111 11 010 %rm[2:0]
+
+
+// idiv qreg
+idiv  %rm(qreg)
+0100100 %rm[3:3] 11110111 11 111 %rm[2:0] 
+
+// imul qreg, imm
+// is a shorthand for imul qreg, qreg, imm
+imul  %rm(qreg) , %imm:S64(immediate)
+01001 %rm[3:3] 0 %rm[3:3] 01101011 11 %rm[2:0] %rm[2:0] %imm[7:0]
+
+imul  %rm(qreg) , %imm:S64(immediate)
+01001 %rm[3:3] 0 %rm[3:3] 01101001 11 %rm[2:0] %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// imul qreg, qreg
+imul  %reg(qreg) , %rm(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001111 10101111 11 %reg[2:0] %rm[2:0]
+
+
+// int imm
+int  %imm:U8(immediate)
+11001101 %imm[7:0]
+
+
+// je imm
+je  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 2
+01110100 %imm[7:0]
+
+// intel doesn't do 16-bit jump offsets
+// je  $ + %off:S64(immediate|label)
+// %imm:S64 = %off - 5
+// 01100110 00001111 10000100 %imm[7:0] %imm[15:8]
+
+je  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 6
+00001111 10000100 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+
+// jmp imm
+jmp  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 2
+11101011 %imm[7:0]
+
+// intel doesn't do 16-bit jump offsets
+// jmp  $ + %off:S64(immediate|label)
+// %imm:S64 = %off - 5
+// 01100110 00001111 11101001 %imm[7:0] %imm[15:8]
+
+jmp  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 5
+11101001 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// jmp qreg
+jmp  %rm(qreg)
+11111111 11 100 %rm[2:0]
+
+jmp  %rm(qreg)
+0100000 %rm[3:3] 11111111 11 100 %rm[2:0]
+
+
+// jne imm
+jne  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 2
+01110101 %imm[7:0]
+
+// intel doesn't do 16-bit jump offsets
+// jne  $ + %off:S64(immediate|label)
+// %imm:S64 = %off - 5
+// 01100110 00001111 10000101 %imm[7:0] %imm[15:8]
+
+jne  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 6
+00001111 10000101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+
+// jnz imm
+jnz  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 2
+01110101 %imm[7:0]
+
+// intel doesn't do 16-bit jump offsets
+// jnz  $ + %off:S64(immediate|label)
+// %imm:S64 = %off - 5
+// 01100110 00001111 10000101 %imm[7:0] %imm[15:8]
+
+jnz  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 6
+00001111 10000101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+
+// jz imm
+jz  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 2
+01110100 %imm[7:0]
+
+// intel doesn't do 16-bit jump offsets
+// jz  $ + %off:S64(immediate|label)
+// %imm:S64 = %off - 5
+// 01100110 00001111 10000100 %imm[7:0] %imm[15:8]
+
+jz  $ + %off:S64(immediate|label)
+%imm:S64 = %off - 6
+00001111 10000100 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+
+
+// mov qreg, imm
+mov  %rm(qreg) , %imm:U64(immediate)
+10111 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+mov  %rm(qreg) , %imm:U64(immediate)
+0100000 %rm[3:3] 10111 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+mov  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 11000111 11 000 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+mov  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10111 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24] %imm[39:32] %imm[47:40] %imm[55:48] %imm[63:56]
+
+
+// mov qreg, qreg
+mov  %rm(qreg) , %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 10001001 11 %reg[2:0] %rm[2:0]
+
+
+
+// mov qreg, [imm]
+// mov  rax , %_(qword_ptr) [ %imm:U64(immediate) ]
+mov  %_(qword_ptr) %reg(qreg) , [ %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov qreg, [qreg]
+// no rsp/rbp/r12/r13
+mov  %_(qword_ptr) %reg(qreg) , [ %base(qreg_no_45) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(qword_ptr) %reg(qreg) , [ %base(qreg_no_5) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(qword_ptr) %reg(qreg) , [ %base(qreg_no_4) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov qreg, [qreg + imm]
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 10001011 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov qreg, [qreg + qreg]
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(qreg) , %_(qword_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(qreg) , %_(qword_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(qreg) , %_(qword_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov dreg, [imm]
+// mov  eax , %_(dword_ptr) [ %imm:U32(immediate) ]
+mov  %_(dword_ptr) %reg(dreg) , [ %disp:S64(immediate) ]
+10001011 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(dword_ptr) %reg(dreg) , [ %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov dreg, [qreg]
+// no rsp/rbp/r12/r13
+mov  %_(dword_ptr) %reg(dreg) , [ %base(qreg_no_45) ]
+10001011 00 %reg[2:0] %base[2:0]
+
+mov  %_(dword_ptr) %reg(dreg) , [ %base(qreg_no_45) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(dword_ptr) %reg(dreg) , [ %base(qreg_no_5) ]
+10001011 00 %reg[2:0] 100 00 %base[2:0] 100
+
+mov  %_(dword_ptr) %reg(dreg) , [ %base(qreg_no_5) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(dword_ptr) %reg(dreg) , [ %base(qreg_no_4) ]
+10001011 01 %reg[2:0] %base[2:0] 00000000
+
+mov  %_(dword_ptr) %reg(dreg) , [ %base(qreg_no_4) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov dreg, [qreg + imm]
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+10001011 00 %reg[2:0] %base[2:0]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+10001011 00 %reg[2:0] 100 00 100 %base[2:0]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+10001011 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+10001011 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+10001011 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+10001011 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001011 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov dreg, [qreg + qreg]
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %reg(dreg) , %_(dword_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(dreg) , %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %reg(dreg) , %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(dreg) , %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %reg(dreg) , %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov wreg, [imm]
+// mov  ax , %_(word_ptr) [ %imm:U32(immediate) ]
+mov  %_(word_ptr) %reg(wreg) , [ %disp:S64(immediate) ]
+01100110 10001011 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(word_ptr) %reg(wreg) , [ %disp:S64(immediate) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov wreg, [qreg]
+// no rsp/rbp/r12/r13
+mov  %_(word_ptr) %reg(wreg) , [ %base(qreg_no_45) ]
+01100110 10001011 00 %reg[2:0] %base[2:0]
+
+mov  %_(word_ptr) %reg(wreg) , [ %base(qreg_no_45) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(word_ptr) %reg(wreg) , [ %base(qreg_no_5) ]
+01100110 10001011 00 %reg[2:0] 100 00 %base[2:0] 100
+
+mov  %_(word_ptr) %reg(wreg) , [ %base(qreg_no_5) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(word_ptr) %reg(wreg) , [ %base(qreg_no_4) ]
+01100110 10001011 01 %reg[2:0] %base[2:0] 00000000
+
+mov  %_(word_ptr) %reg(wreg) , [ %base(qreg_no_4) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov wreg, [qreg + imm]
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01100110 10001011 00 %reg[2:0] %base[2:0]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01100110 10001011 00 %reg[2:0] 100 00 100 %base[2:0]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01100110 10001011 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01100110 10001011 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01100110 10001011 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01100110 10001011 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001011 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov wreg, [qreg + qreg]
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01100110 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+01100110 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %reg(wreg) , %_(word_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(wreg) , %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01100110 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %reg(wreg) , %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(wreg) , %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+01100110 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %reg(wreg) , %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001011 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov breg, [imm]
+// mov  al , %_(byte_ptr) [ %imm:U32(immediate) ]
+mov  %_(byte_ptr) %reg(breg_norex) , [ %disp:S64(immediate) ]
+10001010 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(byte_ptr) %reg(breg) , [ %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov breg, [qreg]
+// no rsp/rbp/r12/r13
+mov  %_(byte_ptr) %reg(breg_norex) , [ %base(qreg_no_45) ]
+10001010 00 %reg[2:0] %base[2:0]
+
+mov  %_(byte_ptr) %reg(breg) , [ %base(qreg_no_45) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(byte_ptr) %reg(breg_norex) , [ %base(qreg_no_5) ]
+10001010 00 %reg[2:0] 100 00 %base[2:0] 100
+
+mov  %_(byte_ptr) %reg(breg) , [ %base(qreg_no_5) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(byte_ptr) %reg(breg_norex) , [ %base(qreg_no_4) ]
+10001010 01 %reg[2:0] %base[2:0] 00000000
+
+mov  %_(byte_ptr) %reg(breg) , [ %base(qreg_no_4) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov breg, [qreg + imm]
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+10001010 00 %reg[2:0] %base[2:0]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001010 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+10001010 00 %reg[2:0] 100 00 100 %base[2:0]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001010 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+10001010 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+10001010 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+10001010 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+10001010 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ]
+01000 %reg[3:3] 0 %base[3:3] 10001010 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov breg, [qreg + qreg]
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+10001010 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001010 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+10001010 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %reg(breg) , %_(byte_ptr) [ %base(qreg) + %index(qreg_no_sp) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001010 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+10001010 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %reg(breg) , %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001010 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %reg(breg_norex) , %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+10001010 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %reg(breg) , %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg) ]
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001010 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov qword [qreg], imm
+// no rsp/rbp/r12/r13
+mov  %_(qword_ptr) [ %base(qreg_no_45) ] , %imm:S64(immediate)
+0100100 %base[3:3] 11000111 00 000 %base[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// no rbp/r13
+mov  %_(qword_ptr) [ %base(qreg_no_5) ] , %imm:S64(immediate)
+0100100 %base[3:3] 11000111 00 000 100 00 %base[2:0] 100 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// no rsp/r12
+mov  %_(qword_ptr) [ %base(qreg_no_4) ] , %imm:S64(immediate)
+0100100 %base[3:3] 11000111 01 000 %base[2:0] 00000000 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+
+// mov [qreg], qreg
+// no rsp/rbp/r12/r13
+mov  %_(qword_ptr) [ %base(qreg_no_45) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(qword_ptr) [ %base(qreg_no_5) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(qword_ptr) [ %base(qreg_no_4) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov [qreg + imm], qreg
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %_(qword_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(qreg)
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %_(qword_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(qreg)
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %_(qword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %_(qword_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %_(qword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %_(qword_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(qreg)
+01001 %reg[3:3] 0 %base[3:3] 10001001 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg + qreg], qreg
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(qword_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(qreg)
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(qword_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(qreg)
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(qword_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(qreg)
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(qword_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(qreg)
+01001 %reg[3:3] %index[3:3] %base[3:3] 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov [imm], dreg
+// mov  %_(dword_ptr) [ %imm:S64(immediate) ] , eax
+mov  %_(dword_ptr) [ %disp:S64(immediate) ] , %reg(dreg)
+10001001 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(dword_ptr) [ %disp:S64(immediate) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg], dreg
+// no rsp/rbp/r12/r13
+mov  %_(dword_ptr) [ %base(qreg_no_45) ] , %reg(dreg)
+10001001 00 %reg[2:0] %base[2:0]
+
+mov  %_(dword_ptr) [ %base(qreg_no_45) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(dword_ptr) [ %base(qreg_no_5) ] , %reg(dreg)
+10001001 00 %reg[2:0] 100 00 %base[2:0] 100
+
+mov  %_(dword_ptr) [ %base(qreg_no_5) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(dword_ptr) [ %base(qreg_no_4) ] , %reg(dreg)
+10001001 01 %reg[2:0] %base[2:0] 00000000
+
+mov  %_(dword_ptr) [ %base(qreg_no_4) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov [qreg + imm], dreg
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %_(dword_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(dreg)
+!assert %disp == 0
+10001001 00 %reg[2:0] %base[2:0]
+
+mov  %_(dword_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(dreg)
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %_(dword_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(dreg)
+!assert %disp == 0
+10001001 00 %reg[2:0] 100 00 100 %base[2:0]
+
+mov  %_(dword_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(dreg)
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(dreg)
+10001001 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+mov  %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(dreg)
+10001001 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+mov  %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(dreg)
+10001001 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(dword_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(dreg)
+10001001 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(dword_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(dreg)
+01000 %reg[3:3] 0 %base[3:3] 10001001 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg + qreg], dreg
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(dword_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(dreg)
+10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %_(dword_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(dreg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(dword_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(dreg)
+10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %_(dword_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(dreg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(dreg)
+10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(dreg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(dreg)
+10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %_(dword_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(dreg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov [imm], wreg
+// mov  %_(word_ptr) [ %imm:S64(immediate) ] , ax
+mov  %_(word_ptr) [ %disp:S64(immediate) ] , %reg(wreg)
+01100110 10001001 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(word_ptr) [ %disp:S64(immediate) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg], wreg
+// no rsp/rbp/r12/r13
+mov  %_(word_ptr) [ %base(qreg_no_45) ] , %reg(wreg)
+01100110 10001001 00 %reg[2:0] %base[2:0]
+
+mov  %_(word_ptr) [ %base(qreg_no_45) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(word_ptr) [ %base(qreg_no_5) ] , %reg(wreg)
+01100110 10001001 00 %reg[2:0] 100 00 %base[2:0] 100
+
+mov  %_(word_ptr) [ %base(qreg_no_5) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(word_ptr) [ %base(qreg_no_4) ] , %reg(wreg)
+01100110 10001001 01 %reg[2:0] %base[2:0] 00000000
+
+mov  %_(word_ptr) [ %base(qreg_no_4) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov [qreg + imm], wreg
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %_(word_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(wreg)
+!assert %disp == 0
+01100110 10001001 00 %reg[2:0] %base[2:0]
+
+mov  %_(word_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(wreg)
+!assert %disp == 0
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %_(word_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(wreg)
+!assert %disp == 0
+01100110 10001001 00 %reg[2:0] 100 00 100 %base[2:0]
+
+mov  %_(word_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(wreg)
+!assert %disp == 0
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 10001001 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+mov  %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 10001001 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+mov  %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 10001001 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(word_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 10001001 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(word_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(wreg)
+01100110 01000 %reg[3:3] 0 %base[3:3] 10001001 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg + qreg], wreg// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(word_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(wreg)
+01100110 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %_(word_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(wreg)
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(word_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(wreg)
+01100110 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %_(word_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(wreg)
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(wreg)
+01100110 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(wreg)
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(wreg)
+01100110 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %_(word_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(wreg)
+01100110 01000 %reg[3:3] %index[3:3] %base[3:3] 10001001 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// mov [imm], breg
+// mov  %_(byte_ptr) [ %imm:S64(immediate) ] , al
+mov  %_(byte_ptr) [ %disp:S64(immediate) ] , %reg(breg_norex)
+10001000 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(byte_ptr) [ %disp:S64(immediate) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 00 %reg[2:0] 100 00 100 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg], breg
+mov  %_(byte_ptr) [ %base(qreg_no_45) ] , %reg(breg_norex)
+10001000 00 %reg[2:0] %base[2:0]
+
+mov  %_(byte_ptr) [ %base(qreg_no_45) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 00 %reg[2:0] %base[2:0]
+
+// no rbp/r13
+mov  %_(byte_ptr) [ %base(qreg_no_5) ] , %reg(breg_norex)
+10001000 00 %reg[2:0] 100 00 %base[2:0] 100
+
+mov  %_(byte_ptr) [ %base(qreg_no_5) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 00 %reg[2:0] 100 00 %base[2:0] 100
+
+// no rsp/r12
+mov  %_(byte_ptr) [ %base(qreg_no_4) ] , %reg(breg_norex)
+10001000 01 %reg[2:0] %base[2:0] 00000000
+
+mov  %_(byte_ptr) [ %base(qreg_no_4) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 01 %reg[2:0] %base[2:0] 00000000
+
+
+// mov [qreg + imm], breg
+// base != rsp/rbp/r12/r13, disp=0bits
+mov  %_(byte_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(breg_norex)
+!assert %disp == 0
+10001000 00 %reg[2:0] %base[2:0]
+
+mov  %_(byte_ptr) [ %base(qreg_no_45) + %disp:S64(immediate) ] , %reg(breg)
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001000 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+mov  %_(byte_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(breg_norex)
+!assert %disp == 0
+10001000 00 %reg[2:0] 100 00 100 %base[2:0]
+
+mov  %_(byte_ptr) [ %base(qreg_no_5) + %disp:S64(immediate) ] , %reg(breg)
+!assert %disp == 0
+01000 %reg[3:3] 0 %base[3:3] 10001000 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+mov  %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(breg_norex)
+10001000 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+mov  %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+mov  %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(breg_norex)
+10001000 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+mov  %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+mov  %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(breg_norex)
+10001000 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(byte_ptr) [ %base(qreg_no_4) + %disp:S64(immediate) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+mov  %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(breg_norex)
+10001000 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+mov  %_(byte_ptr) [ %base(qreg) + %disp:S64(immediate) ] , %reg(breg)
+01000 %reg[3:3] 0 %base[3:3] 10001000 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// mov [qreg + qreg], breg
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(byte_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(breg_norex)
+10001000 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %_(byte_ptr) [ %base(qreg_no_5) + %index(qreg_no_sp) ] , %reg(breg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001000 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(byte_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(breg_norex)
+10001000 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %_(byte_ptr) [ %base(qreg) + %index(qreg_no_sp) ] , %reg(breg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001000 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+mov  %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(breg_norex)
+10001000 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+mov  %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg_no_5) ] , %reg(breg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001000 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+mov  %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(breg_norex)
+10001000 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+mov  %_(byte_ptr) [ %index(qreg_no_sp) + %base(qreg) ] , %reg(breg)
+01000 %reg[3:3] %index[3:3] %base[3:3] 10001000 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+
+// movzx qreg, word [qreg + imm]
+// base != rsp/rbp/r12/r13, disp=0bits
+movzx  %reg(qreg) , word [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110111 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+movzx  %reg(qreg) , word [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110111 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+movzx  %reg(qreg) , word [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110111 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// base disp=8bits
+movzx  %reg(qreg) , word [ %base(qreg) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110111 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+movzx  %reg(qreg) , word [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110111 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// base disp=32bits
+movzx  %reg(qreg) , word [ %base(qreg) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110111 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// movzx qreg, word [qreg + qreg]
+// index != rsp, base != rbp/r12, disp=0bits
+movzx  %reg(qreg) , word [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110111 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+movzx  %reg(qreg) , word [ %base(qreg) + %index(qreg_no_sp) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110111 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+movzx  %reg(qreg) , word [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110111 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+movzx  %reg(qreg) , word [ %index(qreg_no_sp) + %base(qreg) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110111 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+// movzx qreg, byte [qreg + imm]
+// base != rsp/rbp/r12/r13, disp=0bits
+movzx  %reg(qreg) , byte [ %base(qreg_no_45) + %disp:S64(immediate) ]
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110110 00 %reg[2:0] %base[2:0]
+
+// base != rbp/r13, disp=0bits
+movzx  %reg(qreg) , byte [ %base(qreg_no_5) + %disp:S64(immediate) ]
+!assert %disp == 0
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110110 00 %reg[2:0] 100 00 100 %base[2:0]
+
+// base != rsp/r12, disp=8bits
+movzx  %reg(qreg) , byte [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110110 01 %reg[2:0] %base[2:0] %disp[7:0]
+
+// disp=8bits
+movzx  %reg(qreg) , byte [ %base(qreg) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110110 01 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0]
+
+// base != rsp/r12, disp=32bits
+movzx  %reg(qreg) , byte [ %base(qreg_no_4) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110110 10 %reg[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+// disp=32bits
+movzx  %reg(qreg) , byte [ %base(qreg) + %disp:S64(immediate) ]
+01001 %reg[3:3] 0 %base[3:3] 00001111 10110110 10 %reg[2:0] 100 00 100 %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// movzx qreg, byte [qreg + qreg]
+// index != rsp, base != rbp/r12, disp=0bits
+movzx  %reg(qreg) , byte [ %base(qreg_no_5) + %index(qreg_no_sp) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110110 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+movzx  %reg(qreg) , byte [ %base(qreg) + %index(qreg_no_sp) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110110 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+// index != rsp, base != rbp/r12, disp=0bits
+movzx  %reg(qreg) , byte [ %index(qreg_no_sp) + %base(qreg_no_5) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110110 00 %reg[2:0] 100 00 %index[2:0] %base[2:0]
+
+// index != rsp, disp=8bits
+movzx  %reg(qreg) , byte [ %index(qreg_no_sp) + %base(qreg) ]
+01001 %reg[3:3] %index[3:3] %base[3:3] 00001111 10110110 01 %reg[2:0] 100 00 %index[2:0] %base[2:0] 00000000
+
+
+// neg qreg
+neg  %rm(qreg)
+0100100 %rm[3:3] 11110111 11 011 %rm[2:0]
+
+
+// not qreg
+not  %rm(qreg)
+0100100 %rm[3:3] 11110111 11 010 %rm[2:0]
+
+
+// or qreg, imm
+or  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000011 11 001 %rm[2:0] %imm[7:0]
+
+or  %_(rax) , %imm:S64(immediate)
+01001000 00001101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+or  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000001 11 001 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// or qreg qreg
+or  %rm(qreg) , %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00001001 11 %reg[2:0] %rm[2:0]
+
+
+// pop qreg
+pop  %rm(qreg)
+01011 %rm[2:0]
+
+pop  %rm(qreg)
+0100000 %rm[3:3] 01011 %rm[2:0]
+
+
+// push qreg
+push  %rm(qreg)
+01010 %rm[2:0]
+
+push  %rm(qreg)
+0100000 %rm[3:3] 01010 %rm[2:0]
+
+
+// rdtsc
+rdtsc
+00001111 00110001
+
+
+// rep movsb
+rep movsb
+11110011 10100100
+
+
+// rep stosb
+rep stosb
+11110011 10101010
+
+
+// ret
+ret
+11000011
+
+ret %imm:U16(immediate)
+11000010 %imm[15:0]
+
+
+// lea qreg, [rel $+ offset]
+lea  %reg(qreg) , %_(qword_ptr) [ rel $ + %imm:S64(immediate) ]
+%disp:S64 = %imm - 7
+01001 %reg[3:3] 00 10001101 00 %reg[2:0] 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
+
+
+// rol qreg, imm
+rol  %rm(qreg) , %imm:U8(immediate)
+!assert %imm == 1
+0100100 %rm[3:3] 11010001 11 000 %rm[2:0]
+
+rol  %rm(qreg) , %imm:U8(immediate)
+0100100 %rm[3:3] 11000001 11 000 %rm[2:0] %imm[7:0]
+
+// rol qreg, breg
+rol  %rm(qreg) , cl
+0100100 %rm[3:3] 11010011 11 000 %rm[2:0]
+
+
+// ror qreg, imm
+ror  %rm(qreg) , %imm:U8(immediate)
+!assert %imm == 1
+0100100 %rm[3:3] 11010001 11 001 %rm[2:0]
+
+ror  %rm(qreg) , %imm:U8(immediate)
+0100100 %rm[3:3] 11000001 11 001 %rm[2:0] %imm[7:0]
+
+// ror qreg, breg
+ror  %rm(qreg) , cl
+0100100 %rm[3:3] 11010011 11 001 %rm[2:0]
+
+
+// sar qreg, imm
+sar  %rm(qreg) , %imm:U8(immediate)
+!assert %imm == 1
+0100100 %rm[3:3] 11010001 11 111 %rm[2:0]
+
+sar  %rm(qreg) , %imm:U8(immediate)
+0100100 %rm[3:3] 11000001 11 111 %rm[2:0] %imm[7:0]
+
+// sar qreg, breg
+sar  %rm(qreg) , cl
+0100100 %rm[3:3] 11010011 11 111 %rm[2:0]
+
+
+// seta breg
+seta %rm(breg_norex)
+00001111 10010111 11 000 %rm[2:0]
+
+seta %rm(breg)
+0100000 %rm[3:3] 00001111 10010111 11 000 %rm[2:0]
+
+
+// setae breg
+setae %rm(breg_norex)
+00001111 10010011 11 000 %rm[2:0]
+
+setae %rm(breg)
+0100000 %rm[3:3] 00001111 10010011 11 000 %rm[2:0]
+
+
+// setb breg
+setb %rm(breg_norex)
+00001111 10010010 11 000 %rm[2:0]
+
+setb %rm(breg)
+0100000 %rm[3:3] 00001111 10010010 11 000 %rm[2:0]
+
+
+// setbe breg
+setbe %rm(breg_norex)
+00001111 10010110 11 000 %rm[2:0]
+
+setbe %rm(breg)
+0100000 %rm[3:3] 00001111 10010110 11 000 %rm[2:0]
+
+
+// sete breg
+sete %rm(breg_norex)
+00001111 10010100 11 000 %rm[2:0]
+
+sete %rm(breg)
+0100000 %rm[3:3] 00001111 10010100 11 000 %rm[2:0]
+
+
+// setg breg
+setg %rm(breg_norex)
+00001111 10011111 11 000 %rm[2:0]
+
+setg %rm(breg)
+0100000 %rm[3:3] 00001111 10011111 11 000 %rm[2:0]
+
+
+// setge breg
+setge %rm(breg_norex)
+00001111 10011101 11 000 %rm[2:0]
+
+setge %rm(breg)
+0100000 %rm[3:3] 00001111 10011101 11 000 %rm[2:0]
+
+
+// setl breg
+setl %rm(breg_norex)
+00001111 10011100 11 000 %rm[2:0]
+
+setl %rm(breg)
+0100000 %rm[3:3] 00001111 10011100 11 000 %rm[2:0]
+
+
+// setle breg
+setle %rm(breg_norex)
+00001111 10011110 11 000 %rm[2:0]
+
+setle %rm(breg)
+0100000 %rm[3:3] 00001111 10011110 11 000 %rm[2:0]
+
+
+// setne breg
+setne %rm(breg_norex)
+00001111 10010101 11 000 %rm[2:0]
+
+setne %rm(breg)
+0100000 %rm[3:3] 00001111 10010101 11 000 %rm[2:0]
+
+
+// shl qreg, imm
+shl  %rm(qreg) , %imm:U8(immediate)
+!assert %imm == 1
+0100100 %rm[3:3] 11010001 11 100 %rm[2:0]
+
+shl  %rm(qreg) , %imm:U8(immediate)
+0100100 %rm[3:3] 11000001 11 100 %rm[2:0] %imm[7:0]
+
+// shl qreg, breg
+shl  %rm(qreg) , cl
+0100100 %rm[3:3] 11010011 11 100 %rm[2:0]
+
+
+// shr qreg, imm
+shr  %rm(qreg) , %imm:U8(immediate)
+!assert %imm == 1
+0100100 %rm[3:3] 11010001 11 101 %rm[2:0]
+
+shr  %rm(qreg) , %imm:U8(immediate)
+0100100 %rm[3:3] 11000001 11 101 %rm[2:0] %imm[7:0]
+
+// shr qreg, breg
+shr  %rm(qreg) , cl
+0100100 %rm[3:3] 11010011 11 101 %rm[2:0]
+
+
+// sub qreg, imm
+sub  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000011 11 101 %rm[2:0] %imm[7:0]
+
+sub  %_(rax) , %imm:S64(immediate)
+01001000 00101101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+sub  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000001 11 101 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// sub qreg, qreg
+sub  %rm(qreg), %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00101001 11 %reg[2:0] %rm[2:0]
+
+
+// syscall
+syscall
+00001111 00000101
+
+
+// test qreg, imm
+test  %_(rax) , %imm:S64(immediate)
+01001000 10101001 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+test  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 11110111 11 000 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// test qreg, qreg
+test  %rm(qreg) , %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 10000101 11 %reg[2:0] %rm[2:0]
+
+
+// xor qreg, imm
+xor  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000011 11 110 %rm[2:0] %imm[7:0]
+
+xor  %_(rax) , %imm:S64(immediate)
+01001000 00110101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+xor  %rm(qreg) , %imm:S64(immediate)
+0100100 %rm[3:3] 10000001 11 110 %rm[2:0] %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
+
+// xor qreg, qreg
+xor  %rm(qreg) , %reg(qreg)
+01001 %reg[3:3] 0 %rm[3:3] 00110001 11 %reg[2:0] %rm[2:0]
+

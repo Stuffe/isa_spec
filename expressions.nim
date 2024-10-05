@@ -1,24 +1,31 @@
-import std/setutils, strutils, math, bitops
+import std/setutils, strutils, math, bitops, tables
 import types, parse
 
 const CURRENT_ADDRESS* = int.high
 
 func to_str*(exp: expression, operand_names: seq[string]): string =
+  if isNil(exp): return "NIL_EXP"
   case exp.exp_kind:
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
-    of exp_operand: 
+    of exp_operand:
       if exp.index == CURRENT_ADDRESS: return "$"
       if exp.index >= 0 and exp.index < operand_names.len:
         return "%" & operand_names[exp.index]
       else:
         return "%" & $exp.index
     of exp_operation: 
-      if exp.op_kind == op_log2:
-        return "log2(" & exp.lhs.to_str(operand_names) & ")"
-      elif exp.op_kind == op_asr:
-        return "asr(" & exp.lhs.to_str(operand_names) & "," & exp.rhs.to_str(operand_names) & ")"
-      return "(" & exp.lhs.to_str(operand_names) & " " & OP_INDEXES[ord(exp.op_kind)] & " " & exp.rhs.to_str(operand_names) & ")"
+      case exp.op_kind:
+        of op_log2:
+          return "log2(" & exp.lhs.to_str(operand_names) & ")"
+        of op_asr:
+          return "asr(" & exp.lhs.to_str(operand_names) & "," & exp.rhs.to_str(operand_names) & ")"
+        of op_popcount:
+          return "popcount(" & exp.lhs.to_str(operand_names) & ")"
+        of op_trailing_zeros:
+          return "trailing_zeros(" & exp.lhs.to_str(operand_names) & ")"
+        else:
+          return "(" & exp.lhs.to_str(operand_names) & " " & OP_INDEXES[ord(exp.op_kind)] & " " & exp.rhs.to_str(operand_names) & ")"
     of exp_bitextract:
       if exp.bottom.is_nil:
         return exp.base.to_str(operand_names) & "[" & exp.top.to_str(operand_names)  & "]"
@@ -32,13 +39,21 @@ func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression
 
 func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
 
-  if matches(s, "log2("):
-    skip_whitespaces(s)
-    let exp = get_expression(s, operand_names)
-    if not matches(s, ')'):
-      return expression(exp_kind: exp_fail)
-    skip_whitespaces(s)
-    return expression(exp_kind: exp_operation, op_kind: op_log2, lhs: exp)
+  const SINGLE_ARG = {
+    "trailing_zeros": op_trailing_zeros, 
+    "popcount": op_popcount,
+    "log2": op_log2,
+  }.toTable
+
+  for name, kind in SINGLE_ARG:
+
+    if matches(s, name & "("):
+      skip_whitespaces(s)
+      let exp = get_expression(s, operand_names)
+      if not matches(s, ')'):
+        return expression(exp_kind: exp_fail)
+      skip_whitespaces(s)
+      return expression(exp_kind: exp_operation, op_kind: kind, lhs: exp)
 
   if matches(s, "asr("):
     let lhs = get_expression(s, operand_names)
@@ -189,7 +204,7 @@ func eval*(input: expression, operands: seq[uint64], current_address: int): int 
     of exp_operation:
       let lhs = eval(input.lhs, operands, current_address)
       var rhs: int
-      if input.op_kind != op_log2:
+      if input.op_kind notin {op_log2, op_popcount, op_trailing_zeros}:
         rhs = eval(input.rhs, operands, current_address)
 
       case input.op_kind:
@@ -210,6 +225,11 @@ func eval*(input: expression, operands: seq[uint64], current_address: int): int 
           while (number shr shifts) > 0:
             shifts += 1
           return shifts - 1
+        of op_popcount:
+          return popcount(lhs)
+        of op_trailing_zeros:
+          return countTrailingZeroBits(lhs)
+
     of exp_bitextract:
       let base = eval(input.base, operands, current_address)
       let top = eval(input.top, operands, current_address)
@@ -244,7 +264,7 @@ func reverse_single(fields: var seq[uint64], current_address: int, op_kind: OpKi
     of op_lsl: return reverse_eval(unknown, current_address, fields, res shr known)
     of op_lsr: return reverse_eval(unknown, current_address, fields, res shl known)
     of op_asr: return reverse_eval(unknown, current_address, fields, res shl known)
-    of op_log2: assert false
+    of op_log2, op_popcount, op_trailing_zeros: assert false
 
 func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int =
   # TODO: This entire function is the wrong approach to this problem
