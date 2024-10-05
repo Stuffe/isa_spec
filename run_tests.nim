@@ -1,10 +1,9 @@
 import std/[tables, os, strutils, strformat, times, monotimes]
-import isa_spec, types, expressions, parse
+import isa_spec, types, expressions
 
-const STOP_AT_FIRST_FAIL  = true
-const RUN_SINGLE_TEST     = "" # Emtpy string means run all tests
-const CHECK_ROUNDTRIP     = false
-const GENERATE_TOKEN_LIST = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
+const STOP_AT_FIRST_FAIL = true
+const RUN_SINGLE_TEST    = "" # Emtpy string means run all tests
+const CHECK_ROUNDTRIP    = false
 
 type AsmTestFile = tuple
   source_file: string
@@ -133,9 +132,6 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       of "isa_err":
         doAssert parts.len == 2, &"isa error files can't have a subid ({test_dir/file_name})"
         sub_tests[name].spec_error_file = test_dir/file_name
-      of "isa_tokens":
-        doAssert parts.len == 2, &"isa error files can't have a subid ({test_dir/file_name})"
-        sub_tests[name].spec_tokens_file = test_dir/file_name
       of "asm":
         sub_tests[name].asm_tests[subid].source_file = test_dir/file_name
       of "err":
@@ -170,22 +166,6 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     spec_time += timer()
 
     let isa_spec = spec_result.spec
-    if tests.spec_tokens_file != "":
-      let expected_tokens = readFile(tests.spec_tokens_file).splitLines()
-      when GENERATE_TOKEN_LIST:
-        echo &"\u001b[34m[{test_name}] '{tests.spec_file}' token list\u001b[0m: "
-      for i, token in spec_result.tokens:
-        let text = ($token.s).replace("\n", "\\n").replace("\r", "\\r")
-        let expected_line = &"{token.tk}: `{text}`"
-        when GENERATE_TOKEN_LIST:
-          echo expected_line
-        else:
-          if i > expected_tokens.high:
-            fail(test_name, tests.spec_file, &"To many tokens: Got extra\n{expected_line}")
-          if expected_tokens[i] != expected_line:
-            fail(test_name, tests.spec_file, &"Incorrect token: Got\n{expected_line}, Expected\n{expected_tokens[i]}")
-      when GENERATE_TOKEN_LIST:
-        echo "\n"
 
     if spec_result.error.message != "":
       if tests.spec_error_file != "":
