@@ -16,9 +16,6 @@ type FieldKind* = enum
 func is_variable*(input: FieldKind): bool =
   return input notin {field_zero, field_one, field_wildcard, field_imm, field_label, field_invalid}
 
-const ANY_NUMBER_OF_SPACES* = " "
-const AT_LEAST_ONE_SPACE*   = "  "
-
 type FieldValue* = object
   name*: string
   value*: uint64

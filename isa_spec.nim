@@ -137,13 +137,13 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           this_part.text = ""
         # One space means it's optional, two spaces means some whitespace seperation is required
         if char == ' ' and syntax_parts.len > 0:
-          case syntax_parts[^1].text:
-            of ANY_NUMBER_OF_SPACES:
-              syntax_parts[^1].text = AT_LEAST_ONE_SPACE
-            of AT_LEAST_ONE_SPACE:
+          case syntax_parts[^1].kind:
+            of sk_any_number_of_spaces:
+              syntax_parts[^1].kind = sk_at_least_one_space
+            of sk_at_least_one_space:
               discard
             else:
-              syntax_parts.add(Syntax(kind: sk_any_number_of_spaces, text: ANY_NUMBER_OF_SPACES))
+              syntax_parts.add(Syntax(kind: sk_any_number_of_spaces))
       else:
         add_token(s, tk_mnenomic)
         this_part.text.add(char)

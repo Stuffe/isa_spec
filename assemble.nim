@@ -148,11 +148,11 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
 
   var i = 0
   for syntax in inst.syntax:
-    if syntax.text == ANY_NUMBER_OF_SPACES:
+    if syntax.kind == sk_any_number_of_spaces:
       p.isa_spec.skip_whitespaces(s)
       continue
 
-    if syntax.text == AT_LEAST_ONE_SPACE:
+    if syntax.kind == sk_at_least_one_space:
       let start_index = s.get_index()
       p.isa_spec.skip_whitespaces(s)
       if s.get_index() == start_index:
