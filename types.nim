@@ -25,6 +25,12 @@ type FieldType* = object
   bit_length*: int
   values*: seq[FieldValue]
 
+func to_variable*(input: int): FieldKind =
+  return FieldKind(input)
+
+func to_variable_index*(input: FieldKind): int =
+  return int(input)
+
 type ExpKind* = enum
   exp_fail
   exp_number

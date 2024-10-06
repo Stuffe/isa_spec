@@ -308,7 +308,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
       continue # fixed fields are either irreleant or part of the fixed_pattern above
     let bit_index = i mod 64
     let int_index = values.high - (i div 64)
-    let index = int(bit_type.id)
+    let index = to_variable_index(bit_type.id)
     let bits = fields[index].bitsliced(bit_type.bottom .. bit_type.top)
     values[int_index] = values[int_index] or (bits shl bit_index)
     i += bit_type.top - bit_type.bottom + 1
