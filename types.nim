@@ -85,15 +85,22 @@ func `==`*(a, b: expression): bool =
     of exp_bitextract:
       return a.base == b.base and a.top == b.top and a.bottom == b.bottom
 
+type OperandTypeKind* = enum
+  otk_normal
+  otk_virtual
+  otk_empty
+
 type OperandType* = object
   name*: string
   is_signed*: bool
   size*: int
-  case is_virtual*: bool
-    of false:
+  case kind*: OperandTypeKind
+    of otk_normal:
       options*: seq[FieldKind]
-    of true:
+    of otk_virtual:
       expr*: expression
+    of otk_empty: 
+      discard
 
   # if used == 0, the other 3 fields are irreleavnt
   used*: uint64 # bit mask of bits that are used directly in the final result
@@ -111,12 +118,15 @@ type OperandType* = object
   # sign_bit      = 9
 
 func `==`*(a, b: OperandType): bool =
-  if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.is_virtual != b.is_virtual:
+  if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.kind != b.kind:
     return false
-  if a.is_virtual:
-    return a.expr == b.expr
-  else:
-    return a.options == b.options
+  case a.kind:
+    of otk_normal:
+      return a.options == b.options
+    of otk_virtual:
+      return a.expr == b.expr
+    else: 
+      return true
 
 type Bitfield* = object
   id*: FieldKind

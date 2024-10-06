@@ -261,7 +261,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
   var fields = args
   # Compute virtual fields & Apply sizes
   for i, field in inst.fields:
-    if field.is_virtual:
+    if field.kind == otk_virtual:
       let new_field = eval(field.expr, fields, ip)
       fields.add(cast[uint64](new_field))
     if field.size != 64: # If the size is 64, there is nothing we can verify
@@ -382,7 +382,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         return true
     for inst in match.options:
       for virt in inst.fields:
-        if not virt.is_virtual: continue
+        if virt.kind != otk_virtual: continue
         if virt.expr.any_pc_rel:
           return true
     return false

@@ -68,12 +68,14 @@ proc echo_deep_diff(a, b: OperandType; path: string) =
   echo_deep_diff(a.name, b.name, path & "." & "name")
   echo_deep_diff(a.is_signed, b.is_signed, path & "." & "is_signed")
   echo_deep_diff(a.size, b.size, path & "." & "size")
-  echo_deep_diff(a.is_virtual, b.is_virtual, path & "." & "is_virtual")
-  if a.is_virtual == b.is_virtual:
-    if a.is_virtual:
-      echo_deep_diff(a.expr, b.expr, path & "." & "expr")
-    else:
-      echo_deep_diff(a.options, b.options, path & "." & "options")
+  echo_deep_diff(a.kind, b.kind, path & "." & "kind")
+  if a.kind == b.kind:
+    case a.kind:
+      of otk_virtual:
+        echo_deep_diff(a.expr, b.expr, path & "." & "expr")
+      of otk_normal:
+        echo_deep_diff(a.options, b.options, path & "." & "options")
+      else: discard
 
 proc parse_hex_string(source: string): seq[uint8] =
   var last: int = -1

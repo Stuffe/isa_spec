@@ -19,7 +19,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
   for syntax in instruction.syntax:
     if syntax == "":
       var options: seq[string]
-      assert not instruction.fields[field_i].is_virtual
+      assert instruction.fields[field_i].kind == otk_normal
       for field in instruction.fields[field_i].options:
         options.add(isa_spec.field_types[field].name)
       source &= field_define(instruction.fields[field_i]) & "(" & options.join(" | ") & ")"
@@ -29,7 +29,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
   source &= "\n"
 
   for vf in instruction.fields[field_i .. ^1]:
-    assert vf.is_virtual
+    assert vf.kind == otk_virtual
     let expr_source = vf.expr.to_str(instruction.field_names)
     source &= field_define(vf) & " = " & expr_source & "\n"
 
@@ -158,7 +158,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
-      var new_field = OperandType(size: 64, is_virtual: false)
+      var new_field = OperandType(size: 64, kind: otk_normal)
       new_field.name = $get_identifier(s)
       if new_field.name.len == 0:
         return error("Expected an identifier after '%'")
@@ -224,7 +224,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     while peek(s) in {'%', '!'}:
       let restore = s
       if read(s) == '%':
-        var new_field = OperandType(size: 64, is_virtual: true)
+        var new_field = OperandType(size: 64, kind: otk_virtual)
         new_field.name = $get_identifier(s)
         if new_field.name.len == 0:
           return error("Expected an identifier after '%'")
