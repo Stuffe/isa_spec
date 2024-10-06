@@ -320,13 +320,13 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
             pattern.add('0')
             mask.add('0')
             let c = read(s, tk=tk_field_name)
-            var field_index = -1
+            var field_index = field_invalid
             for i, field_name in new_instruction.field_names:
               if field_name[0] == c:
-                  field_index = i
+                  field_index = FieldKind(i)
                   break
 
-            if field_index < 0:
+            if field_index == field_invalid:
               return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
             FieldKind(field_index)
         if bit_id != current.id:
