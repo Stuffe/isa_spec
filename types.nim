@@ -85,7 +85,6 @@ func `==`*(a, b: expression): bool =
 type OperandTypeKind* = enum
   otk_normal
   otk_virtual
-  otk_empty
 
 type OperandType* = object
   name*: string
@@ -96,8 +95,6 @@ type OperandType* = object
       options*: seq[FieldKind]
     of otk_virtual:
       expr*: expression
-    of otk_empty: 
-      discard
 
   # if used == 0, the other 3 fields are irreleavnt
   used*: uint64 # bit mask of bits that are used directly in the final result
@@ -143,7 +140,7 @@ type Syntax* = object
 
 type Instruction* = object
   syntax*: seq[Syntax]
-  fields*: seq[OperandType]
+  operands*: seq[OperandType]
   asserts*: seq[(expression, expression, string)]
   bits*: seq[Bitfield]
   bit_length*: int

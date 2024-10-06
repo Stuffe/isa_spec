@@ -167,8 +167,8 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
       continue
 
     let restore = s
-    for j, field in inst.fields[i].options:
-      let is_last = j == inst.fields[i].options.high
+    for j, field in inst.operands[i].options:
+      let is_last = j == inst.operands[i].options.high
       s = restore
 
       case field:
@@ -243,7 +243,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
   result.final_index = get_index(s)
 
 func field_names(i: Instruction): seq[string] =
-  for f in i.fields:
+  for f in i.operands:
     result.add f.name
 
 func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
@@ -260,7 +260,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
 
   var fields = args
   # Compute virtual fields & Apply sizes
-  for i, field in inst.fields:
+  for i, field in inst.operands:
     if field.kind == otk_virtual:
       let new_field = eval(field.expr, fields, ip)
       fields.add(cast[uint64](new_field))
@@ -381,7 +381,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       if op.kind != ok_fixed:
         return true
     for inst in match.options:
-      for virt in inst.fields:
+      for virt in inst.operands:
         if virt.kind != otk_virtual: continue
         if virt.expr.any_pc_rel:
           return true

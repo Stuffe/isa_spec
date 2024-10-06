@@ -4,8 +4,8 @@ import types, parse, expressions
 export parse.new_StreamSlice
 
 func field_names(i: Instruction): seq[string] =
-  for f in i.fields:
-    result.add f.name
+  for f in i.operands:
+    result.add(f.name)
 
 func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string =
   func field_define(f: OperandType): string =
@@ -19,16 +19,16 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
   for syntax in instruction.syntax:
     if syntax.text == "":
       var options: seq[string]
-      assert instruction.fields[field_i].kind == otk_normal
-      for field in instruction.fields[field_i].options:
+      assert instruction.operands[field_i].kind == otk_normal
+      for field in instruction.operands[field_i].options:
         options.add(isa_spec.field_types[field].name)
-      source &= field_define(instruction.fields[field_i]) & "(" & options.join(" | ") & ")"
+      source &= field_define(instruction.operands[field_i]) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
       source &= syntax.text.replace("%", "%%")
   source &= "\n"
 
-  for vf in instruction.fields[field_i .. ^1]:
+  for vf in instruction.operands[field_i .. ^1]:
     assert vf.kind == otk_virtual
     let expr_source = vf.expr.to_str(instruction.field_names)
     source &= field_define(vf) & " = " & expr_source & "\n"
@@ -49,7 +49,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
           assert field.id.int < 3
           "01?"[field.id.int]
         else:
-          instruction.fields[int(field.id)].name[0]
+          instruction.operands[int(field.id)].name[0]
       for _ in field.bottom .. field.top:
         source &= c
         if j mod 8 == 7:
@@ -57,7 +57,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
         j += 1
     else:
       assert not is_variable(field.id)
-      let field_name = instruction.fields[int(field.id)].name
+      let field_name = instruction.operands[int(field.id)].name
       source &= " %" & field_name & "[" & $field.top & ":" & $field.bottom & "] "
       j += field.top - field.bottom + 1
 
@@ -207,7 +207,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
       if not matches(s, ')', tk=tk_bracket):
         return error("Expected a closing parenthesis after the field type")
 
-      new_instruction.fields.add(new_field)
+      new_instruction.operands.add(new_field)
 
       add_string_syntax(s, new_instruction.syntax)
 
@@ -252,7 +252,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         skip_whitespaces(s)
 
         new_field.expr = get_expression(s, new_instruction.field_names)
-        new_instruction.fields.add(new_field)
+        new_instruction.operands.add(new_field)
 
         if new_field.expr.exp_kind == exp_fail:
           if instruction_name == "":
@@ -341,7 +341,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         if field_name.len == 0:
           return error("Expected an identifier after '%'")
         var field_index = -1
-        for i, field in new_instruction.fields:
+        for i, field in new_instruction.operands:
           if field.name == field_name:
               field_index = i
               break
@@ -378,7 +378,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     new_instruction.bit_length = total_length
 
     var current_length = 0
-    var consumed_bits = newSeq[int](new_instruction.fields.len)
+    var consumed_bits = newSeq[int](new_instruction.operands.len)
     for i in countdown(new_bits.high, 0):
       var bits = new_bits[i]
       let index = int(bits.id)
@@ -388,13 +388,13 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         bits.bottom += consumed_bits[index]
         consumed_bits[index] += bits.top - bits.bottom + 1
       if is_variable(bits.id):
-        new_instruction.fields[index].used = new_instruction.fields[index].used or toMask[uint64](bits.bottom .. bits.top)
+        new_instruction.operands[index].used = new_instruction.operands[index].used or toMask[uint64](bits.bottom .. bits.top)
 
       let new_length = current_length + bits.top - bits.bottom + 1
       if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
         let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
         if bits.top - bits.bottom + 1 > 64 and is_variable(bits.id):
-          return error("Bit pattern for field " & new_instruction.fields[index].name & " longer than 64bit")
+          return error("Bit pattern for field " & new_instruction.operands[index].name & " longer than 64bit")
         var right = bits
         var left = bits
         right.top = bits.bottom + fit_count - 1
@@ -406,7 +406,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
       current_length = new_length
     reverse(new_instruction.bits)
 
-    for f in new_instruction.fields.mitems:
+    for f in new_instruction.operands.mitems:
       if f.used != 0:
         f.unused_zero = not f.used
         f.highest_bit = (63 - f.used.count_leading_zero_bits()).int8
