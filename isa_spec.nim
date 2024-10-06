@@ -45,19 +45,19 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
   var j = 0
   for i, field in instruction.bits:
     if field.is_direct:
-      let c = if field.id.int < FIXED_FIELDS_LEN:
+      let c = if not is_variable(field.id):
           assert field.id.int < 3
           "01?"[field.id.int]
         else:
-          instruction.fields[field.id.int - FIXED_FIELDS_LEN].name[0]
+          instruction.fields[to_variable_index(field.id)].name[0]
       for _ in field.bottom .. field.top:
         source &= c
         if j mod 8 == 7:
           source &= " "
         j += 1
     else:
-      assert field.id.int >= FIXED_FIELDS_LEN
-      let field_name = instruction.fields[field.id.int - FIXED_FIELDS_LEN].name
+      assert not is_variable(field.id)
+      let field_name = instruction.fields[to_variable_index(field.id)].name
       source &= " %" & field_name & "[" & $field.top & ":" & $field.bottom & "] "
       j += field.top - field.bottom + 1
 
@@ -92,7 +92,8 @@ func spec_to_string*(isa_spec: IsaSpec): string =
 
   source &= "[fields]\n"
 
-  for field_type in isa_spec.field_types[FIXED_FIELDS_LEN..^1]:
+  for i, field_type in isa_spec.field_types:
+    if not is_variable(FieldId(i)): continue
 
     source &= "\n" & field_type.name & "\n"
 
@@ -293,7 +294,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
     # nvalid indecies. They are instead used to track the length of the field before being updated
     # to the correct bounds in a seperate pass
-    var current = Bitfield(id: FIELD_INVALID)
+    var current = Bitfield(id: field_invalid)
 
     while peek(s) in setutils.toSet("01?%abcdefghijklmnopqrstuvwxyz "):
       if peek(s) != '%':
@@ -302,12 +303,12 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
             pattern.add('0')
             mask.add('1')
             skip(s, tk=tk_number)
-            FIELD_ZERO
+            field_zero
           of '1':
             pattern.add('1')
             mask.add('1')
             skip(s, tk=tk_number)
-            FIELD_ONE
+            field_one
           of ' ':
             skip(s, tk=tk_whitespace)
             continue
@@ -315,7 +316,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
             pattern.add('0')
             mask.add('0')
             skip(s, tk=tk_number)
-            FIELD_WILDCARD
+            field_wildcard
           else:
             pattern.add('0')
             mask.add('0')
@@ -328,10 +329,9 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
             if field_index < 0:
               return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
-            let field_real_index = field_index + FIXED_FIELDS_LEN
-            FieldId(field_real_index)
+            to_variable(field_index)
         if bit_id != current.id:
-          if current.id != FIELD_INVALID:
+          if current.id != field_invalid:
             new_bits.add(current)
           current = Bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
         else:
@@ -346,7 +346,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           if field.name == field_name:
               field_index = i
               break
-        let field_real_index = field_index + FIXED_FIELDS_LEN
+        let field_real_index = to_variable(field_index)
         if read(s, tk=tk_bracket) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
@@ -359,16 +359,16 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         skip_whitespaces(s)
         if read(s, tk=tk_bracket) != ']':
           return error("Expected slice syntax after field reference in bit pattern")
-        if current.id != FIELD_INVALID:
+        if current.id != field_invalid:
           new_bits.add(current)
-          current = Bitfield(id: FIELD_INVALID)
+          current = Bitfield(id: field_invalid)
         new_bits.add(Bitfield(id: FieldId(field_real_index), top: top, bottom: bottom))
         for _ in bottom .. top:
           mask.add '0'
           pattern.add '0'
 
 
-    if current.id != FIELD_INVALID:
+    if current.id != field_invalid:
       new_bits.add(current)
 
     let total_length = mask.len
@@ -382,19 +382,19 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     var consumed_bits = newSeq[int](new_instruction.fields.len)
     for i in countdown(new_bits.high, 0):
       var bits = new_bits[i]
-      let index = bits.id.int - FIXED_FIELDS_LEN
-      if bits.is_direct and index >= 0:
+      let index = to_variable_index(bits.id)
+      if bits.is_direct and is_variable(bits.id):
         # We need to adjust this for the case of non-consecutive bit fields of the same operand
         bits.top += consumed_bits[index]
         bits.bottom += consumed_bits[index]
         consumed_bits[index] += bits.top - bits.bottom + 1
-      if index >= 0:
+      if is_variable(bits.id):
         new_instruction.fields[index].used = new_instruction.fields[index].used or toMask[uint64](bits.bottom .. bits.top)
 
       let new_length = current_length + bits.top - bits.bottom + 1
       if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
         let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
-        if bits.top - bits.bottom + 1 > 64 and index >= 0:
+        if bits.top - bits.bottom + 1 > 64 and is_variable(bits.id):
           return error("Bit pattern for field " & new_instruction.fields[index].name & " longer than 64bit")
         var right = bits
         var left = bits
@@ -627,57 +627,6 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
     return parse_isa_spec_inner(file_name, source)
   except ParseError as e:
     return SpecParseResult(error: Error(loc:FileLocation(file:file_name, line:e.line), message: e.msg))
-#[
-func disassemble*(isa_spec: isa_spec, machine_code: seq[uint8]): seq[disassembled_instruction] =
-  var machine_code_pad = machine_code & @[0'u8,0,0,0,0,0,0, 0,0,0,0,0,0,0,0] # 15 extra bytes so we don't have to worry about out of bounds indexing
-  var index = 0
-
-  while index < machine_code.len:
-    let machine_code_0 = cast[ptr uint64](addr machine_code_pad[index])[]
-    let machine_code_1 = cast[ptr uint64](addr machine_code_pad[index + 8])[]
-
-    var anything_found = false
-
-    for instruction in isa_spec.instructions:
-      let current_address = index
-      if (machine_code_0 and instruction.fixed_mask_0) == instruction.fixed_pattern_0 and (machine_code_1 and instruction.fixed_mask_1) == instruction.fixed_pattern_1:
-        index += (instruction.bit_length + 7) div 8
-        anything_found = true
-        result.add(disassembled_instruction(is_literal: false, instruction: instruction))
-        var fields: seq[uint64]
-        for i, t in instruction.bits:
-          if t.id.int < FIXED_FIELDS_LEN: continue
-          let idx = t.id.int - FIXED_FIELDS_LEN
-          while idx >= fields.len:
-            fields.add(0)
-
-          var bit = 0'u64
-          if i < 64:
-            bit = uint64((machine_code_0 and (1'u64 shl (instruction.bits.high - i))) > 0)
-          else:
-            let i2 = i - 64
-            bit = uint64((machine_code_1 and (1'u64 shl (instruction.bits.high - i2))) > 0)
-          
-          fields[idx] = fields[idx] shl 1'u64 or bit
-
-        for field_index in countDown(instruction.fields.high, 0):
-          if not instruction.fields[field_index].is_virtual:
-            break
-          let expression = instruction.fields[field_index].expr
-          let res = cast[int](fields[field_index])
-          fields[field_index] = cast[uint64](reverse_eval(expression, current_address, fields, res))
-
-        result[^1].operands = fields
-
-        break
-        
-    if not anything_found:
-      result.add(disassembled_instruction(is_literal: true))
-      let top = index + max(1, isa_spec.code_alignment)
-      while index < top:
-        result[^1].value.add(machine_code_pad[index])
-        index += 1
-]#
 
 import assemble
 export assemble

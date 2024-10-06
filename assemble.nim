@@ -172,7 +172,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
       s = restore
 
       case field:
-        of FIELD_LABEL:
+        of field_label:
           if peek(s) == '.':
             skip(s)
             let jump_distance = check(get_unsigned(s))
@@ -191,7 +191,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
           i += 1
           break
 
-        of FIELD_IMM:
+        of field_imm:
           let (number_err, number) = get_unsigned(s)
           if number_err == "":
             result.operands.add fixed(check(parse_unsigned(number)))
@@ -209,7 +209,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
           break
 
         else: # Some user defined field type
-          assert field.int >= FIXED_FIELDS_LEN, "Illegal field value in syntax definition"
+          assert is_variable(field), "Illegal field value in syntax definition"
           let pre_field_restore = s
           let field_string = get_identifier(s)
           s = pre_field_restore
@@ -303,12 +303,12 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
   var i = 0
   for j in countdown(inst.bits.high, 0):
     let bit_type = inst.bits[j]
-    if bit_type.id.int < FIXED_FIELDS_LEN:
+    if not is_variable(bit_type.id):
       i += bit_type.top - bit_type.bottom + 1
       continue # fixed fields are either irreleant or part of the fixed_pattern above
     let bit_index = i mod 64
     let int_index = values.high - (i div 64)
-    let index = bit_type.id.int - FIXED_FIELDS_LEN
+    let index = to_variable_index(bit_type.id)
     let bits = fields[index].bitsliced(bit_type.bottom .. bit_type.top)
     values[int_index] = values[int_index] or (bits shl bit_index)
     i += bit_type.top - bit_type.bottom + 1

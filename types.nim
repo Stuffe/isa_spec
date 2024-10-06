@@ -4,19 +4,23 @@ const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
-type FieldID* = distinct int
+type FieldID* = enum
+  field_zero
+  field_one
+  field_wildcard
+  field_imm
+  field_label
+  field_variable_0, field_variable_1, field_variable_2, field_variable_3, field_variable_4, field_variable_5, field_variable_6, field_variable_7, field_variable_8, field_variable_9, field_variable_10, field_variable_11, field_variable_12, field_variable_13, field_variable_14, field_variable_15, field_variable_16, field_variable_17, field_variable_18, field_variable_19, field_variable_20, field_variable_21, field_variable_22, field_variable_23, field_variable_24, field_variable_25, field_variable_26, field_variable_27, field_variable_28, field_variable_29, field_variable_30, field_variable_31, field_variable_32, field_variable_33, field_variable_34, field_variable_35, field_variable_36, field_variable_37, field_variable_38, field_variable_39, field_variable_40, field_variable_41, field_variable_42, field_variable_43, field_variable_44, field_variable_45, field_variable_46, field_variable_47, field_variable_48, field_variable_49, field_variable_50, field_variable_51, field_variable_52, field_variable_53, field_variable_54, field_variable_55, field_variable_56, field_variable_57, field_variable_58, field_variable_59, field_variable_60, field_variable_61, field_variable_62, field_variable_63, field_variable_64, field_variable_65, field_variable_66, field_variable_67, field_variable_68, field_variable_69, field_variable_70, field_variable_71, field_variable_72, field_variable_73, field_variable_74, field_variable_75, field_variable_76, field_variable_77, field_variable_78, field_variable_79, field_variable_80, field_variable_81, field_variable_82, field_variable_83, field_variable_84, field_variable_85, field_variable_86, field_variable_87, field_variable_88, field_variable_89, field_variable_90, field_variable_91, field_variable_92, field_variable_93, field_variable_94, field_variable_95, field_variable_96, field_variable_97, field_variable_98, field_variable_99, field_variable_100, field_variable_101, field_variable_102, field_variable_103, field_variable_104, field_variable_105, field_variable_106, field_variable_107
+  field_invalid
 
-func `==`*(a, b: FieldID): bool {.borrow.}
-func `$`*(a: FieldID): string =
-  "FieldID(" & $a.int & ")"
+func to_variable*(input: int): FieldID =
+  return FieldId(input + 5)
 
-const FIELD_INVALID*    = FieldID(-1)
-const FIELD_ZERO*       = FieldID(0)
-const FIELD_ONE*        = FieldID(1)
-const FIELD_WILDCARD*   = FieldID(2)
-const FIELD_IMM*        = FieldID(3)
-const FIELD_LABEL*      = FieldID(4)
-const FIXED_FIELDS_LEN* = 5
+func to_variable_index*(input: FieldID): int =
+  return input.int - 5
+
+func is_variable*(input: FieldId): bool =
+  return input notin {field_zero, field_one, field_wildcard, field_imm, field_label, field_invalid}
 
 const ANY_NUMBER_OF_SPACES* = " "
 const AT_LEAST_ONE_SPACE*   = "  "

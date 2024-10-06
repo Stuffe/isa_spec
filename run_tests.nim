@@ -9,7 +9,7 @@ when existsEnv("CI"): # if we are running in Contious Integeration testing (e.g.
   const CHECK_ROUNDTRIP         = false
   const GENERATE_TOKEN_LIST     = false
 else:
-  const STOP_AT_FIRST_FAIL      = false
+  const STOP_AT_FIRST_FAIL      = true
   const RUN_SINGLE_TEST         = "" # Emtpy string means run all tests
   const SKIP_TESTS: seq[string] = @["x86_64"]
   const CHECK_ROUNDTRIP         = false
