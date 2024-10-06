@@ -47,7 +47,7 @@ type
 
   ParseContext = object
     isa_spec: IsaSpec
-    field_defines: Table[FieldID, Table[StreamSlice, DefineValue]]
+    field_defines: Table[FieldKind, Table[StreamSlice, DefineValue]]
     number_defines*: Table[StreamSlice, DefineValue]
 
 
@@ -125,7 +125,7 @@ func is_defined(p: ParseContext, name: StreamSlice): bool =
   for field, field_values in p.field_defines:
     if name in field_values:
       return true
-    for fv in p.isa_spec.field_types[FieldID(field)].values:
+    for fv in p.isa_spec.field_types[FieldKind(field)].values:
       if fv.name == name:
         return true
   return false

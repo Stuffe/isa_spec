@@ -93,7 +93,7 @@ func spec_to_string*(isa_spec: IsaSpec): string =
   source &= "[fields]\n"
 
   for i, field_type in isa_spec.field_types:
-    if not is_variable(FieldId(i)): continue
+    if not is_variable(FieldKind(i)): continue
 
     source &= "\n" & field_type.name & "\n"
 
@@ -192,7 +192,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         for i, field in isa_spec.field_types:
           if $field_name == field.name:
             found = true
-            new_field.options.add(FieldId(i))
+            new_field.options.add(FieldKind(i))
             break
 
         if not found:
@@ -329,7 +329,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
             if field_index < 0:
               return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
-            FieldId(field_index)
+            FieldKind(field_index)
         if bit_id != current.id:
           if current.id != field_invalid:
             new_bits.add(current)
@@ -346,7 +346,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           if field.name == field_name:
               field_index = i
               break
-        let field_real_index = FieldId(field_index)
+        let field_real_index = FieldKind(field_index)
         if read(s, tk=tk_bracket) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
@@ -362,7 +362,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         if current.id != field_invalid:
           new_bits.add(current)
           current = Bitfield(id: field_invalid)
-        new_bits.add(Bitfield(id: FieldId(field_real_index), top: top, bottom: bottom))
+        new_bits.add(Bitfield(id: FieldKind(field_real_index), top: top, bottom: bottom))
         for _ in bottom .. top:
           mask.add '0'
           pattern.add '0'
@@ -602,7 +602,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
         new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
-        result.spec.field_types[FieldId(next_variable_index)] = field_type
+        result.spec.field_types[FieldKind(next_variable_index)] = field_type
         next_variable_index += 1
 
       skip_newlines(s)
