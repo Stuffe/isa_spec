@@ -300,7 +300,6 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
 
   var values = inst.fixed_pattern
 
-
   var i = 0
   for j in countdown(inst.bits.high, 0):
     let bit_type = inst.bits[j]

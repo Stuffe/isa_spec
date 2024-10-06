@@ -151,7 +151,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     if this_part != "":
       syntax_parts.add(this_part)
 
-  var new_instruction = Instruction(syntax_char_offset: get_index(s))
+  var new_instruction: Instruction
 
   block syntax:
     add_string_syntax(s, new_instruction.syntax)
@@ -294,8 +294,6 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     # nvalid indecies. They are instead used to track the length of the field before being updated
     # to the correct bounds in a seperate pass
     var current = Bitfield(id: FIELD_INVALID)
-
-    new_instruction.bitfield_char_offset = get_index(s)
 
     while peek(s) in setutils.toSet("01?%abcdefghijklmnopqrstuvwxyz "):
       if peek(s) != '%':

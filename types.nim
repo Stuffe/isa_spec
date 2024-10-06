@@ -139,8 +139,6 @@ type Instruction* = object
   fixed_pattern*: seq[uint64]
   fixed_mask*: seq[uint64]
   description*: string
-  syntax_char_offset*: int
-  bitfield_char_offset*: int # (Not always the next line)
 
 type Endianness* = enum
   end_big
