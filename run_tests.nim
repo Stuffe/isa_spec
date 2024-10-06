@@ -65,7 +65,7 @@ proc echo_deep_diff[T: openArray](a, b: T; path: string) =
       echo_deep_diff(av, b[i], path & &"[{i}]" )
 
 proc echo_deep_diff(a, b: OperandType; path: string) =
-  echo_deep_diff(a.name, b.name, path & "." & "name")
+  echo_deep_diff(a.variable_name, b.variable_name, path & "." & "variable_name")
   echo_deep_diff(a.is_signed, b.is_signed, path & "." & "is_signed")
   echo_deep_diff(a.size, b.size, path & "." & "size")
   echo_deep_diff(a.kind, b.kind, path & "." & "kind")

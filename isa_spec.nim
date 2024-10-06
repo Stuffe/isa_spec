@@ -5,14 +5,14 @@ export parse.new_StreamSlice
 
 func field_names(i: Instruction): seq[string] =
   for f in i.operands:
-    result.add(f.name)
+    result.add(f.variable_name)
 
 func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string =
   func field_define(f: OperandType): string =
     if (not f.is_signed) and f.size == 64:
-      "%" & f.name
+      "%" & f.variable_name
     else:
-      "%" & f.name & ":" & "US"[f.is_signed.ord] & $f.size
+      "%" & f.variable_name & ":" & "US"[f.is_signed.ord] & $f.size
 
   var source = ""
   var field_i = 0
@@ -49,7 +49,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
           assert field.id.int < 3
           "01?"[field.id.int]
         else:
-          instruction.operands[int(field.id)].name[0]
+          instruction.operands[int(field.id)].variable_name[0]
       for _ in field.bottom .. field.top:
         source &= c
         if j mod 8 == 7:
@@ -57,7 +57,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
         j += 1
     else:
       assert not is_variable(field.id)
-      let field_name = instruction.operands[int(field.id)].name
+      let field_name = instruction.operands[int(field.id)].variable_name
       source &= " %" & field_name & "[" & $field.top & ":" & $field.bottom & "] "
       j += field.top - field.bottom + 1
 
@@ -158,8 +158,8 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
     while matches(s, '%'):
       var new_field = OperandType(size: 64, kind: otk_normal)
-      new_field.name = $get_identifier(s)
-      if new_field.name.len == 0:
+      new_field.variable_name = $get_identifier(s)
+      if new_field.variable_name.len == 0:
         return error("Expected an identifier after '%'")
 
       if matches(s, ':', tk=tk_seperator):
@@ -170,7 +170,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           of 'S':
              true
           else:
-            return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
+            return error(&"Invalid annotation for operand %{new_field.variable_name}: {marker}")
         new_field.size = check(parse_signed(check(get_unsigned(s))))
         change_token_kind(tk_number, tk_type_name)
         if new_field.size < 1 or new_field.size > 64:
@@ -179,7 +179,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
       new_instruction.syntax.add(Syntax(text: ""))
 
       if not matches(s, '(', tk=tk_bracket):
-        return error("Expected parenthesis after the operand name, like: " & new_field.name & "(immediate)")
+        return error("Expected parenthesis after the operand name, like: " & new_field.variable_name & "(immediate)")
       while true:
         let field_name = get_identifier(s, tk=tk_type_name)
 
@@ -224,8 +224,8 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
       let restore = s
       if read(s) == '%':
         var new_field = OperandType(size: 64, kind: otk_virtual)
-        new_field.name = $get_identifier(s)
-        if new_field.name.len == 0:
+        new_field.variable_name = $get_identifier(s)
+        if new_field.variable_name.len == 0:
           return error("Expected an identifier after '%'")
         if peek(s) == '[': # This is probably the bitpattern which happens to start with a slice, so backtrack
           s = restore
@@ -239,7 +239,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
             of 'S':
                true
             else:
-              return error(&"Invalid annotation for operand %{new_field.name}: {marker}")
+              return error(&"Invalid annotation for operand %{new_field.variable_name}: {marker}")
           new_field.size = check(parse_signed(check(get_unsigned(s))))
           change_token_kind(tk_number, tk_type_name)
           if new_field.size < 1 or new_field.size > 64:
@@ -342,7 +342,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           return error("Expected an identifier after '%'")
         var field_index = -1
         for i, field in new_instruction.operands:
-          if field.name == field_name:
+          if field.variable_name == field_name:
               field_index = i
               break
         let field_real_index = FieldKind(field_index)
@@ -394,7 +394,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
       if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
         let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
         if bits.top - bits.bottom + 1 > 64 and is_variable(bits.id):
-          return error("Bit pattern for field " & new_instruction.operands[index].name & " longer than 64bit")
+          return error("Bit pattern for field " & new_instruction.operands[index].variable_name & " longer than 64bit")
         var right = bits
         var left = bits
         right.top = bits.bottom + fit_count - 1

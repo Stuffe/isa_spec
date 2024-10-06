@@ -87,7 +87,7 @@ type OperandTypeKind* = enum
   otk_virtual
 
 type OperandType* = object
-  name*: string
+  variable_name*: string
   is_signed*: bool
   size*: int
   case kind*: OperandTypeKind
@@ -112,7 +112,7 @@ type OperandType* = object
   # sign_bit      = 9
 
 func `==`*(a, b: OperandType): bool =
-  if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.kind != b.kind:
+  if a.variable_name != b.variable_name or a.is_signed != b.is_signed or a.size != b.size or a.kind != b.kind:
     return false
   case a.kind:
     of otk_normal:

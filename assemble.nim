@@ -244,7 +244,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
 
 func field_names(i: Instruction): seq[string] =
   for f in i.operands:
-    result.add f.name
+    result.add f.variable_name
 
 func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
   template error(input: string) =
