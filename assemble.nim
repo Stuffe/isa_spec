@@ -47,7 +47,7 @@ type
 
   ParseContext = object
     isa_spec: IsaSpec
-    field_defines: seq[Table[StreamSlice, DefineValue]]
+    field_defines: Table[FieldID, Table[StreamSlice, DefineValue]]
     number_defines*: Table[StreamSlice, DefineValue]
 
 
@@ -125,7 +125,7 @@ func is_defined(p: ParseContext, name: StreamSlice): bool =
   for field, field_values in p.field_defines:
     if name in field_values:
       return true
-    for fv in p.isa_spec.field_types[field].values:
+    for fv in p.isa_spec.field_types[FieldID(field)].values:
       if fv.name == name:
         return true
   return false
@@ -214,13 +214,13 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
           let field_string = get_identifier(s)
           s = pre_field_restore
 
-          if field_string in p.field_defines[field.int]:
-            result.operands.add fixed(p.field_defines[field.int][field_string].value)
+          if field_string in p.field_defines[field]:
+            result.operands.add fixed(p.field_defines[field][field_string].value)
             s.skip(field_string.len)
           else:
             var found = -1
             var value: uint64
-            for field_value in p.isa_spec.field_types[field.int].values:
+            for field_value in p.isa_spec.field_types[field].values:
               if field_value.name.len > found and s.matches(field_value.name, false):
                 found = field_value.name.len
                 value = field_value.value
@@ -228,8 +228,8 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
               if not is_last: continue
               # TODO: Add multiple field types to error message if multiple are allowed
               if field_string.len == 0:
-                return error(&"Missing a '{p.isa_spec.field_types[field.int].name}' operand here", i)
-              return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field.int].name}'", i)
+                return error(&"Missing a '{p.isa_spec.field_types[field].name}' operand here", i)
+              return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field].name}'", i)
             else:
               s.skip(found)
               result.operands.add fixed(value)
@@ -335,7 +335,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   var res: PreAssemblyResult
 
   res.pc.isa_spec = isa_spec
-  res.pc.field_defines.setLen(isa_spec.field_types.len)
+  for field_id, _ in isa_spec.field_types:
+    res.pc.field_defines[field_id] = initTable[StreamSlice, DefineValue]()
 
   var s = new_StreamSlice(source)
   var line_counter = 1

@@ -163,7 +163,7 @@ type IsaSpec* = object
   block_comments*: seq[(string, string)]
   endianness*: Endianness
   code_alignment*: int
-  field_types*: seq[FieldType]
+  field_types*: Table[FieldID, FieldType]
   instructions*: seq[Instruction]
 
 type SpecParseResult* = object
@@ -201,7 +201,7 @@ type AssemblyResult* = object
   machine_code*: seq[uint8]
   line_info*: CompleteLineInformation
   errors*: seq[Error]
-  field_defines*: seq[Table[StreamSlice, DefineValue]]
+  field_defines*: Table[FieldID, Table[StreamSlice, DefineValue]]
   number_defines*: Table[StreamSlice, DefineValue]
   labels*: Table[StreamSlice, DefineValue]
 

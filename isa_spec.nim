@@ -21,7 +21,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
       var options: seq[string]
       assert not instruction.fields[field_i].is_virtual
       for field in instruction.fields[field_i].options:
-        options.add(isa_spec.field_types[field.ord].name)
+        options.add(isa_spec.field_types[field].name)
       source &= field_define(instruction.fields[field_i]) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
@@ -466,13 +466,13 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
   result.spec.line_comments  = @[";", "//"]
   result.spec.block_comments = @{"/*": "*/"}
  
-  result.spec.field_types = @[
-    FieldType(name: "0"),
-    FieldType(name: "1"),
-    FieldType(name: "x"),
-    FieldType(name: "immediate"),
-    FieldType(name: "label"),
-  ]
+  result.spec.field_types = {
+    field_zero: FieldType(name: "0"),
+    field_one: FieldType(name: "1"),
+    field_wildcard: FieldType(name: "x"),
+    field_imm: FieldType(name: "immediate"),
+    field_label: FieldType(name: "label"),
+  }.toTable
 
   skip_newlines(s)
 
@@ -532,6 +532,8 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
     if not skip_newlines(s):
       return error("Expected newline after section header")
 
+    var next_variable_index = 0
+    
     while not matches(s, "[", increment = false):
       skip_whitespaces(s)
       var field_type_name = get_identifier(s, tk=tk_type_name)
@@ -600,7 +602,8 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
         new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
-        result.spec.field_types.add(field_type)
+        result.spec.field_types[to_variable(next_variable_index)] = field_type
+        next_variable_index += 1
 
       skip_newlines(s)
   
