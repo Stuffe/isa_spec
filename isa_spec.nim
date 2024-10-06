@@ -17,7 +17,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
   var source = ""
   var field_i = 0
   for syntax in instruction.syntax:
-    if syntax == "":
+    if syntax.text == "":
       var options: seq[string]
       assert instruction.fields[field_i].kind == otk_normal
       for field in instruction.fields[field_i].options:
@@ -25,7 +25,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
       source &= field_define(instruction.fields[field_i]) & "(" & options.join(" | ") & ")"
       field_i += 1
     else:
-      source &= syntax.replace("%", "%%")
+      source &= syntax.text.replace("%", "%%")
   source &= "\n"
 
   for vf in instruction.fields[field_i .. ^1]:
@@ -113,43 +113,42 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
   func error(input: string): (Instruction, string) =
     return (Instruction(), input)
 
-
   template check[T](input: (string, T)): T =
     let (err, res) = input
     if err != "":
       return error(err)
     res
 
-  func add_string_syntax(s: var StreamSlice, syntax_parts: var seq[string]) =
-    var this_part: string
+  func add_string_syntax(s: var StreamSlice, syntax_parts: var seq[Syntax]) =
+    var this_part: Syntax
     while peek(s) notin {'\0', '\n'}:
       if peek(s) == '%':
         if peek(s, 1) == '%':
           doAssert matches(s, "%%", tk=tk_mnenomic)
-          this_part.add('%')
+          this_part.text.add('%')
           continue
         else:
           break
       let char = read(s)
       if char in {'\r', '\t', ' '}:
         add_token(s, tk_whitespace)
-        if this_part != "":
+        if this_part.text != "":
           syntax_parts.add(this_part)
-          this_part = ""
+          this_part.text = ""
         # One space means it's optional, two spaces means some whitespace seperation is required
         if char == ' ' and syntax_parts.len > 0:
-          case syntax_parts[^1]:
+          case syntax_parts[^1].text:
             of ANY_NUMBER_OF_SPACES:
-              syntax_parts[^1] = AT_LEAST_ONE_SPACE
+              syntax_parts[^1].text = AT_LEAST_ONE_SPACE
             of AT_LEAST_ONE_SPACE:
               discard
             else:
-              syntax_parts.add(ANY_NUMBER_OF_SPACES)
+              syntax_parts.add(Syntax(kind: sk_any_number_of_spaces, text: ANY_NUMBER_OF_SPACES))
       else:
         add_token(s, tk_mnenomic)
-        this_part.add(char)
+        this_part.text.add(char)
 
-    if this_part != "":
+    if this_part.text != "":
       syntax_parts.add(this_part)
 
   var new_instruction: Instruction
@@ -177,7 +176,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         if new_field.size < 1 or new_field.size > 64:
           return error(&"Invalid size {new_field.size}")
 
-      new_instruction.syntax.add("")
+      new_instruction.syntax.add(Syntax(text: ""))
 
       if not matches(s, '(', tk=tk_bracket):
         return error("Expected parenthesis after the operand name, like: " & new_field.name & "(immediate)")
@@ -217,7 +216,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
   var instruction_name: string
   if new_instruction.syntax.len > 0:
-    instruction_name = new_instruction.syntax[0]
+    instruction_name = new_instruction.syntax[0].text
   
   block virtual_field:
     var count = 1

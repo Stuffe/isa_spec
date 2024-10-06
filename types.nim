@@ -135,8 +135,17 @@ type Bitfield* = object
   is_direct*: bool
   is_continue*: bool # This field is broken up by a 64bit boundary
 
+type SyntaxKind* = enum
+  sk_normal
+  sk_any_number_of_spaces
+  sk_at_least_one_space
+
+type Syntax* = object
+  kind*: SyntaxKind
+  text*: string
+
 type Instruction* = object
-  syntax*: seq[string]
+  syntax*: seq[Syntax]
   fields*: seq[OperandType]
   asserts*: seq[(expression, expression, string)]
   bits*: seq[Bitfield]

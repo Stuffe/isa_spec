@@ -148,19 +148,19 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
 
   var i = 0
   for syntax in inst.syntax:
-    if syntax == ANY_NUMBER_OF_SPACES:
+    if syntax.text == ANY_NUMBER_OF_SPACES:
       p.isa_spec.skip_whitespaces(s)
       continue
 
-    if syntax == AT_LEAST_ONE_SPACE:
+    if syntax.text == AT_LEAST_ONE_SPACE:
       let start_index = s.get_index()
       p.isa_spec.skip_whitespaces(s)
       if s.get_index() == start_index:
         return error("Expected whitespace here", i)
       continue
 
-    if syntax != "":
-      if not matches(s, syntax):
+    if syntax.text != "":
+      if not matches(s, syntax.text):
         if i == 0:
           return error(&"Unknown instruction", i)
         return error(&"Expected '{syntax}' after '" & $from_line_start(s) & "'", i)
