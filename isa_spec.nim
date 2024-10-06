@@ -8,7 +8,7 @@ func field_names(i: Instruction): seq[string] =
     result.add f.name
 
 func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string =
-  func field_define(f: FieldDef): string =
+  func field_define(f: OperandType): string =
     if (not f.is_signed) and f.size == 64:
       "%" & f.name
     else:
@@ -158,7 +158,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
-      var new_field = FieldDef(size: 64, is_virtual: false)
+      var new_field = OperandType(size: 64, is_virtual: false)
       new_field.name = $get_identifier(s)
       if new_field.name.len == 0:
         return error("Expected an identifier after '%'")
@@ -224,7 +224,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     while peek(s) in {'%', '!'}:
       let restore = s
       if read(s) == '%':
-        var new_field = FieldDef(size: 64, is_virtual: true)
+        var new_field = OperandType(size: 64, is_virtual: true)
         new_field.name = $get_identifier(s)
         if new_field.name.len == 0:
           return error("Expected an identifier after '%'")

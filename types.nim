@@ -85,8 +85,7 @@ func `==`*(a, b: expression): bool =
     of exp_bitextract:
       return a.base == b.base and a.top == b.top and a.bottom == b.bottom
 
-
-type FieldDef* = object
+type OperandType* = object
   name*: string
   is_signed*: bool
   size*: int
@@ -111,7 +110,7 @@ type FieldDef* = object
   # unused_zero   = ...000000001111
   # sign_bit      = 9
 
-func `==`*(a, b: FieldDef): bool =
+func `==`*(a, b: OperandType): bool =
   if a.name != b.name or a.is_signed != b.is_signed or a.size != b.size or a.is_virtual != b.is_virtual:
     return false
   if a.is_virtual:
@@ -128,7 +127,7 @@ type Bitfield* = object
 
 type Instruction* = object
   syntax*: seq[string]
-  fields*: seq[FieldDef]
+  fields*: seq[OperandType]
   asserts*: seq[(expression, expression, string)]
   bits*: seq[Bitfield]
   bit_length*: int

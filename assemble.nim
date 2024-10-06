@@ -25,7 +25,7 @@ type
     ok_label_ref
     ok_relative
 
-  Operand = object
+  OperandValue = object
     case kind: OperandKind
     of ok_fixed:
       value: uint64
@@ -37,12 +37,12 @@ type
   MatchedInstruction = object
     selected_option: int
     options: seq[Instruction]
-    operands: seq[Operand]
+    operands: seq[OperandValue]
 
   InstParseResult = object
     error: string
     error_priority: int
-    operands: seq[Operand]
+    operands: seq[OperandValue]
     final_index: int
 
   ParseContext = object
@@ -51,7 +51,7 @@ type
     number_defines*: Table[StreamSlice, DefineValue]
 
 
-func `==`(a, b: Operand): bool =
+func `==`(a, b: OperandValue): bool =
   if a.kind != b.kind:
     return false
   case a.kind:
@@ -143,8 +143,8 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
       return error(err, i)
     res
 
-  func fixed(val: uint64): Operand =
-    return Operand(kind: ok_fixed, value: val)
+  func fixed(val: uint64): OperandValue =
+    return OperandValue(kind: ok_fixed, value: val)
 
   var i = 0
   for syntax in inst.syntax:
@@ -177,7 +177,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
             skip(s)
             let jump_distance = check(get_unsigned(s))
             let value: uint64 = check(parse_unsigned(jump_distance))
-            result.operands.add(Operand(kind: ok_relative, offset: cast[int64](value)))
+            result.operands.add(OperandValue(kind: ok_relative, offset: cast[int64](value)))
           else:
             let label_name = get_identifier(s)
             if label_name.len == 0:
@@ -186,7 +186,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
             if p.is_defined(label_name):
               if not is_last: continue
               return error("Was expecting a label name here", i)
-            result.operands.add(Operand(kind: ok_label_ref, name: label_name))
+            result.operands.add(OperandValue(kind: ok_label_ref, name: label_name))
 
           i += 1
           break
@@ -252,7 +252,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
       raise newException(ValueError, input)
     return
 
-  func describe(f: FieldDef): string =
+  func describe(f: OperandType): string =
     if f.is_signed:
       &"{f.highest_bit+1}-bit sign-extended field"
     else:
