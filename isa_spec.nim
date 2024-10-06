@@ -49,7 +49,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
           assert field.id.int < 3
           "01?"[field.id.int]
         else:
-          instruction.fields[to_variable_index(field.id)].name[0]
+          instruction.fields[int(field.id)].name[0]
       for _ in field.bottom .. field.top:
         source &= c
         if j mod 8 == 7:
@@ -57,7 +57,7 @@ func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string
         j += 1
     else:
       assert not is_variable(field.id)
-      let field_name = instruction.fields[to_variable_index(field.id)].name
+      let field_name = instruction.fields[int(field.id)].name
       source &= " %" & field_name & "[" & $field.top & ":" & $field.bottom & "] "
       j += field.top - field.bottom + 1
 
@@ -329,7 +329,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
 
             if field_index < 0:
               return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
-            to_variable(field_index)
+            FieldId(field_index)
         if bit_id != current.id:
           if current.id != field_invalid:
             new_bits.add(current)
@@ -346,7 +346,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           if field.name == field_name:
               field_index = i
               break
-        let field_real_index = to_variable(field_index)
+        let field_real_index = FieldId(field_index)
         if read(s, tk=tk_bracket) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)
@@ -382,7 +382,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
     var consumed_bits = newSeq[int](new_instruction.fields.len)
     for i in countdown(new_bits.high, 0):
       var bits = new_bits[i]
-      let index = to_variable_index(bits.id)
+      let index = int(bits.id)
       if bits.is_direct and is_variable(bits.id):
         # We need to adjust this for the case of non-consecutive bit fields of the same operand
         bits.top += consumed_bits[index]
@@ -602,7 +602,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
         new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
-        result.spec.field_types[to_variable(next_variable_index)] = field_type
+        result.spec.field_types[FieldId(next_variable_index)] = field_type
         next_variable_index += 1
 
       skip_newlines(s)
