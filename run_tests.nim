@@ -6,14 +6,14 @@ when existsEnv("CI"): # if we are running in Contious Integeration testing (e.g.
   const STOP_AT_FIRST_FAIL      = false
   const RUN_SINGLE_TEST         = ""
   const SKIP_TESTS: seq[string] = @[]
-  const CHECK_ROUNDTRIP         = false
   const GENERATE_TOKEN_LIST     = false
+  const MANY_SUBTESTS_THRESHOLD = 0
 else:
   const STOP_AT_FIRST_FAIL      = true
   const RUN_SINGLE_TEST         = "" # Emtpy string means run all tests
   const SKIP_TESTS: seq[string] = @["x86_64"]
-  const CHECK_ROUNDTRIP         = false
   const GENERATE_TOKEN_LIST     = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
+  const MANY_SUBTESTS_THRESHOLD = 10
 
 type AsmTestFile = tuple
   source_file: string
@@ -38,10 +38,12 @@ const SPEC_LIB_PATH = "spec_lib"
 
 var global_fail: bool = false
 var local_fail: bool = false
+var sub_fail: bool = false
 
 proc fail(test_name, file_name, msg: string, extra: string = "") =
   ## extra will only be printed of STOP_AT_FIRST_FAIL is true
   echo &"\u001b[31m[{test_name}] '{file_name}'\u001b[0m: " & msg
+  sub_fail = true
   local_fail = true
   global_fail = true
   if STOP_AT_FIRST_FAIL:
@@ -222,6 +224,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       continue
 
     for sid, asm_test in tests.asm_tests:
+      sub_fail = false
       doAssert asm_test.source_file != "", &"no '.asm' file for {test_name}/{sub_name}.{sid}"
       let asm_source = readFile(asm_test.source_file)
       asm_time -= timer()
@@ -278,18 +281,11 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
                                                     &"Expected {byte_index}, got {actual_start_index}")
           last_line = expected_fl
           byte_index += 1
-
-      when CHECK_ROUNDTRIP:
-        # Check that `spec_to_string` is roundtripping.
-        let reconstructed_source = spec_to_string(isa_spec)
-        let new_spec_result = parse_isa_spec(tests.spec_file & ".rec", reconstructed_source)
-        if new_spec_result.spec != isa_spec:
-          if new_spec_result.error.message != "":
-            fail(test_name, tests.spec_file, &"Reconstructed Isa Spec Source errored with {new_spec_result.error}.", &"Reconstructed source:\n{reconstructed_source}")
-          else:
-            if STOP_AT_FIRST_FAIL:
-              echo_deep_diff(isa_spec, new_spec_result.spec, "")
-            fail(test_name, tests.spec_file, &"Isa spec did not survive roundtripping.", &"Reconstructed source:\n{reconstructed_source}")
+      if tests.asm_tests.len > MANY_SUBTESTS_THRESHOLD and not sub_fail:
+        if sid != "":
+          echo &"\u001b[32m[{test_name}] Subtest '{sub_name}.{sid}' passed.\u001b[0m"
+        else:
+          echo &"\u001b[32m[{test_name}] Subtest '{sub_name}' passed.\u001b[0m"
 
   if not local_fail:
     echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} / asm {asm_time:3f}"

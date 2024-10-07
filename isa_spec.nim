@@ -7,108 +7,7 @@ func field_names(i: Instruction): seq[string] =
   for f in i.operands:
     result.add(f.variable_name)
 
-func instruction_to_string*(isa_spec: IsaSpec, instruction: Instruction): string =
-  func field_define(f: OperandType): string =
-    if (not f.is_signed) and f.size == 64:
-      "%" & f.variable_name
-    else:
-      "%" & f.variable_name & ":" & "US"[f.is_signed.ord] & $f.size
-
-  var source = ""
-  var field_i = 0
-  for syntax in instruction.syntax:
-    if syntax.text == "":
-      var options: seq[string]
-      assert instruction.operands[field_i].kind == otk_normal
-      for field in instruction.operands[field_i].options:
-        options.add(isa_spec.field_types[field].name)
-      source &= field_define(instruction.operands[field_i]) & "(" & options.join(" | ") & ")"
-      field_i += 1
-    else:
-      source &= syntax.text.replace("%", "%%")
-  source &= "\n"
-
-  for vf in instruction.operands[field_i .. ^1]:
-    assert vf.kind == otk_virtual
-    let expr_source = vf.expr.to_str(instruction.field_names)
-    source &= field_define(vf) & " = " & expr_source & "\n"
-
-  for (lhs, rhs, msg) in instruction.asserts:
-      let lhs_source = lhs.to_str(instruction.field_names)
-      let rhs_source = rhs.to_str(instruction.field_names)
-      source &= &"!assert {lhs_source} == {rhs_source}"
-      if msg != "":
-        source &= " " & make_escaped_string(msg)
-      source &= "\n"
-      field_i += 1
-
-  var j = 0
-  for i, field in instruction.bits:
-    if field.is_direct:
-      let c = if not is_variable(field.id):
-          assert field.id.int < 3
-          "01?"[field.id.int]
-        else:
-          instruction.operands[to_variable_index(field.id)].variable_name[0]
-      for _ in field.bottom .. field.top:
-        source &= c
-        if j mod 8 == 7:
-          source &= " "
-        j += 1
-    else:
-      assert not is_variable(field.id)
-      let field_name = instruction.operands[to_variable_index(field.id)].variable_name
-      source &= " %" & field_name & "[" & $field.top & ":" & $field.bottom & "] "
-      j += field.top - field.bottom + 1
-
-  source &= "\n" & instruction.description
-  return source
-
-func spec_to_string*(isa_spec: IsaSpec): string =
-  var source = ""
-
-  source &= "[settings]\n"
-
-  if isa_spec.name != "":
-    source &= &"name = {make_escaped_string(isa_spec.name)}\n"
-  if isa_spec.variant != "":
-    source &= &"variant = {make_escaped_string(isa_spec.variant)}\n"
-  if isa_spec.endianness != end_little:
-    source &= &"endianness = {($isa_spec.endianness)[4..^1]}\n"
-  if isa_spec.line_comments != @[";", "//"]:
-    source &= "line_comments = ["
-    for i, lc in isa_spec.line_comments:
-      if i != 0:
-        source &= ", "
-      source &= make_escaped_string(lc)
-    source &= "]\n"
-  if isa_spec.block_comments != @{"/*" : "*/"}:
-    source &= "block_comments = {"
-    for i, (l, r) in isa_spec.block_comments:
-      if i != 0:
-        source &= ", "
-      source &= &"{make_escaped_string(l)}: {make_escaped_string(r)}"
-    source &= "}\n"
-
-  source &= "[fields]\n"
-
-  for i, field_type in isa_spec.field_types:
-    if not is_variable(i): continue
-
-    source &= "\n" & field_type.name & "\n"
-
-    for field_value in field_type.values:
-      source &= field_value.name & " " & toBin(cast[int](field_value.value), field_type.bit_length) & "\n"
-
-  source &= "\n[instructions]\n"
-
-  for instruction in isa_spec.instructions:
-    source &= "\n" & instruction_to_string(isa_spec, instruction) & "\n\n"
-
-  return source
-
-func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, string) =
-  # Being able to reparse a single instruction is needed for Turing Complete
+func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, string) =
 
   func error(input: string): (Instruction, string) =
     return (Instruction(), input)
@@ -176,7 +75,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
         if new_field.size < 1 or new_field.size > 64:
           return error(&"Invalid size {new_field.size}")
 
-      new_instruction.syntax.add(Syntax(text: ""))
+      new_instruction.syntax.add(Syntax(kind: sk_field))
 
       if not matches(s, '(', tk=tk_bracket):
         return error("Expected parenthesis after the operand name, like: " & new_field.variable_name & "(immediate)")
@@ -345,6 +244,8 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, stri
           if field.variable_name == field_name:
               field_index = i
               break
+        if field_index < 0:
+          return error(&"Expected a valid field name, got '{field_name}'")
         let field_real_index = to_variable(field_index)
         if read(s, tk=tk_bracket) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
