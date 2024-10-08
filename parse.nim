@@ -131,7 +131,8 @@ func restore*(s: var StreamSlice, cp: RestorePoint) =
     assert (s.source == tracked_source) == (cp.token_count >= 0), "Token tracking status changed since this RestorePoint was created"
     assert cp.token_count <= tokens.len, "`restore` cannot recreate deleted tokens"
     s = cp.s
-    tokens.set_len(cp.token_count)
+    if s.source == tracked_source:
+      tokens.set_len(cp.token_count)
 
 func start_tokenize*(s: StreamSlice) =
   ## Starts tracking the tokens for this source, ignoring all others. Also clears the token list
