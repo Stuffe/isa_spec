@@ -3,17 +3,19 @@ import isa_spec, types, expressions, parse
 
 
 when existsEnv("CI"): # if we are running in Contious Integeration testing (e.g. Github actions), run all tests
-  const STOP_AT_FIRST_FAIL      = false
-  const RUN_SINGLE_TEST         = ""
-  const SKIP_TESTS: seq[string] = @[]
-  const GENERATE_TOKEN_LIST     = false
-  const MANY_SUBTESTS_THRESHOLD = 0
+  const STOP_AT_FIRST_FAIL        = false
+  const RUN_SINGLE_TEST           = ""
+  const RUN_SUBTESTS: seq[string] = @[]
+  const SKIP_TESTS: seq[string]   = @[]
+  const GENERATE_TOKEN_LIST       = false
+  const MANY_SUBTESTS_THRESHOLD   = 0
 else:
-  const STOP_AT_FIRST_FAIL      = true
-  const RUN_SINGLE_TEST         = "" # Emtpy string means run all tests
-  const SKIP_TESTS: seq[string] = @["x86_64"]
-  const GENERATE_TOKEN_LIST     = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
-  const MANY_SUBTESTS_THRESHOLD = 10
+  const STOP_AT_FIRST_FAIL        = true
+  const RUN_SINGLE_TEST           = "x86_64" # Emtpy string means run all tests
+  const RUN_SUBTESTS: seq[string] = @[] # E.g. @["x86_64", "x86_64.and"], both the spec name and the spec name + subtest id need to be listed.
+  const SKIP_TESTS: seq[string]   = @["x86_64"]
+  const GENERATE_TOKEN_LIST       = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
+  const MANY_SUBTESTS_THRESHOLD   = 10
 
 type AsmTestFile = tuple
   source_file: string
@@ -177,6 +179,8 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
 
     if tests.spec_file == "": # If we don't have a spec file, assume that these are include related files
       continue
+    if RUN_SUBTESTS.len > 0 and test_name not_in RUN_SUBTESTS:
+      continue
 
     let spec_source = readFile(tests.spec_file)
     spec_time -= timer()
@@ -224,6 +228,8 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       continue
 
     for sid, asm_test in tests.asm_tests:
+      if RUN_SUBTESTS.len > 0 and &"{test_name}.{sid}" not_in RUN_SUBTESTS:
+        continue
       sub_fail = false
       doAssert asm_test.source_file != "", &"no '.asm' file for {test_name}/{sub_name}.{sid}"
       let asm_source = readFile(asm_test.source_file)
