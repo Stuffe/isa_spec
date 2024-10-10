@@ -21,4 +21,4 @@ jobs:
         hash -r
         popd
 
-        nim r run_tests.nim
+        nim r -d:release run_tests.nim
