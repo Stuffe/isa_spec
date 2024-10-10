@@ -11,7 +11,7 @@ when existsEnv("CI"): # if we are running in Contious Integeration testing (e.g.
   const MANY_SUBTESTS_THRESHOLD   = 0
 else:
   const STOP_AT_FIRST_FAIL        = true
-  const RUN_SINGLE_TEST           = "x86_64" # Emtpy string means run all tests
+  const RUN_SINGLE_TEST           = "" # Emtpy string means run all tests
   const RUN_SUBTESTS: seq[string] = @[] # E.g. @["x86_64", "x86_64.and"], both the spec name and the spec name + subtest id need to be listed.
   const SKIP_TESTS: seq[string]   = @["x86_64"]
   const GENERATE_TOKEN_LIST       = false # If true, all tests that get run and have a [isa_]tokens file get the "golden" set of tokens output
