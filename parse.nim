@@ -634,6 +634,18 @@ func from_line_start*(s: StreamSlice): StreamSlice =
   while result.finish < s.len and result.source[result.finish] != '\n':
     result.finish += 1
 
+func from_line_start_to_here*(s: StreamSlice): StreamSlice =
+  result = s
+  result.finish = s.start
+
+  # Go back one if we are at a newline
+  if result.start > 0 and peek(result) == '\n':
+    result.start -= 1
+
+  # Seek backwards until the start of the line
+  while result.start > 0 and peek(result) != '\n':
+    result.start -= 1
+
 func get_list_value(s: var StreamSlice): (string, StreamSlice) =
   # This function is not allowed to call add_token with tk!=tk_none
   assert not isNil(s.source)

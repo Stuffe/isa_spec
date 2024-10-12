@@ -239,7 +239,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
 
   p.isa_spec.skip_whitespaces(s)
   if peek(s) notin {'\n', '\0'}:
-    return error("Expected the instruction to end here", i)
+    return error("Unknown code found after instruction: " & $from_line_start_to_here(s), i)
 
   result.final_index = get_index(s)
 
