@@ -390,6 +390,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
   var progress_index = -1
 
+  skip_and_record_newlines(s)
+
   while not finished(s):
     if get_index(s) <= progress_index:
       # No progress made, advance to newline
