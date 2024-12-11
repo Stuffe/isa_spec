@@ -1,4 +1,4 @@
-import std/[tables, pathnorm, strutils, os, strformat, bitops, setutils]
+
 import types, parse, expressions
 
 
@@ -162,7 +162,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): 
         if not matches(s, syntax.text):
           if i == 0:
             return error(&"Unknown instruction", i)
-          return error(&"Expected '{syntax}' after '" & $from_line_start(s) & "'", i)
+          return error(&"Expected '{syntax.text}' after '" & $from_line_start(s) & "'", i)
         continue
       of sk_field:
         discard
