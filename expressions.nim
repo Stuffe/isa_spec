@@ -215,8 +215,12 @@ func eval*(input: expression, operands: seq[uint64], current_address: int): int 
         of op_add: return lhs +   rhs
         of op_sub: return lhs -   rhs
         of op_mul: return lhs *   rhs
-        of op_div: return lhs div rhs
-        of op_mod: return lhs mod rhs
+        of op_div: 
+          if rhs == 0: return 0
+          return lhs div rhs
+        of op_mod: 
+          if rhs == 0: return 0
+          return lhs mod rhs
         of op_and: return lhs and rhs
         of op_or:  return lhs or  rhs
         of op_xor: return lhs xor rhs
