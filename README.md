@@ -86,4 +86,4 @@ The bitfield line matches 0 or 1 as well as any of the operand letters defined a
 Here the expression inside {} is evaluated first and the range specified inside [] determines which bits of the result are used. 
 
 
-TODO: finish this
+TODO: finish this. In the mean time, check out the community documentation here: https://turingcomplete.wiki/wiki/Spec.isa
