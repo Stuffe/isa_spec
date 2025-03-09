@@ -537,6 +537,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         if count_error != "":
           error("Expected a repetition count after the 'rep' keyword")
           continue
+        var num_seq: seq[uint8]
         block rep_number_literal:
           let restore = s
           let (size_error, size) = get_size(s)
@@ -562,14 +563,14 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
               of end_little:
                 var i = size div 8
                 while i > 0:
-                  emit(cast[uint8](value))
+                  num_seq.add(cast[uint8](value))
                   value = value shr 8
                   i -= 1
     
               of end_big:
                 var i = size div 8 - 1
                 while i >= 0:
-                  emit(cast[uint8](value shr (i * 8)))
+                  num_seq.add(cast[uint8](value shr (i * 8)))
                   i -= 1
 
             skip_and_record_newlines(s)
