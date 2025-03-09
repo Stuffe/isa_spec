@@ -1,4 +1,4 @@
-import std/[tables, pathnorm, strutils, os, strformat, bitops, setutils]
+import std/[tables, pathnorm, strutils, os, strformat, bitops, setutils, sequtils]
 import types, parse, expressions
 
 
@@ -364,6 +364,12 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   func emit(val: uint8) =
     res.segments[^1].fixed.add val
 
+  func emit_many(many: seq[uint8]) =
+    sequtils.concat(res.segments[^1].fixed, many)
+
+  func assembled_byte_count(): int =
+    return res.segments[^1].fixed.len().low()
+
   func any_pc_rel(expr: expression): bool =
     if expr == nil:
       return false
@@ -423,7 +429,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
           skip_line(s)
           continue
         )
-        
 
         case isa_spec.endianness:
           of end_little:
@@ -438,6 +443,34 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
             while i >= 0:
               emit(cast[uint8](value shr (i * 8)))
               i -= 1
+
+        isa_spec.skip_whitespaces(s)
+        var had_error = false
+        while peek(s) != "\n":
+          (number_error, number) = get_unsigned(s)
+          if number_error == "":
+            let mask = uint64.high shr (64 - size)
+            var value = mask and (parse_unsigned(number).on_err do:
+              error(err)
+              skip_line(s)
+              break
+            )
+
+            case isa_spec.endianness:
+              of end_little:
+                var i = size div 8
+                while i > 0:
+                  emit(cast[uint8](value))
+                  value = value shr 8
+                  i -= 1
+
+              of end_big:
+                var i = size div 8 - 1
+                while i >= 0:
+                  emit(cast[uint8](value shr (i * 8)))
+                  i -= 1
+
+          isa_spec.skip_whitespaces(s)
 
         skip_and_record_newlines(s)
         continue
@@ -472,6 +505,87 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
     block special:
       let restore = s
       var special_test = get_identifier(s)
+
+      if special_test == "orig":
+        isa_spec.skip_whitespaces(s)
+        let (number_error, number) = get_unsigned(s)
+        if number_error != "":
+          error("Expected the next byte address after the 'orig' keyword")
+          continue
+        if assembled_byte_count() > number:
+          error("The assembled result exeeds address: " & $number)
+          continue
+        let count = assembled_byte_count() - number
+        emit_many(sequtils.rep[uint8](0, count))
+        skip_and_record_newlines(s)
+        continue
+
+      if special_test == "align":
+        isa_spec.skip_whitespaces(s))
+        let (number_error, number) = get_unsigned(s)
+        if number_error != "":
+          error("Expected a byte count alignment after the 'align' keyword")
+          continue
+        let count = (number - (assembled_byte_count() % number)) % number
+        emit_many(sequtils.rep[uint8](0, count))
+        skip_and_record_newlines(s)
+        continue
+
+      if special_test == "rep":
+        isa_spec.skip_whitespaces(s))
+        let (count_error, count) = get_unsigned(s)
+        if count_error != "":
+          error("Expected a repetition count after the 'rep' keyword")
+          continue
+        block rep_number_literal:
+          let restore = s
+          let (size_error, size) = get_size(s)
+          isa_spec.skip_whitespaces(s)
+          let (number_error, number) = get_unsigned(s)
+          if number_error == "":
+            if size_error != "":
+              error("Expected a size before the number, like <U64> " & $number)
+              skip_line(s)
+              continue
+           if size mod 8 != 0:
+             error("Only multiples of 8 bits are supported for now")
+              skip_line(s)
+              continue
+            let mask = uint64.high shr (64 - size)
+            var value = mask and (parse_unsigned(number).on_err do:
+              error(err)
+              skip_line(s)
+              continue
+            )
+    
+            case isa_spec.endianness:
+              of end_little:
+                var i = size div 8
+                while i > 0:
+                  emit(cast[uint8](value))
+                  value = value shr 8
+                  i -= 1
+    
+              of end_big:
+                var i = size div 8 - 1
+                while i >= 0:
+                  emit(cast[uint8](value shr (i * 8)))
+                  i -= 1
+
+            skip_and_record_newlines(s)
+            continue
+    
+          elif size_error == "":
+            error("Expected a number after a size declaration")
+            skip_line(s)
+            continue
+    
+          else:
+            s = restore
+            break rep_number_literal
+        emit_many(num_seq.cycle(count))
+        skip_and_record_newlines(s)
+        continue
 
       var public: bool
       if special_test == "pub":
