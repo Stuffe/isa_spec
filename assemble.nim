@@ -413,7 +413,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       let restore = s
       let (size_error, size) = get_size(s)
       isa_spec.skip_whitespaces(s)
-      let (number_error, number) = get_unsigned(s)
+      var (number_error, number) = get_unsigned(s)
       if number_error == "":
         if size_error != "":
           error("Expected a size before the number, like <U64> " & $number)
@@ -521,7 +521,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         continue
 
       if special_test == "align":
-        isa_spec.skip_whitespaces(s))
+        isa_spec.skip_whitespaces(s)
         let (number_error, number) = get_unsigned(s)
         if number_error != "":
           error("Expected a byte count alignment after the 'align' keyword")
@@ -532,7 +532,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         continue
 
       if special_test == "rep":
-        isa_spec.skip_whitespaces(s))
+        isa_spec.skip_whitespaces(s)
         let (count_error, count) = get_unsigned(s)
         if count_error != "":
           error("Expected a repetition count after the 'rep' keyword")
