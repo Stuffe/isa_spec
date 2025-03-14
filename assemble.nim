@@ -306,7 +306,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
     let bit_type = inst.bits[j]
     if not is_variable(bit_type.id):
       i += bit_type.top - bit_type.bottom + 1
-      continue # fixed fields are either irreleant or part of the fixed_pattern above
+      continue # fixed fields are either irrelevant or part of the fixed_pattern above
     let bit_index = i mod 64
     let int_index = values.high - (i div 64)
     let index = to_variable_index(bit_type.id)
@@ -332,7 +332,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   func skip_newlines(s: var StreamSlice) {.error.}
     # Shadows parse.skip_newlines()
 
-
   var res: PreAssemblyResult
 
   res.pc.isa_spec = isa_spec
@@ -343,7 +342,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   var line_counter = 1
 
   res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
-
 
   func skip_and_record_newlines(s: var StreamSlice) =
     while peek(s) in {' ', '\r', '\n', '\t'}:
@@ -368,7 +366,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
     res.segments[^1].fixed = sequtils.concat(res.segments[^1].fixed, many)
 
   func assembled_byte_count(): uint64 =
-    return cast[uint64](res.segments[^1].fixed.len().low())
+    return cast[uint64](1 + res.segments[^1].fixed.high() - res.segments[^1].fixed.low())
 
   func any_pc_rel(expr: expression): bool =
     if expr == nil:
@@ -508,18 +506,18 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       if special_test == "orig":
         isa_spec.skip_whitespaces(s)
         let (number_error, number) = get_unsigned(s)
-        let value = (parse_unsigned(number).on_err do:
-          error(err)
-          skip_line(s)
-          break
-        )
         if number_error != "":
           error("Expected the next byte address after the 'orig' keyword")
           continue
+        let value = (parse_unsigned(number).on_err do:
+          error(err)
+          skip_line(s)
+          continue
+        )
         if assembled_byte_count() > value:
           error("The assembled result exceeds address: " & $number)
           continue
-        let count = assembled_byte_count() - value
+        let count = value - assembled_byte_count()
         emit_many(sequtils.repeat[uint8](0, count))
         skip_and_record_newlines(s)
         continue
@@ -527,14 +525,15 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       if special_test == "align":
         isa_spec.skip_whitespaces(s)
         let (number_error, number) = get_unsigned(s)
+        if number_error != "":
+          error("Expected a byte count alignment after the 'align' keyword")
+          skip_line(s)
+          continue
         let value = (parse_unsigned(number).on_err do:
           error(err)
           skip_line(s)
-          break
-        )
-        if number_error != "":
-          error("Expected a byte count alignment after the 'align' keyword")
           continue
+        )
         let count = (value - (assembled_byte_count() mod value)) mod value
         emit_many(sequtils.repeat[uint8](0, count))
         skip_and_record_newlines(s)
@@ -546,12 +545,13 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         let count_value = (parse_unsigned(count).on_err do:
           error(err)
           skip_line(s)
-          break
+          continue
         )
         if count_error != "":
           error("Expected a repetition count after the 'rep' keyword")
           continue
-        var num_seq: seq[uint8]
+        isa_spec.skip_whitespaces(s)
+        var num_seq = newSeq[uint8](0)
         block rep_number_literal:
           let restore = s
           let (size_error, size) = get_size(s)
@@ -588,7 +588,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
                   i -= 1
 
             skip_and_record_newlines(s)
-            continue
     
           elif size_error == "":
             error("Expected a number after a size declaration")
@@ -631,7 +630,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
           let new_name = if lbl.public:
               file_first & "." & name
             else:
-               # Generate a unique, not typable name for internal labels
+               # Generate a unique, not typeable name for internal labels
               "$" & file_first & "[" & $line_counter & "]." & name
           var new_val = lbl
           new_val.seg_id += res.segments.len
@@ -658,7 +657,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
               mop.name = if lbl.public:
                   file_first & "." & mop.name
                 else:
-                   # Generate a unique, not typable name for internal labels
+                   # Generate a unique, not typeable name for internal labels
                   "$" & file_first & "[" & $line_counter & "]." & mop.name
           res.segments.add(new_segment)
 
@@ -762,7 +761,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       for inst in isa_spec.instructions:
         s = restore  # Reset to the beginning of the line
         let inst_res = parse_instruction(s, res.pc, inst)
-        if inst_res.error == "": # The instruction parsed succesfully
+        if inst_res.error == "": # The instruction parsed successfully
           if matched.options.len == 0: # This is the first instruction we found
             best_match = inst_res
             matched.operands = inst_res.operands
