@@ -365,10 +365,10 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
     res.segments[^1].fixed.add val
 
   func emit_many(many: seq[uint8]) =
-    sequtils.concat(res.segments[^1].fixed, many)
+    res.segments[^1].fixed = sequtils.concat(res.segments[^1].fixed, many)
 
-  func assembled_byte_count(): int =
-    return res.segments[^1].fixed.len().low()
+  func assembled_byte_count(): uint64 =
+    return cast[uint64](res.segments[^1].fixed.len().low())
 
   func any_pc_rel(expr: expression): bool =
     if expr == nil:
@@ -446,11 +446,10 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
         isa_spec.skip_whitespaces(s)
         var had_error = false
-        while peek(s) != "\n":
+        while peek(s) notin {'\n', '\0'}:
           (number_error, number) = get_unsigned(s)
           if number_error == "":
-            let mask = uint64.high shr (64 - size)
-            var value = mask and (parse_unsigned(number).on_err do:
+            value = mask and (parse_unsigned(number).on_err do:
               error(err)
               skip_line(s)
               break
@@ -509,31 +508,46 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       if special_test == "orig":
         isa_spec.skip_whitespaces(s)
         let (number_error, number) = get_unsigned(s)
+        let value = (parse_unsigned(number).on_err do:
+          error(err)
+          skip_line(s)
+          break
+        )
         if number_error != "":
           error("Expected the next byte address after the 'orig' keyword")
           continue
-        if assembled_byte_count() > number:
-          error("The assembled result exeeds address: " & $number)
+        if assembled_byte_count() > value:
+          error("The assembled result exceeds address: " & $number)
           continue
-        let count = assembled_byte_count() - number
-        emit_many(sequtils.rep[uint8](0, count))
+        let count = assembled_byte_count() - value
+        emit_many(sequtils.repeat[uint8](0, count))
         skip_and_record_newlines(s)
         continue
 
       if special_test == "align":
         isa_spec.skip_whitespaces(s)
         let (number_error, number) = get_unsigned(s)
+        let value = (parse_unsigned(number).on_err do:
+          error(err)
+          skip_line(s)
+          break
+        )
         if number_error != "":
           error("Expected a byte count alignment after the 'align' keyword")
           continue
-        let count = (number - (assembled_byte_count() % number)) % number
-        emit_many(sequtils.rep[uint8](0, count))
+        let count = (value - (assembled_byte_count() mod value)) mod value
+        emit_many(sequtils.repeat[uint8](0, count))
         skip_and_record_newlines(s)
         continue
 
       if special_test == "rep":
         isa_spec.skip_whitespaces(s)
         let (count_error, count) = get_unsigned(s)
+        let count_value = (parse_unsigned(count).on_err do:
+          error(err)
+          skip_line(s)
+          break
+        )
         if count_error != "":
           error("Expected a repetition count after the 'rep' keyword")
           continue
@@ -548,8 +562,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
               error("Expected a size before the number, like <U64> " & $number)
               skip_line(s)
               continue
-           if size mod 8 != 0:
-             error("Only multiples of 8 bits are supported for now")
+            if size mod 8 != 0:
+              error("Only multiples of 8 bits are supported for now")
               skip_line(s)
               continue
             let mask = uint64.high shr (64 - size)
@@ -584,7 +598,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
           else:
             s = restore
             break rep_number_literal
-        emit_many(num_seq.cycle(count))
+        emit_many(num_seq.cycle(count_value))
         skip_and_record_newlines(s)
         continue
 
@@ -730,7 +744,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
       else:
         s = restore
-
 
     block find_instruction:
       #[
