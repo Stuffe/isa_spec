@@ -366,7 +366,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
     res.segments[^1].fixed = sequtils.concat(res.segments[^1].fixed, many)
 
   func assembled_byte_count(): uint64 =
-    return cast[uint64](1 + res.segments[^1].fixed.high() - res.segments[^1].fixed.low())
+    return cast[uint64](res.segments[^1].fixed.len)
 
   func any_pc_rel(expr: expression): bool =
     if expr == nil:
@@ -444,7 +444,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
         isa_spec.skip_whitespaces(s)
         var had_error = false
-        while peek(s) notin {'\n', '\0'}:
+        while peek(s) in setutils.toSet("0123456789-+"):
           (number_error, number) = get_unsigned(s)
           if number_error == "":
             value = mask and (parse_unsigned(number).on_err do:
@@ -577,14 +577,14 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
               of end_little:
                 var i = size div 8
                 while i > 0:
-                  num_seq.add(cast[uint8](value))
+                  num_seq.add cast[uint8](value)
                   value = value shr 8
                   i -= 1
     
               of end_big:
                 var i = size div 8 - 1
                 while i >= 0:
-                  num_seq.add(cast[uint8](value shr (i * 8)))
+                  num_seq.add cast[uint8](value shr (i * 8))
                   i -= 1
 
             skip_and_record_newlines(s)
