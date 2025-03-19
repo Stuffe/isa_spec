@@ -1,2 +1,2 @@
-include registerTest
-include AluTest
+.include registerTest
+.include AluTest

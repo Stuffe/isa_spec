@@ -1,5 +1,5 @@
 
-const last = ddd
+.const last = ddd
 
 test last
 
