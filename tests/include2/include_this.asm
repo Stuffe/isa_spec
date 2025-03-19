@@ -1,1 +1,1 @@
-pub my_label:
+.pub my_label:

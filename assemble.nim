@@ -1,6 +1,5 @@
-import std/[tables, pathnorm, strutils, os, strformat, bitops, setutils]
+import std/[tables, pathnorm, strutils, os, strformat, bitops, setutils, sequtils]
 import types, parse, expressions
-
 
 type
   LabelRef = object
@@ -306,7 +305,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
     let bit_type = inst.bits[j]
     if not is_variable(bit_type.id):
       i += bit_type.top - bit_type.bottom + 1
-      continue # fixed fields are either irreleant or part of the fixed_pattern above
+      continue # fixed fields are either irrelevant or part of the fixed_pattern above
     let bit_index = i mod 64
     let int_index = values.high - (i div 64)
     let index = to_variable_index(bit_type.id)
@@ -332,7 +331,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   func skip_newlines(s: var StreamSlice) {.error.}
     # Shadows parse.skip_newlines()
 
-
   var res: PreAssemblyResult
 
   res.pc.isa_spec = isa_spec
@@ -343,7 +341,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   var line_counter = 1
 
   res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
-
 
   func skip_and_record_newlines(s: var StreamSlice) =
     while peek(s) in {' ', '\r', '\n', '\t'}:
@@ -363,6 +360,12 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
   func emit(val: uint8) =
     res.segments[^1].fixed.add val
+
+  func emit_many(many: seq[uint8]) =
+    res.segments[^1].fixed = sequtils.concat(res.segments[^1].fixed, many)
+
+  func assembled_byte_count(): uint64 =
+    return cast[uint64](res.segments[^1].fixed.len)
 
   func any_pc_rel(expr: expression): bool =
     if expr == nil:
@@ -407,7 +410,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       let restore = s
       let (size_error, size) = get_size(s)
       isa_spec.skip_whitespaces(s)
-      let (number_error, number) = get_unsigned(s)
+      var (number_error, number) = get_unsigned(s)
       if number_error == "":
         if size_error != "":
           error("Expected a size before the number, like <U64> " & $number)
@@ -423,7 +426,6 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
           skip_line(s)
           continue
         )
-        
 
         case isa_spec.endianness:
           of end_little:
@@ -438,6 +440,33 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
             while i >= 0:
               emit(cast[uint8](value shr (i * 8)))
               i -= 1
+
+        isa_spec.skip_whitespaces(s)
+        var had_error = false
+        while peek(s) in setutils.toSet("0123456789-+"):
+          (number_error, number) = get_unsigned(s)
+          if number_error == "":
+            value = mask and (parse_unsigned(number).on_err do:
+              error(err)
+              skip_line(s)
+              break
+            )
+
+            case isa_spec.endianness:
+              of end_little:
+                var i = size div 8
+                while i > 0:
+                  emit(cast[uint8](value))
+                  value = value shr 8
+                  i -= 1
+
+              of end_big:
+                var i = size div 8 - 1
+                while i >= 0:
+                  emit(cast[uint8](value shr (i * 8)))
+                  i -= 1
+
+          isa_spec.skip_whitespaces(s)
 
         skip_and_record_newlines(s)
         continue
@@ -471,74 +500,242 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
     block special:
       let restore = s
-      var special_test = get_identifier(s)
-
+      var special_test: StreamSlice
       var public: bool
-      if special_test == "pub":
-        public = true
-        isa_spec.skip_whitespaces(s)
+
+      if matches(s, '.'):
         special_test = get_identifier(s)
 
-      if special_test == "include":
-        isa_spec.skip_whitespaces(s)
+        if special_test == "orig":
+          isa_spec.skip_whitespaces(s)
+          let (number_error, number) = get_unsigned(s)
+          if number_error != "":
+            error("Expected the next byte address after the 'orig' keyword")
+            continue
+          let value = (parse_unsigned(number).on_err do:
+            error(err)
+            skip_line(s)
+            continue
+          )
+          if assembled_byte_count() > value:
+            error("The assembled result exceeds address: " & $number)
+            continue
+          let count = value - assembled_byte_count()
+          emit_many(sequtils.repeat[uint8](0, count))
+          skip_and_record_newlines(s)
+          continue
 
-        var file_wo_header: string
-        while peek(s) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
-          file_wo_header.add(read(s))
+        if special_test == "align":
+          isa_spec.skip_whitespaces(s)
+          let (number_error, number) = get_unsigned(s)
+          if number_error != "":
+            error("Expected a byte count alignment after the 'align' keyword")
+            skip_line(s)
+            continue
+          let value = (parse_unsigned(number).on_err do:
+            error(err)
+            skip_line(s)
+            continue
+          )
+          let count = (value - (assembled_byte_count() mod value)) mod value
+          emit_many(sequtils.repeat[uint8](0, count))
+          skip_and_record_newlines(s)
+          continue
 
-        let file = file_wo_header.replace("\\", "/") & ".asm"
+        if special_test == "rep":
+          isa_spec.skip_whitespaces(s)
+          let (count_error, count) = get_unsigned(s)
+          let count_value = (parse_unsigned(count).on_err do:
+            error(err)
+            skip_line(s)
+            continue
+          )
+          if count_error != "":
+            error("Expected a repetition count after the 'rep' keyword")
+            continue
+          isa_spec.skip_whitespaces(s)
+          var num_seq = newSeq[uint8](0)
+          block rep_number_literal:
+            let restore = s
+            let (size_error, size) = get_size(s)
+            isa_spec.skip_whitespaces(s)
+            let (number_error, number) = get_unsigned(s)
+            if number_error == "":
+              if size_error != "":
+                error("Expected a size before the number, like <U64> " & $number)
+                skip_line(s)
+                continue
+              if size mod 8 != 0:
+                error("Only multiples of 8 bits are supported for now")
+                skip_line(s)
+                continue
+              let mask = uint64.high shr (64 - size)
+              var value = mask and (parse_unsigned(number).on_err do:
+                error(err)
+                skip_line(s)
+                continue
+              )
+      
+              case isa_spec.endianness:
+                of end_little:
+                  var i = size div 8
+                  while i > 0:
+                    num_seq.add cast[uint8](value)
+                    value = value shr 8
+                    i -= 1
+      
+                of end_big:
+                  var i = size div 8 - 1
+                  while i >= 0:
+                    num_seq.add cast[uint8](value shr (i * 8))
+                    i -= 1
 
-        var i = normal_path.high
-        while i > 0 and normal_path[i] != '/':
-          i -= 1
-
-        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter, already_included)
-        if include_res.errors.len != 0:
-          res.errors.add include_res.errors
-
-        let file_first = file_wo_header.split("/")[^1]
-
-        for name, lbl in include_res.labels:
-          let new_name = if lbl.public:
-              file_first & "." & name
+              skip_and_record_newlines(s)
+      
+            elif size_error == "":
+              error("Expected a number after a size declaration")
+              skip_line(s)
+              continue
+      
             else:
-               # Generate a unique, not typable name for internal labels
-              "$" & file_first & "[" & $line_counter & "]." & name
-          var new_val = lbl
-          new_val.seg_id += res.segments.len
-          res.labels[new_name] = new_val
+              s = restore
+              break rep_number_literal
+          emit_many(num_seq.cycle(count_value))
+          skip_and_record_newlines(s)
+          continue
 
-        for name, val in include_res.pc.number_defines:
-          if val.public:
-            res.pc.number_defines[file_first & "." & name] = val
+        if special_test == "pub":
+          public = true
+          isa_spec.skip_whitespaces(s)
+          special_test = get_identifier(s)
 
-        for field, field_values in include_res.pc.field_defines:
-          for name, val in field_values:
+        if special_test == "include":
+          isa_spec.skip_whitespaces(s)
+
+          var file_wo_header: string
+          while peek(s) in setutils.toSet("\\/.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"):
+            file_wo_header.add(read(s))
+
+          let file = file_wo_header.replace("\\", "/") & ".asm"
+
+          var i = normal_path.high
+          while i > 0 and normal_path[i] != '/':
+            i -= 1
+
+          let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter, already_included)
+          if include_res.errors.len != 0:
+            res.errors.add include_res.errors
+
+          let file_first = file_wo_header.split("/")[^1]
+
+          for name, lbl in include_res.labels:
+            let new_name = if lbl.public:
+                file_first & "." & name
+              else:
+                # Generate a unique, not typeable name for internal labels
+                "$" & file_first & "[" & $line_counter & "]." & name
+            var new_val = lbl
+            new_val.seg_id += res.segments.len
+            res.labels[new_name] = new_val
+
+          for name, val in include_res.pc.number_defines:
             if val.public:
-              res.pc.field_defines[field][file_first & "." & name] = val
-        for segment in include_res.segments:
-          var new_segment = segment
-          for mop in new_segment.relaxable.operands.mitems():
-            if mop.kind == ok_label_ref:
-              if mop.name not_in include_res.labels:
-                res.errors.add(Error(
-                  loc: FileLocation(file: segment.file, line: segment.line_boundaries[^1][1]),
-                                    message: &"Undefined label {$mop.name}"))
-                continue # This label is not gonna be renamed, but that's fine
-              let lbl = include_res.labels[mop.name]
-              mop.name = if lbl.public:
-                  file_first & "." & mop.name
-                else:
-                   # Generate a unique, not typable name for internal labels
-                  "$" & file_first & "[" & $line_counter & "]." & mop.name
-          res.segments.add(new_segment)
+              res.pc.number_defines[file_first & "." & name] = val
 
-        res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
+          for field, field_values in include_res.pc.field_defines:
+            for name, val in field_values:
+              if val.public:
+                res.pc.field_defines[field][file_first & "." & name] = val
+          for segment in include_res.segments:
+            var new_segment = segment
+            for mop in new_segment.relaxable.operands.mitems():
+              if mop.kind == ok_label_ref:
+                if mop.name not_in include_res.labels:
+                  res.errors.add(Error(
+                    loc: FileLocation(file: segment.file, line: segment.line_boundaries[^1][1]),
+                                      message: &"Undefined label {$mop.name}"))
+                  continue # This label is not gonna be renamed, but that's fine
+                let lbl = include_res.labels[mop.name]
+                mop.name = if lbl.public:
+                    file_first & "." & mop.name
+                  else:
+                    # Generate a unique, not typeable name for internal labels
+                    "$" & file_first & "[" & $line_counter & "]." & mop.name
+            res.segments.add(new_segment)
 
-        skip_and_record_newlines(s)
-        continue
+          res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
 
-      elif special_test.len != 0 and peek(s) == ':':
+          skip_and_record_newlines(s)
+          continue
+
+        elif special_test == "const":
+          isa_spec.skip_whitespaces(s)
+          let definition_name = get_identifier(s)
+
+          isa_spec.skip_whitespaces(s)
+
+          if read(s) != '=':
+            error("Missing '=' after 'const'")
+
+
+          if definition_name in res.pc.number_defines:
+            error($definition_name & " is already declared")
+            skip_line(s)
+            continue
+
+          for _, field_type in isa_spec.field_types:
+            for _, field in field_type.values:
+              if field.name == definition_name:
+                error($definition_name & " is already declared")
+                skip_line(s)
+                continue
+
+          isa_spec.skip_whitespaces(s)
+
+          let (number_err, number) = get_unsigned(s)
+          if number_err == "":
+            res.pc.number_defines[definition_name] = DefineValue(
+                public: public,
+                value: (parse_unsigned(number).on_err() do:
+                  error(err)
+                  skip_line(s)
+                  continue
+            ))
+
+          else:
+            let define_value = get_identifier(s)
+
+            if define_value in res.pc.number_defines:
+              res.pc.number_defines[definition_name] = res.pc.number_defines[define_value]
+
+            else:
+
+              var found = false
+              for field_id, values in res.pc.field_defines:
+                if define_value in values:
+                  res.pc.field_defines[field_id][definition_name] = res.pc.field_defines[field_id][define_value]
+                  found = true
+
+              if not found:
+                for field_id, field_type in isa_spec.field_types:
+                  for i, field in field_type.values:
+                    if field.name == define_value:
+                      res.pc.field_defines[field_id][definition_name] = DefineValue(public: public, value: field.value)
+                      found = true
+                      break
+
+              if not found:
+                error("Definition value must be either a number or a register")
+                skip_line(s)
+                continue
+
+          skip_and_record_newlines(s)
+          continue
+
+      else:
+        special_test = get_identifier(s)
+
+      if special_test.len != 0 and peek(s) == ':':
         if special_test in res.labels:
           error("Label " & $special_test & " is already declared")
           skip_line(s)
@@ -549,73 +746,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
         continue
 
-      elif special_test == "const":
-        isa_spec.skip_whitespaces(s)
-        let definition_name = get_identifier(s)
-
-        isa_spec.skip_whitespaces(s)
-
-        if read(s) != '=':
-          error("Missing '=' after 'const'")
-
-
-        if definition_name in res.pc.number_defines:
-          error($definition_name & " is already declared")
-          skip_line(s)
-          continue
-
-        for _, field_type in isa_spec.field_types:
-          for _, field in field_type.values:
-            if field.name == definition_name:
-              error($definition_name & " is already declared")
-              skip_line(s)
-              continue
-
-        isa_spec.skip_whitespaces(s)
-
-        let (number_err, number) = get_unsigned(s)
-        if number_err == "":
-          res.pc.number_defines[definition_name] = DefineValue(
-              public: public,
-              value: (parse_unsigned(number).on_err() do:
-                error(err)
-                skip_line(s)
-                continue
-          ))
-
-        else:
-          let define_value = get_identifier(s)
-
-          if define_value in res.pc.number_defines:
-            res.pc.number_defines[definition_name] = res.pc.number_defines[define_value]
-
-          else:
-
-            var found = false
-            for field_id, values in res.pc.field_defines:
-              if define_value in values:
-                res.pc.field_defines[field_id][definition_name] = res.pc.field_defines[field_id][define_value]
-                found = true
-
-            if not found:
-              for field_id, field_type in isa_spec.field_types:
-                for i, field in field_type.values:
-                  if field.name == define_value:
-                    res.pc.field_defines[field_id][definition_name] = DefineValue(public: public, value: field.value)
-                    found = true
-                    break
-
-            if not found:
-              error("Definition value must be either a number or a register")
-              skip_line(s)
-              continue
-
-        skip_and_record_newlines(s)
-        continue
-
-      else:
-        s = restore
-
+      s = restore
 
     block find_instruction:
       #[
@@ -634,7 +765,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       for inst in isa_spec.instructions:
         s = restore  # Reset to the beginning of the line
         let inst_res = parse_instruction(s, res.pc, inst)
-        if inst_res.error == "": # The instruction parsed succesfully
+        if inst_res.error == "": # The instruction parsed successfully
           if matched.options.len == 0: # This is the first instruction we found
             best_match = inst_res
             matched.operands = inst_res.operands
