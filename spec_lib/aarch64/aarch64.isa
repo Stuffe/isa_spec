@@ -739,7 +739,7 @@ Raises a breakpoint exception. The user can put any value in %imm.
 
 // compare and branch if nonzero
 cbnz  %xn(register_64) , .%imm:S21(immediate|label)
-10110101 %imm[20:2] %xn[4:0]
+#xB5 %imm[20:2] %xn[4:0]
 Branches to the PC-relative offset or label %imm, if %xn is not zero.
 
 

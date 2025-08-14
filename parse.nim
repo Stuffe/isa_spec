@@ -319,7 +319,22 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
     result[1].finish += 1
   add_token(s, tk_number)
 
-func xdigit_to_value(c: char): int =
+func get_hex*(s: var StreamSlice, prefix: string = "0x"): (string, StreamSlice) =
+  result[1] = s
+  result[1].finish = s.start
+
+  if not matches(s, prefix, increment=false):
+    return ("Expected " & prefix, empty_slice(s))
+
+  skip(s, prefix.len)
+  result[1].finish += prefix.len
+  while peek(s) in HexDigits + {'_'}:
+    skip(s)
+    result[1].finish += 1
+  add_token(s, tk_number)
+  return result
+
+func xdigit_to_value*(c: char): int =
   # Assumes that c has already been verified
   if c in DIGITS:
     return c.ord - '0'.ord

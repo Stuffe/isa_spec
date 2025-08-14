@@ -194,7 +194,35 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
     # to the correct bounds in a seperate pass
     var current = Bitfield(id: field_invalid)
 
-    while peek(s) in setutils.toSet("01?%abcdefghijklmnopqrstuvwxyz "):
+    while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
+      const HEX_PREFIX = "#x"
+      if matches(s, HEX_PREFIX, increment=false):
+        let hex_s = check(get_hex(s, HEX_PREFIX))
+        for i in HEX_PREFIX.len ..< hex_s.len:
+          let c = hex_s[i]
+          if c notin HexDigits:
+            continue
+
+          let hex = xdigit_to_value(c)
+          var shift = 1 shl 3
+          while shift != 0:
+            mask.add('1')
+            let bit_id = 
+              if (hex and shift) == 0:
+                pattern.add('0')
+                field_zero
+              else:
+                pattern.add('1')
+                field_one
+            if bit_id != current.id:
+              if current.id != field_invalid:
+                new_bits.add(current)
+              current = Bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
+            else:
+              current.top += 1
+            shift = shift shr 1
+        continue
+
       if peek(s) != '%':
         let bit_id = case peek(s):
           of '0':
