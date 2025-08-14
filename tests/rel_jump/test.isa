@@ -2,6 +2,6 @@
 
 [instructions]
 jmp %a(label)
-%b = %a - $
+%b = %a - $start
 00bbbbbb
 jump to %a.

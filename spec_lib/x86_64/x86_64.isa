@@ -435,11 +435,11 @@ div  %rm(qreg)
 
 // call imm
 // AMD64 actually defines a 16-bit call opcode, but intel doesn't implement this
-// call  $ + %addr:S64(immediate|label)
+// call  $start + %addr:S64(immediate|label)
 // %imm:S64 = %off - 4
 // 01100110 11101000 %imm[7:0] %imm[15:8]
 
-call  $ + %off:S64(immediate|label)
+call  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 5
 11101000 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
 
@@ -474,31 +474,31 @@ int  %imm:U8(immediate)
 
 
 // je imm
-je  $ + %off:S64(immediate|label)
+je  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 2
 01110100 %imm[7:0]
 
 // intel doesn't do 16-bit jump offsets
-// je  $ + %off:S64(immediate|label)
+// je  $start + %off:S64(immediate|label)
 // %imm:S64 = %off - 5
 // 01100110 00001111 10000100 %imm[7:0] %imm[15:8]
 
-je  $ + %off:S64(immediate|label)
+je  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 6
 00001111 10000100 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
 
 
 // jmp imm
-jmp  $ + %off:S64(immediate|label)
+jmp  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 2
 11101011 %imm[7:0]
 
 // intel doesn't do 16-bit jump offsets
-// jmp  $ + %off:S64(immediate|label)
+// jmp  $start + %off:S64(immediate|label)
 // %imm:S64 = %off - 5
 // 01100110 00001111 11101001 %imm[7:0] %imm[15:8]
 
-jmp  $ + %off:S64(immediate|label)
+jmp  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 5
 11101001 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
 
@@ -511,46 +511,46 @@ jmp  %rm(qreg)
 
 
 // jne imm
-jne  $ + %off:S64(immediate|label)
+jne  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 2
 01110101 %imm[7:0]
 
 // intel doesn't do 16-bit jump offsets
-// jne  $ + %off:S64(immediate|label)
+// jne  $start + %off:S64(immediate|label)
 // %imm:S64 = %off - 5
 // 01100110 00001111 10000101 %imm[7:0] %imm[15:8]
 
-jne  $ + %off:S64(immediate|label)
+jne  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 6
 00001111 10000101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
 
 
 // jnz imm
-jnz  $ + %off:S64(immediate|label)
+jnz  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 2
 01110101 %imm[7:0]
 
 // intel doesn't do 16-bit jump offsets
-// jnz  $ + %off:S64(immediate|label)
+// jnz  $start + %off:S64(immediate|label)
 // %imm:S64 = %off - 5
 // 01100110 00001111 10000101 %imm[7:0] %imm[15:8]
 
-jnz  $ + %off:S64(immediate|label)
+jnz  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 6
 00001111 10000101 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
 
 
 // jz imm
-jz  $ + %off:S64(immediate|label)
+jz  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 2
 01110100 %imm[7:0]
 
 // intel doesn't do 16-bit jump offsets
-// jz  $ + %off:S64(immediate|label)
+// jz  $start + %off:S64(immediate|label)
 // %imm:S64 = %off - 5
 // 01100110 00001111 10000100 %imm[7:0] %imm[15:8]
 
-jz  $ + %off:S64(immediate|label)
+jz  $start + %off:S64(immediate|label)
 %imm:S64 = %off - 6
 00001111 10000100 %imm[7:0] %imm[15:8] %imm[23:16] %imm[31:24]
 
@@ -1538,8 +1538,8 @@ ret %imm:U16(immediate)
 11000010 %imm[15:0]
 
 
-// lea qreg, [rel $+ offset]
-lea  %reg(qreg) , %_(qword_ptr) [ rel $ + %imm:S64(immediate) ]
+// lea qreg, [rel $start+ offset]
+lea  %reg(qreg) , %_(qword_ptr) [ rel $start + %imm:S64(immediate) ]
 %disp:S64 = %imm - 7
 01001 %reg[3:3] 00 10001101 00 %reg[2:0] 101 %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24]
 

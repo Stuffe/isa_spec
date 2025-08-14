@@ -2,6 +2,7 @@ import std/setutils, strutils, math, bitops, tables
 import types, parse
 
 const CURRENT_ADDRESS* = int.high
+const NEXT_ADDRESS* = int.high - 1
 
 func to_str*(exp: expression, operand_names: seq[string]): string =
   if isNil(exp): return "NIL_EXP"
@@ -9,7 +10,8 @@ func to_str*(exp: expression, operand_names: seq[string]): string =
     of exp_fail: return "FAIL"
     of exp_number: return $exp.value
     of exp_operand:
-      if exp.index == CURRENT_ADDRESS: return "$"
+      if exp.index == CURRENT_ADDRESS: return "$start"
+      if exp.index == NEXT_ADDRESS: return "$end"
       if exp.index >= 0 and exp.index < operand_names.len:
         return "%" & operand_names[exp.index]
       else:
@@ -80,8 +82,15 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
       return expression(exp_kind: exp_fail)
 
   elif peek(s) == '$':
-    skip(s, tk=tk_literal)
-    return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
+    skip(s)
+    let identifier = get_identifier(s, tk=tk_literal)
+    if identifier == "start":
+      return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
+
+    if identifier == "end":
+      return expression(exp_kind: exp_operand, index: NEXT_ADDRESS)
+
+    return expression(exp_kind: exp_fail)
 
   elif matches(s, '%'):
     let operand = get_identifier(s, tk=tk_field_ref)
@@ -196,7 +205,7 @@ func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression
 
     exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
 
-func eval*(input: expression, operands: seq[uint64], current_address: int): int =
+func eval*(input: expression, operands: seq[uint64], current_address: int, instruction_byte_length: int): int =
 
   case input.exp_kind:
     of exp_fail: return # We need to handle invalid expressions for TC
@@ -204,12 +213,14 @@ func eval*(input: expression, operands: seq[uint64], current_address: int): int 
     of exp_operand: 
       if input.index == CURRENT_ADDRESS: 
         return current_address
+      if input.index == NEXT_ADDRESS:
+        return current_address + instruction_byte_length
       return cast[int](operands[input.index])
     of exp_operation:
-      let lhs = eval(input.lhs, operands, current_address)
+      let lhs = eval(input.lhs, operands, current_address, instruction_byte_length)
       var rhs: int
       if input.op_kind notin {op_log2, op_popcount, op_trailing_zeros}:
-        rhs = eval(input.rhs, operands, current_address)
+        rhs = eval(input.rhs, operands, current_address, instruction_byte_length)
 
       case input.op_kind:
         of op_add: return lhs +   rhs
@@ -239,42 +250,43 @@ func eval*(input: expression, operands: seq[uint64], current_address: int): int 
           return countTrailingZeroBits(lhs)
 
     of exp_bitextract:
-      let base = eval(input.base, operands, current_address)
-      let top = eval(input.top, operands, current_address)
+      let base = eval(input.base, operands, current_address, instruction_byte_length)
+      let top = eval(input.top, operands, current_address, instruction_byte_length)
       let bottom = if input.bottom.is_nil:
           top
         else:
-          eval(input.bottom, operands, current_address)
+          eval(input.bottom, operands, current_address, instruction_byte_length)
       return cast[int](cast[uint64](base).bitsliced(bottom .. top))
 
 func is_known_leaf(input: expression): bool =
-  return input.exp_kind == exp_number or (input.exp_kind == exp_operand and input.index == CURRENT_ADDRESS)
+  return input.exp_kind == exp_number or (input.exp_kind == exp_operand and (input.index == CURRENT_ADDRESS or input.index == NEXT_ADDRESS))
 
-func get_leaf_value(input: expression, operands: seq[uint64], current_address: int): int =
+func get_leaf_value(input: expression, operands: seq[uint64], current_address: int, instruction_byte_length: int): int =
   case input.exp_kind:
     of exp_number: return input.value
     of exp_operand: 
       if input.index == CURRENT_ADDRESS: return current_address
+      if input.index == NEXT_ADDRESS: return current_address + instruction_byte_length
       return cast[int](operands[input.index])
     else: assert false
 
-func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int
-func reverse_single(fields: var seq[uint64], current_address: int, op_kind: OpKind, known: int, unknown: expression, res: int): int =
+func reverse_eval*(input: expression, current_address: int, instruction_byte_length: int, fields: var seq[uint64], res: int): int
+func reverse_single(fields: var seq[uint64], current_address: int, instruction_byte_length: int, op_kind: OpKind, known: int, unknown: expression, res: int): int =
   case op_kind:
-    of op_add: return reverse_eval(unknown, current_address, fields, res -   known)
-    of op_sub: return reverse_eval(unknown, current_address, fields, res +   known)
-    of op_mul: return reverse_eval(unknown, current_address, fields, res div known)
-    of op_div: return reverse_eval(unknown, current_address, fields, res *   known)
+    of op_add: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res -   known)
+    of op_sub: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res +   known)
+    of op_mul: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res div known)
+    of op_div: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res *   known)
     of op_mod: return res
     of op_and: return res
     of op_or:  return res
-    of op_xor: return reverse_eval(unknown, current_address, fields, res xor known)
-    of op_lsl: return reverse_eval(unknown, current_address, fields, res shr known)
-    of op_lsr: return reverse_eval(unknown, current_address, fields, res shl known)
-    of op_asr: return reverse_eval(unknown, current_address, fields, res shl known)
+    of op_xor: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res xor known)
+    of op_lsl: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shr known)
+    of op_lsr: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shl known)
+    of op_asr: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shl known)
     of op_log2, op_popcount, op_trailing_zeros: assert false
 
-func reverse_eval*(input: expression, current_address: int, fields: var seq[uint64], res: int): int =
+func reverse_eval*(input: expression, current_address: int, instruction_byte_length: int, fields: var seq[uint64], res: int): int =
   # TODO: This entire function is the wrong approach to this problem
   #       We have to take all virtual fields and asserts into account at the same time
   #       Just blindly trying to reverse a single expression is never going to work
@@ -284,6 +296,7 @@ func reverse_eval*(input: expression, current_address: int, fields: var seq[uint
     of exp_number:  return input.value
     of exp_operand:
       if input.index == CURRENT_ADDRESS: return current_address
+      if input.index == NEXT_ADDRESS: return current_address + instruction_byte_length
       fields[input.index] = cast[uint64](res)
       return res
     of exp_operation:
@@ -295,19 +308,19 @@ func reverse_eval*(input: expression, current_address: int, fields: var seq[uint
         return result
 
       if is_known_leaf(input.lhs):
-        return reverse_single(fields, current_address, input.op_kind, get_leaf_value(input.lhs, fields, current_address), input.rhs, res)
+        return reverse_single(fields, current_address, instruction_byte_length, input.op_kind, get_leaf_value(input.lhs, fields, current_address, instruction_byte_length), input.rhs, res)
 
       if is_known_leaf(input.rhs):
-        result = reverse_single(fields, current_address, input.op_kind, get_leaf_value(input.rhs, fields, current_address), input.lhs, res)
+        result = reverse_single(fields, current_address, instruction_byte_length, input.op_kind, get_leaf_value(input.rhs, fields, current_address, instruction_byte_length), input.lhs, res)
         return result
 
       # TODO, really we are assuming one equation with at most one unknown here. Rewrite this so it can solve more complex systems of equations
     of exp_bitextract:
       if is_known_leaf(input.top) and is_known_leaf(input.bottom):
         if is_known_leaf(input.base):
-          return eval(input, fields, current_address)
+          return eval(input, fields, current_address, instruction_byte_length)
         else:
-          let orig = res shl get_leaf_value(input.bottom, fields, current_address)
-          return reverse_eval(input.base, current_address, fields, orig)
+          let orig = res shl get_leaf_value(input.bottom, fields, current_address, instruction_byte_length)
+          return reverse_eval(input.base, current_address, instruction_byte_length, fields, orig)
       # TODO, if the bounds are not known, I am really not sure how we can reverse that...
 

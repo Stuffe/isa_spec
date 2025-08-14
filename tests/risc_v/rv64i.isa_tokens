@@ -667,7 +667,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -751,7 +751,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -837,7 +837,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -921,7 +921,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -989,7 +989,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel_hi`
 tk_seperator: `:`
@@ -1095,7 +1095,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel_hi`
 tk_seperator: `:`
@@ -1395,7 +1395,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -1449,7 +1449,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -1510,7 +1510,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel`
 tk_bracket: `[`
@@ -1823,7 +1823,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel_hi`
 tk_seperator: `:`
@@ -2124,7 +2124,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel_hi`
 tk_seperator: `:`
@@ -2284,7 +2284,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel_hi`
 tk_seperator: `:`
@@ -3116,7 +3116,7 @@ tk_field_ref: `%label`
 tk_whitespace: ` `
 tk_operator: `-`
 tk_whitespace: ` `
-tk_literal: `$`
+tk_literal: `$start`
 tk_whitespace: `\n`
 tk_identifier: `%label_pcrel_hi`
 tk_seperator: `:`

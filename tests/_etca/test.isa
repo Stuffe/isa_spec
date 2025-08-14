@@ -24519,97 +24519,97 @@ writecrq %register_qword, %control_register
 write {a} into control register {b}.
 
 jz %label8
-= %a - $
+= %a - $start
 100a0000 bbbbbbbb
 jump to %a if zero flag set.
 
 jeq %label8
-= %a - $
+= %a - $start
 100a0000 bbbbbbbb
 jump to %a if equal.
 
 jnz %label8
-= %a - $
+= %a - $start
 100a0001 bbbbbbbb
 jump to %a if zero flag not set.
 
 jne %label8
-= %a - $
+= %a - $start
 100a0001 bbbbbbbb
 jump to %a if not equal.
 
 jn %label8
-= %a - $
+= %a - $start
 100a0010 bbbbbbbb
 jump to %a if negative flag set.
 
 jnn %label8
-= %a - $
+= %a - $start
 100a0011 bbbbbbbb
 jump to %a if negative flag not set.
 
 jc %label8
-= %a - $
+= %a - $start
 100a0100 bbbbbbbb
 jump to %a if carry flag set.
 
 jb %label8
-= %a - $
+= %a - $start
 100a0100 bbbbbbbb
 jump to %a if below (unsigned).
 
 jnc %label8
-= %a - $
+= %a - $start
 100a0101 bbbbbbbb
 jump to %a if carry flag not set.
 
 jae %label8
-= %a - $
+= %a - $start
 100a0101 bbbbbbbb
 jump to %a if above or equal (unsigned).
 
 jv %label8
-= %a - $
+= %a - $start
 100a0110 bbbbbbbb
 jump to %a if overflow flag set.
 
 jnv %label8
-= %a - $
+= %a - $start
 100a0111 bbbbbbbb
 jump to %a if overflow flag not set.
 
 jbe %label8
-= %a - $
+= %a - $start
 100a1000 bbbbbbbb
 jump to %a if below or equal (unsigned).
 
 ja %label8
-= %a - $
+= %a - $start
 100a1001 bbbbbbbb
 jump to %a if above or equal (unsigned).
 
 jl %label8
-= %a - $
+= %a - $start
 100a1010 bbbbbbbb
 jump to %a if less than (signed).
 
 jge %label8
-= %a - $
+= %a - $start
 100a1011 bbbbbbbb
 jump to %a if greater than or equal (signed).
 
 jle %label8
-= %a - $
+= %a - $start
 100a1100 bbbbbbbb
 jump to %a if less than or equal (signed).
 
 jg %label8
-= %a - $
+= %a - $start
 100a1101 bbbbbbbb
 jump to %a if greater than (signed).
 
 jmp %label8
-= %a - $
+= %a - $start
 100a1110 bbbbbbbb
 jump to %a if greater than (signed).
 

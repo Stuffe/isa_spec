@@ -259,11 +259,13 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
     else:
       &"{f.highest_bit+1}-bit zero-extended field"
 
+  let byte_length = inst.bit_length div 8
   var fields = args
+
   # Compute virtual fields & Apply sizes
   for i, field in inst.operands:
     if field.kind == otk_virtual:
-      let new_field = eval(field.expr, fields, ip)
+      let new_field = eval(field.expr, fields, ip, byte_length)
       fields.add(cast[uint64](new_field))
     if field.size != 64: # If the size is 64, there is nothing we can verify
       let remainder = asr(fields[i], field.size.uint64) # The bits that are not part of this value
@@ -289,8 +291,8 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
         error(&"Value {cast[int64](fields[i])} doesn't fit (some bits should be zero aren't)")
 
   for i, (lhs, rhs, msg) in inst.asserts:
-    let lhs_value = eval(lhs, fields, ip)
-    let rhs_value = eval(rhs, fields, ip)
+    let lhs_value = eval(lhs, fields, ip, byte_length)
+    let rhs_value = eval(rhs, fields, ip, byte_length)
     if lhs_value != rhs_value:
       if msg == "":
         let lhs_source = lhs.to_str(inst.field_names)
@@ -371,7 +373,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       of exp_fail, exp_number:
         return false
       of exp_operand:
-        return expr.index == CURRENT_ADDRESS
+        return expr.index == CURRENT_ADDRESS or expr.index == NEXT_ADDRESS
       of exp_operation:
         return expr.lhs.any_pc_rel or expr.rhs.any_pc_rel
       of exp_bitextract:

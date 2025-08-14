@@ -7,6 +7,6 @@ auipc x%rd(immediate), %imm(immediate)
 %imm[19:0] %rd[4:0] 0010111
 
 j %label(label)
-%label_pcrel = %label - $
+%label_pcrel = %label - $start
 %label_pcrel[20:20] %label_pcrel[10:1] %label_pcrel[11:11] %label_pcrel[19:12] 00000 1101111
 jal zero, %label

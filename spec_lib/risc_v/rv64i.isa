@@ -180,34 +180,34 @@ auipc  %rd(register) , %imm:S64(immediate)
 %imm[19:0] %rd[4:0] 0010111
 
 b%op(branch_funct3)  %src1(register) , %src2(register) , %label(label)
-%label_pcrel:S13 = %label - $
+%label_pcrel:S13 = %label - $start
 %label_pcrel[12:12] %label_pcrel[10:5] %src2[4:0] %src1[4:0] %op[2:0] %label_pcrel[4:1] %label_pcrel[11:11] 1100011
 beq/bge/bgeu/blt/bltu/bne %src1, %src2, %label
 
 b%op(branch_z_funct3)  %src(register) , %label(label)
-%label_pcrel:S13 = %label - $
+%label_pcrel:S13 = %label - $start
 %label_pcrel[12:12] %label_pcrel[10:5] 00000 %src[4:0] %op[2:0] %label_pcrel[4:1] %label_pcrel[11:11] 1100011
 beqz/bgez/bltz/bnez %src, %label -> beq/bge/blt/bne %src, zero, %label
 
 b%op(branch_opposite_funct3)  %src1(register) , %src2(register) , %label(label)
-%label_pcrel:S13 = %label - $
+%label_pcrel:S13 = %label - $start
 %label_pcrel[12:12] %label_pcrel[10:5] %src1[4:0] %src2[4:0] %op[2:0] %label_pcrel[4:1] %label_pcrel[11:11] 1100011
 bgt/bgtu/ble/bleu %src1, %src2, %label -> blt/bltu/bge/bgeu %src2, %src1, %label
 
 b%op(branch_opposite_z_funct3)  %src(register) , %label(label)
-%label_pcrel:S13 = %label - $
+%label_pcrel:S13 = %label - $start
 %label_pcrel[12:12] %label_pcrel[10:5] %src[4:0] 00000 %op[2:0] %label_pcrel[4:1] %label_pcrel[11:11] 1100011
 bgtz/blez %src, %label -> blt/bge zero, %src, %label
 
 call  %label(label)
-%label_pcrel:S32 = %label - $
+%label_pcrel:S32 = %label - $start
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
 %label_pcrel_lo:S12 = %label_pcrel[11:0]
 %label_pcrel_hi[19:0] 00001 0010111 %label_pcrel_lo[11:0] 00001 000 00001 1100111
 auipc ra, pcrel_hi(%label); jalr ra, pcrel_lo(%label)(ra)
 
 call  %dest(register) , %label(label)
-%label_pcrel:S32 = %label - $
+%label_pcrel:S32 = %label - $start
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
 %label_pcrel_lo:S12 = %label_pcrel[11:0]
 %label_pcrel_hi[19:0] %dest[4:0] 0010111 %label_pcrel_lo[11:0] %dest[4:0] 000 %dest[4:0] 1100111
@@ -239,17 +239,17 @@ fence.tso
 1000 0011 0011 00000 000 00000 0001111
 
 j  %label(label)
-%label_pcrel:S21 = %label - $
+%label_pcrel:S21 = %label - $start
 %label_pcrel[20:20] %label_pcrel[10:1] %label_pcrel[11:11] %label_pcrel[19:12] 00000 1101111
 jal zero, %label
 
 jal  %label(label)
-%label_pcrel:S21 = %label - $
+%label_pcrel:S21 = %label - $start
 %label_pcrel[20:20] %label_pcrel[10:1] %label_pcrel[11:11] %label_pcrel[19:12] 00001 1101111
 jal ra, %a
 
 jal  %dest(register) , %label(label)
-%label_pcrel:S21 = %label - $
+%label_pcrel:S21 = %label - $start
 %label_pcrel[20:20] %label_pcrel[10:1] %label_pcrel[11:11] %label_pcrel[19:12] %dest[4:0] 1101111
 
 jalr  ( %base(register) )
@@ -280,7 +280,7 @@ jr  %base(register)
 jalr zero, 0(%base)
 
 jump  %label(label) , %scratch(register)
-%label_pcrel:S32 = %label - $
+%label_pcrel:S32 = %label - $start
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
 %label_pcrel_lo:S12 = %label_pcrel[11:0]
 %label_pcrel_hi[19:0] %scratch[4:0] 0010111 %label_pcrel_lo[11:0] %scratch[4:0] 000 00000 1100111
@@ -301,7 +301,7 @@ li  %dest(register) , %imm:S64(immediate)
 lui %dest, %hi(%imm); addi %dest, %lo(%imm)
 
 lla  %dest(register) , %label(label)
-%label_pcrel:S32 = %label - $
+%label_pcrel:S32 = %label - $start
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
 %label_pcrel_lo:S12 = %label_pcrel[11:0]
 %label_pcrel_hi[19:0] %dest[4:0] 0010111 %label_pcrel_lo[11:0] %dest[4:0] 000 %dest[4:0] 0010011
@@ -312,7 +312,7 @@ lui  %dest(register) , %imm:S64(immediate)
 lui %dest, %imm
 
 l%width(load_funct3)  %dest(register) , %label(label)
-%label_pcrel:S32 = %label - $
+%label_pcrel:S32 = %label - $start
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
 %label_pcrel_lo:S12 = %label_pcrel[11:0]
 %label_pcrel_hi[19:0] %dest[4:0] 0010111 %label_pcrel_lo[11:0] %dest[4:0] %width[2:0] %dest[4:0] 0000011
@@ -399,7 +399,7 @@ s%width(store_funct3)  %src(register) , %offset:S64(immediate) ( %base(register)
 sb/sd/sh/sw %src, %offset(%base)
 
 tail  %label(label)
-%label_pcrel:S32 = %label - $
+%label_pcrel:S32 = %label - $start
 %label_pcrel_hi:S20 = (%label_pcrel[31:12] + %label_pcrel[11:11]) & ((1 << 20) - 1)
 %label_pcrel_lo:S12 = %label_pcrel[11:0]
 %label_pcrel_hi[19:0] 00110 0010111 %label_pcrel_lo[11:0] 00110 000 00000 1100111

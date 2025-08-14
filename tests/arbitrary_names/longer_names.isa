@@ -4,6 +4,6 @@ mov  %target(immediate) , %source(immediate)
 ssss tttt
 
 jmp  %target(immediate)
-%rel = %target - $
+%rel = %target - $start
 0000 rrrr
 
