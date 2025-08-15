@@ -156,6 +156,11 @@ type Instruction* = object
   fixed_mask*: seq[uint64]
   description*: string
 
+func name*(i: Instruction): string =
+  for part in i.syntax:
+    if part.kind == sk_fixed:
+      return part.text
+
 type Endianness* = enum
   end_big
   end_little

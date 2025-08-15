@@ -113,9 +113,7 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
     if read(s, tk_whitespace) != '\n':
       return error("Was expecting a newline here")
 
-  var instruction_name: string
-  if new_instruction.syntax.len > 0:
-    instruction_name = new_instruction.syntax[0].text
+  let instruction_name = new_instruction.name()
   
   block virtual_field:
     var count = 1
