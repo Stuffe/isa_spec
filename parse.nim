@@ -92,6 +92,8 @@ type TokenKind* = enum
   tk_directive
   tk_literal # false, true, big, little, ...
   tk_type_name # S64, immediate, custom field names
+  tk_pattern_name # @pattern
+  tk_pattern_variable # @pattern
   tk_field_name # The names defined within custom fields
   tk_field_ref # %a, %some_name
   tk_register_1 # Normal register names
@@ -100,7 +102,7 @@ type TokenKind* = enum
   tk_label
   tk_const
 
-  tk_header # [settings], [fields], [instructions]
+  tk_header # [settings], [fields], [patterns], [instructions]
 
   # Control instructions
   tk_new_instruction
@@ -275,6 +277,17 @@ func get_identifier*(s: var StreamSlice, tk=tk_identifier): StreamSlice =
 
   skip(s)
   result.finish += 1
+
+  while peek(s) in IDENTIFIER_NEXT:
+    skip(s)
+    result.finish += 1
+  add_token(s, tk)
+
+func get_sub_identifier*(s: var StreamSlice, tk=tk_identifier): StreamSlice =
+  ## Parse an identifier that can start with a number
+
+  result = s
+  result.finish = s.start
 
   while peek(s) in IDENTIFIER_NEXT:
     skip(s)
@@ -760,4 +773,39 @@ proc get_whole_table*(s: var StreamSlice): OrderedTable[StreamSlice, StreamSlice
     else:
       result[key] = value
 
-      
+func get_parametrized_pattern*(s: var StreamSlice, parameters: seq[StreamSlice]): (seq[StreamSlice], seq[int]) =
+  var slice = s
+  slice.finish = slice.start
+
+  while peek(s) notin {'\n', '\0'} or peek(s, 1) notin {'[', '@'}:
+    if peek(s) != '`':
+      skip(s, tk = tk_text)
+      slice.finish = s.start
+      continue
+
+    let (err, parameter_name) = get_string(s, tk = tk_pattern_variable)
+    if err != "":
+      skip(s, tk = tk_text)
+      slice.finish = s.start
+      continue
+
+    if parameter_name.len <= 0:
+      slice.finish = s.start
+      continue
+
+    let parameter_index = parameters.find(parameter_name)
+    if parameter_index < 0:
+      slice.finish = s.start
+      change_token_kind(tk_pattern_variable, tk_text)
+      continue
+
+    result[0].add(slice)
+    result[1].add(parameter_index)
+
+    slice.start = s.start
+    slice.finish = s.start
+
+  if slice.start != slice.finish:
+    result[0].add(slice)
+
+  skip(s)

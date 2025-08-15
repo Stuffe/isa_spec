@@ -532,7 +532,48 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
         next_variable_index += 1
 
       skip_newlines(s)
-  
+
+  if matches(s, "[patterns]", tk=tk_header):
+
+    if not skip_newlines(s):
+      return error("Expected newline after section header")
+
+    while not matches(s, "[", increment = false):
+      skip_whitespaces(s)
+      if not matches(s, '@'):
+        return error("Expected an @ before the pattern name")
+
+      let pattern_name = get_identifier(s, tk=tk_pattern_name)
+      if pattern_name.len == 0: return error("Expected a name for the pattern")
+
+      var parameters: seq[StreamSlice]
+
+      skip_whitespaces(s)
+      if matches(s, '(', tk=tk_bracket):
+        # This is a parametrized pattern, parse and store the parameter list
+        while not matches(s, ')', tk=tk_bracket):
+          skip_whitespaces(s)
+          if peek(s) != '`':
+            return error("Expected a ` before the pattern parameter")
+          
+          var parameter_name = check(get_string(s, tk=tk_pattern_variable))
+          if parameter_name.len == 0: return error("Expected a name for the pattern parameter")
+
+          parameters.add(parameter_name)
+          if parameters.len > 53:  ## Arbitrary limit, picked an "uncommon" number
+            return error("Pattern can have at most 53 parameters")
+
+          skip_whitespaces(s)
+          discard matches(s, ',', tk=tk_seperator)
+
+      add_token(s, tk_new_instruction)
+      let (texts, parameter_indexes) = get_parametrized_pattern(s, parameters)
+      result.spec.patterns.add((
+        name: pattern_name,
+        parameter_count: parameters.len,
+        pattern: ParametrizedPattern(texts: texts, parameters: parameter_indexes)
+      ))
+
   if not matches(s, "[instructions]", tk=tk_header):
     return error("Was expecting the [instructions] header here")
 

@@ -161,6 +161,10 @@ func name*(i: Instruction): string =
     if part.kind == sk_fixed:
       return part.text
 
+type ParametrizedPattern* = object
+  texts*: seq[StreamSlice]
+  parameters*: seq[int]
+
 type Endianness* = enum
   end_big
   end_little
@@ -182,6 +186,7 @@ type IsaSpec* = object
   code_alignment*: int
   field_types*: Table[FieldKind, FieldType]
   instructions*: seq[Instruction]
+  patterns*: seq[tuple[name: StreamSlice, parameter_count: int, pattern: ParametrizedPattern]]
 
 type SpecParseResult* = object
   error*: Error
