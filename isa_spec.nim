@@ -61,6 +61,11 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
       if new_field.variable_name.len == 0:
         return error("Expected an identifier after '%'")
 
+      if new_field.variable_name != "_":
+        for operand in new_instruction.operands:
+          if operand.variable_name == new_field.variable_name:
+            return error(&"Operand {new_field.variable_name} on syntax line shadowed another operand")
+
       if matches(s, ':', tk=tk_seperator):
         let marker = read(s)
         new_field.is_signed = case marker:
@@ -115,6 +120,7 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
 
   let instruction_name = new_instruction.name()
   
+  var operand_names = new_instruction.field_names()
   block virtual_field:
     var count = 1
     while peek(s) in {'%', '!'}:
@@ -148,8 +154,9 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
 
         skip_whitespaces(s)
 
-        new_field.expr = get_expression(s, new_instruction.field_names)
+        new_field.expr = get_expression(s, operand_names)
         new_instruction.operands.add(new_field)
+        operand_names.add(new_field.variable_name)
 
         if new_field.expr.exp_kind == exp_fail:
           if instruction_name == "":
@@ -164,14 +171,14 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
         if not matches(s, "assert"):
           return error("Expected 'assert' here")
         skip_whitespaces(s)
-        let lhs = get_expression(s, new_instruction.field_names)
+        let lhs = get_expression(s, operand_names)
         if lhs.exp_kind == exp_fail:
           return error("Could not parse assert expression")
         skip_whitespaces(s)
         if not matches(s, "=="):
           return error("Expected an equaltiy operator in the assert expression")
         skip_whitespaces(s)
-        let rhs = get_expression(s, new_instruction.field_names)
+        let rhs = get_expression(s, operand_names)
         if rhs.exp_kind == exp_fail:
           return error("Could not parse assert expression")
         skip_whitespaces(s)
@@ -246,8 +253,8 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
             mask.add('0')
             let c = read(s, tk=tk_field_name)
             var field_index = field_invalid
-            for i, field_name in new_instruction.field_names:
-              if field_name[0] == c:
+            for i in countdown(operand_names.high, 0):
+              if operand_names[i][0] == c:
                   field_index = to_variable(i)
                   break
 
@@ -262,17 +269,20 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
           current.top += 1
       else:
         skip(s)
-        let field_name = get_identifier(s)
-        if field_name.len == 0:
+        let operand_name = get_identifier(s)
+        if operand_name.len == 0:
           return error("Expected an identifier after '%'")
-        var field_index = -1
-        for i, field in new_instruction.operands:
-          if field.variable_name == field_name:
-              field_index = i
+
+        var operand_index = -1
+        for i in countdown(operand_names.high, 0):
+          if operand_names[i] == operand_name:
+              operand_index = i
               break
-        if field_index < 0:
-          return error(&"Expected a valid field name, got '{field_name}'")
-        let field_real_index = to_variable(field_index)
+
+        if operand_index < 0:
+          return error(&"Expected a valid field name, got '{operand_name}'")
+
+        let field_real_index = to_variable(operand_index)
         if read(s, tk=tk_bracket) != '[':
           return error("Expected slice syntax after field reference in bit pattern")
         skip_whitespaces(s)

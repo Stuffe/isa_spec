@@ -1,8 +1,7 @@
 
 [instructions]
 
-// In the futher, this definition should cause an error because `reg_target` is unused
-// The point of this test is to verify that the first value is being used, which is probably what most
-// people will expect
+// The point of this test is to verify that in the event of name collision, the last one is used.
+// This mirrors the concept of variable shadowing/variable reassignment in most languages
 mov  %reg_source(immediate) , %reg_target(immediate)
 rrrr rrrr

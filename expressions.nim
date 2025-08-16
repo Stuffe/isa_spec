@@ -1,4 +1,4 @@
-import std/setutils, strutils, math, bitops, tables
+import std/[bitops, tables]
 import types, parse
 
 const CURRENT_ADDRESS* = int.high
@@ -96,11 +96,11 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
     let operand = get_identifier(s, tk=tk_field_ref)
     if operand.len == 0: return expression(exp_kind: exp_fail)
 
-    let operand_index = operand_names.find(operand)
-    if operand_index < 0 or operand_index >= operand_names.len:
-      return expression(exp_kind: exp_fail)
+    for i in countdown(operand_names.high, 0):
+      if operand_names[i] == operand:
+        return expression(exp_kind: exp_operand, index: i)
 
-    result = expression(exp_kind: exp_operand, index: operand_index)
+    return expression(exp_kind: exp_fail)
   
   else:
     let (err, number) = get_unsigned(s)
