@@ -11,7 +11,7 @@ type ParseError* = object of ValueError
 const IDENTIFIER_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 const IDENTIFIER_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.")
 const NUMBER_FIRST = setutils.toSet("0123456789-+")
-const NUMBER_NEXT  = setutils.toSet("0123456789")
+const NUMBER_NEXT  = setutils.toSet("0123456789_")
 const QUOTES* = {'"', '\'', '`'}
 const WHITESPACES* = {' ', '\t', '\r'}
 
@@ -298,11 +298,11 @@ func get_sub_identifier*(s: var StreamSlice, tk=tk_identifier): StreamSlice =
 func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
-  if peek(s) == '0':
+  if peek(s) in {'0', '#'}:
     if peek(s, 1) == 'x':
       skip(s, 2)
       result[1].finish += 2
-      while peek(s) in setutils.toSet("0123456789abcdefABCDEF"):
+      while peek(s) in setutils.toSet("0123456789abcdefABCDEF_"):
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
@@ -310,7 +310,7 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
     if peek(s, 1) == 'o':
       skip(s, 2)
       result[1].finish += 2
-      while peek(s) in setutils.toSet("01234567"):
+      while peek(s) in setutils.toSet("01234567_"):
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
@@ -318,7 +318,7 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
     if peek(s, 1) == 'b':
       skip(s, 2)
       result[1].finish += 2
-      while peek(s) in setutils.toSet("01"):
+      while peek(s) in setutils.toSet("01_"):
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
@@ -364,9 +364,9 @@ func parse_unsigned*(s: StreamSlice): (string, uint64) =
     except ValueError: return ("Invalid int literal", 0'u64)
   try:
     case s[1]:
-      of 'x': return ("", fromHex[uint64]($s))
-      of 'o': return ("", fromOct[uint64]($s))
-      of 'b': return ("", fromBin[uint64]($s))
+      of 'x': return ("", fromHex[uint64]($s[2..^1]))
+      of 'o': return ("", fromOct[uint64]($s[2..^1]))
+      of 'b': return ("", fromBin[uint64]($s[2..^1]))
       else:   return ("", cast[uint64](parseInt($s)))
   except ValueError: return ("Invalid int literal", 0'u64)
 
@@ -674,6 +674,9 @@ func from_line_start_to_here*(s: StreamSlice): StreamSlice =
   # Seek backwards until the start of the line
   while result.start > 0 and peek(result) != '\n':
     result.start -= 1
+  
+  if peek(result) == '\n':
+    result.start += 1
 
 func get_list_value(s: var StreamSlice): (string, StreamSlice) =
   # This function is not allowed to call add_token with tk!=tk_none

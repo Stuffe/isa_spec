@@ -237,6 +237,8 @@ func eval*(input: expression, operands: seq[uint64], current_address: int, instr
         of op_xor: return lhs xor rhs
         of op_lsl: return lhs shl rhs
         of op_lsr: return lsr(lhs, rhs)
+        of op_lt: return int(lhs < rhs)
+        of op_gt: return int(lhs > rhs)
         of op_asr: return lhs shr rhs
         of op_log2:
           var shifts = 0
@@ -283,6 +285,8 @@ func reverse_single(fields: var seq[uint64], current_address: int, instruction_b
     of op_xor: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res xor known)
     of op_lsl: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shr known)
     of op_lsr: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shl known)
+    of op_lt: return reverse_eval(unknown, current_address, instruction_byte_length, fields, known - 1)
+    of op_gt: return reverse_eval(unknown, current_address, instruction_byte_length, fields, known + 1)
     of op_asr: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shl known)
     of op_log2, op_popcount, op_trailing_zeros: assert false
 

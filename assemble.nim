@@ -1,6 +1,7 @@
-import std/[tables, pathnorm, strutils, os, strformat, bitops, setutils]
+import std/[algorithm, bitops, os, parseutils, pathnorm, setutils, sequtils, strformat, strutils, tables]
 import types, parse, expressions
 
+import isa_spec
 
 type
   LabelRef = object
@@ -34,22 +35,51 @@ type
     of ok_relative:
       offset: int64
 
+  BitPattern = object
+    bits: seq[Bitfield]
+    bit_length: int
+    # These are both bit endian lists of 64bit words
+    # If bit_length is not a multiple of 64, the first word is the partial one
+    fixed_pattern: seq[uint64]
+    fixed_mask: seq[uint64]
+    operand_types: seq[OperandType]
+    operand_masks: seq[OperandType_Mask]
+    asserts: seq[(expression, expression, string)]
+
   MatchedInstruction = object
     selected_option: int
-    options: seq[Instruction]
+    options: seq[(Instruction, BitPattern)]
     operands: seq[OperandValue]
 
-  InstParseResult = object
-    error: string
-    error_priority: int
-    operands: seq[OperandValue]
+  PatternSubstitution = object
+    index: uint8
+    bits: BitPattern
+    values: seq[OperandValue]
+
+  InstIncompleteParseResult = object
     final_index: int
+    case is_err: bool
+    of false:
+      pattern_substitutions: seq[PatternSubstitution]
+      values: seq[OperandValue]
+    of true:
+      error: string
+      error_priority: int
+
+  InstParseResult = object
+    final_index: int
+    case is_err: bool
+    of false:
+      bits: BitPattern
+      operands: seq[OperandValue]
+    of true:
+      error: string
+      error_priority: int
 
   ParseContext = object
     isa_spec: IsaSpec
     field_defines: Table[FieldKind, Table[StreamSlice, DefineValue]]
     number_defines*: Table[StreamSlice, DefineValue]
-
 
 func `==`(a, b: OperandValue): bool =
   if a.kind != b.kind:
@@ -70,6 +100,543 @@ proc get_ordinal*(input: int): string =
     of '3': return number & "rd"
     else: return number & "th"
 
+func offset_all_refs*(expr: expression, offset: uint8): expression =
+  if expr.isNil(): return
+
+  case expr.exp_kind:
+    of exp_fail:
+      expression(exp_kind: exp_fail, msg: expr.msg)
+    of exp_number:
+      expression(exp_kind: exp_number, value: expr.value)
+    of exp_operand:
+      if expr.index == CURRENT_ADDRESS or expr.index == NEXT_ADDRESS:
+        expression(exp_kind: exp_operand, index: expr.index)
+      else:
+        expression(exp_kind: exp_operand, index: expr.index + offset.int)
+    of exp_operation:
+      expression(exp_kind: exp_operation, op_kind: expr.op_kind, lhs: expr.lhs.offset_all_refs(offset), rhs: expr.rhs.offset_all_refs(offset))
+    of exp_bitextract:
+      expression(exp_kind: exp_bitextract, base: expr.base.offset_all_refs(offset), top: expr.top.offset_all_refs(offset), bottom: expr.bottom.offset_all_refs(offset))
+
+func into_virtual_operands(o: var BitPattern, name: string, size: int, offset: uint8): seq[OperandType] =
+  func or_bit_field(old_expr: expression, id: FieldKind, shift: int, top: int, bottom: int, offset: uint8): expression = 
+    let width = top - bottom + 1
+    let rhs = case id
+      of field_invalid, field_imm, field_label, field_zero, field_wildcard:
+        return old_expr
+      of field_one:
+        expression(
+          exp_kind: exp_operation,
+          op_kind: op_lsl,
+          lhs: expression(exp_kind: exp_number, value: (1 shl width) - 1),
+          rhs: expression(exp_kind: exp_number, value: shift + 1 - width),
+        )
+      else:
+        expression(
+          exp_kind: exp_operation,
+          op_kind: op_lsl,
+          lhs: expression(
+            exp_kind: exp_bitextract,
+            base: expression(exp_kind: exp_operand, index: id.to_variable_index() + offset.int),
+            top: expression(exp_kind: exp_number, value: top),
+            bottom: expression(exp_kind: exp_number, value: bottom),
+          ),
+          rhs: expression(exp_kind: exp_number, value: shift + 1 - width),
+        )
+
+    if old_expr.exp_kind == exp_fail:
+      rhs
+    else:
+      expression(
+        exp_kind: exp_operation,
+        op_kind: op_or,
+        lhs: old_expr,
+        rhs: rhs,
+      )
+
+  for operand in o.operand_types.mitems:
+    operand.variable_name = name & "/" & operand.variable_name
+    case operand.kind
+      of otk_normal:
+        result.add(operand)
+      of otk_virtual:
+        operand.expr = operand.expr.offset_all_refs(offset)
+        result.add(operand)
+      else:
+        assert false, "Expected all patterns to have been converted to normal/virtual operands"
+
+  var shift = if size <= 0:
+    o.bit_length
+  else:
+    if size > o.bit_length:
+      o.bits.insert(Bitfield(id: field_zero, top: size - o.bit_length - 1))
+    else:
+      let diff = o.bit_length - size
+      var count = 0
+      for i in 0 ..< o.bit_length:
+        count += o.bits[i].top - o.bits[i].bottom + 1
+        if count == diff:
+          o.bits.delete(0 .. i)
+          break
+        if count > diff:
+          o.bits[i].top = o.bits[i].bottom + count - diff
+          o.bits.delete(0 ..< i)
+          break
+    size
+  shift -= 1
+
+  var new_operand = OperandType(
+    kind: otk_virtual,
+    variable_name: name,
+    size: shift mod MAX_FIELD_SIZE + 1,
+    expr: expression(exp_kind: exp_fail),
+  )
+  shift = shift mod MAX_FIELD_SIZE
+  for bit in o.bits:
+    let top = bit.top
+    let bottom = bit.bottom.max(bit.top - shift)
+    new_operand.expr = or_bit_field(new_operand.expr, bit.id, shift, top, bottom, offset)
+
+    let width = top - bottom + 1
+    if bottom == bit.bottom and shift >= width:
+      shift -= width
+      continue
+
+    shift = MAX_FIELD_SIZE - 1
+    if new_operand.expr.exp_kind == exp_fail:
+      new_operand.expr = expression(exp_kind: exp_number, value: 0)
+    result.add(new_operand)
+    new_operand = OperandType(
+      kind: otk_virtual,
+      variable_name: name,
+      size: MAX_FIELD_SIZE,
+      expr: expression(exp_kind: exp_fail),
+    )
+
+    if bottom != bit.bottom:
+      new_operand.expr = or_bit_field(new_operand.expr, bit.id, shift, bottom - 1, bit.bottom, offset)
+  
+  if result.len == 0:
+    # Phantom field for alignment purposes
+    result.add(OperandType(
+      kind: otk_virtual,
+      variable_name: name & "/_",
+      size: 0,
+      expr: expression(exp_kind: exp_number),
+    ))
+
+func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, values: var seq[OperandValue], pattern_substitutions: var seq[PatternSubstitution], allow_unaligned_bit_pattern: static[bool] = false): (string, BitPattern) = 
+  ## pattern_substitutions assumed sorted to match the order of the pattern operands
+
+  func error(input: string): (string, BitPattern) =
+    return (input, BitPattern())
+
+  template check[T](input: (string, T)): T =
+    let (err, res) = input
+    if err != "":
+      return error(err)
+    res
+
+  var root_operand_types = inst.operands
+  var operand_types: seq[OperandType]
+  var operand_values: seq[OperandValue]
+  var asserts: seq[(expression, expression, string)]
+
+  var pattern_to_virtuals: seq[tuple[top_word_index: uint8, bottom_word_index: uint8, num_word: uint8]]
+  for sub in pattern_substitutions.mitems():
+    let index = sub.index
+
+    let root_operand = root_operand_types[index].addr
+    assert root_operand.kind == otk_pattern
+
+    for x in sub.values:
+      operand_values.add(x)
+
+    let bits = sub.bits.addr
+    let root_name = root_operand.variable_name
+    let offset = operand_types.len.uint8
+    let manual_size = root_operand.size
+    var pattern_operands = bits[].into_virtual_operands(root_name, manual_size, offset)
+    let num_word = bits.fixed_pattern.len.uint8
+    let top_word_index = offset + pattern_operands.len.uint8 - num_word
+    let bottom_word_index = index.uint8
+    pattern_to_virtuals.add((top_word_index, bottom_word_index, num_word))
+
+    let is_signed = root_operand.is_signed
+    root_operand[] = pattern_operands[^1]
+    for i in 0 ..< pattern_operands.high:
+      operand_types.add(pattern_operands[i])
+      if i == 0:
+        operand_types[^1].is_signed = is_signed
+    
+    for assertion in bits.asserts:
+      asserts.add((
+        assertion[0].offset_all_refs(offset),
+        assertion[1].offset_all_refs(offset),
+        assertion[2],
+      ))
+
+  let offset = operand_types.len.uint8
+  var i = 0.uint8
+  for item in pattern_to_virtuals.mitems:
+    for j in i ..< item.bottom_word_index:
+      var operand = root_operand_types[j]
+      if operand.size == 0:
+        operand.size = MAX_FIELD_SIZE
+      if operand.kind == otk_virtual:
+        operand.expr = operand.expr.offset_all_refs(offset)
+      operand_types.add(operand)
+    operand_types.add(root_operand_types[item.bottom_word_index])
+    i = item.bottom_word_index + 1
+    item.bottom_word_index += offset
+  for j in i ..< root_operand_types.len.uint8:
+    var operand = root_operand_types[j]
+    if operand.size == 0:
+      operand.size = MAX_FIELD_SIZE
+    if operand.kind == otk_virtual:
+      operand.expr = operand.expr.offset_all_refs(offset)
+    operand_types.add(operand)
+  
+  for x in values:
+    operand_values.add(x)
+
+  for assertion in inst.asserts:
+    asserts.add((
+      assertion[0].offset_all_refs(offset),
+      assertion[1].offset_all_refs(offset),
+      assertion[2],
+    ))
+
+  # List of operand names directly declared in the instruction
+  let operand_names = inst.operand_names()
+  let instruction_name = inst.name()
+
+  var pattern: string
+  var mask: string
+  var new_bits: seq[Bitfield]
+  # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
+  # nvalid indecies. They are instead used to track the length of the field before being updated
+  # to the correct bounds in a seperate pass
+  var current = Bitfield(id: field_invalid)
+
+  while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
+    const HEX_PREFIX = "#x"
+    if matches(s, HEX_PREFIX):
+      let hex_s = check(get_hex(s, ""))
+
+      skip_whitespaces(s)
+      let (top, bottom) = if peek(s) == '[':
+        discard read(s, tk=tk_bracket)
+
+        skip_whitespaces(s)
+        let top = if peek(s) != ':':
+          check(parse_signed(check(get_unsigned(s))))
+        else:
+          -1
+
+        skip_whitespaces(s)
+        if read(s, tk=tk_seperator) != ':':
+          return error("Expected slice syntax after field/pattern reference in bit pattern")
+
+        skip_whitespaces(s)
+        let bottom = if peek(s) != ']':
+          check(parse_signed(check(get_unsigned(s))))
+        else:
+          0
+
+        skip_whitespaces(s)
+        if read(s, tk=tk_bracket) != ']':
+          return error("Expected slice syntax after field/pattern reference in bit pattern")
+
+        (top, bottom)
+      else:
+        (-1, 0)
+
+      var length = 0
+      for c in hex_s:
+        if c notin HexDigits:
+          continue
+        length += 4
+
+      var i_from = if top < 0:
+        0
+      else:
+        length - top - 1
+      
+      for i in i_from ..< 0:
+        mask.add('0')
+        pattern.add('0')
+        if field_zero != current.id:
+          if current.id != field_invalid:
+            new_bits.add(current)
+          current = Bitfield(id: field_zero, is_direct: true)
+        else:
+          current.top += 1
+      
+      i_from = 0
+      let i_to = length - bottom - 1
+
+      var i = 0
+      for c in hex_s:
+        if c notin HexDigits:
+          continue
+        if i > i_to:
+          break
+
+        let hex = xdigit_to_value(c)
+        var shift = 1 shl 3
+        while shift != 0:
+          if i < i_from:
+            i += 1
+            shift = shift shr 1
+            continue
+          if i > i_to:
+            break
+
+          mask.add('1')
+          let bit_id = 
+            if (hex and shift) == 0:
+              pattern.add('0')
+              field_zero
+            else:
+              pattern.add('1')
+              field_one
+          if bit_id != current.id:
+            if current.id != field_invalid:
+              new_bits.add(current)
+            current = Bitfield(id: bit_id, is_direct: true)
+          else:
+            current.top += 1
+          i += 1
+          shift = shift shr 1
+      continue
+
+    if peek(s) != '%':
+      let bit_id = case peek(s):
+        of '0':
+          pattern.add('0')
+          mask.add('1')
+          skip(s, tk=tk_number)
+          field_zero
+        of '1':
+          pattern.add('1')
+          mask.add('1')
+          skip(s, tk=tk_number)
+          field_one
+        of ' ':
+          skip(s, tk=tk_whitespace)
+          continue
+        of '?':
+          pattern.add('0')
+          mask.add('0')
+          skip(s, tk=tk_number)
+          field_wildcard
+        else:
+          pattern.add('0')
+          mask.add('0')
+          let c = read(s, tk=tk_field_name)
+          var operand_index = field_invalid
+          for i in countdown(operand_names.high, 0):
+            if operand_names[i][0] == c:
+                operand_index = to_variable(i + offset.int)
+                break
+
+          if operand_index == field_invalid:
+            return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
+          operand_index
+      if bit_id != current.id:
+        if current.id != field_invalid:
+          new_bits.add(current)
+        current = Bitfield(id: bit_id, is_direct: true)
+      else:
+        current.top += 1
+    else:
+      skip(s)
+      let operand_name = get_identifier(s)
+      if operand_name.len == 0:
+        return error("Expected an identifier after '%'")
+
+      var operand_index = -1
+      var operand_size: int
+      for i in countdown(operand_names.high, 0):
+        if operand_names[i] == operand_name:
+            operand_index = i + offset.int
+            operand_size = inst.operands[i].size
+            break
+
+      if operand_index < 0:
+        return error(&"Expected a valid operand name, got '{operand_name}'")
+
+      skip_whitespaces(s)
+      let (top, bottom) = if peek(s) == '[':
+        discard read(s, tk=tk_bracket)
+
+        skip_whitespaces(s)
+        let top = if peek(s) != ':':
+          check(parse_signed(check(get_unsigned(s))))
+        else:
+          -1
+
+        skip_whitespaces(s)
+        if read(s, tk=tk_seperator) != ':':
+          return error("Expected slice syntax after field/pattern reference in bit pattern")
+
+        skip_whitespaces(s)
+        let bottom = if peek(s) != ']':
+          check(parse_signed(check(get_unsigned(s))))
+        else:
+          0
+
+        skip_whitespaces(s)
+        if read(s, tk=tk_bracket) != ']':
+          return error("Expected slice syntax after field/pattern reference in bit pattern")
+
+        (top, bottom)
+      else:
+        (-1, 0)
+
+      var pattern_index = -1
+      for i, (top_word_index, bottom_word_index, num_word) in pattern_to_virtuals:
+        if bottom_word_index.int == operand_index:
+          pattern_index = i
+          break
+
+      if current.id != field_invalid:
+        new_bits.add(current)
+        current = Bitfield(id: field_invalid)
+
+      if pattern_index >= 0:
+        let (top_word_index, _, num_word) = pattern_to_virtuals[pattern_index]
+
+        if num_word <= 0:
+          if top > 0:
+            new_bits.add(Bitfield(id: field_zero, top: top - bottom))
+            for _ in bottom .. top:
+              mask.add('1')
+              pattern.add('0')
+        else:
+          let first_word_index = if num_word > 1: top_word_index.int else: operand_index
+          var pattern_size_truncated = (num_word - 1).int * MAX_FIELD_SIZE
+          let pattern_size = operand_types[first_word_index].size + pattern_size_truncated
+          var top = if top >= pattern_size:
+            let bottom = bottom.max(pattern_size)
+            new_bits.add(Bitfield(id: field_zero, top: top - bottom))
+            for _ in bottom .. top:
+              mask.add('1')
+              pattern.add('0')
+            bottom - 1
+          elif top < 0:
+            pattern_size + top
+          else:
+            top
+
+          if top >= pattern_size_truncated:
+            let top = (top - pattern_size_truncated).min(operand_types[first_word_index].size - 1)
+            let bottom = 0.max(bottom - pattern_size_truncated)
+            new_bits.add(Bitfield(id: to_variable(first_word_index.int), top: top, bottom: bottom))
+            for _ in bottom .. top:
+              mask.add('0')
+              pattern.add('0')
+          
+          top = pattern_size_truncated - 1
+          for index in top_word_index + 1 .. top_word_index + num_word - 2:
+            if bottom >= pattern_size_truncated:
+              break
+            top -= MAX_FIELD_SIZE
+
+            pattern_size_truncated -= MAX_FIELD_SIZE
+            let top = MAX_FIELD_SIZE - 1
+            let bottom = 0.max(bottom - pattern_size_truncated)
+            new_bits.add(Bitfield(id: to_variable(index.int), top: top, bottom: bottom))
+            for _ in bottom .. top:
+              mask.add('0')
+              pattern.add('0')
+
+          if top >= bottom:
+            new_bits.add(Bitfield(id: to_variable(operand_index), top: top, bottom: bottom))
+            for _ in bottom .. top:
+              mask.add('0')
+              pattern.add('0')
+      else:
+        let top = if top < 0:
+          if operand_size <= 0:
+            return error("Expected slice syntax after unsized field reference in bit pattern")
+          operand_size + top
+        else:
+          top
+        new_bits.add(Bitfield(id: to_variable(operand_index), top: top, bottom: bottom))
+        for _ in bottom .. top:
+          mask.add('0')
+          pattern.add('0')
+
+  if current.id != field_invalid:
+    new_bits.add(current)
+
+  let total_length = mask.len
+  if not allow_unaligned_bit_pattern:
+    if total_length ==  0:
+      return error("Instruction '" & instruction_name & "' is missing the bit field definition")
+    if total_length mod 8 != 0:
+      return error("The width of instruction '" & instruction_name & "' is " & $total_length & " bits, but only multiples of 8 are supported")
+  result[1].bit_length = total_length
+
+  var current_length = 0
+  var consumed_bits = newSeq[int](root_operand_types.len)
+  var operand_masks = newSeq[OperandType_Mask](operand_types.len)
+  for i in countdown(new_bits.high, 0):
+    var bits = new_bits[i]
+    let index = to_variable_index(bits.id)
+    let root_index = index - offset.int
+    if bits.is_direct and is_variable(bits.id):
+      # We need to adjust this for the case of non-consecutive bit fields of the same operand
+      bits.top += consumed_bits[root_index]
+      bits.bottom += consumed_bits[root_index]
+      consumed_bits[root_index] += bits.top - bits.bottom + 1
+    if is_variable(bits.id):
+      let p = operand_masks[index].addr
+      p.used = p.used or toMask[uint64](bits.bottom .. bits.top)
+    let new_length = current_length + bits.top - bits.bottom + 1
+    if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
+      let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
+      if bits.top - bits.bottom + 1 > 64 and is_variable(bits.id):
+        return error("Bit pattern for field " & operand_names[root_index] & " longer than 64bit")
+      var right = bits
+      var left = bits
+      right.top = bits.bottom + fit_count - 1
+      left.bottom = right.top + 1
+      result[1].bits.add right
+      result[1].bits.add left
+    else:
+      result[1].bits.add bits
+    current_length = new_length
+  reverse(result[1].bits)
+
+  for i, f in operand_masks.mpairs:
+    if f.used != 0:
+      f.unused_zero = not f.used
+      f.highest_bit = (63 - f.used.count_leading_zero_bits()).int8
+      if operand_types[i].is_signed and f.highest_bit != 63:
+        let sign_mask = toMask[uint64]((f.highest_bit + 1).int .. 63)
+        f.unused_zero = f.unused_zero.clearMasked(sign_mask)
+
+  let word_count = (total_length + 63) div 64
+  let r = (total_length + 63) mod 64
+  result[1].fixed_pattern.set_len(word_count)
+  result[1].fixed_mask.set_len(word_count)
+  if word_count > 0:
+    discard parseBin(pattern[0..r], result[1].fixed_pattern[0])
+    discard parseBin(mask[0..r], result[1].fixed_mask[0])
+    for i in 1 ..< word_count:
+      let s = r + 1 + (i-1) * 64
+      let e = s+63
+      discard parseBin(pattern[s..e], result[1].fixed_pattern[i])
+      discard parseBin(mask[s..e], result[1].fixed_mask[i])
+
+  result[1].operand_types = operand_types
+  result[1].operand_masks = operand_masks
+  result[1].asserts = asserts
+  values = operand_values
+
 # Since we can have custom comments, we should no longer be using the simple parsing functions
 
 func skip_comment(s: var StreamSlice) {.error, used.}
@@ -83,12 +650,12 @@ func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
     isa_spec.skip_whitespaces(s)
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string]): PreAssemblyResult
 func assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult
+func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult
 func finalize(pa: PreAssemblyResult): AssemblyResult
 func relax(pa: var PreAssemblyResult)
 
-func pre_assemble_file(base_path: string, path: string, isa_spec: IsaSpec, line: int, already_included: seq[string]): PreAssemblyResult =
+func pre_assemble_file(base_path: string, path: string, isa_spec: IsaSpec, line: int, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   if normal_path in already_included:
@@ -110,12 +677,13 @@ func pre_assemble_file(base_path: string, path: string, isa_spec: IsaSpec, line:
       )])
 
     let source = readFile(base_path / normal_path)
-    return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new)
+    return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new, resolved_patterns)
 
 func assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult =
-
+  var resolved_patterns: Table[string, Instruction]
+  resolved_patterns[""] = Instruction()
   let normal_path = normalizePath(path).replace('\\', '/')
-  var pa = pre_assemble(base_path, normal_path, isa_spec, source, already_included)
+  var pa = pre_assemble(base_path, normal_path, isa_spec, source, already_included, resolved_patterns)
   pa.relax()
   return finalize(pa)
 
@@ -130,182 +698,357 @@ func is_defined(p: ParseContext, name: StreamSlice): bool =
         return true
   return false
 
-func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction): InstParseResult =
 
-  template error(msg: string, priority: int): InstParseResult =
-    result.error = msg
-    result.error_priority = priority
-    result
+func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction, resolved_patterns: var Table[string, Instruction], allow_unaligned_bit_pattern: static[bool] = false): seq[InstParseResult]
+
+func parse_instruction_syntax_part(s: var StreamSlice, syntax_index: int, p: ParseContext, inst: Instruction, operand_index: int, values: var seq[OperandValue], resolved_patterns: var Table[string, Instruction]): seq[InstIncompleteParseResult] =
+  template error(msg: string, priority: int) =
+    return @[InstIncompleteParseResult(is_err: true, error_priority: priority + 0xFF00, error: msg)]
+
+  if syntax_index >= inst.syntax.len:
+    p.isa_spec.skip_whitespaces(s)
+    if peek(s) notin {'\n', '\0'}:
+      error("Unknown code found after instruction: " & $from_line_start_to_here(s), operand_index)
+    
+    return @[InstIncompleteParseResult(
+      is_err: false,
+      final_index: s.get_index(),
+      values: values
+    )]
 
   template check[T](input: (string, T)): T =
     let (err, res) = input
     if err != "":
-      return error(err, i)
+      error(err, operand_index)
     res
 
   func fixed(val: uint64): OperandValue =
     return OperandValue(kind: ok_fixed, value: val)
 
-  var i = 0
-  for syntax in inst.syntax:
-    case syntax.kind:
-      of sk_any_number_of_spaces:
-        p.isa_spec.skip_whitespaces(s)
-        continue
-      of sk_at_least_one_space:
-        let start_index = s.get_index()
-        p.isa_spec.skip_whitespaces(s)
-        if s.get_index() == start_index:
-          return error("Expected whitespace here", i)
-        continue
-      of sk_fixed:
-        if not matches(s, syntax.text):
-          if i == 0:
-            return error(&"Unknown instruction", i)
-          return error(&"Expected '{syntax.text}' after '" & $from_line_start(s) & "'", i)
-        continue
-      of sk_field:
-        discard
-
-    let restore = s
-    for j, field in inst.operands[i].options:
-      let is_last = j == inst.operands[i].options.high
-      s = restore
-
-      case field:
-        of field_label:
-          if peek(s) == '.':
-            skip(s)
-            let jump_distance = check(get_unsigned(s))
-            let value: uint64 = check(parse_unsigned(jump_distance))
-            result.operands.add(OperandValue(kind: ok_relative, offset: cast[int64](value)))
-          else:
-            let label_name = get_identifier(s)
-            if label_name.len == 0:
-              if not is_last: continue
-              return error("Was expecting a label name here", i)
-            if p.is_defined(label_name):
-              if not is_last: continue
-              return error("Was expecting a label name here", i)
-            result.operands.add(OperandValue(kind: ok_label_ref, name: label_name))
-
-          i += 1
-          break
-
-        of field_imm:
-          let (number_err, number) = get_unsigned(s)
-          if number_err == "":
-            result.operands.add fixed(check(parse_unsigned(number)))
-          else:
-            let field_string = get_identifier(s)
-            if field_string.len == 0:
-              if not is_last: continue
-              return error("Expected either a number or a symbol", i)
-            if field_string in p.number_defines:
-              result.operands.add fixed(p.number_defines[field_string].value)
+  let syntax = inst.syntax[syntax_index]
+  let syntax_index = syntax_index + 1
+  case syntax.kind:
+    of sk_any_number_of_spaces:
+      p.isa_spec.skip_whitespaces(s)
+      return parse_instruction_syntax_part(s, syntax_index, p, inst, operand_index, values, resolved_patterns)
+    of sk_at_least_one_space:
+      let start_index = s.get_index()
+      p.isa_spec.skip_whitespaces(s)
+      if s.get_index() == start_index:
+        error("Expected whitespace here", operand_index)
+      return parse_instruction_syntax_part(s, syntax_index, p, inst, operand_index, values, resolved_patterns)
+    of sk_fixed:
+      if matches(s, syntax.text):
+        return parse_instruction_syntax_part(s, syntax_index, p, inst, operand_index, values, resolved_patterns)
+      elif operand_index == 0:
+        error(&"Unknown instruction", operand_index)
+      else:
+        error(&"Expected '{syntax.text}' after '" & $from_line_start_to_here(s) & "'", operand_index)
+    of sk_field:
+      let restore = s
+      let options = inst.operands[operand_index].options
+      var op_value: OperandValue
+      for j, field in options:
+        let is_last = j == options.high
+        s = restore
+        case field:
+          of field_label:
+            if peek(s) == '.':
+              skip(s)
+              let jump_distance = check(get_unsigned(s))
+              let value: uint64 = check(parse_unsigned(jump_distance))
+              op_value = OperandValue(kind: ok_relative, offset: cast[int64](value))
             else:
-              if not is_last: continue
-              return error(&"Undefined constant {field_string}", i)
-          i += 1
-          break
+              let label_name = get_identifier(s)
+              if label_name.len == 0:
+                if not is_last: continue
+                error("Was expecting a label name here", operand_index)
+              if p.is_defined(label_name):
+                if not is_last: continue
+                error("Was expecting a label name here", operand_index)
+              op_value = OperandValue(kind: ok_label_ref, name: label_name)
 
-        else: # Some user defined field type
-          assert is_variable(field), "Illegal field value in syntax definition"
-          let pre_field_restore = s
-          let field_string = get_identifier(s)
-          s = pre_field_restore
+            break
 
-          if field_string in p.field_defines[field]:
-            result.operands.add fixed(p.field_defines[field][field_string].value)
-            s.skip(field_string.len)
-          else:
-            var found = -1
-            var value: uint64
-            for field_value in p.isa_spec.field_types[field].values:
-              if field_value.name.len > found and s.matches(field_value.name, false):
-                found = field_value.name.len
-                value = field_value.value
-            if found < 0:
-              if not is_last: continue
-              # TODO: Add multiple field types to error message if multiple are allowed
+          of field_imm:
+            let (number_err, number) = get_unsigned(s)
+            if number_err == "":
+              op_value = fixed(check(parse_unsigned(number)))
+            else:
+              let field_string = get_identifier(s)
               if field_string.len == 0:
-                return error(&"Missing a '{p.isa_spec.field_types[field].name}' operand here", i)
-              return error(&"'{field_string}' is not a '{p.isa_spec.field_types[field].name}'", i)
+                if not is_last: continue
+                error("Expected either a number or a symbol", operand_index)
+              if field_string in p.number_defines:
+                op_value = fixed(p.number_defines[field_string].value)
+              else:
+                if not is_last: continue
+                error(&"Undefined constant {field_string}", operand_index)
+            break
+
+          else: # Some user defined field type
+            assert is_variable(field), "Illegal field value in syntax definition"
+            let pre_field_restore = s
+            let field_string = get_identifier(s)
+            s = pre_field_restore
+
+            if field_string in p.field_defines[field]:
+              op_value = fixed(p.field_defines[field][field_string].value)
+              s.skip(field_string.len)
             else:
-              s.skip(found)
-              result.operands.add fixed(value)
-          i += 1
+              var found = -1
+              var value: uint64
+              for field_value in p.isa_spec.field_types[field].values:
+                if field_value.name.len > found and s.matches(field_value.name, false):
+                  found = field_value.name.len
+                  value = field_value.value
+              if found >= 0:
+                s.skip(found)
+                op_value = fixed(value)
+              elif not is_last:
+                continue
+              else: # TODO: Add multiple field types to error message if multiple are allowed
+                if field_string.len == 0:
+                  error(&"Missing a '{p.isa_spec.field_types[field].name}' operand here", operand_index)
+                else:
+                  error(&"'{field_string}' is not a '{p.isa_spec.field_types[field].name}'", operand_index)
+            break
+
+      values.add(op_value)
+      result = parse_instruction_syntax_part(s, syntax_index, p, inst, operand_index + 1, values, resolved_patterns)
+      discard values.pop()
+      return result
+    of sk_pattern:
+      assert inst.operands[operand_index].kind == otk_pattern
+
+      var cur_resolved_patterns: seq[Instruction]
+
+      let start_s = s.get_index()
+      let cp = checkpoint(s)
+      var skip = 0
+      var best_err = InstIncompleteParseResult(is_err: true)
+
+      while true:
+        let sub_cp = s.checkpoint()
+
+        let rets = parse_instruction_syntax_part(s, syntax_index, p, inst, operand_index + 1, values, resolved_patterns)
+        if rets[0].is_err:
+          if result.len == 0 and rets[0].error_priority >= best_err.error_priority:
+            best_err = rets[0]
+          s.restore(sub_cp)
+        else:
+          if cur_resolved_patterns.len == 0:
+            for i, pattern in inst.operands[operand_index].patterns:
+              let pattern_key = if pattern.index == uint32.high:
+                ""
+              else:
+                $pattern.index & '\0' & pattern.args.join("\0")
+              
+              let instruction = if pattern_key in resolved_patterns:
+                resolved_patterns[pattern_key]
+              else:
+                let resolved_pattern = p.isa_spec.patterns[pattern.index].pattern.resolve(pattern.args)
+                var sslice = new_StreamSlice(resolved_pattern)
+                start_tokenize(sslice)
+                let (err, instruction) = get_instruction(sslice, p.isa_spec, pattern.index)
+                if err != "":
+                  error(&"Failed to resolve pattern({err}):\n{resolved_pattern}", 2 * inst.operands.len - operand_index.int)
+                
+                start_tokenize(nil)
+                resolved_patterns[pattern_key] = instruction
+                instruction
+
+              cur_resolved_patterns.add(instruction)
+            
+            s.restore(sub_cp)
+
+          for i, sub_instruction in cur_resolved_patterns:
+            var sub_s = s.get_slice(start_s, start_s + skip)
+            for sub_inst in parse_instruction(sub_s, p, sub_instruction, resolved_patterns, allow_unaligned_bit_pattern = true):
+              if sub_inst.is_err:
+                if result.len == 0 and sub_inst.error_priority > best_err.error_priority:
+                  best_err = InstIncompleteParseResult(
+                    is_err: true,
+                    error_priority: sub_inst.error_priority + operand_index.int,
+                    error: sub_inst.error
+                  )
+              else:
+                for ret in rets:
+                  result.add(InstIncompleteParseResult(
+                    is_err: false,
+                    final_index: ret.final_index,
+                    pattern_substitutions: ret.pattern_substitutions,
+                    values: ret.values,
+                  ))
+                  result[^1].pattern_substitutions.add(PatternSubstitution(
+                    index: operand_index.uint8,
+                    bits: sub_inst.bits,
+                    values: sub_inst.operands,
+                  ))
+            
+            s.restore(sub_cp)
+
+        if peek(s) in {'\n', '\0'}:
           break
 
-  p.isa_spec.skip_whitespaces(s)
-  if peek(s) notin {'\n', '\0'}:
-    return error("Unknown code found after instruction: " & $from_line_start_to_here(s), i)
+        skip += 1
+        s.restore(cp)
+        skip(s, skip)
 
-  result.final_index = get_index(s)
+      if result.len == 0:
+        return @[best_err]
 
-func field_names(i: Instruction): seq[string] =
-  for f in i.operands:
-    result.add f.variable_name
+func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction, resolved_patterns: var Table[string, Instruction], allow_unaligned_bit_pattern: static[bool] = false): seq[InstParseResult] =
+  block QUICK_STRING_CHECK:
+    # The 2 requirements for this check is:
+    # 1. It must not produce false negatives, i.e. what fails this is 100% sure to fail latter checks
+    # 2. It must be fast. Trade off with false-positive probability as needed
 
-func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
+    let original_s = s
+    var idx = 0
+    for syntax in inst.syntax:
+      idx += 1
+      case syntax.kind:
+        of sk_fixed:
+          if not matches(s, syntax.text):
+            return @[InstParseResult(is_err: true, error: &"Expected fixed string '{syntax.text}' after \"{$s.get_slice(original_s.get_index(), s.get_index())}\"")]
+        of sk_any_number_of_spaces:
+          p.isa_spec.skip_whitespaces(s)
+        of sk_at_least_one_space:
+          let start_index = s.get_index()
+          p.isa_spec.skip_whitespaces(s)
+          if s.get_index() == start_index:
+            return @[InstParseResult(
+              is_err: true,
+              error: &"Expected at least one whitespace character after \"{$s.get_slice(original_s.get_index(), s.get_index())}\""
+            )]
+        of sk_field, sk_pattern:
+          break
+
+    var priority = 1
+    for i in idx ..< inst.syntax.len:
+      let syntax = inst.syntax[i]
+      var has_failed = false
+      let s_index = s.get_index()
+      case syntax.kind:
+        of sk_fixed:
+          while not matches(s, syntax.text):
+            if peek(s) in {'\n', '\0'}:
+              has_failed = true
+              break
+            skip(s)
+        of sk_at_least_one_space:
+          while true:
+            let start_index = s.get_index()
+            p.isa_spec.skip_whitespaces(s)
+            if s.get_index() != start_index:
+              break
+            if peek(s) in {'\n', '\0'}:
+              has_failed = true
+              break
+            skip(s)
+        else:
+          discard
+      
+      if has_failed:
+        let key = case syntax.kind:
+          of sk_fixed:
+            "Expected fixed string '" & syntax.text & "'"
+          of sk_at_least_one_space:
+            "Expected at least one whitespace character"
+          else:
+            "Unexpected end of instruction"
+        return @[InstParseResult(
+          is_err: true,
+          error_priority: priority,
+          error: &"{key} after \"{$s.get_slice(original_s.get_index(), s_index)}\""
+        )]
+
+      priority += 1
+    s = original_s
+
+  var buffer: seq[OperandValue]
+  var ret = parse_instruction_syntax_part(s, 0, p, inst, 0, buffer, resolved_patterns)
+  result = newSeqOfCap[InstParseResult](ret.len)
+
+  for it in ret.mitems():
+    result.add(
+      if it.is_err:
+        InstParseResult(is_err: true, final_index: it.final_index, error_priority: it.error_priority, error: it.error)
+      else:
+        var s = inst.bit_pattern
+        it.pattern_substitutions.reverse()
+        let (err, bits) = get_bit_pattern(s, p.isa_spec, inst, it.values, it.pattern_substitutions, allow_unaligned_bit_pattern)
+
+        if err == "":
+          InstParseResult(is_err: false, final_index: it.final_index, operands: it.values, bits: bits)
+        else:
+          InstParseResult(is_err: true, final_index: it.final_index, error_priority: int.high, error: err)
+    )
+
+func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
   template error(input: string) =
     if throw_on_error:
       raise newException(ValueError, input)
     return
 
-  func describe(f: OperandType): string =
+  func describe(f: OperandType, m: OperandType_Mask): string =
     if f.is_signed:
-      &"{f.highest_bit+1}-bit sign-extended field"
+      &"{m.highest_bit+1}-bit sign-extended field"
     else:
-      &"{f.highest_bit+1}-bit zero-extended field"
+      &"{m.highest_bit+1}-bit zero-extended field"
 
-  let byte_length = inst.bit_length div 8
+  let byte_length = bits.bit_length div 8
   var fields = args
 
   # Compute virtual fields & Apply sizes
-  for i, field in inst.operands:
-    if field.kind == otk_virtual:
-      let new_field = eval(field.expr, fields, ip, byte_length)
-      fields.add(cast[uint64](new_field))
-    if field.size != 64: # If the size is 64, there is nothing we can verify
-      let remainder = asr(fields[i], field.size.uint64) # The bits that are not part of this value
+  for i, operand in bits.operand_types:
+    if operand.kind == otk_virtual:
+      let new_field = eval(operand.expr, fields, ip, byte_length)
+      fields.insert(cast[uint64](new_field), i)
+    
+    if operand.size != 64: # If the size is 64, there is nothing we can verify
+      let remainder = asr(fields[i], operand.size.uint64) # The bits that are not part of this value
       if not (remainder == 0 or remainder == 0xFFFF_FFFF_FFFFF_FFFF'u64):
-        error(&"Value {fields[i]} outside of range for this {field.size}-bit operand")
-      if field.is_signed and fields[i].test_bit(field.size - 1):
+        error(&"Value {fields[i]} outside of range for this {operand.size}-bit operand ({operand.variable_name})")
+      if operand.is_signed and fields[i].test_bit(operand.size - 1):
         # We are in signed mode and the Sign bit is set, sign extend to 64bit
-        fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl field.size)
-    if field.used != 0:
-      if field.highest_bit < 63:
-        if field.is_signed:
-          if fields[i].test_bit(field.highest_bit):
-            if asr(fields[i], field.highest_bit.uint64) != uint64.high:
-              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(field)}")
+        fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl operand.size)
+    
+    let mask = bits.operand_masks[i]
+    if mask.used != 0:
+      if mask.highest_bit < 63:
+        if operand.is_signed:
+          if fields[i].test_bit(mask.highest_bit):
+            if asr(fields[i], mask.highest_bit.uint64) != uint64.high:
+              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(operand, mask)}")
           else:
-            if asr(fields[i], field.highest_bit.uint64) != 0:
-              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(field)}")
+            if asr(fields[i], mask.highest_bit.uint64) != 0:
+              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(operand, mask)}")
         else:
-          if asr(fields[i], field.highest_bit.uint64 + 1) != 0:
-            error(&"Value {cast[int64](fields[i])} outside of range for this {describe(field)}")
+          if asr(fields[i], mask.highest_bit.uint64 + 1) != 0:
+            error(&"Value {cast[int64](fields[i])} outside of range for this {describe(operand, mask)}")
       # TODO: Produce good error messages, e.g. "should be multiple of 16" if the lowest 4 bits should be 0
-      if fields[i].masked(field.unused_zero) != 0:
+      if fields[i].masked(mask.unused_zero) != 0:
         error(&"Value {cast[int64](fields[i])} doesn't fit (some bits should be zero aren't)")
 
-  for i, (lhs, rhs, msg) in inst.asserts:
+  for i, (lhs, rhs, msg) in bits.asserts:
     let lhs_value = eval(lhs, fields, ip, byte_length)
     let rhs_value = eval(rhs, fields, ip, byte_length)
     if lhs_value != rhs_value:
       if msg == "":
-        let lhs_source = lhs.to_str(inst.field_names)
-        let rhs_source = rhs.to_str(inst.field_names)
+        let operand_names = inst.operand_names()
+        let lhs_source = lhs.to_str(operand_names)
+        let rhs_source = rhs.to_str(operand_names)
         error(&"Assert {lhs_source} == {rhs_source} did not match")
       else:
         error(msg)
 
-  var values = inst.fixed_pattern
+  var values = bits.fixed_pattern
 
   var i = 0
-  for j in countdown(inst.bits.high, 0):
-    let bit_type = inst.bits[j]
+  for j in countdown(bits.bits.high, 0):
+    let bit_type = bits.bits[j]
     if not is_variable(bit_type.id):
       i += bit_type.top - bit_type.bottom + 1
       continue # fixed fields are either irreleant or part of the fixed_pattern above
@@ -316,7 +1059,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
     values[int_index] = values[int_index] or (bits shl bit_index)
     i += bit_type.top - bit_type.bottom + 1
 
-  result.set_len(inst.bit_length div 8)
+  result.set_len(bits.bit_length div 8)
   var k = 0
   for i in countdown(values.high, 0):
     var value = values[i]
@@ -328,7 +1071,7 @@ func assemble_instruction(inst: Instruction, args: seq[uint64], ip: int, throw_o
         break
 
 
-func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string]): PreAssemblyResult =
+func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult =
   let normal_path = normalizePath(path).replace('\\', '/')
 
   func skip_newlines(s: var StreamSlice) {.error.}
@@ -383,8 +1126,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
     for op in match.operands:
       if op.kind != ok_fixed:
         return true
-    for inst in match.options:
-      for virt in inst.operands:
+    for (inst, bits) in match.options:
+      for virt in bits.operand_types:
         if virt.kind != otk_virtual: continue
         if virt.expr.any_pc_rel:
           return true
@@ -494,7 +1237,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         while i > 0 and normal_path[i] != '/':
           i -= 1
 
-        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter, already_included)
+        let include_res = pre_assemble_file(base_path, normal_path[0..i] & file, isa_spec, line_counter, already_included, resolved_patterns)
         if include_res.errors.len != 0:
           res.errors.add include_res.errors
 
@@ -635,19 +1378,19 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
       for inst in isa_spec.instructions:
         s = restore  # Reset to the beginning of the line
-        let inst_res = parse_instruction(s, res.pc, inst)
-        if inst_res.error == "": # The instruction parsed succesfully
-          if matched.options.len == 0: # This is the first instruction we found
-            best_match = inst_res
-            matched.operands = inst_res.operands
-          else: # This is not the first instruction we found. Check that it's compatible with the first
-            if matched.operands != inst_res.operands or inst_res.final_index != best_match.final_index:
-              skip_line(s)
-              continue
-          matched.options.add inst
-        if matched.options.len == 0:
-          if inst_res.error_priority > best_match.error_priority or best_match.error == "":
-            best_match = inst_res
+        for inst_res in parse_instruction(s, res.pc, inst, resolved_patterns):
+          if not inst_res.is_err: # The instruction parsed succesfully
+            if matched.options.len == 0: # This is the first instruction we found
+              best_match = inst_res
+              matched.operands = inst_res.operands
+            else: # This is not the first instruction we found. Check that it's compatible with the first
+              if matched.operands != inst_res.operands or inst_res.final_index != best_match.final_index:
+                skip_line(s)
+                continue
+            matched.options.add((inst, inst_res.bits))
+          if matched.options.len == 0:
+            if not best_match.is_err or inst_res.error_priority > best_match.error_priority:
+              best_match = inst_res
 
       set_index(s, best_match.final_index)
 
@@ -664,8 +1407,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
               t.add(op.value)
             t
           var found = false
-          for inst in matched.options:
-            let machine_code = assemble_instruction(inst, args, 0xDEAD, false)
+          for (inst, bits) in matched.options:
+            let machine_code = assemble_instruction(inst, bits, args, 0xDEAD, false)
             if machine_code.len == 0:
               continue
             found = true
@@ -679,7 +1422,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
           if not found:
             try: # Trigger the first error
-              discard assemble_instruction(matched.options[0], args, 0xDEAD, true)
+              let (inst, bits) = matched.options[0]
+              discard assemble_instruction(inst, bits, args, 0xDEAD, true)
             except ValueError as e:
               error(e.msg)
               skip_line(s)
@@ -703,7 +1447,7 @@ func sum_segments(pa: PreAssemblyResult): seq[int] =
     result.add(ip)
     ip += seg.fixed.len
     if seg.relaxable.options.len > 0:
-      ip += seg.relaxable.options[seg.relaxable.selected_option].bit_length div 8
+      ip += seg.relaxable.options[seg.relaxable.selected_option][1].bit_length div 8
 
 
 func finalize(pa: PreAssemblyResult): AssemblyResult =
@@ -735,7 +1479,7 @@ func finalize(pa: PreAssemblyResult): AssemblyResult =
     if segment.relaxable.options.len == 0:
       continue
 
-    let inst = segment.relaxable.options[segment.relaxable.selected_option]
+    let (inst, bits) = segment.relaxable.options[segment.relaxable.selected_option]
     let args = block:
       var values: seq[uint64]
       for op in segment.relaxable.operands:
@@ -755,7 +1499,7 @@ func finalize(pa: PreAssemblyResult): AssemblyResult =
     var err_msg: string
     var machine_code: seq[uint8]
     try: 
-      machine_code = assemble_instruction(inst, args, result.machine_code.len, true)
+      machine_code = assemble_instruction(inst, bits, args, result.machine_code.len, true)
     except ValueError as e:
       return error(e.msg, result.line_info.get_line_from_byte(result.machine_code.len))
 
@@ -788,7 +1532,7 @@ func relax(pa: var PreAssemblyResult) =
       if segment.relaxable.selected_option >= segment.relaxable.options.len - 1:
         continue # Nothing we have to/can do here
 
-      let inst = segment.relaxable.options[segment.relaxable.selected_option]
+      let (inst, bits) = segment.relaxable.options[segment.relaxable.selected_option]
       let ip = segment_starts[i] + segment.fixed.len
       let args = block:
         var values: seq[uint64]
@@ -802,7 +1546,7 @@ func relax(pa: var PreAssemblyResult) =
             of ok_relative:
               cast[uint64](ip + op.offset)
         values
-      let machine_code = assemble_instruction(inst, args, ip, false)
+      let machine_code = assemble_instruction(inst, bits, args, ip, false)
       if machine_code.len == 0:
         segment.relaxable.selected_option += 1
         all_fit = false

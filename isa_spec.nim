@@ -1,16 +1,13 @@
-import std/[setutils, strutils, bitops, os, pathnorm, tables, strformat], parseUtils, algorithm
+import std/[parseUtils, strutils, strformat, tables]
 import types, parse, expressions
 
 export parse.new_StreamSlice
 
-func field_names(i: Instruction): seq[string] =
-  for f in i.operands:
-    result.add(f.variable_name)
+const MAX_FIELD_SIZE* = 64
 
-func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, string) =
-
-  func error(input: string): (Instruction, string) =
-    return (Instruction(), input)
+func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound: uint32 = uint32.high): (string, Instruction) =
+  func error(input: string): (string, Instruction) =
+    return (input, Instruction())
 
   template check[T](input: (string, T)): T =
     let (err, res) = input
@@ -23,7 +20,7 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
     while peek(s) notin {'\0', '\n'}:
       if peek(s) == '%':
         if peek(s, 1) == '%':
-          doAssert matches(s, "%%", tk=tk_mnenomic)
+          doAssert matches(s, "%%", tk = tk_mnenomic)
           this_part.text.add('%')
           continue
         else:
@@ -36,13 +33,13 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
           this_part.text = ""
         # One space means it's optional, two spaces means some whitespace seperation is required
         if char == ' ' and syntax_parts.len > 0:
-          case syntax_parts[^1].kind:
-            of sk_any_number_of_spaces:
-              syntax_parts[^1].kind = sk_at_least_one_space
-            of sk_at_least_one_space:
-              discard
-            else:
-              syntax_parts.add(Syntax(kind: sk_any_number_of_spaces))
+          case syntax_parts[^1].kind
+          of sk_any_number_of_spaces:
+            syntax_parts[^1].kind = sk_at_least_one_space
+          of sk_at_least_one_space:
+            discard
+          else:
+            syntax_parts.add(Syntax(kind: sk_any_number_of_spaces))
       else:
         add_token(s, tk_mnenomic)
         this_part.text.add(char)
@@ -56,113 +53,230 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
     add_string_syntax(s, new_instruction.syntax)
 
     while matches(s, '%'):
-      var new_field = OperandType(size: 64, kind: otk_normal)
-      new_field.variable_name = $get_identifier(s)
-      if new_field.variable_name.len == 0:
+      let variable_name = $get_identifier(s)
+      if variable_name.len == 0:
         return error("Expected an identifier after '%'")
 
-      if new_field.variable_name != "_":
+      if variable_name != "_":
         for operand in new_instruction.operands:
-          if operand.variable_name == new_field.variable_name:
-            return error(&"Operand {new_field.variable_name} on syntax line shadowed another operand")
+          if operand.variable_name == variable_name:
+            return error(&"Operand {variable_name} on syntax line shadowed another operand")
 
-      if matches(s, ':', tk=tk_seperator):
+      var is_signed = false
+      var size = 0
+      if matches(s, ':', tk = tk_seperator):
         let marker = read(s)
-        new_field.is_signed = case marker:
+        is_signed =
+          case marker
           of 'U':
             false
           of 'S':
-             true
+            true
           else:
-            return error(&"Invalid annotation for operand %{new_field.variable_name}: {marker}")
-        new_field.size = check(parse_signed(check(get_unsigned(s))))
+            return error(&"Invalid annotation for operand %{variable_name}: {marker}")
+        size = check(parse_signed(check(get_unsigned(s))))
         change_token_kind(tk_number, tk_type_name)
-        if new_field.size < 1 or new_field.size > 64:
-          return error(&"Invalid size {new_field.size}")
+        if size < 1 or size > MAX_FIELD_SIZE:
+          return error(&"Invalid size {size}")
 
-      new_instruction.syntax.add(Syntax(kind: sk_field))
+      if not matches(s, '(', tk = tk_bracket):
+        return error(
+          "Expected parenthesis after the operand name, like: " & variable_name &
+            "(immediate)"
+        )
 
-      if not matches(s, '(', tk=tk_bracket):
-        return error("Expected parenthesis after the operand name, like: " & new_field.variable_name & "(immediate)")
-      while true:
-        let field_name = get_identifier(s, tk=tk_type_name)
+      skip_whitespaces(s)
 
-        if field_name.len == 0:
-          return error("Was expecting a field name here")
+      let operand =
+        if peek(s) in {'@', '|', ')'}:
+          var patterns: seq[OperandType_Pattern]
+          while true:
+            if matches(s, ')', tk = tk_bracket):
+              patterns.add(OperandType_Pattern(index: uint32.high))
+              break
 
-        var found = false
+            if matches(s, '|', tk = tk_seperator):
+              patterns.add(OperandType_Pattern(index: uint32.high))
+              skip_whitespaces(s)
+              continue
 
-        for i, field in isa_spec.field_types:
-          if $field_name == field.name:
-            found = true
-            new_field.options.add(i)
-            break
+            skip_whitespaces(s)
+            skip(s)
+            let pattern_name = get_identifier(s, tk = tk_pattern_name)
+            if pattern_name.len == 0:
+              return error("Was expecting a pattern name here")
 
-        if not found:
-          return error("Field name '" & $field_name & "' not defined")
+            var arguments: seq[string]
 
-        skip_whitespaces(s)
+            skip_whitespaces(s)
+            if s.matches('(', tk = tk_bracket):
+              while true:
+                skip_whitespaces(s)
+                let argument =
+                  if peek(s) == '"':
+                    check(descape_string_content(check(get_string(s))))
+                  else:
+                    var ret = ""
+                    while peek(s) notin {',', ')', '"', '\0', '\n'}:
+                      ret.add(read(s))
+                      discard skip_comment(s)
+                    if peek(s) == '"':
+                      return error(
+                        "Pattern argument specified without opening double-quote cannot contain double-quotes"
+                      )
+                    ret.strip(leading = false, chars = WHITESPACES)
 
-        if not s.matches('|', tk=tk_seperator):
-          break
+                arguments.add(argument)
 
-        skip_whitespaces(s)
+                skip_whitespaces(s)
+                if s.matches(')', tk = tk_bracket):
+                  break
 
-      if not matches(s, ')', tk=tk_bracket):
-        return error("Expected a closing parenthesis after the field type")
+                if s.matches(',', tk = tk_seperator):
+                  continue
 
-      new_instruction.operands.add(new_field)
+                return error("Expected ',' or ')' after pattern argument")
+
+            var found = false
+
+            for i, pattern in isa_spec.patterns:
+              if pattern_name == pattern.name and
+                  arguments.len == pattern.parameter_count:
+                found = true
+                patterns.add(OperandType_Pattern(index: i.uint32, args: arguments))
+                if i.uint32 >= pattern_index_bound:
+                  return error("Patterns can only invoke those defined before them")
+                break
+
+            if not found:
+              return error(
+                "Pattern '" & $pattern_name & "' with " & $arguments.len &
+                  " parameters not defined"
+              )
+
+            skip_whitespaces(s)
+            if s.matches(')', tk = tk_bracket):
+              break
+
+            if s.matches('|', tk = tk_seperator):
+              continue
+
+            return error("Expected a closing parenthesis after the pattern type")
+
+          new_instruction.syntax.add(Syntax(kind: sk_pattern))
+          OperandType(
+            variable_name: variable_name,
+            is_signed: is_signed,
+            size: size,
+            kind: otk_pattern,
+            patterns: patterns,
+          )
+        else:
+          var options: seq[FieldKind]
+          while true:
+            let field_name = get_identifier(s, tk = tk_type_name)
+
+            if field_name.len == 0:
+              return error("Was expecting a field name here")
+
+            var found = false
+
+            for i, field in isa_spec.field_types:
+              if $field_name == field.name:
+                found = true
+                options.add(i)
+                break
+
+            if not found:
+              return error("Field name '" & $field_name & "' not defined")
+
+            skip_whitespaces(s)
+
+            if not s.matches('|', tk = tk_seperator):
+              break
+
+            skip_whitespaces(s)
+
+          if not matches(s, ')', tk = tk_bracket):
+            return error("Expected a closing parenthesis after the field type")
+
+          new_instruction.syntax.add(Syntax(kind: sk_field))
+          OperandType(
+            variable_name: variable_name,
+            is_signed: is_signed,
+            size: size,
+            kind: otk_normal,
+            options: options,
+          )
+
+      new_instruction.operands.add(operand)
 
       add_string_syntax(s, new_instruction.syntax)
 
     if read(s, tk_whitespace) != '\n':
-      return error("Was expecting a newline here")
+      return error("Was expecting a newline here after syntax declaration")
 
   let instruction_name = new_instruction.name()
-  
-  var operand_names = new_instruction.field_names()
+
+  var operand_names = new_instruction.operand_names()
   block virtual_field:
     var count = 1
     while peek(s) in {'%', '!'}:
-      let restore = s
+      let cp = checkpoint(s)
       if read(s) == '%':
-        var new_field = OperandType(size: 64, kind: otk_virtual)
-        new_field.variable_name = $get_identifier(s)
-        if new_field.variable_name.len == 0:
+        let variable_name = $get_identifier(s)
+        if variable_name.len == 0:
           return error("Expected an identifier after '%'")
-        if peek(s) == '[': # This is probably the bitpattern which happens to start with a slice, so backtrack
-          s = restore
+        if peek(s) == '[':
+          # This is probably the bitpattern which happens to start with a slice, so backtrack
+          s.restore(cp)
           break
 
-        if matches(s, ':', tk=tk_seperator):
+        var is_signed = false
+        var size = 0
+        if matches(s, ':', tk = tk_seperator):
           let marker = read(s)
-          new_field.is_signed = case marker:
+          is_signed =
+            case marker
             of 'U':
               false
             of 'S':
-               true
+              true
             else:
-              return error(&"Invalid annotation for operand %{new_field.variable_name}: {marker}")
-          new_field.size = check(parse_signed(check(get_unsigned(s))))
+              return error(&"Invalid annotation for operand %{variable_name}: {marker}")
+          size = check(parse_signed(check(get_unsigned(s))))
           change_token_kind(tk_number, tk_type_name)
-          if new_field.size < 1 or new_field.size > 64:
-            return error(&"Invalid size {new_field.size}")
+          if size < 1 or size > MAX_FIELD_SIZE:
+            return error(&"Invalid size {size}")
         skip_whitespaces(s)
 
-        if not matches(s, '=', tk=tk_operator):
-          return error("Expected an assignment here")
+        if not matches(s, '=', tk = tk_operator):
+          # This is probably the bitpattern which happens to start with a pattern ref, so backtrack
+          s.restore(cp)
+          break
 
         skip_whitespaces(s)
 
-        new_field.expr = get_expression(s, operand_names)
-        new_instruction.operands.add(new_field)
-        operand_names.add(new_field.variable_name)
-
-        if new_field.expr.exp_kind == exp_fail:
+        let expr = get_expression(s, operand_names)
+        if expr.exp_kind == exp_fail:
           if instruction_name == "":
             return error("Could not read virtual operand " & $count)
           else:
-            return error("Could not read virtual operand " & $count & " for instruction " & instruction_name)
+            return error(
+              "Could not read virtual operand " & $count & " for instruction " &
+                instruction_name
+            )
+
+        new_instruction.operands.add(
+          OperandType(
+            variable_name: variable_name,
+            is_signed: is_signed,
+            size: size,
+            kind: otk_virtual,
+            expr: expr,
+          )
+        )
+        operand_names.add(variable_name)
 
         count += 1
         if not skip_newlines(s):
@@ -182,7 +296,8 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
         if rhs.exp_kind == exp_fail:
           return error("Could not parse assert expression")
         skip_whitespaces(s)
-        let msg = if peek(s) in QUOTES:
+        let msg =
+          if peek(s) in QUOTES:
             check(descape_string_content(check(get_string(s))))
           else:
             ""
@@ -191,82 +306,56 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
         new_instruction.asserts.add (lhs, rhs, msg)
 
   block bit_pattern:
-    var pattern: string
-    var mask: string
-    var new_bits: seq[Bitfield]
-    # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
-    # nvalid indecies. They are instead used to track the length of the field before being updated
-    # to the correct bounds in a seperate pass
-    var current = Bitfield(id: field_invalid)
+    let start = get_index(s)
 
     while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
       const HEX_PREFIX = "#x"
-      if matches(s, HEX_PREFIX, increment=false):
-        let hex_s = check(get_hex(s, HEX_PREFIX))
-        for i in HEX_PREFIX.len ..< hex_s.len:
-          let c = hex_s[i]
-          if c notin HexDigits:
-            continue
+      if matches(s, HEX_PREFIX, increment = false):
+        discard check(get_hex(s, HEX_PREFIX))
+        if peek(s) == '[':
+          discard read(s, tk=tk_bracket)
 
-          let hex = xdigit_to_value(c)
-          var shift = 1 shl 3
-          while shift != 0:
-            mask.add('1')
-            let bit_id = 
-              if (hex and shift) == 0:
-                pattern.add('0')
-                field_zero
-              else:
-                pattern.add('1')
-                field_one
-            if bit_id != current.id:
-              if current.id != field_invalid:
-                new_bits.add(current)
-              current = Bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
-            else:
-              current.top += 1
-            shift = shift shr 1
+          skip_whitespaces(s)
+          if peek(s) != ':':
+            discard check(parse_signed(check(get_unsigned(s))))
+
+          skip_whitespaces(s)
+          if read(s, tk=tk_seperator) != ':':
+            return error("Expected slice syntax after base-16 number in bit pattern")
+
+          skip_whitespaces(s)
+          if peek(s) != ']':
+            discard check(parse_signed(check(get_unsigned(s))))
+
+          skip_whitespaces(s)
+          if read(s, tk=tk_bracket) != ']':
+            return error("Expected slice syntax after base-16 number in bit pattern")
         continue
 
       if peek(s) != '%':
-        let bit_id = case peek(s):
-          of '0':
-            pattern.add('0')
-            mask.add('1')
-            skip(s, tk=tk_number)
-            field_zero
-          of '1':
-            pattern.add('1')
-            mask.add('1')
-            skip(s, tk=tk_number)
-            field_one
-          of ' ':
-            skip(s, tk=tk_whitespace)
-            continue
-          of '?':
-            pattern.add('0')
-            mask.add('0')
-            skip(s, tk=tk_number)
-            field_wildcard
-          else:
-            pattern.add('0')
-            mask.add('0')
-            let c = read(s, tk=tk_field_name)
-            var field_index = field_invalid
-            for i in countdown(operand_names.high, 0):
-              if operand_names[i][0] == c:
-                  field_index = to_variable(i)
-                  break
-
-            if field_index == field_invalid:
-              return error("Error defining '" & instruction_name & "'. No operand starts with character '" & c & "'.")
-            field_index
-        if bit_id != current.id:
-          if current.id != field_invalid:
-            new_bits.add(current)
-          current = Bitfield(id: bit_id, top: 0, bottom: 0, is_direct: true)
+        case peek(s)
+        of '0':
+          skip(s, tk = tk_number)
+        of '1':
+          skip(s, tk = tk_number)
+        of ' ':
+          skip(s, tk = tk_whitespace)
+          continue
+        of '?':
+          skip(s, tk = tk_number)
         else:
-          current.top += 1
+          let c = read(s, tk = tk_field_name)
+          var operand_index = field_invalid
+          for i in countdown(operand_names.high, 0):
+            if operand_names[i][0] == c:
+              operand_index = to_variable(i)
+              break
+
+          if operand_index == field_invalid:
+            return error(
+              "Error defining '" & instruction_name &
+                "'. No operand starts with character '" & c & "'."
+            )
       else:
         skip(s)
         let operand_name = get_identifier(s)
@@ -282,116 +371,57 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
         if operand_index < 0:
           return error(&"Expected a valid field name, got '{operand_name}'")
 
-        let field_real_index = to_variable(operand_index)
-        if read(s, tk=tk_bracket) != '[':
-          return error("Expected slice syntax after field reference in bit pattern")
-        skip_whitespaces(s)
-        let top = check(parse_signed(check(get_unsigned(s))))
-        skip_whitespaces(s)
-        if read(s, tk=tk_seperator) != ':':
-          return error("Expected slice syntax after field reference in bit pattern")
-        skip_whitespaces(s)
-        let bottom = check(parse_signed(check(get_unsigned(s))))
-        skip_whitespaces(s)
-        if read(s, tk=tk_bracket) != ']':
-          return error("Expected slice syntax after field reference in bit pattern")
-        if current.id != field_invalid:
-          new_bits.add(current)
-          current = Bitfield(id: field_invalid)
-        new_bits.add(Bitfield(id: field_real_index, top: top, bottom: bottom))
-        for _ in bottom .. top:
-          mask.add '0'
-          pattern.add '0'
+        if peek(s) != '[':
+          let operand = new_instruction.operands[operand_index]
+          if operand.kind != otk_pattern and operand.size <= 0:
+            return error("Expected slice syntax after unsized field reference in bit pattern")
+        else:
+          discard read(s, tk = tk_bracket)
 
+          skip_whitespaces(s)
+          if peek(s) != ':':
+            discard check(parse_signed(check(get_unsigned(s))))
+          
+          skip_whitespaces(s)
+          if read(s, tk = tk_seperator) != ':':
+            return error("Expected slice syntax after field/pattern reference in bit pattern")
 
-    if current.id != field_invalid:
-      new_bits.add(current)
-
-    let total_length = mask.len
-    if total_length ==  0:
-      return error("Instruction '" & instruction_name & "' is missing the bit field definition")
-    if total_length mod 8 != 0:
-      return error("The width of instruction '" & instruction_name & "' is " & $total_length & " bits, but only multiples of 8 are supported")
-    new_instruction.bit_length = total_length
-
-    var current_length = 0
-    var consumed_bits = newSeq[int](new_instruction.operands.len)
-    for i in countdown(new_bits.high, 0):
-      var bits = new_bits[i]
-      let index = to_variable_index(bits.id)
-      if bits.is_direct and is_variable(bits.id):
-        # We need to adjust this for the case of non-consecutive bit fields of the same operand
-        bits.top += consumed_bits[index]
-        bits.bottom += consumed_bits[index]
-        consumed_bits[index] += bits.top - bits.bottom + 1
-      if is_variable(bits.id):
-        new_instruction.operands[index].used = new_instruction.operands[index].used or toMask[uint64](bits.bottom .. bits.top)
-
-      let new_length = current_length + bits.top - bits.bottom + 1
-      if (new_length - 1) div 64 != current_length div 64: # We are crossing a 64bit boundary
-        let fit_count = 64 - (current_length mod 64) #  number of bits that still fit within this word
-        if bits.top - bits.bottom + 1 > 64 and is_variable(bits.id):
-          return error("Bit pattern for field " & new_instruction.operands[index].variable_name & " longer than 64bit")
-        var right = bits
-        var left = bits
-        right.top = bits.bottom + fit_count - 1
-        left.bottom = right.top + 1
-        new_instruction.bits.add right
-        new_instruction.bits.add left
-      else:
-        new_instruction.bits.add bits
-      current_length = new_length
-    reverse(new_instruction.bits)
-
-    for f in new_instruction.operands.mitems:
-      if f.used != 0:
-        f.unused_zero = not f.used
-        f.highest_bit = (63 - f.used.count_leading_zero_bits()).int8
-        if f.is_signed and f.highest_bit != 63:
-          let sign_mask = toMask[uint64]((f.highest_bit + 1).int .. 63)
-          f.unused_zero = f.unused_zero.clearMasked(sign_mask)
-
-    let word_count = (total_length + 63) div 64
-    new_instruction.fixed_pattern.set_len(word_count)
-    new_instruction.fixed_mask.set_len(word_count)
-    var r = total_length mod 64
-    if r == 0:
-      r = 63
-    else:
-      r -= 1
-    discard parseBin(pattern[0..r], new_instruction.fixed_pattern[0])
-    discard parseBin(mask[0..r], new_instruction.fixed_mask[0])
-    for i in 1 ..< word_count:
-      let s = r + 1 + (i-1) * 64
-      let e = s+63
-      discard parseBin(pattern[s..e], new_instruction.fixed_pattern[i])
-      discard parseBin(mask[s..e], new_instruction.fixed_mask[i])
+          skip_whitespaces(s)
+          if peek(s) != ']':
+            discard check(parse_signed(check(get_unsigned(s))))
+          
+          skip_whitespaces(s)
+          if read(s, tk = tk_bracket) != ']':
+            return error("Expected slice syntax after field/pattern reference in bit pattern")
 
     skip_whitespaces(s)
 
-    if read(s, tk=tk_whitespace) notin {'\n', '\0'}:
+    let finish = get_index(s)
+    if read(s, tk = tk_whitespace) notin {'\n', '\0'}:
       return error("Was expecting a newline here")
+
+    new_instruction.bit_pattern = get_slice(s, start, finish)
 
   block get_description:
     var description: string
     while peek(s) notin {'\n', '\0'}:
-      let char = read(s, tk=tk_text)
+      let char = read(s, tk = tk_text)
       if char notin {'\r'}:
         description.add(char)
     new_instruction.description = description
 
-  return (new_instruction, "")
+  return ("", new_instruction)
 
 func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
-
   var s = new_StreamSlice(source)
   start_tokenize(s)
 
   func error(input: string): SpecParseResult =
     return SpecParseResult(
-          error: Error(
-            loc: FileLocation(file: file_name, line: get_line_number(s)),
-            message: input))
+      error: Error(
+        loc: FileLocation(file: file_name, line: get_line_number(s)), message: input
+      )
+    )
 
   template check[T](input: (string, T)): T =
     let (err, res) = input
@@ -399,9 +429,9 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
       return error(err)
     res
 
-  result.spec.line_comments  = @[";", "//"]
+  result.spec.line_comments = @[";", "//"]
   result.spec.block_comments = @{"/*": "*/"}
- 
+
   result.spec.field_types = {
     field_zero: FieldType(name: "0"),
     field_one: FieldType(name: "1"),
@@ -412,68 +442,66 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
 
   skip_newlines(s)
 
-  if matches(s, "[settings]", tk=tk_header):
+  if matches(s, "[settings]", tk = tk_header):
     if not skip_newlines(s):
       return error("Expected newline after section header")
-    var seen_names = newSeq[string]() # Don't think a hashset is justified here, we don't have that many settings
+    var seen_names = newSeq[string]()
+      # Don't think a hashset is justified here, we don't have that many settings
 
-    while not (finished(s) or peek(s) == '[') :
+    while not (finished(s) or peek(s) == '['):
       let name = $get_identifier(s)
       if s.len == 0:
         return error("Expected the name of an option or start of the next section")
       skip_whitespaces(s)
-      if not s.matches("=", tk=tk_operator):
+      if not s.matches("=", tk = tk_operator):
         return error("Expected an '=' here")
       skip_whitespaces(s)
       if name in seen_names:
         return error(&"Duplicate setting '{name}'")
       seen_names.add name
-      case name:
-        of "name":
-          if peek(s) in QUOTES:
-            result.spec.name = check(descape_string_content(check(get_string(s))))
-          else:
-            let raw_id = get_identifier(s)
-            if raw_id.len == 0:
-              return error("Expected string or identifier as name")
-            result.spec.name = $raw_id
-        of "variant":
-          result.spec.variant = check(descape_string_content(check(get_string(s))))
-        of "endianness":
-          result.spec.endianness = check(get_enum(s, {
-            "big": end_big,
-            "little": end_little
-          }, tk=tk_literal))
-        of "line_comments":
-          result.spec.line_comments.set_len(0)
-          for entry in get_list(s):
-            result.spec.line_comments.add check(parse_string(entry))
-        of "block_comments":
-          result.spec.block_comments.set_len(0)
-          var start_sym: string
-          for is_value, text in get_table(s):
-            if not is_value:
-              start_sym = check(parse_string(text))
-            else:
-              let end_sym = check(parse_string(text))
-              result.spec.block_comments.add (start_sym, end_sym)
+      case name
+      of "name":
+        if peek(s) in QUOTES:
+          result.spec.name = check(descape_string_content(check(get_string(s))))
         else:
-          return error(&"Unknown setting name {$name}")
+          let raw_id = get_identifier(s)
+          if raw_id.len == 0:
+            return error("Expected string or identifier as name")
+          result.spec.name = $raw_id
+      of "variant":
+        result.spec.variant = check(descape_string_content(check(get_string(s))))
+      of "endianness":
+        result.spec.endianness =
+          check(get_enum(s, {"big": end_big, "little": end_little}, tk = tk_literal))
+      of "line_comments":
+        result.spec.line_comments.set_len(0)
+        for entry in get_list(s):
+          result.spec.line_comments.add check(parse_string(entry))
+      of "block_comments":
+        result.spec.block_comments.set_len(0)
+        var start_sym: string
+        for is_value, text in get_table(s):
+          if not is_value:
+            start_sym = check(parse_string(text))
+          else:
+            let end_sym = check(parse_string(text))
+            result.spec.block_comments.add (start_sym, end_sym)
+      else:
+        return error(&"Unknown setting name {$name}")
       if not skip_newlines(s):
         return error("Expected newline after setting assignment")
 
-
-  if matches(s, "[fields]", tk=tk_header):
-
+  if matches(s, "[fields]", tk = tk_header):
     if not skip_newlines(s):
       return error("Expected newline after section header")
 
     var next_variable_index = 0
-    
+
     while not matches(s, "[", increment = false):
       skip_whitespaces(s)
-      var field_type_name = get_identifier(s, tk=tk_type_name)
-      if field_type_name.len == 0: return error("Expected a name for the field type")
+      var field_type_name = get_identifier(s, tk = tk_type_name)
+      if field_type_name.len == 0:
+        return error("Expected a name for the field type")
       skip_whitespaces(s)
 
       var new_field_types: Table[string, FieldType]
@@ -481,20 +509,21 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
 
       block outer:
         while peek(s) == '\n':
-          skip(s, tk=tk_whitespace)
-           # If the line starts with a comment, continue on to the next line
-           # We don't use skip_newlines because we don't want to allow empty lines in the middle of a field type def
+          skip(s, tk = tk_whitespace)
+            # If the line starts with a comment, continue on to the next line
+            # We don't use skip_newlines because we don't want to allow empty lines in the middle of a field type def
           if skip_comment(s):
             skip_whitespaces(s)
             continue
-          let field_name = if peek(s) in QUOTES:
+          let field_name =
+            if peek(s) in QUOTES:
               let temp = check(descape_string_content(check(get_string(s))))
               for c in temp:
                 if c in WHITESPACE:
                   return error("Field names can not contain whitespace characters")
               temp
             else:
-              let temp = get_identifier(s, tk=tk_field_name)
+              let temp = get_identifier(s, tk = tk_field_name)
               skip_whitespaces(s)
               if temp.len == 0:
                 if peek(s) in {'\n', '\0'}:
@@ -506,19 +535,23 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
 
           var bits: string
 
-          while peek(s) in {'0','1'}:
+          while peek(s) in {'0', '1'}:
             bits.add(read(s, tk_number))
-        
+
           if bits.len == 0:
             return error("Expected a bit pattern for " & $field_name)
-          if bits.len > 64:
-            return error("Only up to 64-bit field lengths supported")
-          
+          if bits.len > MAX_FIELD_SIZE:
+            return
+              error("Only up to " & $MAX_FIELD_SIZE & "-bit field lengths supported")
+
           if bit_length == 0:
             bit_length = bits.len
           else:
             if bit_length != bits.len:
-              return error("The bit pattern of " & $field_name & " is only " & $bits.len & " long, expected " & $bit_length)
+              return error(
+                "The bit pattern of " & $field_name & " is only " & $bits.len &
+                  " long, expected " & $bit_length
+              )
 
           var bit_value = 0
           discard parseBin(bits, bit_value)
@@ -526,16 +559,17 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
           skip_whitespaces(s)
 
           if $field_type_name notin new_field_types:
-            new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: bit_length)
-            
-          new_field_types[$field_type_name].values.add(FieldValue(
-            name: $field_name,
-            value: cast[uint64](bit_value),
-          ))
+            new_field_types[$field_type_name] =
+              FieldType(name: $field_type_name, bit_length: bit_length)
+
+          new_field_types[$field_type_name].values.add(
+            FieldValue(name: $field_name, value: cast[uint64](bit_value))
+          )
 
       if $field_type_name notin new_field_types:
         # Nonsensical, but will otherwise render some specs unusable in TC
-        new_field_types[$field_type_name] = FieldType(name: $field_type_name, bit_length: 3)
+        new_field_types[$field_type_name] =
+          FieldType(name: $field_type_name, bit_length: 3)
 
       for name, field_type in new_field_types:
         result.spec.field_types[to_variable(next_variable_index)] = field_type
@@ -543,8 +577,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
 
       skip_newlines(s)
 
-  if matches(s, "[patterns]", tk=tk_header):
-
+  if matches(s, "[patterns]", tk = tk_header):
     if not skip_newlines(s):
       return error("Expected newline after section header")
 
@@ -553,15 +586,16 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
       if not matches(s, '@'):
         return error("Expected an @ before the pattern name")
 
-      let pattern_name = get_identifier(s, tk=tk_pattern_name)
-      if pattern_name.len == 0: return error("Expected a name for the pattern")
+      let pattern_name = get_identifier(s, tk = tk_pattern_name)
+      if pattern_name.len == 0:
+        return error("Expected a name for the pattern")
 
       var parameters: seq[StreamSlice]
 
       skip_whitespaces(s)
-      if matches(s, '(', tk=tk_bracket):
+      if matches(s, '(', tk = tk_bracket):
         # This is a parametrized pattern, parse and store the parameter list
-        while not matches(s, ')', tk=tk_bracket):
+        while not matches(s, ')', tk = tk_bracket):
           skip_whitespaces(s)
           if peek(s) != '`':
             return error("Expected a ` before the pattern parameter")
@@ -570,21 +604,25 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
           if parameter_name.len == 0: return error("Expected a name for the pattern parameter")
 
           parameters.add(parameter_name)
-          if parameters.len > 53:  ## Arbitrary limit, picked an "uncommon" number
+          if parameters.len > 53: ## Arbitrary limit, picked an "uncommon" number
             return error("Pattern can have at most 53 parameters")
 
           skip_whitespaces(s)
-          discard matches(s, ',', tk=tk_seperator)
+          discard matches(s, ',', tk = tk_seperator)
 
       add_token(s, tk_new_instruction)
+      skip_whitespaces(s)
+      assert matches(s, '\n', tk = tk_whitespace)
       let (texts, parameter_indexes) = get_parametrized_pattern(s, parameters)
-      result.spec.patterns.add((
-        name: pattern_name,
-        parameter_count: parameters.len,
-        pattern: ParametrizedPattern(texts: texts, parameters: parameter_indexes)
-      ))
+      result.spec.patterns.add(
+        (
+          name: pattern_name,
+          parameter_count: parameters.len,
+          pattern: ParametrizedPattern(texts: texts, parameters: parameter_indexes),
+        )
+      )
 
-  if not matches(s, "[instructions]", tk=tk_header):
+  if not matches(s, "[instructions]", tk = tk_header):
     return error("Was expecting the [instructions] header here")
 
   if not skip_newlines(s):
@@ -592,7 +630,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
 
   while peek(s) != '\0':
     add_token(s, tk_new_instruction)
-    var (new_instruction, error_message) = get_instruction(s, result.spec)
+    var (error_message, new_instruction) = get_instruction(s, result.spec)
     if error_message != "":
       return error(error_message)
     result.spec.instructions.add(new_instruction)
@@ -606,7 +644,9 @@ func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
   try:
     return parse_isa_spec_inner(file_name, source)
   except ParseError as e:
-    return SpecParseResult(error: Error(loc:FileLocation(file:file_name, line:e.line), message: e.msg))
+    return SpecParseResult(
+      error: Error(loc: FileLocation(file: file_name, line: e.line), message: e.msg)
+    )
 
 import assemble
 export assemble

@@ -1,6 +1,6 @@
 import tables, std/[algorithm, setutils], parse
 
-const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>"]
+const OP_INDEXES* = ["+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>", "<", ">"]
 const GREEDY_CHARS* = setutils.toSet("*/%")
 const LAZY_CHARS* = setutils.toSet("+-<>|!&^")
 
@@ -12,6 +12,9 @@ type FieldKind* = enum
   field_imm
   field_label
   field_invalid
+
+static:
+  assert sizeof(FieldKind) == sizeof(uint8)
 
 func is_variable*(input: FieldKind): bool =
   return input notin {field_zero, field_one, field_wildcard, field_imm, field_label, field_invalid}
@@ -49,6 +52,8 @@ type OpKind* = enum
   op_xor
   op_lsl
   op_lsr
+  op_lt
+  op_gt
   op_asr
   op_log2
   op_popcount
@@ -91,18 +96,10 @@ func `==`*(a, b: expression): bool =
 type OperandTypeKind* = enum
   otk_normal
   otk_virtual
+  otk_pattern
 
-type OperandType* = object
-  variable_name*: string
-  is_signed*: bool
-  size*: int
-  case kind*: OperandTypeKind
-    of otk_normal:
-      options*: seq[FieldKind]
-    of otk_virtual:
-      expr*: expression
-
-  # if used == 0, the other 3 fields are irreleavnt
+type OperandType_Mask* = object
+  # if used == 0, the other fields are irreleavnt
   used*: uint64 # bit mask of bits that are used directly in the final result
   unused_zero*: uint64 # bit mask of the bits that have to be zero
   highest_bit*: int8 # bit index of the higest bit, i.e. the sign bit if is_signed
@@ -117,16 +114,22 @@ type OperandType* = object
   # unused_zero   = ...000000001111
   # sign_bit      = 9
 
-func `==`*(a, b: OperandType): bool =
-  if a.variable_name != b.variable_name or a.is_signed != b.is_signed or a.size != b.size or a.kind != b.kind:
-    return false
-  case a.kind:
+type OperandType_Pattern* = object
+    index*: uint32
+    args*: seq[string]
+
+type OperandType* = object
+  variable_name*: string
+  is_signed*: bool
+  size*: int
+
+  case kind*: OperandTypeKind
     of otk_normal:
-      return a.options == b.options
+      options*: seq[FieldKind]
     of otk_virtual:
-      return a.expr == b.expr
-    else: 
-      return true
+      expr*: expression
+    of otk_pattern:
+      patterns*: seq[OperandType_Pattern]
 
 type Bitfield* = object
   id*: FieldKind
@@ -137,6 +140,7 @@ type Bitfield* = object
 type SyntaxKind* = enum
   sk_fixed
   sk_field
+  sk_pattern
   sk_any_number_of_spaces
   sk_at_least_one_space
 
@@ -148,12 +152,7 @@ type Instruction* = object
   syntax*: seq[Syntax]
   operands*: seq[OperandType]
   asserts*: seq[(expression, expression, string)]
-  bits*: seq[Bitfield]
-  bit_length*: int
-  # These are both bit endian lists of 64bit words
-  # If bit_length is not a multiple of 64, the first word is the partial one
-  fixed_pattern*: seq[uint64]
-  fixed_mask*: seq[uint64]
+  bit_pattern*: StreamSlice
   description*: string
 
 func name*(i: Instruction): string =
@@ -161,9 +160,21 @@ func name*(i: Instruction): string =
     if part.kind == sk_fixed:
       return part.text
 
+func operand_names*(i: Instruction): seq[string] =
+  for f in i.operands:
+    result.add(f.variable_name)
+
 type ParametrizedPattern* = object
   texts*: seq[StreamSlice]
   parameters*: seq[int]
+
+func resolve*(p: ParametrizedPattern, args: seq[string]): string =
+  for i in 0 .. p.parameters.high:
+    result &= $p.texts[i]
+    result &= $args[p.parameters[i]]
+  
+  if p.texts.len > p.parameters.len:
+    result &= $p.texts[^1]
 
 type Endianness* = enum
   end_big
