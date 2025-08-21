@@ -77,7 +77,7 @@ func skip_whitespaces(s: var StreamSlice) {.error, used.}
 func skip_newlines(s: var StreamSlice) {.error, used.}
 
 func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
-  while peek(s) in {' ', '\t', '\r'}:
+  while peek(s) in WHITESPACES:
     s.skip()
   if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
     isa_spec.skip_whitespaces(s)
@@ -348,7 +348,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
 
   func skip_and_record_newlines(s: var StreamSlice) =
-    while peek(s) in {' ', '\r', '\n', '\t'}:
+    while peek(s) in WHITESPACES + {'\n'}:
       if read(s) == '\n':
         line_counter += 1
         res.segments[^1].line_boundaries.add (res.segments[^1].fixed.len, line_counter)

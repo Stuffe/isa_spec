@@ -29,7 +29,7 @@ func get_instruction(s: var StreamSlice, isa_spec: IsaSpec): (Instruction, strin
         else:
           break
       let char = read(s)
-      if char in {'\r', '\t', ' '}:
+      if char in WHITESPACES:
         add_token(s, tk_whitespace)
         if this_part.text != "":
           syntax_parts.add(this_part)

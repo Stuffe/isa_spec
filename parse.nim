@@ -13,6 +13,7 @@ const IDENTIFIER_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM
 const NUMBER_FIRST = setutils.toSet("0123456789-+")
 const NUMBER_NEXT  = setutils.toSet("0123456789")
 const QUOTES* = {'"', '\'', '`'}
+const WHITESPACES* = {' ', '\t', '\r'}
 
 func new_StreamSlice*(source: string): StreamSlice =
   var reference = new(string)
@@ -243,7 +244,7 @@ func skip_comment*(s: var StreamSlice, line_comments = @[";", "//"], block_comme
       return true
 
 func skip_whitespaces*(s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}) =
-  while peek(s) in {' ', '\t', '\r'}:
+  while peek(s) in WHITESPACES:
     s.start += 1
   add_token(s, tk_whitespace)
   if skip_comment(s, line_comments, block_comments):
@@ -251,7 +252,7 @@ func skip_whitespaces*(s: var StreamSlice, line_comments = @[";", "//"], block_c
 
 func skip_newlines*(s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}): bool {.discardable.} =
   var any_newline = false
-  while peek(s) in {' ', '\r', '\n', '\t'}:
+  while peek(s) in WHITESPACES + {'\n'}:
     if read(s) == '\n':
       any_newline = true
   add_token(s, tk_whitespace)
@@ -641,9 +642,9 @@ proc skip_encapsulation*(s: var StreamSlice) =
 
 func strip*(s: StreamSlice): StreamSlice {.deprecated: "For better token production, manually use skip_whitespaces/skip_newlines"}=
   result = s
-  while peek(result) in {' ', '\t', '\r', '\n'}:
+  while peek(result) in WHITESPACES + {'\n'}:
     skip(result)
-  while result.finish - 1 > 0 and result.source[][result.finish - 1] in {' ', '\t', '\r', '\n'}:
+  while result.finish - 1 > 0 and result.source[][result.finish - 1] in WHITESPACES + {'\n'}:
     result.finish -= 1
 
 func from_line_start*(s: StreamSlice): StreamSlice =
@@ -687,7 +688,7 @@ func get_list_value(s: var StreamSlice): (string, StreamSlice) =
     of '(', '[', '{': # These may contain commas
       skip_encapsulation(s)
     else:
-      while peek(s) notin {',', ':', ' ', '\r', '\n', '\t', '\0'}:
+      while peek(s) notin WHITESPACES + {',', ':', '\n', '\0'}:
         skip(s)
 
   result[1] = s

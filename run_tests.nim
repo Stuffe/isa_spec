@@ -91,9 +91,9 @@ proc parse_hex_string(source: string): seq[uint8] =
         c.ord - 'A'.ord + 10
       of 'a' .. 'f':
         c.ord - 'a'.ord + 10
-      of ' ', '\t', '\n', '\r', '\f':
-        continue
       else:
+        if c in Whitespace:
+          continue
         raiseAssert "Illegal character in hex file"
 
     if last == -1:
