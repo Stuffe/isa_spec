@@ -1,0 +1,6 @@
+o16 gs fxrstor64  [rsp + 1 * rbp]
+o16 fxrstor64  [r15 + 2 * rdi + 0x72]
+o16 gs fxrstor64  [r14 + 1 * rdx + 0x7FFFFFFF]
+a32 fxrstor64  [esp + 1 * ebp]
+fxrstor64  [r15d + 2 * edi + 0x72]
+gs o16 fxrstor64  [esp]

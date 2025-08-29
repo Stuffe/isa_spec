@@ -1,42 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+F2
+2E 66 0F 8D F7 FF FF FF F2 2E
+66 67 0F 8D ED FF FF FF F2 2E
+66 67 0F 8D E3 FF FF FF 2E 66
+67 0F 8D DA FF FF FF F2 2E 66
+0F 8D D1 FF FF FF F2 2E 66 67
+0F 8D C7 FF FF FF 
