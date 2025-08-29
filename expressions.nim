@@ -103,7 +103,7 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
     return expression(exp_kind: exp_fail)
   
   else:
-    let (err, number) = get_unsigned(s)
+    let (err, number) = get_signed(s)
     if err != "":
       return expression(exp_kind: exp_fail, msg: err)
     let value: uint64 = parse_unsigned(number).on_err() do:

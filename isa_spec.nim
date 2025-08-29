@@ -74,7 +74,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
             true
           else:
             return error(&"Invalid annotation for operand %{variable_name}: {marker}")
-        size = check(parse_signed(check(get_unsigned(s))))
+        size = check(parse_signed(check(get_signed(s))))
         change_token_kind(tk_number, tk_type_name)
         if size < 1 or size > MAX_FIELD_SIZE:
           return error(&"Invalid size {size}")
@@ -244,7 +244,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
               true
             else:
               return error(&"Invalid annotation for operand %{variable_name}: {marker}")
-          size = check(parse_signed(check(get_unsigned(s))))
+          size = check(parse_signed(check(get_signed(s))))
           change_token_kind(tk_number, tk_type_name)
           if size < 1 or size > MAX_FIELD_SIZE:
             return error(&"Invalid size {size}")
@@ -317,7 +317,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
 
           skip_whitespaces(s)
           if peek(s) != ':':
-            discard check(parse_signed(check(get_unsigned(s))))
+            discard check(parse_signed(check(get_signed(s))))
 
           skip_whitespaces(s)
           if read(s, tk=tk_seperator) != ':':
@@ -325,7 +325,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
 
           skip_whitespaces(s)
           if peek(s) != ']':
-            discard check(parse_signed(check(get_unsigned(s))))
+            discard check(parse_signed(check(get_signed(s))))
 
           skip_whitespaces(s)
           if read(s, tk=tk_bracket) != ']':
@@ -380,7 +380,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
 
           skip_whitespaces(s)
           if peek(s) != ':':
-            discard check(parse_signed(check(get_unsigned(s))))
+            discard check(parse_signed(check(get_signed(s))))
           
           skip_whitespaces(s)
           if read(s, tk = tk_seperator) != ':':
@@ -388,7 +388,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
 
           skip_whitespaces(s)
           if peek(s) != ']':
-            discard check(parse_signed(check(get_unsigned(s))))
+            discard check(parse_signed(check(get_signed(s))))
           
           skip_whitespaces(s)
           if read(s, tk = tk_bracket) != ']':

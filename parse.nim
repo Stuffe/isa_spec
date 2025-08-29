@@ -295,7 +295,7 @@ func get_sub_identifier*(s: var StreamSlice, tk=tk_identifier): StreamSlice =
     result.finish += 1
   add_token(s, tk)
 
-func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
+func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
   if peek(s) in {'0', '#'}:
@@ -306,6 +306,8 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
+      if base != nil:
+        base[] = 16
       return result
     if peek(s, 1) == 'o':
       skip(s, 2)
@@ -314,6 +316,8 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
+      if base != nil:
+        base[] = 8
       return result
     if peek(s, 1) == 'b':
       skip(s, 2)
@@ -322,6 +326,8 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
+      if base != nil:
+        base[] = 2
       return result
 
   if peek(s) notin NUMBER_FIRST:
@@ -332,6 +338,8 @@ func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
     skip(s)
     result[1].finish += 1
   add_token(s, tk_number)
+  if base != nil:
+    base[] = 2
 
 func get_hex*(s: var StreamSlice, prefix: string = "0x"): (string, StreamSlice) =
   result[1] = s
@@ -369,16 +377,6 @@ func parse_unsigned*(s: StreamSlice): (string, uint64) =
       of 'b': return ("", fromBin[uint64]($s[2..^1]))
       else:   return ("", cast[uint64](parseInt($s)))
   except ValueError: return ("Invalid int literal", 0'u64)
-
-func get_signed*(s: var StreamSlice): (string, StreamSlice) =
-  
-  let negative = s.peek() == '-'
-  if negative:
-    skip(s)
-  # The sign will be implictly included by the call to add_token in get_unsigned
-  result = s.get_unsigned()
-  if negative and result[0] == "":
-    result[1].start -= 1
 
 func parse_signed*(s: StreamSlice): (string, int) =
   if s.len == 0: return ("Invalid signed int literal", 0)
@@ -421,7 +419,7 @@ func get_size*(s: var StreamSlice): (string, int) =
   if peek(s) != '<' or peek(s, 1) != 'U':
     return ("Expected a size declaration here", 0)
   s.skip(2)
-  let number = (get_unsigned(s).on_err do:
+  let number = (get_signed(s).on_err do:
     return (err, 0)
   )
   if number.len == 0 or read(s) != '>':
