@@ -30,6 +30,7 @@ type
     case kind: OperandKind
     of ok_fixed:
       value: uint64
+      no_sign_extend: bool
     of ok_label_ref:
       name: StreamSlice
     of ok_relative:
@@ -330,7 +331,7 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
 
         skip_whitespaces(s)
         let top = if peek(s) != ':':
-          check(parse_signed(check(get_unsigned(s))))
+          check(parse_signed(check(get_signed(s))))
         else:
           -1
 
@@ -340,7 +341,7 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
 
         skip_whitespaces(s)
         let bottom = if peek(s) != ']':
-          check(parse_signed(check(get_unsigned(s))))
+          check(parse_signed(check(get_signed(s))))
         else:
           0
 
@@ -473,7 +474,7 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
 
         skip_whitespaces(s)
         let top = if peek(s) != ':':
-          check(parse_signed(check(get_unsigned(s))))
+          check(parse_signed(check(get_signed(s))))
         else:
           -1
 
@@ -483,7 +484,7 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
 
         skip_whitespaces(s)
         let bottom = if peek(s) != ']':
-          check(parse_signed(check(get_unsigned(s))))
+          check(parse_signed(check(get_signed(s))))
         else:
           0
 
@@ -755,7 +756,7 @@ func parse_instruction_syntax_part(s: var StreamSlice, syntax_index: int, p: Par
           of field_label:
             if peek(s) == '.':
               skip(s)
-              let jump_distance = check(get_unsigned(s))
+              let jump_distance = check(get_signed(s))
               let value: uint64 = check(parse_unsigned(jump_distance))
               op_value = OperandValue(kind: ok_relative, offset: cast[int64](value))
             else:
@@ -771,9 +772,12 @@ func parse_instruction_syntax_part(s: var StreamSlice, syntax_index: int, p: Par
             break
 
           of field_imm:
-            let (number_err, number) = get_unsigned(s)
+            var base: int
+            let (number_err, number) = get_signed(s, base.addr)
             if number_err == "":
               op_value = fixed(check(parse_unsigned(number)))
+              if base == 10:
+                op_value.no_sign_extend = true
             else:
               let field_string = get_identifier(s)
               if field_string.len == 0:
@@ -1011,7 +1015,7 @@ func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64]
       let remainder = asr(fields[i], operand.size.uint64) # The bits that are not part of this value
       if not (remainder == 0 or remainder == 0xFFFF_FFFF_FFFFF_FFFF'u64):
         error(&"Value {fields[i]} outside of range for this {operand.size}-bit operand ({operand.variable_name})")
-      if operand.is_signed and fields[i].test_bit(operand.size - 1):
+      if operand.kind != otk_normal and operand.is_signed and fields[i].test_bit(operand.size - 1):
         # We are in signed mode and the Sign bit is set, sign extend to 64bit
         fields[i] = fields[i] or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl operand.size)
     
@@ -1019,11 +1023,8 @@ func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64]
     if mask.used != 0:
       if mask.highest_bit < 63:
         if operand.is_signed:
-          if fields[i].test_bit(mask.highest_bit):
-            if asr(fields[i], mask.highest_bit.uint64) != uint64.high:
-              error(&"Value {cast[int64](fields[i])} outside of range for this {describe(operand, mask)}")
-          else:
-            if asr(fields[i], mask.highest_bit.uint64) != 0:
+          let sign = asr(fields[i], mask.highest_bit.uint64)
+          if sign != uint64.high and sign != 0:
               error(&"Value {cast[int64](fields[i])} outside of range for this {describe(operand, mask)}")
         else:
           if asr(fields[i], mask.highest_bit.uint64 + 1) != 0:
@@ -1070,6 +1071,17 @@ func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64]
       if k > result.high:
         break
 
+func actualize_operand_values(operands: seq[OperandValue], bits: BitPattern): seq[uint64] =
+  for i, op in operands:
+    assert op.kind == ok_fixed, "any_pc_rel did something weird"
+    let operand_type = bits.operand_types[i]
+    let size = operand_type.size
+    let value =
+      if not op.no_sign_extend and operand_type.is_signed and size < 64 and op.value.test_bit(size - 1):
+        op.value or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl size)
+      else:
+        op.value
+    result.add(value)
 
 func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult =
   let normal_path = normalizePath(path).replace('\\', '/')
@@ -1122,15 +1134,14 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       of exp_bitextract:
         return expr.base.any_pc_rel or expr.top.any_pc_rel or expr.bottom.any_pc_rel
 
-  func any_pc_rel(match: MatchedInstruction): bool =
-    for op in match.operands:
+  func any_pc_rel(operands: seq[OperandValue], bits: BitPattern): bool =
+    for op in operands:
       if op.kind != ok_fixed:
         return true
-    for (inst, bits) in match.options:
-      for virt in bits.operand_types:
-        if virt.kind != otk_virtual: continue
-        if virt.expr.any_pc_rel:
-          return true
+    for virt in bits.operand_types:
+      if virt.kind != otk_virtual: continue
+      if virt.expr.any_pc_rel:
+        return true
     return false
 
   var progress_index = -1
@@ -1152,7 +1163,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
       let restore = s
       let (size_error, size) = get_size(s)
       isa_spec.skip_whitespaces(s)
-      let (number_error, number) = get_unsigned(s)
+      let (number_error, number) = get_signed(s)
       if number_error == "":
         if size_error != "":
           error("Expected a size before the number, like <U64> " & $number)
@@ -1318,7 +1329,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
 
         isa_spec.skip_whitespaces(s)
 
-        let (number_err, number) = get_unsigned(s)
+        let (number_err, number) = get_signed(s)
         if number_err == "":
           res.pc.number_defines[definition_name] = DefineValue(
               public: public,
@@ -1373,6 +1384,7 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
          This could at some point be checked statically for better error messages
        ]#
       var best_match = InstParseResult()
+      var simple_matches: seq[(seq[OperandValue], Instruction, BitPattern)]
       var matched: MatchedInstruction
       let restore = s
 
@@ -1380,55 +1392,50 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         s = restore  # Reset to the beginning of the line
         for inst_res in parse_instruction(s, res.pc, inst, resolved_patterns):
           if not inst_res.is_err: # The instruction parsed succesfully
-            if matched.options.len == 0: # This is the first instruction we found
+            if simple_matches.len + matched.options.len == 0:
               best_match = inst_res
-              matched.operands = inst_res.operands
-            else: # This is not the first instruction we found. Check that it's compatible with the first
-              if matched.operands != inst_res.operands or inst_res.final_index != best_match.final_index:
+            if any_pc_rel(inst_res.operands, inst_res.bits):
+              if matched.options.len == 0: # This is the first instruction needing relaxation we found
+                matched.operands = inst_res.operands
+              elif matched.operands != inst_res.operands:
+                # This is not the first instruction we found. Check that it's compatible with the first
                 skip_line(s)
                 continue
-            matched.options.add((inst, inst_res.bits))
-          if matched.options.len == 0:
-            if not best_match.is_err or inst_res.error_priority > best_match.error_priority:
+              matched.options.add((inst, inst_res.bits))
+            else:
+              simple_matches.add((inst_res.operands, inst, inst_res.bits))
+          elif simple_matches.len + matched.options.len == 0 and (not best_match.is_err or inst_res.error_priority > best_match.error_priority):
               best_match = inst_res
 
       set_index(s, best_match.final_index)
 
-      if matched.options.len != 0:
-        if matched.any_pc_rel:
-          # If the instruction is position relative (either in operands or virtual fields) we need to make it relaxable
-          res.segments[^1].relaxable = matched
-          res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
-        else:
-          let args = block:
-            var t: seq[uint64] = @[]
-            for op in matched.operands:
-              assert op.kind == ok_fixed, "any_pc_rel did something weird"
-              t.add(op.value)
-            t
-          var found = false
-          for (inst, bits) in matched.options:
-            let machine_code = assemble_instruction(inst, bits, args, 0xDEAD, false)
-            if machine_code.len == 0:
-              continue
-            found = true
-            case isa_spec.endianness:
-              of end_little:
-                res.segments[^1].fixed.add machine_code
-              of end_big:
-                for i in countdown(machine_code.high, machine_code.low):
-                  res.segments[^1].fixed.add machine_code[i]
-            break
+      for (operands, inst, bits) in simple_matches:
+        let args = actualize_operand_values(operands, bits)
+        let machine_code = assemble_instruction(inst, bits, args, 0xDEAD, false)
+        if machine_code.len == 0:
+          continue
 
-          if not found:
-            try: # Trigger the first error
-              let (inst, bits) = matched.options[0]
-              discard assemble_instruction(inst, bits, args, 0xDEAD, true)
-            except ValueError as e:
-              error(e.msg)
-              skip_line(s)
-              continue
-          
+        case isa_spec.endianness:
+          of end_little:
+            res.segments[^1].fixed.add(machine_code)
+          of end_big:
+            for i in countdown(machine_code.high, machine_code.low):
+              res.segments[^1].fixed.add(machine_code[i])
+        break find_instruction
+
+      if matched.options.len != 0:
+        # If the instruction is position relative (either in operands or virtual fields) we need to make it relaxable
+        res.segments[^1].relaxable = matched
+        res.segments.add(Segment(file: normal_path, line_boundaries: @[(0, line_counter)]))
+      elif simple_matches.len != 0:
+        try: # Trigger the first error
+          let (operands, inst, bits) = simple_matches[0]
+          let args = actualize_operand_values(operands, bits)
+          discard assemble_instruction(inst, bits, args, 0xDEAD, true)
+        except ValueError as e:
+          error(e.msg)
+          skip_line(s)
+          continue
       else:
         if best_match.error != "":
           error(best_match.error)
@@ -1482,8 +1489,8 @@ func finalize(pa: PreAssemblyResult): AssemblyResult =
     let (inst, bits) = segment.relaxable.options[segment.relaxable.selected_option]
     let args = block:
       var values: seq[uint64]
-      for op in segment.relaxable.operands:
-        values.add case op.kind:
+      for i, op in segment.relaxable.operands:
+        var value = case op.kind:
           of ok_fixed:
             op.value
           of ok_label_ref:
@@ -1493,6 +1500,11 @@ func finalize(pa: PreAssemblyResult): AssemblyResult =
               return error(&"INTERNAL ERROR: Undefined label {$op.name} (late detection)", result.line_info.get_line_from_byte(result.machine_code.len))
           of ok_relative:
             cast[uint64](result.machine_code.len + op.offset)
+        let operand_type = bits.operand_types[i]
+        let size = operand_type.size
+        if (op.kind != ok_fixed or not op.no_sign_extend) and operand_type.is_signed and size < 64 and op.value.test_bit(size - 1):
+          value = value or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl size)
+        values.add(value)
       values
 
 
@@ -1536,8 +1548,8 @@ func relax(pa: var PreAssemblyResult) =
       let ip = segment_starts[i] + segment.fixed.len
       let args = block:
         var values: seq[uint64]
-        for op in segment.relaxable.operands:
-          values.add case op.kind:
+        for i, op in segment.relaxable.operands:
+          var value = case op.kind:
             of ok_fixed:
               op.value
             of ok_label_ref:
@@ -1545,6 +1557,12 @@ func relax(pa: var PreAssemblyResult) =
               cast[uint64](segment_starts[ld.seg_id] + ld.offset)
             of ok_relative:
               cast[uint64](ip + op.offset)
+
+          let operand_type = bits.operand_types[i]
+          let size = operand_type.size
+          if (op.kind != ok_fixed or not op.no_sign_extend) and operand_type.is_signed and size < 64 and op.value.test_bit(size - 1):
+            value = value or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl size)
+          values.add(value)
         values
       let machine_code = assemble_instruction(inst, bits, args, ip, false)
       if machine_code.len == 0:
