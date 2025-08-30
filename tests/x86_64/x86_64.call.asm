@@ -1,0 +1,51 @@
+bnd gs o16 call 0
+o16 bnd a32 call 0
+o16 a32 gs bnd call 0
+bnd o16 gs call qword [rbx + 8 * rdx]
+bnd call qword [r13]
+o16 bnd gs call qword [r12]
+gs bnd o16 call qword [eax]
+a32 o16 gs call qword [esp]
+o16 gs a32 bnd call qword [edx - 0x80000000]
+o16 gs bnd call qword [rsp + 1 * rbp]
+bnd o16 call qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs call qword [r12]
+a32 bnd o16 gs call qword [r14d + 1 * edx + 0x7FFFFFFF]
+bnd o16 gs a32 call qword [eax]
+bnd o16 call qword [edx - 0x80000000]
+a32 bnd gs call rdi
+gs bnd a32 call rbp
+bnd o16 a32 gs call r11
+bnd gs a32 o16 call r14
+o16 call rbx
+a32 o16 gs call r11
+call far qword [rsp + 1 * rbp]
+gs call far qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs call far qword [rax]
+call far qword [ebx + 8 * edx]
+a32 gs call far qword [ebp]
+a32 call far qword [r11d + r11d * 2 + 0x514f7aae]
+gs call far dword [rbx + 8 * rdx]
+gs call far dword [rax]
+gs call far dword [r11 + r11 * 2 + 0x38feb825]
+gs a32 call far dword [r15d + 2 * edi + 0x72]
+call far dword [esp + 1 * ebp]
+gs call far dword [eax]
+call far dword [rsp + 1 * rbp]
+gs call far dword [rdx - 0x80000000]
+call far dword [r12]
+gs call far dword [r11d + r11d * 2 + 0x38feb825]
+gs call far dword [edx - 0x80000000]
+a32 gs call far dword [r15d + 2 * edi + 0x72]
+gs call far word [r11 + r11 * 2 + 0xda0bda7]
+gs o16 call far word [r15 + 2 * rdi + 0x72]
+o16 call far word [r13]
+a32 call far word [eax]
+gs call far word [r14d + 1 * edx + 0x7FFFFFFF]
+o16 gs call far word [ebp]
+o16 call far word [r15 + 2 * rdi + 0x72]
+call far word [r13]
+call far word [rbp]
+gs call far word [edx - 0x80000000]
+gs call far word [esp + 1 * ebp]
+gs o16 call far word [eax]

@@ -1,2 +1,0 @@
-gs wrpkru 
-gs wrpkru 

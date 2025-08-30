@@ -1,6 +1,0 @@
-o16 xsaveopt64  [rdx - 0x80000000]
-xsaveopt64  [rbp]
-gs xsaveopt64  [r12]
-a32 gs o16 xsaveopt64  [esp + 1 * ebp]
-o16 gs xsaveopt64  [r13d]
-a32 o16 gs xsaveopt64  [r12d]

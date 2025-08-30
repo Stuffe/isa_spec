@@ -1,0 +1,6 @@
+o16 fxsave64  [rax]
+gs fxsave64  [rsp + 1 * rbp]
+o16 fxsave64  [r15 + 2 * rdi + 0x72]
+a32 fxsave64  [esp]
+a32 o16 fxsave64  [esp + 1 * ebp]
+o16 a32 fxsave64  [r13d]

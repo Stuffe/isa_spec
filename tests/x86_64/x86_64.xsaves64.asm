@@ -1,0 +1,6 @@
+o16 xsaves64  [r13]
+o16 xsaves64  [r12]
+gs o16 xsaves64  [r11 + r11 * 2 + 0x7ddfd448]
+a32 o16 xsaves64  [r15d + 2 * edi + 0x72]
+a32 o16 gs xsaves64  [r11d + r11d * 2 + 0x7ddfd448]
+gs o16 xsaves64  [ebx + 8 * edx]

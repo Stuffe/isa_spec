@@ -1,0 +1,13 @@
+a32 fnstsw ax
+o16 fnstsw word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs fnstsw word [r12]
+fnstsw word [r11 + r11 * 2 + 0x6a576f3b]
+gs a32 fnstsw word [edx - 0x80000000]
+a32 o16 fnstsw word [esp + 1 * ebp]
+o16 a32 fnstsw word [r11d + r11d * 2 + 0x6a576f3b]
+gs o16 fnstsw word [r15 + 2 * rdi + 0x72]
+gs fnstsw word [rsp + 1 * rbp]
+o16 fnstsw word [rsp]
+a32 o16 gs fnstsw word [edx - 0x80000000]
+o16 fnstsw word [r15d + 2 * edi + 0x72]
+a32 gs fnstsw word [r11d + r11d * 2 + 0x6a576f3b]

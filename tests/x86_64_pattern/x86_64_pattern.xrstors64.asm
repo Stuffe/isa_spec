@@ -1,6 +1,0 @@
-xrstors64  [rsp + 1 * rbp]
-gs xrstors64  [r11 + r11 * 2 + 0x303809a4]
-xrstors64  [rbp]
-gs o16 xrstors64  [esp + 1 * ebp]
-o16 xrstors64  [r12d]
-gs a32 o16 xrstors64  [r13d]

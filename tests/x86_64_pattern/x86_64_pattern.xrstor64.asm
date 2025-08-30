@@ -1,6 +1,0 @@
-gs xrstor64  [r15 + 2 * rdi + 0x72]
-gs o16 xrstor64  [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16 xrstor64  [rsp]
-gs o16 a32 xrstor64  [r11d + r11d * 2 + 0x390293c4]
-a32 gs o16 xrstor64  [r14d + 1 * edx + 0x7FFFFFFF]
-gs xrstor64  [ebp]

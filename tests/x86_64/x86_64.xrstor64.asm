@@ -1,0 +1,6 @@
+gs xrstor64  [r12]
+gs xrstor64  [rax]
+o16 gs xrstor64  [rbp]
+a32 xrstor64  [esp + 1 * ebp]
+gs a32 xrstor64  [ebp]
+o16 xrstor64  [r11d + r11d * 2 + 0x7fd778a6]
