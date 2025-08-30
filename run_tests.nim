@@ -306,7 +306,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
         if sid != "":
           name &= "." & sid
 
-        echo &"\u001b[32m[{test_name}] Subtest '{name}' passed.\u001b[0m {repeat(' ', 45 - name.len)} {test_index} / {tests.asm_tests.len} | asm {time_take:3f} | asm/sec {(float(instructions)/asm_time):3f}"
+        echo &"\u001b[32m[{test_name}] Subtest '{name}' passed.\u001b[0m {repeat(' ', 45 - name.len)} {test_index} / {tests.asm_tests.len} | asm {time_take:3f} | asm/sec {(float(instructions)/time_take):3f}"
 
   if not local_fail:
     echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} | asm {asm_time:3f} | asm/sec {(float(instruction_count)/asm_time):3f}"
