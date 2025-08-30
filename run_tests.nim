@@ -1,5 +1,5 @@
 import std/[tables, os, strutils, strformat, times, monotimes]
-import isa_spec, types, expressions, parse
+import isa_spec, types, expressions, parse, assemble
 
 
 when existsEnv("CI"): # if we are running in Contious Integeration testing (e.g. Github actions), run all tests
@@ -127,6 +127,9 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     continue
   if (RUN_SINGLE_TEST != "" and test_name != RUN_SINGLE_TEST) or (test_name != RUN_SINGLE_TEST and test_name in SKIP_TESTS):
     continue
+
+  instruction_count = 0
+
   var sub_tests: Table[string, TestFiles]
   local_fail = false
   for (kind, file_name) in test_dir.walk_dir(relative=true):
@@ -230,15 +233,22 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       fail(test_name, tests.spec_file, "Expected spec parse error")
       continue
 
+    var test_index = -1
     for sid, asm_test in tests.asm_tests:
+      test_index += 1
       if RUN_SUBTESTS.len > 0 and &"{test_name}.{sid}" not_in RUN_SUBTESTS:
         continue
       sub_fail = false
       doAssert asm_test.source_file != "", &"no '.asm' file for {test_name}/{sub_name}.{sid}"
       let asm_source = readFile(asm_test.source_file)
-      asm_time -= timer()
+
+      var instructions = -instruction_count
+      var time_take = - timer()
       let asm_result = assemble(TEST_PATH, asm_test.source_file.relative_path(TEST_PATH), isa_spec, asm_source)
-      asm_time += timer()
+      time_take += timer()
+      instructions += instruction_count
+
+      asm_time += time_take
 
       if asm_result.errors.len != 0:
         if asm_test.error_file != "":
@@ -290,14 +300,16 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
                                                     &"Expected {byte_index}, got {actual_start_index}")
           last_line = expected_fl
           byte_index += 1
+
       if tests.asm_tests.len > MANY_SUBTESTS_THRESHOLD and not sub_fail:
+        var name = sub_name
         if sid != "":
-          echo &"\u001b[32m[{test_name}] Subtest '{sub_name}.{sid}' passed.\u001b[0m"
-        else:
-          echo &"\u001b[32m[{test_name}] Subtest '{sub_name}' passed.\u001b[0m"
+          name &= "." & sid
+
+        echo &"\u001b[32m[{test_name}] Subtest '{name}' passed.\u001b[0m {repeat(' ', 45 - name.len)} {test_index} / {tests.asm_tests.len} | asm {time_take:3f} | asm/sec {(float(instructions)/asm_time):3f}"
 
   if not local_fail:
-    echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} / asm {asm_time:3f}"
+    echo &"\u001b[32mTest '{test_name}' passed.\u001b[0m {repeat(' ', 50 - test_name.len)} spec {spec_time:3f} | asm {asm_time:3f} | asm/sec {(float(instruction_count)/asm_time):3f}"
 
 if global_fail:
   quit(1)
