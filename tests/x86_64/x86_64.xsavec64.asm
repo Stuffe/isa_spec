@@ -1,0 +1,6 @@
+o16 gs xsavec64  [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 xsavec64  [r15 + 2 * rdi + 0x72]
+gs xsavec64  [rax]
+o16 xsavec64  [r12d]
+a32 xsavec64  [esp + 1 * ebp]
+o16 gs xsavec64  [ebx + 8 * edx]

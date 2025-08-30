@@ -1,0 +1,6 @@
+gs o16 xsaveopt64  [r13]
+gs xsaveopt64  [r15 + 2 * rdi + 0x72]
+gs xsaveopt64  [r11 + r11 * 2 + 0x55baecc9]
+gs xsaveopt64  [r13d]
+a32 gs o16 xsaveopt64  [esp]
+a32 xsaveopt64  [r15d + 2 * edi + 0x72]

@@ -1,6 +1,0 @@
-o16 xsave64  [rax]
-gs o16 xsave64  [rsp + 1 * rbp]
-xsave64  [r11 + r11 * 2 + 0x587d94a3]
-o16 a32 xsave64  [r11d + r11d * 2 + 0x587d94a3]
-a32 o16 gs xsave64  [r12d]
-gs o16 a32 xsave64  [esp]

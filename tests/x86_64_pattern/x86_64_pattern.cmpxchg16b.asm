@@ -1,6 +1,0 @@
-o16 lock cmpxchg16b oword [rax]
-lock o16 gs cmpxchg16b oword [r15 + 2 * rdi + 0x72]
-o16 lock cmpxchg16b oword [r14 + 1 * rdx + 0x7FFFFFFF]
-a32 lock gs cmpxchg16b oword [ebx + 8 * edx]
-o16 gs a32 cmpxchg16b oword [r12d]
-a32 gs o16 cmpxchg16b oword [edx - 0x80000000]

@@ -1,0 +1,2 @@
+gs wrmsr 
+wrmsr 

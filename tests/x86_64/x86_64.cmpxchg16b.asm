@@ -1,0 +1,6 @@
+lock o16 cmpxchg16b oword [r12]
+lock gs o16 cmpxchg16b oword [rsp]
+o16 gs lock cmpxchg16b oword [rsp + 1 * rbp]
+a32 lock o16 cmpxchg16b oword [ebx + 8 * edx]
+o16 lock gs cmpxchg16b oword [eax]
+o16 gs lock a32 cmpxchg16b oword [r11d + r11d * 2 + 0x1aab657c]

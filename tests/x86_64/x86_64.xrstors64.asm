@@ -1,0 +1,6 @@
+xrstors64  [rbp]
+xrstors64  [rdx - 0x80000000]
+o16 xrstors64  [r13]
+o16 a32 xrstors64  [r12d]
+a32 gs o16 xrstors64  [eax]
+gs o16 a32 xrstors64  [ebp]
