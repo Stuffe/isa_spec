@@ -3,6 +3,8 @@ import types, parse, expressions
 
 import isa_spec
 
+var instruction_count* = 0
+
 type
   LabelRef = object
     public: bool
@@ -651,9 +653,9 @@ func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
     isa_spec.skip_whitespaces(s)
 
 
-func assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult
-func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult
-func finalize(pa: PreAssemblyResult): AssemblyResult
+proc assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult
+proc pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult
+proc finalize(pa: PreAssemblyResult): AssemblyResult
 func relax(pa: var PreAssemblyResult)
 
 func pre_assemble_file(base_path: string, path: string, isa_spec: IsaSpec, line: int, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult =
@@ -680,7 +682,7 @@ func pre_assemble_file(base_path: string, path: string, isa_spec: IsaSpec, line:
     let source = readFile(base_path / normal_path)
     return pre_assemble(base_path, normal_path, isa_spec, source, already_included_new, resolved_patterns)
 
-func assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult =
+proc assemble*(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included = newSeq[string]()): AssemblyResult =
   var resolved_patterns: Table[string, Instruction]
   resolved_patterns[""] = Instruction()
   let normal_path = normalizePath(path).replace('\\', '/')
@@ -1083,7 +1085,8 @@ func actualize_operand_values(operands: seq[OperandValue], bits: BitPattern): se
         op.value
     result.add(value)
 
-func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult =
+proc pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: string, already_included: seq[string], resolved_patterns: var Table[string, Instruction]): PreAssemblyResult =
+  
   let normal_path = normalizePath(path).replace('\\', '/')
 
   func skip_newlines(s: var StreamSlice) {.error.}
@@ -1415,6 +1418,8 @@ func pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         if machine_code.len == 0:
           continue
 
+        instruction_count += 1
+        
         case isa_spec.endianness:
           of end_little:
             res.segments[^1].fixed.add(machine_code)
@@ -1457,7 +1462,7 @@ func sum_segments(pa: PreAssemblyResult): seq[int] =
       ip += seg.relaxable.options[seg.relaxable.selected_option][1].bit_length div 8
 
 
-func finalize(pa: PreAssemblyResult): AssemblyResult =
+proc finalize(pa: PreAssemblyResult): AssemblyResult =
   func error(msg: string, loc: FileLocation): AssemblyResult =
     return AssemblyResult(errors: @[Error(message:msg, loc: loc)])
 
@@ -1512,6 +1517,7 @@ func finalize(pa: PreAssemblyResult): AssemblyResult =
     var machine_code: seq[uint8]
     try: 
       machine_code = assemble_instruction(inst, bits, args, result.machine_code.len, true)
+      instruction_count += 1
     except ValueError as e:
       return error(e.msg, result.line_info.get_line_from_byte(result.machine_code.len))
 
