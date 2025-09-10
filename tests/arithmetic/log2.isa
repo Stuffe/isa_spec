@@ -1,0 +1,9 @@
+[settings]
+endianness = little
+
+
+[instructions]
+
+log2 %a(immediate)
+%b:S64= log2(%a)
+bbbbbbbb 00001011

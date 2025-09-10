@@ -45,9 +45,10 @@ type
     # If bit_length is not a multiple of 64, the first word is the partial one
     fixed_pattern: seq[uint64]
     fixed_mask: seq[uint64]
+    expressions: seq[ExpRef]
     operand_types: seq[OperandType]
     operand_masks: seq[OperandType_Mask]
-    asserts: seq[(expression, expression, string)]
+    asserts: seq[Assertion]
 
   MatchedInstruction = object
     selected_option: int
@@ -103,70 +104,51 @@ proc get_ordinal*(input: int): string =
     of '3': return number & "rd"
     else: return number & "th"
 
-func offset_all_refs*(expr: expression, offset: uint8): expression =
-  if expr.isNil(): return
+func offset_all_refs*(exp: ExpRef, offset: uint8): ExpRef =
+  if exp == nil:
+    return nil
 
-  case expr.exp_kind:
-    of exp_fail:
-      expression(exp_kind: exp_fail, msg: expr.msg)
-    of exp_number:
-      expression(exp_kind: exp_number, value: expr.value)
-    of exp_operand:
-      if expr.index == CURRENT_ADDRESS or expr.index == NEXT_ADDRESS:
-        expression(exp_kind: exp_operand, index: expr.index)
-      else:
-        expression(exp_kind: exp_operand, index: expr.index + offset.int)
-    of exp_operation:
-      expression(exp_kind: exp_operation, op_kind: expr.op_kind, lhs: expr.lhs.offset_all_refs(offset), rhs: expr.rhs.offset_all_refs(offset))
-    of exp_bitextract:
-      expression(exp_kind: exp_bitextract, base: expr.base.offset_all_refs(offset), top: expr.top.offset_all_refs(offset), bottom: expr.bottom.offset_all_refs(offset))
+  case exp.exp_kind:
+  of exp_operand:
+    if not exp.is_address:
+      ExpRef(exp_kind: exp_operand, is_address: false, index: exp.index + offset)
+    else:
+      exp
+  of exp_number:
+    exp
+  else:
+    exp_op(exp.exp_kind, [exp.args[0].offset_all_refs(offset), exp.args[1].offset_all_refs(offset), exp.args[2].offset_all_refs(offset)])
 
-func into_virtual_operands(o: var BitPattern, name: string, size: int, offset: uint8): seq[OperandType] =
-  func or_bit_field(old_expr: expression, id: FieldKind, shift: int, top: int, bottom: int, offset: uint8): expression = 
+func offset_all_refs*(o: var BitPattern, offset: uint8) =
+  for operand in o.operand_types.mitems:
+    if operand.kind == otk_virtual:
+      operand.expr = operand.expr.offset_all_refs(offset)
+  for assertion in o.asserts.mitems:
+    assertion.exp = assertion.exp.offset_all_refs(offset)
+
+func into_virtual_operands(o: var BitPattern, name: string, size: int, offset: uint8) =
+  func or_bit_field(old_expr: ExpRef, id: FieldKind, shift: int, top: int, bottom: int): ExpRef = 
     let width = top - bottom + 1
-    let rhs = case id
+    let new_expr = case id
       of field_invalid, field_imm, field_label, field_zero, field_wildcard:
         return old_expr
       of field_one:
-        expression(
-          exp_kind: exp_operation,
-          op_kind: op_lsl,
-          lhs: expression(exp_kind: exp_number, value: (1 shl width) - 1),
-          rhs: expression(exp_kind: exp_number, value: shift + 1 - width),
-        )
+        ExpRef(exp_kind: exp_number, value: ((1'u64 shl width) - 1) shl (shift + 1 - width))
       else:
-        expression(
-          exp_kind: exp_operation,
-          op_kind: op_lsl,
-          lhs: expression(
-            exp_kind: exp_bitextract,
-            base: expression(exp_kind: exp_operand, index: id.to_variable_index() + offset.int),
-            top: expression(exp_kind: exp_number, value: top),
-            bottom: expression(exp_kind: exp_number, value: bottom),
-          ),
-          rhs: expression(exp_kind: exp_number, value: shift + 1 - width),
-        )
+        let base = ExpRef(exp_kind: exp_operand, is_address: false, index: cast[uint8](id.to_variable_index()))
+        let top = ExpRef(exp_kind: exp_number, value: cast[uint64](top))
+        let bottom = ExpRef(exp_kind: exp_number, value: cast[uint64](bottom))
+        let slice = exp_op(exp_op_bitextract, [base, top, bottom])
+        let shift = ExpRef(exp_kind: exp_number, value: cast[uint64](shift + 1 - width))
+        exp_op(exp_op_lsl, [slice, shift])
 
-    if old_expr.exp_kind == exp_fail:
-      rhs
+    if old_expr.exp_kind == exp_number and old_expr.value == 0:
+      new_expr
     else:
-      expression(
-        exp_kind: exp_operation,
-        op_kind: op_or,
-        lhs: old_expr,
-        rhs: rhs,
-      )
-
+      exp_op(exp_op_or_bitwise, [old_expr, new_expr])
+  
   for operand in o.operand_types.mitems:
     operand.variable_name = name & "/" & operand.variable_name
-    case operand.kind
-      of otk_normal:
-        result.add(operand)
-      of otk_virtual:
-        operand.expr = operand.expr.offset_all_refs(offset)
-        result.add(operand)
-      else:
-        assert false, "Expected all patterns to have been converted to normal/virtual operands"
 
   var shift = if size <= 0:
     o.bit_length
@@ -192,13 +174,13 @@ func into_virtual_operands(o: var BitPattern, name: string, size: int, offset: u
     kind: otk_virtual,
     variable_name: name,
     size: shift mod MAX_FIELD_SIZE + 1,
-    expr: expression(exp_kind: exp_fail),
+    expr: ExpRef(exp_kind: exp_number, value: 0),
   )
   shift = shift mod MAX_FIELD_SIZE
   for bit in o.bits:
     let top = bit.top
     let bottom = bit.bottom.max(bit.top - shift)
-    new_operand.expr = or_bit_field(new_operand.expr, bit.id, shift, top, bottom, offset)
+    new_operand.expr = or_bit_field(new_operand.expr, bit.id, shift, top, bottom)
 
     let width = top - bottom + 1
     if bottom == bit.bottom and shift >= width:
@@ -206,27 +188,27 @@ func into_virtual_operands(o: var BitPattern, name: string, size: int, offset: u
       continue
 
     shift = MAX_FIELD_SIZE - 1
-    if new_operand.expr.exp_kind == exp_fail:
-      new_operand.expr = expression(exp_kind: exp_number, value: 0)
-    result.add(new_operand)
+    o.operand_types.add(new_operand)
     new_operand = OperandType(
       kind: otk_virtual,
       variable_name: name,
       size: MAX_FIELD_SIZE,
-      expr: expression(exp_kind: exp_fail),
+      expr: ExpRef(exp_kind: exp_number, value: 0),
     )
 
     if bottom != bit.bottom:
-      new_operand.expr = or_bit_field(new_operand.expr, bit.id, shift, bottom - 1, bit.bottom, offset)
+      new_operand.expr = or_bit_field(new_operand.expr, bit.id, shift, bottom - 1, bit.bottom)
   
-  if result.len == 0:
+  if o.operand_types.len == 0:
     # Phantom field for alignment purposes
-    result.add(OperandType(
+    o.operand_types.add(OperandType(
       kind: otk_virtual,
       variable_name: name & "/_",
       size: 0,
-      expr: expression(exp_kind: exp_number),
+      expr: ExpRef(exp_kind: exp_number, value: 0),
     ))
+
+  o.offset_all_refs(offset)
 
 func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, values: var seq[OperandValue], pattern_substitutions: var seq[PatternSubstitution], allow_unaligned_bit_pattern: static[bool] = false): (string, BitPattern) = 
   ## pattern_substitutions assumed sorted to match the order of the pattern operands
@@ -240,75 +222,80 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
       return error(err)
     res
 
-  var root_operand_types = inst.operands
   var operand_types: seq[OperandType]
   var operand_values: seq[OperandValue]
-  var asserts: seq[(expression, expression, string)]
-
+  var asserts: seq[Assertion]
   var pattern_to_virtuals: seq[tuple[top_word_index: uint8, bottom_word_index: uint8, num_word: uint8]]
-  for sub in pattern_substitutions.mitems():
-    let index = sub.index
+  var offset_op = 0'u8
 
-    let root_operand = root_operand_types[index].addr
-    assert root_operand.kind == otk_pattern
+  if pattern_substitutions.len == 0:
+    for operand in inst.operands:
+      var operand = operand
+      if operand.size == 0:
+        operand.size = MAX_FIELD_SIZE
+      operand_types.add(operand)
 
-    for x in sub.values:
-      operand_values.add(x)
+    operand_values = values
+    asserts = inst.asserts
+  else:
+    var root_operand_types = inst.operands
+    for sub in pattern_substitutions.mitems():
+      let index = sub.index
 
-    let bits = sub.bits.addr
-    let root_name = root_operand.variable_name
-    let offset = operand_types.len.uint8
-    let manual_size = root_operand.size
-    var pattern_operands = bits[].into_virtual_operands(root_name, manual_size, offset)
-    let num_word = bits.fixed_pattern.len.uint8
-    let top_word_index = offset + pattern_operands.len.uint8 - num_word
-    let bottom_word_index = index.uint8
-    pattern_to_virtuals.add((top_word_index, bottom_word_index, num_word))
+      let root_operand = root_operand_types[index].addr
+      assert root_operand.kind == otk_pattern
 
-    let is_signed = root_operand.is_signed
-    root_operand[] = pattern_operands[^1]
-    for i in 0 ..< pattern_operands.high:
-      operand_types.add(pattern_operands[i])
-      if i == 0:
-        operand_types[^1].is_signed = is_signed
-    
-    for assertion in bits.asserts:
-      asserts.add((
-        assertion[0].offset_all_refs(offset),
-        assertion[1].offset_all_refs(offset),
-        assertion[2],
-      ))
+      for x in sub.values:
+        operand_values.add(x)
 
-  let offset = operand_types.len.uint8
-  var i = 0.uint8
-  for item in pattern_to_virtuals.mitems:
-    for j in i ..< item.bottom_word_index:
+      let bits = sub.bits.addr
+      let root_name = root_operand.variable_name
+      let offset_op = operand_types.len.uint8
+      let manual_size = root_operand.size
+      bits[].into_virtual_operands(root_name, manual_size, offset_op)
+      let pattern_operands = bits.operand_types
+      let num_word = bits.fixed_pattern.len.uint8
+      let top_word_index = offset_op + pattern_operands.len.uint8 - num_word
+      let bottom_word_index = index.uint8
+      pattern_to_virtuals.add((top_word_index, bottom_word_index, num_word))
+
+      let is_signed = root_operand.is_signed
+      root_operand[] = pattern_operands[^1]
+      for i in 0 ..< pattern_operands.high:
+        operand_types.add(pattern_operands[i])
+        if i == 0:
+          operand_types[^1].is_signed = is_signed
+
+      for assertion in bits.asserts:
+        asserts.add(assertion)
+      
+    offset_op = operand_types.len.uint8
+
+    var i = 0.uint8
+    for item in pattern_to_virtuals.mitems:
+      for j in i ..< item.bottom_word_index:
+        var operand = root_operand_types[j]
+        if operand.size == 0:
+          operand.size = MAX_FIELD_SIZE
+        if operand.kind == otk_virtual:
+          operand.expr = operand.expr.offset_all_refs(offset_op)
+        operand_types.add(operand)
+      operand_types.add(root_operand_types[item.bottom_word_index])
+      i = item.bottom_word_index + 1
+      item.bottom_word_index += offset_op
+    for j in i ..< root_operand_types.len.uint8:
       var operand = root_operand_types[j]
       if operand.size == 0:
         operand.size = MAX_FIELD_SIZE
       if operand.kind == otk_virtual:
-        operand.expr = operand.expr.offset_all_refs(offset)
+        operand.expr = operand.expr.offset_all_refs(offset_op)
       operand_types.add(operand)
-    operand_types.add(root_operand_types[item.bottom_word_index])
-    i = item.bottom_word_index + 1
-    item.bottom_word_index += offset
-  for j in i ..< root_operand_types.len.uint8:
-    var operand = root_operand_types[j]
-    if operand.size == 0:
-      operand.size = MAX_FIELD_SIZE
-    if operand.kind == otk_virtual:
-      operand.expr = operand.expr.offset_all_refs(offset)
-    operand_types.add(operand)
-  
-  for x in values:
-    operand_values.add(x)
+    
+    for x in values:
+      operand_values.add(x)
 
-  for assertion in inst.asserts:
-    asserts.add((
-      assertion[0].offset_all_refs(offset),
-      assertion[1].offset_all_refs(offset),
-      assertion[2],
-    ))
+    for assertion in inst.asserts:
+      asserts.add(Assertion(exp: assertion.exp.offset_all_refs(offset_op), msg: assertion.msg))
 
   # List of operand names directly declared in the instruction
   let operand_names = inst.operand_names()
@@ -441,7 +428,7 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
           var operand_index = field_invalid
           for i in countdown(operand_names.high, 0):
             if operand_names[i][0] == c:
-                operand_index = to_variable(i + offset.int)
+                operand_index = to_variable(i + offset_op.int)
                 break
 
           if operand_index == field_invalid:
@@ -463,7 +450,7 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
       var operand_size: int
       for i in countdown(operand_names.high, 0):
         if operand_names[i] == operand_name:
-            operand_index = i + offset.int
+            operand_index = i + offset_op.int
             operand_size = inst.operands[i].size
             break
 
@@ -584,12 +571,12 @@ func get_bit_pattern(s: var StreamSlice, isa_spec: IsaSpec, inst: Instruction, v
   result[1].bit_length = total_length
 
   var current_length = 0
-  var consumed_bits = newSeq[int](root_operand_types.len)
+  var consumed_bits = newSeq[int](inst.operands.len)
   var operand_masks = newSeq[OperandType_Mask](operand_types.len)
   for i in countdown(new_bits.high, 0):
     var bits = new_bits[i]
     let index = to_variable_index(bits.id)
-    let root_index = index - offset.int
+    let root_index = index - offset_op.int
     if bits.is_direct and is_variable(bits.id):
       # We need to adjust this for the case of non-consecutive bit fields of the same operand
       bits.top += consumed_bits[root_index]
@@ -992,7 +979,7 @@ func parse_instruction(s: var StreamSlice, p: ParseContext, inst: Instruction, r
           InstParseResult(is_err: true, final_index: it.final_index, error_priority: int.high, error: err)
     )
 
-func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64], ip: int, throw_on_error: bool): seq[uint8] =
+func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64], ip: uint64, throw_on_error: bool): seq[uint8] =
   template error(input: string) =
     if throw_on_error:
       raise newException(ValueError, input)
@@ -1004,14 +991,18 @@ func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64]
     else:
       &"{m.highest_bit+1}-bit zero-extended field"
 
-  let byte_length = bits.bit_length div 8
+  let byte_length = cast[uint64](bits.bit_length div 8)
   var fields = args
 
   # Compute virtual fields & Apply sizes
+
   for i, operand in bits.operand_types:
     if operand.kind == otk_virtual:
-      let new_field = eval(operand.expr, fields, ip, byte_length)
-      fields.insert(cast[uint64](new_field), i)
+      let (err, new_field) = eval(operand.expr, fields, ip, byte_length)
+      if err != "":
+        error(&"Error evaluating this {operand.size}-bit operand {operand.variable_name}: {err}")
+
+      fields.insert(new_field, i)
     
     if operand.size != 64: # If the size is 64, there is nothing we can verify
       let remainder = asr(fields[i], operand.size.uint64) # The bits that are not part of this value
@@ -1035,15 +1026,18 @@ func assemble_instruction(inst: Instruction, bits: BitPattern, args: seq[uint64]
       if fields[i].masked(mask.unused_zero) != 0:
         error(&"Value {cast[int64](fields[i])} doesn't fit (some bits should be zero aren't)")
 
-  for i, (lhs, rhs, msg) in bits.asserts:
-    let lhs_value = eval(lhs, fields, ip, byte_length)
-    let rhs_value = eval(rhs, fields, ip, byte_length)
-    if lhs_value != rhs_value:
+  for i, assertion in bits.asserts:
+    let exp_idx = assertion.exp
+    let (err, value) = eval(exp_idx, fields, ip, byte_length)
+    if err != "":
+      error(&"Error evaluating assert {assertion.msg}: {err}")
+
+    if value == 0:
+      let msg = assertion.msg
       if msg == "":
         let operand_names = inst.operand_names()
-        let lhs_source = lhs.to_str(operand_names)
-        let rhs_source = rhs.to_str(operand_names)
-        error(&"Assert {lhs_source} == {rhs_source} did not match")
+        let source = exp_idx.to_str(operand_names)
+        error(&"Assert {source} did not match")
       else:
         error(msg)
 
@@ -1089,10 +1083,6 @@ proc pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   
   let normal_path = normalizePath(path).replace('\\', '/')
 
-  func skip_newlines(s: var StreamSlice) {.error.}
-    # Shadows parse.skip_newlines()
-
-
   var res: PreAssemblyResult
 
   res.pc.isa_spec = isa_spec
@@ -1124,18 +1114,19 @@ proc pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
   func emit(val: uint8) =
     res.segments[^1].fixed.add val
 
-  func any_pc_rel(expr: expression): bool =
-    if expr == nil:
-      return false
-    case expr.exp_kind:
-      of exp_fail, exp_number:
+  func any_pc_rel(exp: ExpRef): bool =
+    case exp.exp_kind:
+      of exp_number :
         return false
       of exp_operand:
-        return expr.index == CURRENT_ADDRESS or expr.index == NEXT_ADDRESS
-      of exp_operation:
-        return expr.lhs.any_pc_rel or expr.rhs.any_pc_rel
-      of exp_bitextract:
-        return expr.base.any_pc_rel or expr.top.any_pc_rel or expr.bottom.any_pc_rel
+        return exp.is_address
+      else:
+        for arg in exp.args:
+          if not arg.is_arg_used():
+            break
+          if arg.any_pc_rel():
+            return true
+        return false
 
   func any_pc_rel(operands: seq[OperandValue], bits: BitPattern): bool =
     for op in operands:
@@ -1143,7 +1134,7 @@ proc pre_assemble(base_path: string, path: string, isa_spec: IsaSpec, source: st
         return true
     for virt in bits.operand_types:
       if virt.kind != otk_virtual: continue
-      if virt.expr.any_pc_rel:
+      if virt.expr.any_pc_rel():
         return true
     return false
 
@@ -1516,7 +1507,7 @@ proc finalize(pa: PreAssemblyResult): AssemblyResult =
     var err_msg: string
     var machine_code: seq[uint8]
     try: 
-      machine_code = assemble_instruction(inst, bits, args, result.machine_code.len, true)
+      machine_code = assemble_instruction(inst, bits, args, cast[uint64](result.machine_code.len), true)
       instruction_count += 1
     except ValueError as e:
       return error(e.msg, result.line_info.get_line_from_byte(result.machine_code.len))
@@ -1570,7 +1561,7 @@ func relax(pa: var PreAssemblyResult) =
             value = value or (0xFFFF_FFFF_FFFFF_FFFF'u64 shl size)
           values.add(value)
         values
-      let machine_code = assemble_instruction(inst, bits, args, ip, false)
+      let machine_code = assemble_instruction(inst, bits, args, cast[uint64](ip), false)
       if machine_code.len == 0:
         segment.relaxable.selected_option += 1
         all_fit = false

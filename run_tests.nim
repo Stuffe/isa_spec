@@ -68,7 +68,7 @@ proc echo_deep_diff[T: openArray](a, b: T; path: string) =
     for i, av in a:
       echo_deep_diff(av, b[i], path & &"[{i}]" )
 
-proc echo_deep_diff(a, b: OperandType; path: string) =
+proc echo_deep_diff(a, b: OperandType; path: string) {.used.} =
   echo_deep_diff(a.variable_name, b.variable_name, path & "." & "variable_name")
   echo_deep_diff(a.kind, b.kind, path & "." & "kind")
   echo_deep_diff(a.is_signed, b.is_signed, path & "." & "is_signed")
@@ -173,7 +173,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
       # If we don't have a spec file yet, use it from SPEC_LIB_PATH if it exists there.
       # If a spec file does get found under TEST_PATH later, it will override the SPEC_LIB_PATH file.
 
-      let spec_lib_spec_file = (SPEC_LIB_PATH/test_name/(name & ".isa")).string
+      let spec_lib_spec_file = SPEC_LIB_PATH/test_name/(name & ".isa")
 
       if fileExists(spec_lib_spec_file):
         sub_tests[name].spec_file = spec_lib_spec_file

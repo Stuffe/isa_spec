@@ -5,7 +5,9 @@ export parse.new_StreamSlice
 
 const MAX_FIELD_SIZE* = 64
 
-func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound: uint32 = uint32.high): (string, Instruction) =
+func get_instruction*(
+    s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound: uint32 = uint32.high
+): (string, Instruction) =
   func error(input: string): (string, Instruction) =
     return (input, Instruction())
 
@@ -60,7 +62,8 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
       if variable_name != "_":
         for operand in new_instruction.operands:
           if operand.variable_name == variable_name:
-            return error(&"Operand {variable_name} on syntax line shadowed another operand")
+            return
+              error(&"Operand {variable_name} on syntax line shadowed another operand")
 
       var is_signed = false
       var size = 0
@@ -257,14 +260,15 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
 
         skip_whitespaces(s)
 
-        let expr = get_expression(s, operand_names)
-        if expr.exp_kind == exp_fail:
+        let (error, expr) =
+          get_expression(s, operand_names)
+        if error != "":
           if instruction_name == "":
-            return error("Could not read virtual operand " & $count)
+            return error("Could not read virtual operand " & $count & ": " & error)
           else:
             return error(
               "Could not read virtual operand " & $count & " for instruction " &
-                instruction_name
+                instruction_name & ": " & error
             )
 
         new_instruction.operands.add(
@@ -282,19 +286,20 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
         if not skip_newlines(s):
           return error("Expected newline after virtual field")
       else:
-        if not matches(s, "assert"):
+        if not matches(s, "assert", tk = tk_directive):
           return error("Expected 'assert' here")
-        skip_whitespaces(s)
-        let lhs = get_expression(s, operand_names)
-        if lhs.exp_kind == exp_fail:
-          return error("Could not parse assert expression")
-        skip_whitespaces(s)
-        if not matches(s, "=="):
-          return error("Expected an equaltiy operator in the assert expression")
-        skip_whitespaces(s)
-        let rhs = get_expression(s, operand_names)
-        if rhs.exp_kind == exp_fail:
-          return error("Could not parse assert expression")
+
+        let (error, expr) =
+          get_expression(s, operand_names)
+        if error != "":
+          return error("Could not parse assert expression: " & error)
+
+        if expr.exp_kind notin {
+          exp_op_eq, exp_op_ne, exp_op_lt, exp_op_ge, exp_op_le, exp_op_gt,
+          exp_op_boolean, exp_op_not_boolean, exp_op_and_boolean, exp_op_or_boolean,
+        }:
+          return error("Expected a boolean expression in the assert expression")
+
         skip_whitespaces(s)
         let msg =
           if peek(s) in QUOTES:
@@ -303,7 +308,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
             ""
         if not skip_newlines(s):
           return error("Expected newline after assert expression")
-        new_instruction.asserts.add (lhs, rhs, msg)
+        new_instruction.asserts.add(Assertion(exp: expr, msg: msg))
 
   block bit_pattern:
     let start = get_index(s)
@@ -313,14 +318,14 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
       if matches(s, HEX_PREFIX, increment = false):
         discard check(get_hex(s, HEX_PREFIX))
         if peek(s) == '[':
-          discard read(s, tk=tk_bracket)
+          discard read(s, tk = tk_bracket)
 
           skip_whitespaces(s)
           if peek(s) != ':':
             discard check(parse_signed(check(get_signed(s))))
 
           skip_whitespaces(s)
-          if read(s, tk=tk_seperator) != ':':
+          if read(s, tk = tk_seperator) != ':':
             return error("Expected slice syntax after base-16 number in bit pattern")
 
           skip_whitespaces(s)
@@ -328,7 +333,7 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
             discard check(parse_signed(check(get_signed(s))))
 
           skip_whitespaces(s)
-          if read(s, tk=tk_bracket) != ']':
+          if read(s, tk = tk_bracket) != ']':
             return error("Expected slice syntax after base-16 number in bit pattern")
         continue
 
@@ -365,8 +370,8 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
         var operand_index = -1
         for i in countdown(operand_names.high, 0):
           if operand_names[i] == operand_name:
-              operand_index = i
-              break
+            operand_index = i
+            break
 
         if operand_index < 0:
           return error(&"Expected a valid field name, got '{operand_name}'")
@@ -374,25 +379,31 @@ func get_instruction*(s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound
         if peek(s) != '[':
           let operand = new_instruction.operands[operand_index]
           if operand.kind != otk_pattern and operand.size <= 0:
-            return error("Expected slice syntax after unsized field reference in bit pattern")
+            return error(
+              "Expected slice syntax after unsized field reference in bit pattern"
+            )
         else:
           discard read(s, tk = tk_bracket)
 
           skip_whitespaces(s)
           if peek(s) != ':':
             discard check(parse_signed(check(get_signed(s))))
-          
+
           skip_whitespaces(s)
           if read(s, tk = tk_seperator) != ':':
-            return error("Expected slice syntax after field/pattern reference in bit pattern")
+            return error(
+              "Expected slice syntax after field/pattern reference in bit pattern"
+            )
 
           skip_whitespaces(s)
           if peek(s) != ']':
             discard check(parse_signed(check(get_signed(s))))
-          
+
           skip_whitespaces(s)
           if read(s, tk = tk_bracket) != ']':
-            return error("Expected slice syntax after field/pattern reference in bit pattern")
+            return error(
+              "Expected slice syntax after field/pattern reference in bit pattern"
+            )
 
     skip_whitespaces(s)
 
@@ -599,9 +610,10 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
           skip_whitespaces(s)
           if peek(s) != '`':
             return error("Expected a ` before the pattern parameter")
-          
-          var parameter_name = check(get_string(s, tk=tk_pattern_variable))
-          if parameter_name.len == 0: return error("Expected a name for the pattern parameter")
+
+          var parameter_name = check(get_string(s, tk = tk_pattern_variable))
+          if parameter_name.len == 0:
+            return error("Expected a name for the pattern parameter")
 
           parameters.add(parameter_name)
           if parameters.len > 53: ## Arbitrary limit, picked an "uncommon" number

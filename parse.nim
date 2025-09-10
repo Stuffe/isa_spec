@@ -1,4 +1,4 @@
-import std/setutils, strutils, hashes, tables, strformat
+import std/[options, setutils, strutils, hashes, tables, strformat]
 
 type StreamSlice* = object
   source: ref string
@@ -10,8 +10,6 @@ type ParseError* = object of ValueError
 
 const IDENTIFIER_FIRST = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 const IDENTIFIER_NEXT  = setutils.toSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.")
-const NUMBER_FIRST = setutils.toSet("0123456789-+")
-const NUMBER_NEXT  = setutils.toSet("0123456789_")
 const QUOTES* = {'"', '\'', '`'}
 const WHITESPACES* = {' ', '\t', '\r'}
 
@@ -295,14 +293,16 @@ func get_sub_identifier*(s: var StreamSlice, tk=tk_identifier): StreamSlice =
     result.finish += 1
   add_token(s, tk)
 
-func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
+func get_number(s: var StreamSlice, base: ptr int, dec_start: set[char]): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
   if peek(s) in {'0', '#'}:
     if peek(s, 1) == 'x':
+      const HEX = HexDigits + {'_'}
+
       skip(s, 2)
       result[1].finish += 2
-      while peek(s) in setutils.toSet("0123456789abcdefABCDEF_"):
+      while peek(s) in HEX:
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
@@ -310,9 +310,11 @@ func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice)
         base[] = 16
       return result
     if peek(s, 1) == 'o':
+      const OCT = Digits - {'8', '9'} + {'_'}
+
       skip(s, 2)
       result[1].finish += 2
-      while peek(s) in setutils.toSet("01234567_"):
+      while peek(s) in OCT:
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
@@ -320,9 +322,11 @@ func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice)
         base[] = 8
       return result
     if peek(s, 1) == 'b':
+      const BIN = {'0', '1', '_'}
+
       skip(s, 2)
       result[1].finish += 2
-      while peek(s) in setutils.toSet("01_"):
+      while peek(s) in BIN:
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
@@ -330,16 +334,27 @@ func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice)
         base[] = 2
       return result
 
-  if peek(s) notin NUMBER_FIRST:
+  const DEC_FIRST = Digits
+  const DEC_NEXT = DEC_FIRST + {'_'}
+  
+  let dec_start = dec_start + DEC_FIRST
+  if peek(s) notin dec_start:
     return ("Expected a number literal", empty_slice(s))
   skip(s)
   result[1].finish += 1
-  while peek(s) in NUMBER_NEXT:
+  while peek(s) in DEC_NEXT:
     skip(s)
     result[1].finish += 1
   add_token(s, tk_number)
   if base != nil:
     base[] = 2
+
+func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
+  get_number(s, base, {'-', '+'})
+
+func get_unsigned*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
+  get_number(s, base, {})
+
 
 func get_hex*(s: var StreamSlice, prefix: string = "0x"): (string, StreamSlice) =
   result[1] = s
@@ -491,17 +506,16 @@ func get_enum*[T](s: var StreamSlice, options: openArray[(string, T)], tk=tk_ide
   else:
     return ("Expected one of " & joined_options, default(T))
 
-func find*(s: var StreamSlice, candidates: openArray[string], tk=tk_none): int =
+func find*[T: string | char](s: var StreamSlice, candidates: openArray[T], tk=tk_none): int =
   for i, candidate in candidates:
     if matches(s, candidate, tk=tk):
       return i
   return -1
 
-func find*(s: var StreamSlice, candidates: openArray[char], tk=tk_none): int =
-  for i, candidate in candidates:
-    if matches(s, candidate, tk=tk):
-      return i
-  return -1
+func find*[T: string | char, U](s: var StreamSlice, candidates: openArray[(T, U)], tk=tk_none): Option[U] =
+  for candidate in candidates:
+    if matches(s, candidate[0], tk=tk):
+      return candidate[1].some
 
 func get_bool*(s: var StreamSlice): (string, bool) =
   let index = find(s, ["false", "true"], tk=tk_literal)

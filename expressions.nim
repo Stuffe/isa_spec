@@ -1,330 +1,580 @@
-import std/[bitops, tables]
-import types, parse
+import std/[bitops, options]
+import parse
 
-const CURRENT_ADDRESS* = int.high
-const NEXT_ADDRESS* = int.high - 1
+type ExpKind* {.pure.} = enum
+  # Interanal expression
+  # Infix operators
+  exp_op_boolean
+  exp_op_not_boolean
+  exp_op_and_boolean
+  exp_op_or_boolean
+  exp_op_eq
+  exp_op_ne
+  exp_op_lt
+  exp_op_ge
+  exp_op_le
+  exp_op_gt
+  exp_op_not_bitwise
+  exp_op_and_bitwise
+  exp_op_or_bitwise
+  exp_op_xor_bitwise
+  exp_op_add
+  exp_op_sub
+  exp_op_mul
+  exp_op_div
+  exp_op_mod
+  exp_op_lsl
+  exp_op_lsr
 
-func to_str*(exp: expression, operand_names: seq[string]): string =
-  if isNil(exp): return "NIL_EXP"
-  case exp.exp_kind:
-    of exp_fail: return "FAIL"
-    of exp_number: return $exp.value
-    of exp_operand:
-      if exp.index == CURRENT_ADDRESS: return "$start"
-      if exp.index == NEXT_ADDRESS: return "$end"
-      if exp.index >= 0 and exp.index < operand_names.len:
-        return "%" & operand_names[exp.index]
+  # Functional operators
+  exp_op_asr
+  exp_op_log2
+  exp_op_popcount
+  exp_op_trailing_zeros
+
+  # Special operators
+  exp_op_bitextract
+  exp_op_conditional
+  exp_op_jump_switch
+
+  # Leaf expression
+  exp_number
+  exp_operand
+
+static:
+  assert sizeof(ExpKind) == sizeof(uint8)
+
+type ExpAddress* {.pure.} = enum
+  addr_current
+  addr_next
+
+const MAX_N_ARG = 3
+
+type ExpRef* = ref object
+  case exp_kind*: ExpKind
+  of exp_number:
+    value*: uint64
+  of exp_operand:
+    case is_address*: bool
+    of true:
+      location*: ExpAddress
+    else:
+      index*: uint8
+  else:
+    args*: array[MAX_N_ARG, ExpRef]
+
+func is_arg_used*(exp: ExpRef): bool =
+  return exp != nil
+
+func exp_op*[N: static[int]](op: ExpKind, args: array[N, ExpRef]): ExpRef =
+  static:
+    assert N <= ExpRef().args.len
+
+  var exp = ExpRef(exp_kind: op)
+  for i in 0 ..< args.len:
+    exp.args[i] = args[i]
+  exp
+
+func to_str(exp: ExpKind): string =
+  const OP_INDEXES = [
+    "~", "!!", "!", "+", "-", "&", "|", "^", "*", "/", "%", "<<", ">>", "==", "!=", "<",
+    ">=", "<=", ">", "&&", "||", "asr", "log2", "popcount", "trailing_zeros", "[]",
+    "?:", "jump_switch", "number", "operand",
+  ]
+  static:
+    assert OP_INDEXES.len == ExpKind.high.int + 1
+
+  return OP_INDEXES[ord(exp)]
+
+func to_str*(exp: ExpRef, operand_names: seq[string]): string =
+  if exp.exp_kind == exp_number:
+    return $exp.value
+
+  if exp.exp_kind == exp_operand:
+    return
+      if exp.is_address:
+        case exp.location
+        of addr_current: "$start"
+        of addr_next: "$end"
+      elif exp.index >= 0 and exp.index.int < operand_names.len:
+        "%" & operand_names[exp.index]
       else:
-        return "%" & $exp.index
-    of exp_operation: 
-      case exp.op_kind:
-        of op_log2:
-          return "log2(" & exp.lhs.to_str(operand_names) & ")"
-        of op_asr:
-          return "asr(" & exp.lhs.to_str(operand_names) & "," & exp.rhs.to_str(operand_names) & ")"
-        of op_popcount:
-          return "popcount(" & exp.lhs.to_str(operand_names) & ")"
-        of op_trailing_zeros:
-          return "trailing_zeros(" & exp.lhs.to_str(operand_names) & ")"
-        else:
-          return "(" & exp.lhs.to_str(operand_names) & " " & OP_INDEXES[ord(exp.op_kind)] & " " & exp.rhs.to_str(operand_names) & ")"
-    of exp_bitextract:
-      if exp.bottom.is_nil:
-        return exp.base.to_str(operand_names) & "[" & exp.top.to_str(operand_names)  & "]"
-      else:
-        return exp.base.to_str(operand_names) & "[" & exp.top.to_str(operand_names) & ":" & exp.bottom.to_str(operand_names) & "]"
+        "%" & $exp.index
 
-func `$`*(exp: expression): string =
+  let arg0 = exp.args[0].to_str(operand_names)
+  if exp.exp_kind in {
+    exp_op_not_bitwise, exp_op_boolean, exp_op_not_boolean, exp_op_log2,
+    exp_op_popcount, exp_op_trailing_zeros,
+  } or (exp.exp_kind in {exp_op_add, exp_op_sub} and not exp.args[1].is_arg_used()):
+    return exp.exp_kind.to_str() & "(" & arg0 & ")"
+
+  if exp.exp_kind in {exp_op_asr, exp_op_jump_switch}:
+    let arg1 = exp.args[1].to_str(operand_names)
+    return exp.exp_kind.to_str() & "(" & arg0 & ", " & arg1 & ")"
+
+  if exp.exp_kind == exp_op_bitextract:
+    let arg1 = exp.args[1].to_str(operand_names)
+    return
+      if exp.args[2].is_arg_used():
+        let arg2 = exp.args[2].to_str(operand_names)
+        arg0 & "[" & arg1 & ":" & arg2 & "]"
+      else:
+        arg0 & "[" & arg1 & "]"
+
+  if exp.exp_kind == exp_op_conditional:
+    let arg1 = exp.args[1].to_str(operand_names)
+    let arg2 = exp.args[2].to_str(operand_names)
+    return arg0 & " ? " & arg1 & " : " & arg2
+
+  result = arg0
+  let op_name = exp.exp_kind.to_str()
+  for i in 1 ..< exp.args.len:
+    if not exp.args[i].is_arg_used():
+      break
+
+    let arg_i = exp.args[i].to_str(operand_names)
+    result = "(" & result & " " & op_name & arg_i & ")"
+
+func `$`*(exp: ExpRef): string =
   exp.to_str(@[])
 
-func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression
-
-func get_atom(s: var StreamSlice, operand_names: seq[string]): expression =
-
-  const SINGLE_ARG = {
-    "trailing_zeros": op_trailing_zeros, 
-    "popcount": op_popcount,
-    "log2": op_log2,
-  }.toTable
-
-  for name, kind in SINGLE_ARG:
-
-    if matches(s, name, tk=tk_directive):
-      if not matches(s, '(', tk=tk_bracket):
-        return expression(exp_kind: exp_fail)
-      skip_whitespaces(s)
-      let exp = get_expression(s, operand_names)
-      if not matches(s, ')', tk=tk_bracket):
-        return expression(exp_kind: exp_fail)
-      skip_whitespaces(s)
-      return expression(exp_kind: exp_operation, op_kind: kind, lhs: exp)
-
-  if matches(s, "asr", tk=tk_directive):
-    if not matches(s, '(', tk=tk_bracket):
-      return expression(exp_kind: exp_fail)
-    let lhs = get_expression(s, operand_names)
-    skip_whitespaces(s)
-    if not matches(s, ',', tk=tk_seperator):
-      return expression(exp_kind: exp_fail)
-    skip_whitespaces(s)
-    let rhs = get_expression(s, operand_names)
-    skip_whitespaces(s)
-    if not matches(s, ')', tk=tk_bracket):
-      return expression(exp_kind: exp_fail)
-    return expression(exp_kind: exp_operation, op_kind: op_asr, lhs: lhs, rhs: rhs)
-  
-  if matches(s, '(', tk=tk_bracket):
-    let cp = checkpoint(s)
-    result = get_expression(s, operand_names)
-    skip_whitespaces(s)
-    if read(s, tk=tk_bracket) != ')':
-      s.restore(cp)
-      return expression(exp_kind: exp_fail)
-
-  elif peek(s) == '$':
-    skip(s)
-    let identifier = get_identifier(s, tk=tk_literal)
-    if identifier == "start":
-      return expression(exp_kind: exp_operand, index: CURRENT_ADDRESS)
-
-    if identifier == "end":
-      return expression(exp_kind: exp_operand, index: NEXT_ADDRESS)
-
-    return expression(exp_kind: exp_fail)
-
-  elif matches(s, '%'):
-    let operand = get_identifier(s, tk=tk_field_ref)
-    if operand.len == 0: return expression(exp_kind: exp_fail)
-
-    for i in countdown(operand_names.high, 0):
-      if operand_names[i] == operand:
-        return expression(exp_kind: exp_operand, index: i)
-
-    return expression(exp_kind: exp_fail)
-  
+func is_pc_rel*(exp: ExpRef): bool =
+  case exp.exp_kind
+  of exp_number:
+    false
+  of exp_operand:
+    exp.is_address
   else:
-    let (err, number) = get_signed(s)
-    if err != "":
-      return expression(exp_kind: exp_fail, msg: err)
-    let value: uint64 = parse_unsigned(number).on_err() do:
-        return expression(exp_kind: exp_fail, msg: err)
-    result = expression(exp_kind: exp_number, value: cast[int](value))
+    for i in 0 ..< MAX_N_ARG:
+      if not exp.args[i].is_arg_used():
+        break
 
-func get_term(s: var StreamSlice, operand_names: seq[string]): expression =
-  let atom = get_atom(s, operand_names)
-  if atom.exp_kind == exp_fail:
-    return atom
-  skip_whitespaces(s)
-  if s.peek() == '[':
-    skip(s, tk=tk_bracket)
-    skip_whitespaces(s)
-    let top = get_expression(s, operand_names)
-    if top.exp_kind == exp_fail:
-      return top
-    let bottom = if s.peek() == ':':
-        skip(s, tk=tk_seperator)
-        skip_whitespaces(s)
-        get_expression(s, operand_names)
+      if exp.args[i].is_pc_rel():
+        return true
+
+    false
+
+const FUNC_OPS = [
+  ("asr", (exp_op_asr, 2)),
+  ("log2", (exp_op_log2, 1)),
+  ("popcount", (exp_op_popcount, 1)),
+  ("trailing_zeros", (exp_op_trailing_zeros, 1)),
+]
+
+const PREFIX_OPS = [
+  ("~", exp_op_not_bitwise),
+  ("!!", exp_op_boolean),
+  ("!", exp_op_not_boolean),
+  ("+", exp_op_add),
+  ("-", exp_op_sub),
+  ("asr", exp_op_asr),
+  ("log2", exp_op_log2),
+  ("popcount", exp_op_popcount),
+  ("trailing_zeros", exp_op_trailing_zeros),
+]
+
+const POSTFIX_OPS: array[0, (string, ExpKind)] = []
+
+const INFIX_OPS = [
+  ("&&", exp_op_and_boolean),
+  ("||", exp_op_or_boolean),
+  ("&", exp_op_and_bitwise),
+  ("|", exp_op_or_bitwise),
+  ("^", exp_op_xor_bitwise),
+  ("<<", exp_op_lsl),
+  (">>", exp_op_lsr),
+  (">=", exp_op_ge),
+  ("<=", exp_op_le),
+  ("==", exp_op_eq),
+  ("!=", exp_op_ne),
+  ("<", exp_op_lt),
+  (">", exp_op_gt),
+  ("+", exp_op_add),
+  ("-", exp_op_sub),
+  ("*", exp_op_mul),
+  ("/", exp_op_div),
+  ("%", exp_op_mod),
+]
+
+# Borrowed the term binding power (BP) from https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
+# Operator to operator, larger binding power means higher priority
+# Within an operator, larger left binding power means right associativity and vice versa
+# BP 0 is reserved for non-existent (prefix/postfix) & ends of expression (e.g. open/close round brackets)
+template get_binding_power(
+    index: ExpKind, is_prefix: static[bool] = false, is_postfix: static[bool] = false
+): untyped =
+  when is_prefix and is_postfix:
+    static:
+      assert false, "Prefix and postfix operators are mutually exclusive"
+
+  when is_prefix:
+    case index
+    of exp_op_not_bitwise, exp_op_boolean, exp_op_not_boolean, exp_op_add, exp_op_sub:
+      11'u8
+    else:
+      assert false, "Unrecognized prefix operator: " & $index
+      0'u8
+  elif is_postfix:
+    case index
+    else:
+      assert false, "Unrecognized postfix operator: " & $index
+      0'u8
+  else:
+    case index
+    of exp_op_add, exp_op_sub, exp_op_and_bitwise, exp_op_or_bitwise, exp_op_xor_bitwise:
+      (7'u8, 8'u8)
+    of exp_op_mul, exp_op_div, exp_op_mod, exp_op_lsl, exp_op_lsr:
+      (9'u8, 10'u8)
+    of exp_op_eq, exp_op_ne, exp_op_lt, exp_op_ge, exp_op_le, exp_op_gt:
+      (5'u8, 6'u8)
+    of exp_op_and_boolean:
+      (3'u8, 4'u8)
+    of exp_op_or_boolean:
+      (1'u8, 2'u8)
+    else:
+      assert false, "Unrecognized infix operator: " & $index
+      (0'u8, 0'u8)
+
+func get_expression_bp(
+  s: var StreamSlice, min_bp: uint8, operand_names: seq[string]
+): (string, ExpRef)
+
+func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) =
+  if s.matches('$'):
+    let identifier = get_identifier(s, tk = tk_literal)
+    let location =
+      if identifier == "start":
+        addr_current
+      elif identifier == "end":
+        addr_next
       else:
-        nil
-    if not bottom.isNil and bottom.exp_kind == exp_fail:
-      return bottom
-    if s.read(tk=tk_bracket) != ']':
-      return expression(exp_kind: exp_fail, msg: "Expected ']'")
-    return expression(exp_kind: exp_bitextract, base: atom, top: top, bottom: bottom)
-  return atom
+        return ("Unrecognized address: $" & $identifier, nil)
+    let exp = ExpRef(exp_kind: exp_operand, is_address: true, location: location)
+    return ("", exp)
 
+  if matches(s, '%'):
+    let operand = get_identifier(s, tk = tk_field_ref)
+    if operand.len == 0:
+      return ("Invalid identifier: %" & $operand, nil)
 
-func get_greedy_group(s: var StreamSlice, operand_names: seq[string]): expression =
+    for i in countdown(cast[uint8](operand_names.len - 1), 0):
+      if operand_names[i] == operand:
+        let exp = ExpRef(exp_kind: exp_operand, is_address: false, index: i)
+        return ("", exp)
 
+    return ("Unrecognized identifier: %" & $operand, nil)
+
+  let opt_exp_kind = s.find(FUNC_OPS, tk = tk_operator)
+  if opt_exp_kind.is_some():
+    let (exp_kind, n_ary) = opt_exp_kind.get()
+
+    if s.read(tk = tk_bracket) != '(':
+      return ("Expected '('", nil)
+
+    let (error, exp_i) = get_expression_bp(s, 0, operand_names)
+    if error != "":
+      return (error, nil)
+
+    var exp = exp_op(exp_kind, [exp_i])
+    for i in 1 ..< n_ary:
+      skip_whitespaces(s)
+      if s.read(tk = tk_seperator) != ',':
+        return ("Expected ','", nil)
+
+      let (error, exp_i) = get_expression_bp(s, 0, operand_names)
+      if error != "":
+        return (error, nil)
+
+      exp.args[i] = exp_i
+
+    if s.read(tk = tk_bracket) != ')':
+      return ("Expected ')'", nil)
+
+    return ("", exp)
+
+  let s_value = get_unsigned(s).on_err:
+    return ("", nil)
+
+  let value = parse_unsigned(s_value).on_err:
+    return ("", nil)
+
+  let exp = ExpRef(exp_kind: exp_number, value: value)
+  ("", exp)
+
+func get_expression_bp(
+    s: var StreamSlice, min_bp: uint8, operand_names: seq[string]
+): (string, ExpRef) =
   skip_whitespaces(s)
 
-  var exp = get_term(s, operand_names)
+  var exp_0: ExpRef
+  var error: string
+  block BLK_FIRST_TERM:
+    if matches(s, '(', tk = tk_bracket):
+      (error, exp_0) = get_expression_bp(s, 0, operand_names)
+      if error != "":
+        return (error, nil)
 
-  if exp.exp_kind == exp_fail: 
-    return expression(exp_kind: exp_fail)
+      skip_whitespaces(s)
+      if s.read(tk = tk_bracket) != ')':
+        return ("Expected ')'", nil)
 
-  while true:
+      break BLK_FIRST_TERM
 
-    skip_whitespaces(s)
+    (error, exp_0) = get_atom(s, operand_names)
+    if exp_0 != nil:
+      break BLK_FIRST_TERM
 
+    if error != "":
+      return (error, nil)
+
+    let opt_exp_kind = s.find(PREFIX_OPS, tk = tk_operator)
+    if opt_exp_kind.is_none():
+      return ("Unrecognized prefix operator " & $s[0], nil)
+
+    let exp_kind = opt_exp_kind.get()
+    let bp = get_binding_power(exp_kind, is_prefix = true)
+    (error, exp_0) = get_expression_bp(s, bp, operand_names)
+    if error != "":
+      return (error, nil)
+    exp_0 = exp_op(exp_kind, [exp_0])
+
+  while not s.finished():
     let cp = checkpoint(s)
 
-    var next_token: string
-    
-    while peek(s) in GREEDY_CHARS and peek(s, 1) != '%': # The '%' in '%reg' is not an operator!
-      next_token.add(peek(s))
-      skip(s, tk=tk_operator)
+    if s.matches('[', tk = tk_bracket):
+      var exp_1: ExpRef
+      (error, exp_1) = get_expression_bp(s, 0, operand_names)
 
-    let op_index = OP_INDEXES.find(next_token)
+      skip_whitespaces(s)
+      let sep = s.read(tk = tk_bracket)
+      exp_0 =
+        if sep == ']':
+          exp_op(exp_op_bitextract, [exp_0, exp_1])
+        elif sep == ':':
+          change_token_kind(tk_bracket, tk_seperator)
+          var exp_2: ExpRef
+          (error, exp_2) = get_expression_bp(s, 0, operand_names)
 
-    if op_index == -1: return exp
-    skip_whitespaces(s)
+          skip_whitespaces(s)
+          if s.read(tk = tk_bracket) != ']':
+            return ("Expected ']' or ':', got '" & $sep & "'", nil)
 
-    let op = OpKind(op_index)
-
-    let rhs = get_term(s, operand_names)
-    if rhs.exp_kind == exp_fail:
-      s.restore(cp)
-      return expression(exp_kind: exp_fail)
-
-    exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
-
-
-func get_expression*(s: var StreamSlice, operand_names: seq[string]): expression =
-
-  skip_whitespaces(s)
-
-  var exp = get_greedy_group(s, operand_names)
-
-  if exp.exp_kind == exp_fail: 
-    return expression(exp_kind: exp_fail)
-
-  while true:
-
-    skip_whitespaces(s)
-
-    let cp = checkpoint(s)
-
-    var next_token: string
-    
-    while peek(s) in LAZY_CHARS:
-      next_token.add(read(s, tk=tk_operator))
-
-    let op_index = OP_INDEXES.find(next_token)
-
-    if op_index == -1: return exp
-    skip_whitespaces(s)
-
-    let op = OpKind(op_index)
-
-    let rhs = get_greedy_group(s, operand_names)
-    if rhs.exp_kind == exp_fail:
-      s.restore(cp)
-      return expression(exp_kind: exp_fail)
-
-    exp = expression(exp_kind: exp_operation, op_kind: op, lhs: exp, rhs: rhs)
-
-func eval*(input: expression, operands: seq[uint64], current_address: int, instruction_byte_length: int): int =
-
-  case input.exp_kind:
-    of exp_fail: return # We need to handle invalid expressions for TC
-    of exp_number: return input.value
-    of exp_operand: 
-      if input.index == CURRENT_ADDRESS: 
-        return current_address
-      if input.index == NEXT_ADDRESS:
-        return current_address + instruction_byte_length
-      return cast[int](operands[input.index])
-    of exp_operation:
-      let lhs = eval(input.lhs, operands, current_address, instruction_byte_length)
-      var rhs: int
-      if input.op_kind notin {op_log2, op_popcount, op_trailing_zeros}:
-        rhs = eval(input.rhs, operands, current_address, instruction_byte_length)
-
-      case input.op_kind:
-        of op_add: return lhs +   rhs
-        of op_sub: return lhs -   rhs
-        of op_mul: return lhs *   rhs
-        of op_div: 
-          if rhs == 0: return 0
-          return lhs div rhs
-        of op_mod: 
-          if rhs == 0: return 0
-          return lhs mod rhs
-        of op_and: return lhs and rhs
-        of op_or:  return lhs or  rhs
-        of op_xor: return lhs xor rhs
-        of op_lsl: return lhs shl rhs
-        of op_lsr: return lsr(lhs, rhs)
-        of op_lt: return int(lhs < rhs)
-        of op_gt: return int(lhs > rhs)
-        of op_asr: return lhs shr rhs
-        of op_log2:
-          var shifts = 0
-          var number = lhs
-          while (number shr shifts) > 0:
-            shifts += 1
-          return shifts - 1
-        of op_popcount:
-          return popcount(lhs)
-        of op_trailing_zeros:
-          return countTrailingZeroBits(lhs)
-
-    of exp_bitextract:
-      let base = eval(input.base, operands, current_address, instruction_byte_length)
-      let top = eval(input.top, operands, current_address, instruction_byte_length)
-      let bottom = if input.bottom.is_nil:
-          top
+          exp_op(exp_op_bitextract, [exp_0, exp_1, exp_2])
         else:
-          eval(input.bottom, operands, current_address, instruction_byte_length)
-      return cast[int](cast[uint64](base).bitsliced(bottom .. top))
+          return ("Expected ']' or ':', got '" & $sep & "'", nil)
 
-func is_known_leaf(input: expression): bool =
-  return input.exp_kind == exp_number or (input.exp_kind == exp_operand and (input.index == CURRENT_ADDRESS or input.index == NEXT_ADDRESS))
+      continue
 
-func get_leaf_value(input: expression, operands: seq[uint64], current_address: int, instruction_byte_length: int): int =
-  case input.exp_kind:
-    of exp_number: return input.value
-    of exp_operand: 
-      if input.index == CURRENT_ADDRESS: return current_address
-      if input.index == NEXT_ADDRESS: return current_address + instruction_byte_length
-      return cast[int](operands[input.index])
-    else: assert false
+    skip_whitespaces(s)
 
-func reverse_eval*(input: expression, current_address: int, instruction_byte_length: int, fields: var seq[uint64], res: int): int
-func reverse_single(fields: var seq[uint64], current_address: int, instruction_byte_length: int, op_kind: OpKind, known: int, unknown: expression, res: int): int =
-  case op_kind:
-    of op_add: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res -   known)
-    of op_sub: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res +   known)
-    of op_mul: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res div known)
-    of op_div: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res *   known)
-    of op_mod: return res
-    of op_and: return res
-    of op_or:  return res
-    of op_xor: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res xor known)
-    of op_lsl: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shr known)
-    of op_lsr: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shl known)
-    of op_lt: return reverse_eval(unknown, current_address, instruction_byte_length, fields, known - 1)
-    of op_gt: return reverse_eval(unknown, current_address, instruction_byte_length, fields, known + 1)
-    of op_asr: return reverse_eval(unknown, current_address, instruction_byte_length, fields, res shl known)
-    of op_log2, op_popcount, op_trailing_zeros: assert false
+    var opt_exp_kind = s.find(POSTFIX_OPS, tk = tk_operator)
+    if opt_exp_kind.is_some():
+      let exp_kind = opt_exp_kind.get()
+      let bp = get_binding_power(exp_kind, is_postfix = true)
+      if bp < min_bp:
+        restore(s, cp)
+        break
 
-func reverse_eval*(input: expression, current_address: int, instruction_byte_length: int, fields: var seq[uint64], res: int): int =
-  # TODO: This entire function is the wrong approach to this problem
-  #       We have to take all virtual fields and asserts into account at the same time
-  #       Just blindly trying to reverse a single expression is never going to work
-  #       E.g. this fails to take into account the cases where some fields are already guranteed to be known
-  case input.exp_kind:
-    of exp_fail:    assert false
-    of exp_number:  return input.value
+      exp_0 = exp_op(exp_kind, [exp_0])
+
+      continue
+
+    if s.matches('?', tk = tk_seperator):
+      var exp_1: ExpRef
+      (error, exp_1) = get_expression_bp(s, 0, operand_names)
+      skip_whitespaces(s)
+      if s.read(tk = tk_seperator) != ':':
+        return ("Expected ':'", nil)
+
+      var exp_2: ExpRef
+      (error, exp_2) = get_expression_bp(s, 0, operand_names)
+      exp_0 = exp_op(exp_op_conditional, [exp_0, exp_1, exp_2])
+
+      continue
+
+    opt_exp_kind = s.find(INFIX_OPS, tk = tk_operator)
+    if opt_exp_kind.is_none():
+      break
+
+    let exp_kind = opt_exp_kind.get()
+    let (bp_0, bp_1) = get_binding_power(exp_kind)
+    if bp_0 < min_bp:
+      restore(s, cp)
+      break
+
+    var exp_1: ExpRef
+    (error, exp_1) = get_expression_bp(s, bp_1, operand_names)
+    if error != "":
+      return (error, nil)
+
+    exp_0 = exp_op(exp_kind, [exp_0, exp_1])
+
+  ("", exp_0)
+
+func get_expression*(
+    s: var StreamSlice, operand_names: var seq[string]
+): (string, ExpRef) =
+  get_expression_bp(s, 0, operand_names)
+
+func log2(n: uint64): uint64 =
+  # This is a modified version of the algorithm described in
+  # https://graphics.stanford.edu/~seander/bithacks.html#IntegerLogDeBruijn
+
+  # DeBruijn sequence as a lookup table
+  const LUT: array[64, uint64] = [
+    0'u64, 58, 1, 59, 47, 53, 2, 60, 39, 48, 27, 54, 33, 42, 3, 61, 51, 37, 40, 49, 18,
+    28, 20, 55, 30, 34, 11, 43, 14, 22, 4, 62, 57, 46, 52, 38, 26, 32, 41, 50, 36, 17,
+    19, 29, 10, 13, 21, 56, 45, 25, 31, 35, 16, 9, 12, 44, 24, 15, 8, 23, 7, 6, 5, 63,
+  ]
+
+  # Round up to one less than a power of two
+  var n = n
+  n = n or (n shr 1)
+  n = n or (n shr 2)
+  n = n or (n shr 4)
+  n = n or (n shr 8)
+  n = n or (n shr 16)
+  n = n or (n shr 32)
+
+  # Multiply & shift as perfect hash
+  LUT[(n * 0x03F6_EAF2_CD27_1461'u64) shr 58]
+
+func eval*(
+    exp: ExpRef,
+    operands: seq[uint64],
+    current_address: uint64,
+    instruction_byte_length: uint64,
+): (string, uint64) =
+  result[1] =
+    case exp.exp_kind
+    of exp_number:
+      exp.value
     of exp_operand:
-      if input.index == CURRENT_ADDRESS: return current_address
-      if input.index == NEXT_ADDRESS: return current_address + instruction_byte_length
-      fields[input.index] = cast[uint64](res)
-      return res
-    of exp_operation:
-  
-      if input.op_kind == op_log2:
-        result = 1 shl res
-        if input.lhs.exp_kind == exp_operand:
-          fields[input.lhs.index] = cast[uint64](result)
-        return result
+      if exp.is_address:
+        if current_address == uint64.high:
+          result[0] = "Instruction pointer not available"
+          return
 
-      if is_known_leaf(input.lhs):
-        return reverse_single(fields, current_address, instruction_byte_length, input.op_kind, get_leaf_value(input.lhs, fields, current_address, instruction_byte_length), input.rhs, res)
+        case exp.location
+        of addr_current:
+          current_address
+        of addr_next:
+          current_address + instruction_byte_length
+      else:
+        if exp.index.int >= operands.len:
+          result[0] = "Operand " & $exp.index & " not found"
+          return
 
-      if is_known_leaf(input.rhs):
-        result = reverse_single(fields, current_address, instruction_byte_length, input.op_kind, get_leaf_value(input.rhs, fields, current_address, instruction_byte_length), input.lhs, res)
-        return result
+        operands[exp.index]
+    else:
+      var is_used: array[MAX_N_ARG, bool]
+      var args: array[MAX_N_ARG, uint64]
+      for i in 0 ..< MAX_N_ARG:
+        if not exp.args[i].is_arg_used():
+          break
 
-      # TODO, really we are assuming one equation with at most one unknown here. Rewrite this so it can solve more complex systems of equations
-    of exp_bitextract:
-      if is_known_leaf(input.top) and is_known_leaf(input.bottom):
-        if is_known_leaf(input.base):
-          return eval(input, fields, current_address, instruction_byte_length)
+        let t = eval(exp.args[i], operands, current_address, instruction_byte_length)
+        if t[0] != "":
+          result[0] = t[0]
+          return
+
+        args[i] = t[1]
+        is_used[i] = true
+
+      case exp.exp_kind
+      of exp_op_boolean:
+        uint64(args[0] != 0)
+      of exp_op_not_boolean:
+        uint64(args[0] == 0)
+      of exp_op_and_boolean:
+        uint64(args[0] != 0 and args[1] != 0)
+      of exp_op_or_boolean:
+        uint64(args[0] != 0 or args[1] != 0)
+      of exp_op_eq:
+        uint64(args[0] == args[1])
+      of exp_op_ne:
+        uint64(args[0] != args[1])
+      of exp_op_lt:
+        uint64(cast[int64](args[0]) < cast[int64](args[1]))
+      of exp_op_ge:
+        uint64(cast[int64](args[0]) >= cast[int64](args[1]))
+      of exp_op_le:
+        uint64(cast[int64](args[0]) <= cast[int64](args[1]))
+      of exp_op_gt:
+        uint64(cast[int64](args[0]) > cast[int64](args[1]))
+      of exp_op_not_bitwise:
+        not args[0]
+      of exp_op_and_bitwise:
+        args[0] and args[1]
+      of exp_op_or_bitwise:
+        args[0] or args[1]
+      of exp_op_xor_bitwise:
+        args[0] xor args[1]
+      of exp_op_add:
+        if is_used[1]:
+          args[0] + args[1]
         else:
-          let orig = res shl get_leaf_value(input.bottom, fields, current_address, instruction_byte_length)
-          return reverse_eval(input.base, current_address, instruction_byte_length, fields, orig)
-      # TODO, if the bounds are not known, I am really not sure how we can reverse that...
+          args[0]
+      of exp_op_sub:
+        if is_used[1]:
+          args[0] - args[1]
+        else:
+          (not args[0]) + 1
+      of exp_op_mul:
+        try:
+          cast[uint64](cast[int64](args[0]) * cast[int64](args[1]))
+        except OverflowDefect:
+          result[0] = "Signed multiplication overflow"
+          return
+      of exp_op_div:
+        if args[1] != 0:
+          cast[uint64](cast[int64](args[0]) div cast[int64](args[1]))
+        else:
+          result[0] = "Cannot divide by zero"
+          return
+      of exp_op_mod:
+        if args[1] != 0:
+          cast[uint64](cast[int64](args[0]) mod cast[int64](args[1]))
+        else:
+          result[0] = "Cannot divide by zero"
+          return
+      of exp_op_lsl:
+        args[0] shl args[1]
+      of exp_op_lsr:
+        args[0] shr args[1]
+      of exp_op_asr:
+        cast[uint64](cast[int64](args[0]) shr cast[int64](args[1]))
+      of exp_op_log2:
+        if cast[int64](args[0]) <= 0:
+          result[0] = "Cannot take log of a non-positive number"
+          return
 
+        log2(args[0])
+      of exp_op_popcount:
+        cast[uint64](popcount(args[0]))
+      of exp_op_trailing_zeros:
+        cast[uint64](countTrailingZeroBits(args[0]))
+      of exp_op_bitextract:
+        let base = args[0]
+        let top = cast[int](args[1])
+        let bottom =
+          if is_used[2]:
+            cast[int](args[2])
+          else:
+            top
+        base.bitsliced(bottom .. top)
+      of exp_op_conditional:
+        if args[0] != 0:
+          args[1]
+        else:
+          args[2]
+      of exp_op_jump_switch:
+        let magnitude =
+          if args[0].testBit(63):
+            not args[0]
+          else:
+            args[0]
+        uint64(log2(magnitude) < args[1])
+      of exp_number, exp_operand:
+        assert false
+        return

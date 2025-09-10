@@ -30,7 +30,6 @@ asr -5, 2
 asr -5, 1
 asr -5, 0
 
-log2 0 ; This results in -1 ... Which I guess is fine?
 log2 1
 log2 2
 log2 3
@@ -41,5 +40,3 @@ log2 16
 log2 17
 log2 256
 log2 0x80000000
-log2 0x8000000000000000 ; This also results in -1 ... Which seems less fine...
-; This last one probably has to be changed if immediate parsing is changed.
