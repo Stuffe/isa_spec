@@ -10,5 +10,7 @@ q  11
 
 [instructions]
 movs  %%r%a(size)%b(immediate), %%r%c(size)%d(immediate)
-!assert %a == %c "All registers must be of equal size"
+if %a != %c {
+    "All registers must be of equal size"
+}
 bbb ddd 00 00 aa 1001

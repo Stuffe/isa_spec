@@ -4,4 +4,4 @@
 jmp %a(label)
 %b = %a - $start
 00bbbbbb
-jump to %a.
+# jump to %a.

@@ -1,2 +1,2 @@
-(loc: (file: "arithmetic/log2.asm", line: 1), message: "Error evaluating this 64-bit operand b: Cannot take log of a non-positive number")
-(loc: (file: "arithmetic/log2.asm", line: 12), message: "Error evaluating this 64-bit operand b: Cannot take log of a non-positive number")
+(loc: (file: "arithmetic/log2.asm", line: 1), message: "Error evaluating operand %b: Cannot take log of a non-positive number")
+(loc: (file: "arithmetic/log2.asm", line: 12), message: "Error evaluating operand %b: Cannot take log of a non-positive number")

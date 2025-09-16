@@ -1,1 +1,1 @@
-(loc: (file: "widening/growing_width.1.asm", line: 20), message: "Value 17 outside of range for this 4-bit zero-extended field")
+(loc: (file: "widening/growing_width.1.asm", line: 20), message: "Assert !(jump_switch(%jump_switch, 5)) did not match")

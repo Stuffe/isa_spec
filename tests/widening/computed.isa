@@ -8,13 +8,9 @@ nop
 11111111
 
 jmp %a(label)
-%b:S64= %a - $start
-100000bb
-
-jmp %a(label)
-%b:S64= %a - $start
-10010000 00000bbb
-
-jmp %a(label)
-%b:S64= %a - $start
-10100000 00000000 0000bbbb
+jump_switch(%a, $start) {
+    // implicit %jump_switch = %a - $start
+    2: 100000jj
+    3: 10010000 00000jjj
+    4: 10100000 00000000 0000jjjj
+}

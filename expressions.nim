@@ -10,9 +10,13 @@ type ExpKind* {.pure.} = enum
   exp_op_or_boolean
   exp_op_eq
   exp_op_ne
+  exp_op_lt_u
   exp_op_lt
+  exp_op_ge_u
   exp_op_ge
+  exp_op_le_u
   exp_op_le
+  exp_op_gt_u
   exp_op_gt
   exp_op_not_bitwise
   exp_op_and_bitwise
@@ -21,13 +25,16 @@ type ExpKind* {.pure.} = enum
   exp_op_add
   exp_op_sub
   exp_op_mul
+  exp_op_div_u
   exp_op_div
+  exp_op_mod_u
   exp_op_mod
   exp_op_lsl
   exp_op_lsr
 
   # Functional operators
   exp_op_asr
+  exp_op_log2_u
   exp_op_log2
   exp_op_popcount
   exp_op_trailing_zeros
@@ -77,9 +84,9 @@ func exp_op*[N: static[int]](op: ExpKind, args: array[N, ExpRef]): ExpRef =
 
 func to_str(exp: ExpKind): string =
   const OP_INDEXES = [
-    "~", "!!", "!", "+", "-", "&", "|", "^", "*", "/", "%", "<<", ">>", "==", "!=", "<",
-    ">=", "<=", ">", "&&", "||", "asr", "log2", "popcount", "trailing_zeros", "[]",
-    "?:", "jump_switch", "number", "operand",
+    "!!", "!", "&&", "||", "==", "!=", "<u", "<", ">=u", ">=", "<=u", "<=", ">u", ">",
+    "~", "&", "|", "^", "+", "-", "*", "/u", "/", "%u", "%", "<<", ">>", "asr", "ulog2",
+    "log2", "popcount", "trailing_zeros", "[]", "?:", "jump_switch", "number", "operand",
   ]
   static:
     assert OP_INDEXES.len == ExpKind.high.int + 1
@@ -103,7 +110,7 @@ func to_str*(exp: ExpRef, operand_names: seq[string]): string =
 
   let arg0 = exp.args[0].to_str(operand_names)
   if exp.exp_kind in {
-    exp_op_not_bitwise, exp_op_boolean, exp_op_not_boolean, exp_op_log2,
+    exp_op_not_bitwise, exp_op_boolean, exp_op_not_boolean, exp_op_log2_u, exp_op_log2,
     exp_op_popcount, exp_op_trailing_zeros,
   } or (exp.exp_kind in {exp_op_add, exp_op_sub} and not exp.args[1].is_arg_used()):
     return exp.exp_kind.to_str() & "(" & arg0 & ")"
@@ -138,12 +145,12 @@ func to_str*(exp: ExpRef, operand_names: seq[string]): string =
 func `$`*(exp: ExpRef): string =
   exp.to_str(@[])
 
-func is_pc_rel*(exp: ExpRef): bool =
+func is_pc_rel*(exp: ExpRef, label_ops: set[uint8] = {}): bool =
   case exp.exp_kind
   of exp_number:
     false
   of exp_operand:
-    exp.is_address
+    exp.is_address or exp.index in label_ops
   else:
     for i in 0 ..< MAX_N_ARG:
       if not exp.args[i].is_arg_used():
@@ -156,6 +163,7 @@ func is_pc_rel*(exp: ExpRef): bool =
 
 const FUNC_OPS = [
   ("asr", (exp_op_asr, 2)),
+  ("ulog2", (exp_op_log2_u, 1)),
   ("log2", (exp_op_log2, 1)),
   ("popcount", (exp_op_popcount, 1)),
   ("trailing_zeros", (exp_op_trailing_zeros, 1)),
@@ -168,6 +176,7 @@ const PREFIX_OPS = [
   ("+", exp_op_add),
   ("-", exp_op_sub),
   ("asr", exp_op_asr),
+  ("ulog2", exp_op_log2_u),
   ("log2", exp_op_log2),
   ("popcount", exp_op_popcount),
   ("trailing_zeros", exp_op_trailing_zeros),
@@ -183,16 +192,22 @@ const INFIX_OPS = [
   ("^", exp_op_xor_bitwise),
   ("<<", exp_op_lsl),
   (">>", exp_op_lsr),
+  (">=u", exp_op_ge_u),
   (">=", exp_op_ge),
+  ("<=u", exp_op_le_u),
   ("<=", exp_op_le),
   ("==", exp_op_eq),
   ("!=", exp_op_ne),
+  ("<u", exp_op_lt_u),
   ("<", exp_op_lt),
+  (">u", exp_op_gt_u),
   (">", exp_op_gt),
   ("+", exp_op_add),
   ("-", exp_op_sub),
   ("*", exp_op_mul),
+  ("/u", exp_op_div_u),
   ("/", exp_op_div),
+  ("%u", exp_op_mod_u),
   ("%", exp_op_mod),
 ]
 
@@ -223,9 +238,11 @@ template get_binding_power(
     case index
     of exp_op_add, exp_op_sub, exp_op_and_bitwise, exp_op_or_bitwise, exp_op_xor_bitwise:
       (7'u8, 8'u8)
-    of exp_op_mul, exp_op_div, exp_op_mod, exp_op_lsl, exp_op_lsr:
+    of exp_op_mul, exp_op_div_u, exp_op_div, exp_op_mod_u, exp_op_mod, exp_op_lsl,
+        exp_op_lsr:
       (9'u8, 10'u8)
-    of exp_op_eq, exp_op_ne, exp_op_lt, exp_op_ge, exp_op_le, exp_op_gt:
+    of exp_op_eq, exp_op_ne, exp_op_lt_u, exp_op_lt, exp_op_ge_u, exp_op_ge,
+        exp_op_le_u, exp_op_le, exp_op_gt_u, exp_op_gt:
       (5'u8, 6'u8)
     of exp_op_and_boolean:
       (3'u8, 4'u8)
@@ -257,7 +274,7 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
     if operand.len == 0:
       return ("Invalid identifier: %" & $operand, nil)
 
-    for i in countdown(cast[uint8](operand_names.len - 1), 0):
+    for i in countdown(cast[uint8](operand_names.high), 0):
       if operand_names[i] == operand:
         let exp = ExpRef(exp_kind: exp_operand, is_address: false, index: i)
         return ("", exp)
@@ -416,7 +433,7 @@ func get_expression*(
 ): (string, ExpRef) =
   get_expression_bp(s, 0, operand_names)
 
-func log2(n: uint64): uint64 =
+func log2*(n: uint64): uint64 =
   # This is a modified version of the algorithm described in
   # https://graphics.stanford.edu/~seander/bithacks.html#IntegerLogDeBruijn
 
@@ -494,12 +511,20 @@ func eval*(
         uint64(args[0] == args[1])
       of exp_op_ne:
         uint64(args[0] != args[1])
+      of exp_op_lt_u:
+        uint64(args[0] < args[1])
       of exp_op_lt:
         uint64(cast[int64](args[0]) < cast[int64](args[1]))
+      of exp_op_ge_u:
+        uint64(args[0] >= args[1])
       of exp_op_ge:
         uint64(cast[int64](args[0]) >= cast[int64](args[1]))
+      of exp_op_le_u:
+        uint64(args[0] <= args[1])
       of exp_op_le:
         uint64(cast[int64](args[0]) <= cast[int64](args[1]))
+      of exp_op_gt_u:
+        uint64(args[0] > args[1])
       of exp_op_gt:
         uint64(cast[int64](args[0]) > cast[int64](args[1]))
       of exp_op_not_bitwise:
@@ -521,14 +546,22 @@ func eval*(
         else:
           (not args[0]) + 1
       of exp_op_mul:
-        try:
-          cast[uint64](cast[int64](args[0]) * cast[int64](args[1]))
-        except OverflowDefect:
-          result[0] = "Signed multiplication overflow"
+        args[0] * args[1]
+      of exp_op_div_u:
+        if args[1] != 0:
+          args[0] div args[1]
+        else:
+          result[0] = "Cannot divide by zero"
           return
       of exp_op_div:
         if args[1] != 0:
           cast[uint64](cast[int64](args[0]) div cast[int64](args[1]))
+        else:
+          result[0] = "Cannot divide by zero"
+          return
+      of exp_op_mod_u:
+        if args[1] != 0:
+          args[0] mod args[1]
         else:
           result[0] = "Cannot divide by zero"
           return
@@ -544,6 +577,8 @@ func eval*(
         args[0] shr args[1]
       of exp_op_asr:
         cast[uint64](cast[int64](args[0]) shr cast[int64](args[1]))
+      of exp_op_log2_u:
+        log2(args[0])
       of exp_op_log2:
         if cast[int64](args[0]) <= 0:
           result[0] = "Cannot take log of a non-positive number"
@@ -570,11 +605,13 @@ func eval*(
           args[2]
       of exp_op_jump_switch:
         let magnitude =
-          if args[0].testBit(63):
-            not args[0]
+          if args[0] == uint64.high:
+            0'u64
+          elif args[0].testBit(63):
+            log2(not args[0]) + 1
           else:
-            args[0]
-        uint64(log2(magnitude) < args[1])
+            log2(args[0]) + 1
+        uint64(magnitude < args[1])
       of exp_number, exp_operand:
         assert false
         return

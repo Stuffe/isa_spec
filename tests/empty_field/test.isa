@@ -12,5 +12,5 @@ b
 
 mov %a(a), %b(b)
 00aaabbb 
-Moves a value from %b to %a.
+# Moves a value from %b to %a.
 
