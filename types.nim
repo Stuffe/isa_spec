@@ -268,6 +268,14 @@ func operand_names*(i: InstructionDebranched): seq[string] =
   for f in i.operands:
     result.add(f.variable_name)
 
+func syntax_operand_names*(i: InstructionUnbranched): seq[string] =
+  i.operand_names()
+
+func syntax_operand_names*(i: InstructionDebranched): seq[string] =
+  for f in i.operands:
+    if f.kind == otk_normal:
+      result.add(f.variable_name)
+
 func has_pc_rel_virtual*(inst: InstructionUnbranched): bool =
   for op in inst.virtual_operands:
     if op.expr.is_pc_rel():

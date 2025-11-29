@@ -83,12 +83,10 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
     let variable_name = $get_identifier(s)
     expect(variable_name.len > 0, "Expected an identifier after '%'")
 
-    if variable_name != "_":
-      for operand in operands:
-        expect(
-          operand.variable_name != variable_name,
-          &"Operand {variable_name} on syntax line shadowed another operand",
-        )
+    expect(
+      variable_name notin op_names,
+      &"Operand {variable_name} on syntax line shadowed another operand",
+    )
 
     expect(
       matches(s, '(', tk = tk_bracket),
@@ -376,6 +374,11 @@ func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
       # This is probably the bitpattern which happens to start with a reference, so backtrack
       s.restore(cp)
       return
+
+    expect(
+      variable_name notin inst.syntax_operand_names(),
+      &"Virtual operand {variable_name} shadowed another operand on syntax line",
+    )
 
     let expr = check(get_expression(s, op_names)):
       "Could not interpret virtual operand %" & variable_name & ": " & err
