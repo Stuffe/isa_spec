@@ -177,7 +177,7 @@ func add_token*(s: StreamSlice, tk: TokenKind) =
       else:
         tokens[^1].s.finish
 
-    let finish = s.start
+    let finish = s.start.min(s.source[].len)
 
     if tk in CONTROL_TOKENS:
       assert start == finish
