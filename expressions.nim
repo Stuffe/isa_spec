@@ -368,7 +368,7 @@ func get_expression_bp(
         if sep == ']':
           exp_op(exp_op_bitextract, [exp_0, exp_1])
         elif sep == ':':
-          change_token_kind(tk_bracket, tk_seperator)
+          change_token_kind(s, tk_bracket, tk_seperator)
           var exp_2: ExpRef
           (error, exp_2) = get_expression_bp(s, 0, operand_names)
 

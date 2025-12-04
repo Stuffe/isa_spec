@@ -1,4 +1,4 @@
-import std/[parseUtils, sets, strutils, strformat, tables]
+import std/[parseutils, sets, strutils, strformat, tables]
 import types, parse, expressions
 
 export parse.new_StreamSlice
@@ -493,7 +493,6 @@ func get_instruction*(
 
       if peek(s) == '#' and peek(s, 1) in {' ', '\t'}:
         error("Expected a bit pattern line")
-        break
 
       expect(not matches(s, "jump_switch", tk = tk_keyword)):
         "Jump switch not allowed in patterns"
@@ -682,6 +681,7 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
   start_tokenize(s)
 
   template error(input: string): untyped =
+    start_tokenize(nil)
     return SpecParseResult(
       error: Error(
         loc: FileLocation(file: file_name, line: get_line_number(s)), message: input

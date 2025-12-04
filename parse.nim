@@ -192,9 +192,9 @@ func add_token*(s: StreamSlice, tk: TokenKind) =
     else:
       tokens.add Token(s: StreamSlice(source: s.source, start: start, finish: finish), tk: tk)
 
-func change_token_kind*(expected: TokenKind, new: TokenKind) =
+func change_token_kind*(s: StreamSlice, expected: TokenKind, new: TokenKind) =
   {.noSideEffect.}:
-    if tracked_source == nil:
+    if tracked_source == nil or tracked_source != s.source:
       return
     assert tokens[^1].tk == expected
     tokens[^1].tk = new
@@ -464,7 +464,7 @@ func get_size*(s: var StreamSlice): (string, uint64, bool) =
     result[0] = err
     return
 
-  change_token_kind(tk_number, tk_type_name)
+  change_token_kind(s, tk_number, tk_type_name)
 
   if s_number.len == 0 or read(s) != '>':
     s.restore(cp)
@@ -847,7 +847,7 @@ func parse_parametrized_pattern*(s: var StreamSlice, parameters: seq[StreamSlice
     let parameter_index = parameters.find(parameter_name)
     if parameter_index < 0:
       slice.finish = s.start
-      change_token_kind(tk_pattern_variable, tk_text)
+      change_token_kind(s, tk_pattern_variable, tk_text)
       continue
 
     result[0].add($slice)
@@ -860,3 +860,54 @@ func parse_parametrized_pattern*(s: var StreamSlice, parameters: seq[StreamSlice
     result[0].add($slice)
 
   skip(s)
+
+func get_truth_table_value(s: var StreamSlice): tuple[is_ref: bool, ss: StreamSlice] =
+  assert not isNil(s.source)
+
+  result.ss = s
+  let start = s.start
+
+  case peek(s):
+    of '{':
+      skip(s)
+      # Reference ID may contain commas
+      while peek(s) notin {'}', '\r', '\n', '\0'}:
+        skip(s)
+      skip(s)
+      result.is_ref = true
+      result.ss.start = start + 1
+      result.ss.finish = s.start - 1
+
+    else:
+      while peek(s) notin {',', '\r', '\n', '\0'}:
+        skip(s)
+
+      result.is_ref = false
+      result.ss.start = start 
+      result.ss.finish = s.start
+
+iterator get_truth_table*(s: var StreamSlice): tuple[is_label: bool, is_ref: bool, ss: StreamSlice] =
+  if read(s, tk_bracket) != ']':
+    raise newParseError(s, "Expected ']' at the start of the truth table")
+
+  var is_label = true
+  while not finished(s) and peek(s) != '[':
+
+    skip_newlines(s)
+
+    let element = get_truth_table_value(s)
+
+    yield (is_label, element.is_ref, element.ss)
+    is_label = false
+
+    let next_char = peek(s)
+    if next_char in {'\n', '\r'}:
+      skip_newlines(s)
+      is_label = true
+    elif next_char == ',':
+      skip(s, tk=tk_seperator)
+
+  if finished(s):
+    raise newParseError(s, "Expected '[' at the end of the truth table")
+
+  skip(s, tk=tk_bracket)
