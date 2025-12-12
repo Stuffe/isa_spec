@@ -1609,6 +1609,9 @@ proc estimate_labels(
 proc assemble*(
     base_path: string, path: string, isa_spec: IsaSpec, source: string
 ): AssemblyResult =
+  if source.strip().len == 0:
+    return
+
   var resolved_patterns: Table[string, InstructionDebranched]
   resolved_patterns[""] = InstructionDebranched()
 
