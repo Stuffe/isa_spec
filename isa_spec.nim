@@ -1,4 +1,4 @@
-import std/[parseutils, sets, strutils, strformat, tables]
+import std/[algorithm, options, parseutils, sets, sequtils, strutils, strformat, tables]
 import types, parse, expressions
 
 export parse.new_StreamSlice
@@ -246,10 +246,610 @@ func get_uint64(s: var StreamSlice): WithError[uint64] =
   let s_idx = check(get_unsigned(s))
   result[1] = check(parse_unsigned(s_idx))
 
-func get_bit_pattern(
+# func get_disassembly_exprs(
+#     s: var StreamSlice, inst: var Option[InstructionDecoder], op_names: var seq[string]
+# ): (string, bool) =
+#   while true:
+#     skip_whitespaces(s)
+#     if peek(s) != '%':
+#       return
+#     skip(s)
+
+#     let variable_name = $get_identifier(s)
+#     expect(variable_name.len > 0, "Expected an identifier after '%'")
+
+#     skip_whitespaces(s)
+#     expect(matches(s, '=', tk = tk_operator), "Expected '=' after operand name")
+
+#     let expr = check(get_expression(s, op_names)):
+#       "Could not interpret disassembly expression %" & variable_name & ": " & err
+
+#     skip_whitespaces(s)
+#     expect(
+#       matches(s, {'\n', '\0'}, tk = tk_whitespace),
+#       "Expected newline after disassembly expression",
+#     )
+
+#     if inst.is_some:
+#       inst.get.exprs.add(OperandTypeVirtual(variable_name: variable_name, expr: expr))
+#     op_names.add(variable_name)
+
+func get_mask_expr_underlying_arguments(exp: ExpRef): (string, ExpRef, ExpRef) =
+  var exp = exp
+  var parity = 0
+  while exp.exp_kind == exp_op_not_boolean:
+    exp = exp.args[0]
+    parity += 1
+
+  if parity mod 2 == 0 and exp.exp_kind != exp_op_ne:
+    result[0] = "Not an NE expression"
+    return
+  if parity mod 2 != 0 and exp.exp_kind != exp_op_eq:
+    result[0] = "Not an NE expression"
+    return
+
+  discard eval(exp.args[0], @[], uint64.high, 0)
+  return ("", exp.args[0], exp.args[1])
+
+func get_auto_instruction_decoder(
+    inst: InstructionDebranched, field_types: Table[FieldKind, FieldType]
+): (string, InstructionDecoder) =
+  result[1].syntax = inst.syntax
+
+  const MAX_NUM_PATH = 10 # Arbitrary
+  var all_option_paths: seq[seq[seq[FieldKind]]]
+  block BLK_OPTION_PATHS:
+    all_option_paths.set_len(1)
+    for operand in inst.operands:
+      if operand.kind != otk_normal:
+        break
+
+      var options = operand.options
+      if options.len <= 1 or options.all_it(it notin {fk_simm_1 .. fk_simm_64}):
+        for path in all_option_paths.mitems:
+          path.add(options)
+        continue
+
+      all_option_paths.reverse()
+      let old_option_paths = all_option_paths
+      all_option_paths.set_len(0)
+
+      for i in countdown(options.high, 0):
+        let option = options[i]
+        if option notin {fk_simm_1 .. fk_simm_64}:
+          continue
+
+        options.delete(i)
+        for path in old_option_paths:
+          all_option_paths.add(path & @[@[option]])
+
+      if options.len > 0:
+        for path in old_option_paths:
+          all_option_paths.add(path & @[options])
+
+      all_option_paths.reverse()
+
+      if all_option_paths.len > MAX_NUM_PATH:
+        error(
+          &"Too many operand option paths for automatic disassembly, at most {MAX_NUM_PATH} are allowed"
+        )
+
+  var s = new_StreamSlice(inst.bit_pattern)
+
+  # List of operand names directly declared in the instruction
+  let operand_names = inst.operand_names()
+  let instruction_name = inst.name()
+
+  var bit_length = 0'u32
+  var new_bits: seq[Bitfield]
+  var machine_code_direct_decoding: Table[
+    uint8,
+    seq[tuple[machine_code_slice: (uint32, uint32), operand_slice: (uint32, uint32)]],
+  ]
+
+  block BLK_BIT_PATTERN:
+    # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
+    # nvalid indecies. They are instead used to track the length of the field before being updated
+    # to the correct bounds in a seperate pass
+    var current = Bitfield(id: bfk_invalid)
+
+    while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
+      const HEX_PREFIX = "#x"
+      if matches(s, HEX_PREFIX):
+        let hex_s = check(get_hex(s, ""))
+
+        skip_whitespaces(s)
+        let (top, bottom) =
+          if peek(s) == '[':
+            discard read(s, tk = tk_bracket)
+
+            skip_whitespaces(s)
+            let top =
+              if peek(s) != ':':
+                cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+              else:
+                -1
+
+            skip_whitespaces(s)
+            assert matches(s, ':', tk = tk_seperator),
+              "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+
+            skip_whitespaces(s)
+            let bottom =
+              if peek(s) != ']':
+                cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+              else:
+                0
+
+            skip_whitespaces(s)
+            assert matches(s, ']', tk = tk_bracket),
+              "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+
+            (top, bottom)
+          else:
+            (-1'i16, 0'i16)
+
+        var length = 0
+        for c in hex_s:
+          if c notin HexDigits:
+            continue
+          length += 4
+
+        var i_from =
+          if top < 0:
+            0
+          else:
+            length - top - 1
+
+        for i in i_from ..< 0:
+          bit_length += 1
+          if bfk_zero != current.id:
+            if current.id != bfk_invalid:
+              new_bits.add(current)
+            current = Bitfield(id: bfk_zero, is_direct: true)
+          else:
+            current.top += 1
+
+        i_from = 0
+        let i_to = length - bottom - 1
+
+        var i = 0
+        for c in hex_s:
+          if c notin HexDigits:
+            continue
+          if i > i_to:
+            break
+
+          let hex = xdigit_to_value(c)
+          var shift = 1 shl 3
+          while shift != 0:
+            if i < i_from:
+              i += 1
+              shift = shift shr 1
+              continue
+            if i > i_to:
+              break
+
+            let bit_id =
+              if (hex and shift) == 0:
+                bit_length += 1
+                bfk_zero
+              else:
+                bit_length += 1
+                bfk_one
+            if bit_id != current.id:
+              if current.id != bfk_invalid:
+                new_bits.add(current)
+              current = Bitfield(id: bit_id, is_direct: true)
+            else:
+              current.top += 1
+            i += 1
+            shift = shift shr 1
+        continue
+
+      if peek(s) != '%':
+        let bit_id =
+          case peek(s)
+          of '0':
+            bit_length += 1
+            skip(s, tk = tk_number)
+            bfk_zero
+          of '1':
+            bit_length += 1
+            skip(s, tk = tk_number)
+            bfk_one
+          of ' ':
+            skip(s, tk = tk_whitespace)
+            continue
+          of '?':
+            bit_length += 1
+            skip(s, tk = tk_number)
+            bfk_wildcard
+          else:
+            bit_length += 1
+            let c = read(s, tk = tk_field_name)
+            var operand_index = bfk_invalid
+            for i in countdown(cast[uint8](operand_names.high), 0):
+              if operand_names[i][0] == c:
+                operand_index = to_bit_field_kind(i)
+                break
+
+            assert operand_index != bfk_invalid,
+              "(Late detection!): Error defining '" & instruction_name &
+                "'. No operand starts with character '" & c & "'."
+            operand_index
+        if bit_id != current.id:
+          if current.id != bfk_invalid:
+            new_bits.add(current)
+          current = Bitfield(id: bit_id, is_direct: true)
+        else:
+          current.top += 1
+      else:
+        skip(s)
+        let operand_name = get_identifier(s)
+        assert operand_name.len > 0,
+          "(Late detection!): Expected an identifier after '%'"
+
+        var operand_index: uint8
+        block BLK_FIND_OP_INDEX:
+          for i in countdown(cast[uint8](operand_names.high), 0):
+            if operand_names[i] == operand_name:
+              operand_index = i
+              break BLK_FIND_OP_INDEX
+
+          error(
+            &"Expected a valid operand name, got '{operand_name}' among {$operand_names}"
+          )
+
+        skip_whitespaces(s)
+        expect(
+          matches(s, '[', tk = tk_bracket),
+          "Expected slice syntax after field/pattern reference in bit pattern",
+        )
+
+        skip_whitespaces(s)
+        let top = cast[uint32](check(parse_unsigned(check(get_unsigned(s)))))
+
+        skip_whitespaces(s)
+        expect(
+          matches(s, ':', tk = tk_seperator),
+          "Expected slice syntax after field/pattern reference in bit pattern",
+        )
+
+        skip_whitespaces(s)
+        let bottom =
+          if peek(s) != ']':
+            cast[uint32](check(parse_unsigned(check(get_unsigned(s)))))
+          else:
+            0
+
+        skip_whitespaces(s)
+        expect(
+          matches(s, ']', tk = tk_bracket),
+          "Expected slice syntax after field/pattern reference in bit pattern",
+        )
+
+        if current.id != bfk_invalid:
+          new_bits.add(current)
+          current = Bitfield(id: bfk_invalid)
+
+        new_bits.add(
+          Bitfield(id: to_bit_field_kind(operand_index), top: top, bottom: bottom)
+        )
+        bit_length += top - bottom + 1
+
+    if current.id != bfk_invalid:
+      new_bits.add(current)
+
+    result[1].bit_length = bit_length
+
+    var current_length = 0'u32
+    var consumed_bits = newSeq[uint32](inst.operands.len)
+    for i in countdown(new_bits.high, 0):
+      var bits = new_bits[i]
+      let index = to_variable_index(bits.id)
+      let root_index = index
+      let new_length = current_length + bits.top - bits.bottom + 1
+      if is_variable(bits.id):
+        if bits.is_direct:
+          # We need to adjust this for the case of non-consecutive bit fields of the same operand
+          bits.top += consumed_bits[root_index]
+          bits.bottom += consumed_bits[root_index]
+          consumed_bits[root_index] += bits.top - bits.bottom + 1
+
+        let operand_index = bits.id.to_variable_index()
+        let direct_decoding = (
+          machine_code_slice: (current_length, new_length),
+          operand_slice: (bits.bottom, bits.top + 1),
+        )
+        machine_code_direct_decoding.mgetOrPut(operand_index).add(direct_decoding)
+
+      # Whether we are crossing a 64-bit boundary
+      if (new_length - 1) div 64 != current_length div 64:
+        # number of bits that still fit within this word
+        let fit_count = 64 - (current_length mod 64)
+        var right = bits
+        var left = bits
+        right.top = bits.bottom + fit_count - 1
+        left.bottom = right.top + 1
+        result[1].bits.add(right)
+        result[1].bits.add(left)
+      else:
+        result[1].bits.add(bits)
+      current_length = new_length
+    reverse(result[1].bits)
+
+  var old_virtuals: seq[OperandTypeVirtual]
+  for operand in inst.operands:
+    case operand.kind
+    of otk_normal:
+      continue
+    of otk_pattern:
+      error("Patterns not supported in disassembly")
+    of otk_virtual:
+      old_virtuals.add(
+        OperandTypeVirtual(variable_name: operand.variable_name, expr: operand.expr)
+      )
+
+  for option_path in all_option_paths:
+    var names_to_virtual_index: Table[string, uint32]
+    let num_base_word = (bit_length + 63) div 64
+    var new_virtuals: seq[OperandTypeVirtual]
+    var old_asserts = inst.asserts
+    var new_asserts: seq[Assertion]
+    var is_operand_resolved: array[256, bool]
+
+    var seq_machine_code_direct_decoding = machine_code_direct_decoding.pairs.toSeq
+    for i in countdown(seq_machine_code_direct_decoding.high, 0):
+      let (operand_index, direct_decodings) = seq_machine_code_direct_decoding[i]
+      let operand = inst.operands[operand_index]
+      if operand.kind != otk_normal:
+        continue
+      seq_machine_code_direct_decoding.del(i)
+
+      let options = option_path[operand_index]
+      let signed_size =
+        if options[0] in {fk_simm_1 .. fk_simm_64}:
+          cast[uint32](options[0].ord - fk_simm_1.ord + 1)
+        else:
+          0'u32
+
+      for old_assert in old_asserts:
+        if old_assert.exp.exp_kind != exp_op_ne:
+          continue
+
+        var constant = 0'u64
+        var op_mask: ExpRef
+        block BLK_FIND_CONSTANT:
+          for i, arg in old_assert.exp.args:
+            if arg.exp_kind == exp_number:
+              constant = arg.value
+              op_mask = old_assert.exp.args[1 - i]
+              break BLK_FIND_CONSTANT
+
+          continue
+
+      let index_virtual = num_base_word + cast[uint32](new_virtuals.len)
+      names_to_virtual_index[operand.variable_name] = index_virtual
+      new_virtuals.add(
+        OperandTypeVirtual(variable_name: operand.variable_name, expr: exp_num(0))
+      )
+
+      var resolved_mask = 0'u64
+      for decoding in direct_decodings:
+        var (output_start_inc, output_end_exc) = decoding.machine_code_slice
+        var (start_inc, end_exc) = decoding.operand_slice
+
+        if signed_size > 0:
+          if start_inc > signed_size - 1:
+            end_exc = end_exc - start_inc + (signed_size - 1)
+            start_inc = signed_size - 1
+
+          if end_exc > signed_size:
+            # Asserts that the value derived from sign extension matches what is in the machine code
+            new_asserts.add(
+              Assertion(
+                msg: "Sign extension bits do not match",
+                exp: exp_op(
+                  exp_op_ne,
+                  [
+                    exp_op(
+                      exp_op_bit_extract,
+                      [
+                        exp_output(),
+                        exp_num(cast[uint64](output_end_exc - 1)),
+                        exp_num(cast[uint64](output_start_inc)),
+                      ],
+                    ),
+                    exp_op(
+                      exp_op_bit_extract,
+                      [
+                        exp_var(index_virtual),
+                        exp_num(cast[uint64](end_exc - 1)),
+                        exp_num(cast[uint64](start_inc)),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            )
+            end_exc = signed_size
+            output_end_exc = output_start_inc - start_inc + end_exc
+
+        # $output[{output_end_exc - 1} : {output_start_inc}]
+        let exp_output_extracted = exp_op(
+          exp_op_bit_extract,
+          [
+            exp_output(),
+            exp_num(cast[uint64](output_end_exc - 1)),
+            exp_num(cast[uint64](output_start_inc)),
+          ],
+        )
+
+        # $output[{output_end_exc - 1} : {output_start_inc}] << {start_inc}
+        var exp_output_shifted =
+          exp_op(exp_op_lsl, [exp_output_extracted, exp_num(cast[uint64](start_inc))])
+
+        let mask = (not 0'u64) shr (64 - (end_exc - start_inc)) shl start_inc
+        let mask_intersect = resolved_mask and mask
+        if mask_intersect != 0:
+          # ($output[{output_end_exc - 1} : {output_start_inc}] << {start_inc}) & {!mask_intersect}
+          exp_output_shifted = exp_op(
+            exp_op_and_bitwise,
+            [exp_output_shifted, exp_num(cast[uint64](not mask_intersect))],
+          )
+          # $[{end_exc - 1} : {start_inc}] != $output[{output_end_exc - 1} : {output_start_inc}] => "Repeat field references do not match"
+          new_asserts.add(
+            Assertion(
+              msg: &"Repeat field references do not match",
+              exp: exp_op(
+                exp_op_ne,
+                [
+                  exp_op(
+                    exp_op_bit_extract,
+                    [
+                      exp_var(index_virtual),
+                      exp_num(cast[uint64](end_exc - 1)),
+                      exp_num(cast[uint64](start_inc)),
+                    ],
+                  ), exp_output_extracted,
+                ],
+              ),
+            )
+          )
+
+        # $ = $ | {exp_output_shifted}
+        new_virtuals[^1] = OperandTypeVirtual(
+          variable_name: new_virtuals[^1].variable_name,
+          expr: exp_op(exp_op_or_bitwise, [new_virtuals[^1].expr, exp_output_shifted]),
+        )
+        resolved_mask = resolved_mask or mask
+
+      # Signed-immediate path requires a sign extension
+      if signed_size > 0:
+        # if resolved_mask != (not 0'u64) shr (64 - signed_size):
+        #   error(
+        #     &"Not all bits in %{operand.variable_name} can be automatically disassembled"
+        #   )
+
+        # $ = asr($ << {shift}, {shift})
+        let shift = exp_num(cast[uint64](64 - signed_size))
+        new_virtuals[^1] = OperandTypeVirtual(
+          variable_name: new_virtuals[^1].variable_name,
+          expr: exp_op(
+            exp_op_asr, [exp_op(exp_op_lsl, [new_virtuals[^1].expr, shift]), shift]
+          ),
+        )
+      # Other paths maybe share common bits
+      else:
+        var any_value = 0'u64
+        for option in options:
+          if option.is_variable() and option in field_types:
+            any_value = field_types[option].values[0].value
+          break
+
+        var mask_and = any_value
+        var mask_or = any_value
+        for option in options:
+          if not option.is_variable():
+            mask_and = 0
+            if option != fk_imm_0:
+              let unsigned_size =
+                if option == fk_label:
+                  64
+                else:
+                  option.ord - fk_imm_0.ord
+
+              mask_or = mask_or or ((not 0'u64) shr (64 - unsigned_size))
+            continue
+
+          if option notin field_types:
+            continue
+
+          for value in field_types[option].values:
+            mask_and = mask_and and value.value
+            mask_or = mask_or or value.value
+
+        let fixed_mask = not (mask_and xor mask_or)
+        # if (resolved_mask or fixed_mask) != not 0'u64:
+        #   error(
+        #     &"Not all bits in %{operand.variable_name} can be automatically disassembled"
+        #   )
+
+        let mask_overlap = resolved_mask and fixed_mask
+        if mask_overlap != 0:
+          new_asserts.add(
+            Assertion(
+              msg: &"Fixed bits in %{operand.variable_name} do not match",
+              exp: exp_op(
+                exp_op_ne,
+                [
+                  exp_op(
+                    exp_op_and_bitwise, [exp_var(index_virtual), exp_num(mask_overlap)]
+                  ),
+                  exp_num(any_value and mask_overlap),
+                ],
+              ),
+            )
+          )
+
+        if fixed_mask != mask_overlap:
+          let fixed_bits = any_value and (fixed_mask xor mask_overlap)
+          new_virtuals[^1] = OperandTypeVirtual(
+            variable_name: new_virtuals[^1].variable_name,
+            expr:
+              exp_op(exp_op_or_bitwise, [new_virtuals[^1].expr, exp_num(fixed_bits)]),
+          )
+
+    var operand_options: seq[tuple[options: seq[FieldKind], exp: uint32]]
+    for operand_index, operand in inst.operands:
+      case operand.kind
+      of otk_normal:
+        let exp =
+          if operand.variable_name in names_to_virtual_index:
+            names_to_virtual_index[operand.variable_name]
+          else:
+            let num_virtual = cast[uint32](new_virtuals.len)
+            var value = 0'u64
+            for option in option_path[operand_index]:
+              if not option.is_variable():
+                break
+              if option notin field_types:
+                continue
+
+              let value_set = field_types[option].values
+              if value_set.len == 0:
+                continue
+
+              value = value_set[0].value
+              break
+
+            new_virtuals.add(
+              OperandTypeVirtual(
+                variable_name: operand.variable_name, expr: exp_num(value)
+              )
+            )
+            num_virtual
+        operand_options.add((options: option_path[operand_index], exp: exp))
+      of otk_pattern:
+        error("Patterns not supported in disassembly")
+      of otk_virtual:
+        continue
+
+    result[1].paths.add(
+      InstructionDecodingPath(
+        exprs: new_virtuals, asserts: new_asserts, operands: operand_options
+      )
+    )
+
+func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
     is_patterns: set[uint8],
+    field_types: Table[FieldKind, FieldType],
+    inst: var T,
+    decoders: var Option[seq[InstructionDecoder]],
     op_names: var seq[string],
+    is_labels: var set[uint8],
     chunk: var InstructionChunk,
 ): (string, bool) =
   let start = get_index(s)
@@ -348,10 +948,24 @@ func get_bit_pattern(
   skip_whitespaces(s)
 
   let finish = get_index(s)
-  expect(matches(s, {'\n', '\0'}, tk = tk_whitespace), "Was expecting a newline here")
+  expect(
+    matches(s, {'\n', '\0'}, tk = tk_whitespace),
+    "Was expecting a newline at the end of the bit pattern",
+  )
 
   chunk.raw_text = $s.get_slice(start, finish)
   chunk.is_assert = false
+
+  when T is InstructionUnbranched:
+    inst.chunks.add(chunk)
+
+  if decoders.is_some:
+    let inst_debranched =
+      when T is InstructionUnbranched:
+        inst.debranch()
+      else:
+        inst
+    decoders.get.add(check(get_auto_instruction_decoder(inst_debranched, field_types)))
 
 func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
@@ -402,7 +1016,9 @@ func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
 func get_if[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
     is_patterns: set[uint8],
+    field_types: Table[FieldKind, FieldType],
     inst: var T,
+    decoders: var Option[seq[InstructionDecoder]],
     op_names: var seq[string],
     is_labels: set[uint8],
     chunk: var InstructionChunk,
@@ -420,7 +1036,11 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
     matches(s, "{", tk = tk_bracket), "Expected '{' after 'if'-condition expression"
   )
 
-  expect(matches(s, '\n', tk = tk_whitespace), "Was expecting a newline here")
+  skip_whitespaces(s)
+  expect(
+    matches(s, '\n', tk = tk_whitespace),
+    "Was expecting a newline after opening bracket",
+  )
 
   when not only_asserts:
     expect(
@@ -440,7 +1060,11 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
     chunk.virtuals.finish = cast[uint16](inst.operands.len)
 
   if not only_asserts and peek(s) notin QUOTES:
-    discard check(get_bit_pattern(s, is_patterns, op_names, chunk))
+    discard check(
+      get_bit_pattern(
+        s, is_patterns, field_types, inst, decoders, op_names, is_labels, chunk
+      )
+    )
   else:
     expect(
       chunk.virtuals.branch == chunk.virtuals.finish,
@@ -450,6 +1074,9 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
     let s_msg = check(get_string(s))
     chunk.raw_text = check(descape_string_content(s_msg))
     chunk.is_assert = true
+
+    when T is InstructionUnbranched:
+      inst.chunks.add(chunk)
 
     skip_whitespaces(s)
     expect(matches(s, '\n', tk = tk_whitespace), "Expected newline before '}'")
@@ -466,6 +1093,7 @@ func get_instruction*(
     s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound: uint8
 ): (string, InstructionDebranched) =
   var inst: InstructionDebranched
+  var decoders: Option[seq[InstructionDecoder]]
   var op_names: seq[string]
   var is_labels: set[uint8]
   var is_patterns: set[uint8]
@@ -485,7 +1113,12 @@ func get_instruction*(
 
       skip_whitespaces(s)
       if matches(s, "if", tk = tk_keyword):
-        discard check(get_if(s, is_patterns, inst, op_names, is_labels, chunk, false))
+        discard check(
+          get_if(
+            s, is_patterns, isa_spec.field_types, inst, decoders, op_names, is_labels,
+            chunk, false,
+          )
+        )
 
         inst.asserts.add(Assertion(exp: chunk.cond, msg: chunk.raw_text))
         chunk.virtuals.start = chunk.virtuals.finish
@@ -497,7 +1130,12 @@ func get_instruction*(
       expect(not matches(s, "jump_switch", tk = tk_keyword)):
         "Jump switch not allowed in patterns"
 
-      discard check(get_bit_pattern(s, is_patterns, op_names, chunk))
+      discard check(
+        get_bit_pattern(
+          s, is_patterns, isa_spec.field_types, inst, decoders, op_names, is_labels,
+          chunk,
+        )
+      )
       inst.bit_pattern = chunk.raw_text
       break
 
@@ -510,7 +1148,7 @@ func get_instruction*(
   result[1] = inst
 
 func get_instruction*(
-    s: var StreamSlice, isa_spec: IsaSpec
+    s: var StreamSlice, isa_spec: var IsaSpec
 ): (string, InstructionUnbranched) =
   var inst: InstructionUnbranched
   var op_names: seq[string]
@@ -531,9 +1169,13 @@ func get_instruction*(
 
       skip_whitespaces(s)
       if matches(s, "if", tk = tk_keyword):
-        discard check(get_if(s, is_patterns, inst, op_names, is_labels, chunk, false))
+        discard check(
+          get_if(
+            s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
+            op_names, is_labels, chunk, false,
+          )
+        )
 
-        inst.chunks.add(chunk)
         chunk.virtuals.start = chunk.virtuals.finish
         continue
 
@@ -574,7 +1216,7 @@ func get_instruction*(
         skip_whitespaces(s)
         let expr_anchor =
           if not matches(s, ","):
-            ExpRef(exp_kind: exp_number, value: 0)
+            exp_num(0)
           else:
             check(get_expression(s, op_names))
 
@@ -582,13 +1224,7 @@ func get_instruction*(
         inst.virtual_operands.add(
           OperandTypeVirtual(
             variable_name: "jump_switch",
-            expr: exp_op(
-              exp_op_sub,
-              [
-                ExpRef(exp_kind: exp_operand, is_address: false, index: idx_label),
-                expr_anchor,
-              ],
-            ),
+            expr: exp_op(exp_op_sub, [exp_var(idx_label), expr_anchor]),
           )
         )
         op_names.add("jump_switch")
@@ -610,10 +1246,13 @@ func get_instruction*(
 
           skip_whitespaces(s)
           if matches(s, "if", tk = tk_keyword):
-            discard
-              check(get_if(s, is_patterns, inst, op_names, is_labels, chunk, true))
+            discard check(
+              get_if(
+                s, is_patterns, isa_spec.field_types, inst,
+                isa_spec.instruction_decoders, op_names, is_labels, chunk, true,
+              )
+            )
 
-            inst.chunks.add(chunk)
             chunk.virtuals.start = chunk.virtuals.finish
             continue
 
@@ -630,17 +1269,16 @@ func get_instruction*(
           expect(matches(s, ":", tk = tk_seperator), "Expected ':' after jump size")
 
           chunk.virtuals.finish = chunk.virtuals.branch
-          chunk.cond = exp_op(
-            exp_op_jump_switch,
-            [
-              ExpRef(exp_kind: exp_operand, is_address: false, index: idx_jump_switch),
-              ExpRef(exp_kind: exp_number, value: size),
-            ],
+          chunk.cond =
+            exp_op(exp_op_jump_switch, [exp_var(idx_jump_switch), exp_num(size)])
+
+          discard check(
+            get_bit_pattern(
+              s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
+              op_names, is_labels, chunk,
+            )
           )
 
-          discard check(get_bit_pattern(s, is_patterns, op_names, chunk))
-
-          inst.chunks.add(chunk)
           chunk.virtuals.start = chunk.virtuals.finish
 
         skip_whitespaces(s)
@@ -652,11 +1290,15 @@ func get_instruction*(
         break
 
       chunk.virtuals.finish = chunk.virtuals.branch
-      chunk.cond = ExpRef(exp_kind: exp_number, value: 1)
+      chunk.cond = exp_num(1)
 
-      discard check(get_bit_pattern(s, is_patterns, op_names, chunk))
+      discard check(
+        get_bit_pattern(
+          s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
+          op_names, is_labels, chunk,
+        )
+      )
 
-      inst.chunks.add(chunk)
       break
 
     expect(inst.virtual_operands.len <= uint16.high.int, "Too many virtual operands")
@@ -676,7 +1318,9 @@ func get_instruction*(
 
   result[1] = inst
 
-func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
+func parse_isa_spec_inner(
+    file_name: string, source: string, with_disassembly: bool = false
+): SpecParseResult =
   var s = new_StreamSlice(source)
   start_tokenize(s)
 
@@ -895,6 +1539,9 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
   if not skip_newlines(s):
     error("Expected newline after section header")
 
+  if with_disassembly:
+    result.spec.instruction_decoders = some(newSeq[InstructionDecoder]())
+
   while peek(s) != '\0':
     add_token(s, tk_new_instruction)
     var (error_message, inst) = get_instruction(s, result.spec)
@@ -908,8 +1555,10 @@ func parse_isa_spec_inner(file_name: string, source: string): SpecParseResult =
   result.tokens = collect_tokens(s)
   start_tokenize(nil)
 
-func parse_isa_spec*(file_name: string, source: string): SpecParseResult =
-  parse_isa_spec_inner(file_name, source)
+func parse_isa_spec*(
+    file_name: string, source: string, with_disassembly: bool = false
+): SpecParseResult =
+  parse_isa_spec_inner(file_name, source, with_disassembly)
 
 import assemble
 export assemble

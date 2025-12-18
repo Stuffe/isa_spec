@@ -1,7 +1,7 @@
 import
   std/[
-    algorithm, bitops, deques, options, os, parseutils, setutils, strformat, strutils,
-    tables,
+    algorithm, bitops, deques, options, os, parseutils, sequtils, setutils, strformat,
+    strutils, tables,
   ]
 import types, parse, expressions, label_prefix_trie
 
@@ -26,7 +26,7 @@ type
 
   BitPattern = object
     bits: seq[Bitfield]
-    bit_length: int16
+    bit_length: uint32
     # These are both bit endian lists of 64bit words
     # If bit_length is not a multiple of 64, the first word is the partial one
     fixed_pattern: seq[uint64]
@@ -112,7 +112,7 @@ func offset_all_refs(exp: ExpRef, offset: uint8): ExpRef =
   case exp.exp_kind
   of exp_operand:
     if not exp.is_address:
-      ExpRef(exp_kind: exp_operand, is_address: false, index: exp.index + offset)
+      exp_var(exp.index + offset)
     else:
       exp
   of exp_number:
@@ -136,7 +136,7 @@ func offset_all_refs(o: var BitPattern, offset: uint8) =
 
 func into_virtual_operands(o: var BitPattern, name: string, offset: uint8) =
   func or_bit_field(
-      old_expr: ExpRef, id: BitFieldKind, shift: int, top: int, bottom: int
+      old_expr: ExpRef, id: BitFieldKind, shift: uint32, top: uint32, bottom: uint32
   ): ExpRef =
     let width = top - bottom + 1
     let new_expr =
@@ -151,10 +151,10 @@ func into_virtual_operands(o: var BitPattern, name: string, offset: uint8) =
         let base = ExpRef(
           exp_kind: exp_operand, is_address: false, index: id.to_variable_index()
         )
-        let top = ExpRef(exp_kind: exp_number, value: cast[uint64](top))
-        let bottom = ExpRef(exp_kind: exp_number, value: cast[uint64](bottom))
-        let slice = exp_op(exp_op_bitextract, [base, top, bottom])
-        let shift = ExpRef(exp_kind: exp_number, value: cast[uint64](shift + 1 - width))
+        let top = exp_num(cast[uint64](top))
+        let bottom = exp_num(cast[uint64](bottom))
+        let slice = exp_op(exp_op_bit_extract, [base, top, bottom])
+        let shift = exp_num(cast[uint64](shift + 1 - width))
         exp_op(exp_op_lsl, [slice, shift])
 
     if old_expr.exp_kind == exp_number and old_expr.value == 0:
@@ -170,9 +170,8 @@ func into_virtual_operands(o: var BitPattern, name: string, offset: uint8) =
 
   o.bit_length = shift mod MAX_FIELD_SIZE + 1
 
-  var new_operand = OperandType(
-    variable_name: name, kind: otk_virtual, expr: ExpRef(exp_kind: exp_number, value: 0)
-  )
+  var new_operand =
+    OperandType(variable_name: name, kind: otk_virtual, expr: exp_num(0))
   shift = shift mod MAX_FIELD_SIZE
   for bit in o.bits:
     let top = bit.top
@@ -186,11 +185,7 @@ func into_virtual_operands(o: var BitPattern, name: string, offset: uint8) =
 
     shift = MAX_FIELD_SIZE - 1
     o.operand_types.add(new_operand)
-    new_operand = OperandType(
-      variable_name: name,
-      kind: otk_virtual,
-      expr: ExpRef(exp_kind: exp_number, value: 0),
-    )
+    new_operand = OperandType(variable_name: name, kind: otk_virtual, expr: exp_num(0))
 
     if bottom != bit.bottom:
       new_operand.expr =
@@ -199,11 +194,7 @@ func into_virtual_operands(o: var BitPattern, name: string, offset: uint8) =
   if o.operand_types.len == 0:
     # Phantom field for alignment purposes
     o.operand_types.add(
-      OperandType(
-        variable_name: name & "/_",
-        kind: otk_virtual,
-        expr: ExpRef(exp_kind: exp_number, value: 0),
-      )
+      OperandType(variable_name: name & "/_", kind: otk_virtual, expr: exp_num(0))
     )
     o.bit_length = 0
 
@@ -511,7 +502,7 @@ func get_bit_pattern(
 
         if num_word <= 0:
           if top > 0:
-            new_bits.add(Bitfield(id: bfk_zero, top: cast[int16](top - bottom)))
+            new_bits.add(Bitfield(id: bfk_zero, top: cast[uint32](top - bottom)))
             for _ in bottom .. top:
               pattern.add('0')
         else:
@@ -521,7 +512,7 @@ func get_bit_pattern(
           var top =
             if top >= pattern_size:
               let bottom = bottom.max(pattern_size)
-              new_bits.add(Bitfield(id: bfk_zero, top: cast[int16](top - bottom)))
+              new_bits.add(Bitfield(id: bfk_zero, top: cast[uint32](top - bottom)))
               for _ in bottom .. top:
                 pattern.add('0')
               bottom - 1
@@ -536,8 +527,8 @@ func get_bit_pattern(
             new_bits.add(
               Bitfield(
                 id: to_bit_field_kind(first_word_index),
-                top: cast[int16](top),
-                bottom: cast[int16](bottom),
+                top: cast[uint32](top),
+                bottom: cast[uint32](bottom),
               )
             )
             for _ in bottom .. top:
@@ -555,8 +546,8 @@ func get_bit_pattern(
             new_bits.add(
               Bitfield(
                 id: to_bit_field_kind(index),
-                top: cast[int16](top),
-                bottom: cast[int16](bottom),
+                top: cast[uint32](top),
+                bottom: cast[uint32](bottom),
               )
             )
             for _ in bottom .. top:
@@ -566,8 +557,8 @@ func get_bit_pattern(
             new_bits.add(
               Bitfield(
                 id: to_bit_field_kind(operand_index),
-                top: cast[int16](top),
-                bottom: cast[int16](bottom),
+                top: cast[uint32](top),
+                bottom: cast[uint32](bottom),
               )
             )
             for _ in bottom .. top:
@@ -578,8 +569,8 @@ func get_bit_pattern(
         new_bits.add(
           Bitfield(
             id: to_bit_field_kind(operand_index),
-            top: cast[int16](top),
-            bottom: cast[int16](bottom),
+            top: cast[uint32](top),
+            bottom: cast[uint32](bottom),
           )
         )
         for _ in bottom .. top:
@@ -588,7 +579,7 @@ func get_bit_pattern(
   if current.id != bfk_invalid:
     new_bits.add(current)
 
-  let total_length = cast[int16](pattern.len)
+  let total_length = cast[uint32](pattern.len)
   if not allow_unaligned_bit_pattern:
     if total_length == 0:
       error(
@@ -601,8 +592,8 @@ func get_bit_pattern(
       )
   result[1].bit_length = total_length
 
-  var current_length = 0'i16
-  var consumed_bits = newSeq[int16](inst.operands.len)
+  var current_length = 0'u32
+  var consumed_bits = newSeq[uint32](inst.operands.len)
   for i in countdown(new_bits.high, 0):
     var bits = new_bits[i]
     let index = to_variable_index(bits.id)
@@ -1156,14 +1147,14 @@ func assemble_instruction(
 
   result[1] = bits.fixed_pattern
 
-  var i = 0
+  var i = 0'u32
   for j in countdown(bits.bits.high, 0):
     let bit_type = bits.bits[j]
     if not is_variable(bit_type.id):
       i += bit_type.top - bit_type.bottom + 1
       continue # fixed fields are either irreleant or part of the fixed_pattern above
     let bit_index = i mod 64
-    let int_index = cast[int16](result[1].high) - (i div 64)
+    let int_index = cast[uint32](result[1].high) - (i div 64)
     let index = to_variable_index(bit_type.id)
     let bits = fields[index].bitsliced(bit_type.bottom.int .. bit_type.top.int)
     result[1][int_index] = result[1][int_index] or (bits shl bit_index)
@@ -2166,3 +2157,192 @@ proc assemble*(
         ret.line_info.add_line(
           sources[^1].normal_path, ret.machine_code.len, sources[^1].line_counter + 1
         )
+
+func decode(
+    decoder: InstructionDecoder,
+    byte_stream: seq[uint8],
+    ip: uint64,
+    field_types: Table[FieldKind, FieldType],
+    endian: types.Endianness,
+): Option[tuple[inst: string, num_bit_consumed: uint32]] =
+  if cast[uint32](byte_stream.len) * 8 < decoder.bit_length:
+    return
+
+  var bytes = newSeq[uint8](decoder.bit_length div 8)
+  if endian == end_big:
+    for i in 0 ..< bytes.len:
+      bytes[i] = byte_stream[i]
+  else:
+    for i in 0 ..< bytes.len:
+      bytes[i] = byte_stream[bytes.len - 1 - i]
+
+  # Quick check
+  block BLK_QUICK_CHECK:
+    var byte_index = 0'u32
+    var num_bit_in_byte = 8'u32
+    for part in decoder.bits:
+      case part.id
+      of bfk_zero:
+        var num_bit = part.top - part.bottom + 1
+        if num_bit >= num_bit_in_byte:
+          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let bits = bytes[byte_index] and mask
+          if bits != 0:
+            return
+
+          num_bit -= num_bit_in_byte
+          byte_index += 1
+          num_bit_in_byte = 8
+
+          while num_bit >= 8:
+            if bytes[byte_index] != 0:
+              return
+
+            num_bit -= 8
+            byte_index += 1
+
+        if num_bit > 0:
+          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let bits = (bytes[byte_index] and mask) shr (num_bit_in_byte - num_bit)
+          if bits != 0:
+            return
+
+          num_bit_in_byte -= num_bit
+      of bfk_one:
+        var num_bit = part.top - part.bottom + 1
+        if num_bit >= num_bit_in_byte:
+          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let bits = (not bytes[byte_index]) and mask
+          if bits != 0:
+            return
+
+          num_bit -= num_bit_in_byte
+          byte_index += 1
+          num_bit_in_byte = 8
+
+          while num_bit >= 8:
+            if bytes[byte_index] != 0xFF:
+              return
+
+            num_bit -= 8
+            byte_index += 1
+
+        if num_bit > 0:
+          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let bits = ((not bytes[byte_index]) and mask) shr (num_bit_in_byte - num_bit)
+          if bits != 0:
+            return
+
+          num_bit_in_byte -= num_bit
+      else:
+        var num_bit = part.top - part.bottom + 1
+        if num_bit >= num_bit_in_byte:
+          num_bit -= num_bit_in_byte
+          byte_index += 1
+          num_bit_in_byte = 8
+
+          num_bit = num_bit mod 8
+          byte_index += num_bit div 8
+
+        if num_bit > 0:
+          num_bit_in_byte -= num_bit
+
+  # Put the bytes into 64-bit operands
+  var values: seq[uint64]
+  let bit_length = decoder.bit_length
+  let msd_cutoff = (bit_length mod 64) div 8
+  if msd_cutoff > 0:
+    var value = 0'u64
+    for i in 0 ..< msd_cutoff:
+      value = value shl 8
+      value = value or cast[uint64](bytes[i])
+    values.add(value)
+
+  for word_index in 0 ..< bit_length div 64:
+    var value = 0'u64
+    for byte_index in 0 ..< 8'u32:
+      value = value shl 8
+      value = value or cast[uint64](bytes[msd_cutoff + word_index * 8 + byte_index])
+    values.add(value)
+
+  # Evaluate all expressions
+  let byte_length = cast[uint64](decoder.bit_length div 8)
+  for path in decoder.paths:
+    block BLK_EVAL_PATH:
+      for i, exp in path.exprs:
+        let (err, new_value) = eval(exp.expr, values, ip, byte_length)
+        if err != "":
+          break BLK_EVAL_PATH
+
+        values.add(new_value)
+
+      # Check assertions
+      for i, assertion in path.asserts:
+        let exp = assertion.exp
+        let (err, value) = eval(exp, values, ip, byte_length)
+        if err != "":
+          break BLK_EVAL_PATH
+
+        if value != 0:
+          break BLK_EVAL_PATH
+
+      # Translate syntax into actual string
+      var op_index = 0
+      var str = ""
+      for part in decoder.syntax:
+        case part.kind
+        of sk_any_number_of_spaces, sk_at_least_one_space:
+          str &= " "
+        of sk_fixed:
+          str &= part.text
+        of sk_field:
+          let (options, exp_index) = path.operands[op_index]
+          op_index += 1
+
+          let value = values[exp_index]
+          block BLK_FIND_FIELD_NAME:
+            for option in options:
+              if option == fk_label:
+                str &= "." & $cast[int64](value - ip)
+                break BLK_FIND_FIELD_NAME
+
+              if not option.is_variable():
+                if value.in_range(option):
+                  str &= value.to_string(option)
+                  break BLK_FIND_FIELD_NAME
+                continue
+
+              if option notin field_types:
+                continue
+
+              for field in field_types[option].values:
+                if field.value == value:
+                  str &= field.name
+                  break BLK_FIND_FIELD_NAME
+
+            break BLK_EVAL_PATH
+        of sk_pattern:
+          assert false
+
+      return (inst: str, num_bit_consumed: bit_length div 8).some
+
+func disassemble*(machine_code: seq[uint8], isa_spec: IsaSpec, ip: uint64 = 0): seq[string] =
+  if isa_spec.instruction_decoders.is_none():
+    return machine_code.mapIt("<U8>" & $it)
+
+  let decoders = isa_spec.instruction_decoders.get()
+  let num_byte = cast[uint64](machine_code.len)
+  var index = 0'u64
+  while index < num_byte:
+    block BLK_TRY_DECODER:
+      for decoder in decoders:
+        let ret =
+          decoder.decode(machine_code, ip + index, isa_spec.field_types, isa_spec.endianness)
+        if ret.is_some():
+          let (inst, num_bit_consumed) = ret.get()
+          result.add(inst)
+          index += num_bit_consumed
+          break BLK_TRY_DECODER
+
+      result.add("<U8>" & $machine_code[index])
+      index += 1

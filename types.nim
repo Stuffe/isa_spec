@@ -60,7 +60,7 @@ func get_tighest_simm*(num: uint64): FieldKind =
   else:
     FieldKind((log2(0 - num - 1).uint8 + 1) or 0xC0)
 
-func in_range*(num: uint64, field: FieldKind, to_extend_sign = false): bool =
+func in_range*(num: uint64, field: FieldKind, to_extend_sign: bool = false): bool =
   case field
   of fk_imm_0 .. fk_uimm_64:
     num shr (field.ord - fk_uimm_1.ord) <= 1
@@ -72,6 +72,19 @@ func in_range*(num: uint64, field: FieldKind, to_extend_sign = false): bool =
       t == 0 or t == -1
   else:
     false
+
+func to_string*(num: uint64, field: FieldKind, to_extend_sign: bool = false): string =
+  case field
+  of fk_imm_0 .. fk_uimm_64:
+    $num
+  of fk_simm_1 .. fk_simm_64:
+    if to_extend_sign:
+      let shift = 63 - (field.ord - fk_simm_1.ord)
+      $(cast[int64](num shl shift) shr shift)
+    else:
+      $cast[int64](num)
+  else:
+    ""
 
 static:
   assert to_immediate_field_kind(1, false) == fk_uimm_1
@@ -156,8 +169,6 @@ type OperandTypeSyntax* = object
 
 type OperandTypeVirtual* = object
   variable_name*: string
-  size*: int
-  is_signed*: bool
 
   expr*: ExpRef
 
@@ -197,8 +208,8 @@ func to_bit_field_kind*(input: uint8): BitFieldKind =
 
 type Bitfield* = object
   id*: BitFieldKind
-  top*: int16
-  bottom*: int16
+  top*: uint32
+  bottom*: uint32
   is_direct*: bool
 
 type SyntaxKind* = enum
@@ -436,6 +447,17 @@ func resolve*(p: ParametrizedPattern, args: seq[string]): string =
   if p.texts.len > p.parameters.len:
     result &= $p.texts[^1]
 
+type InstructionDecodingPath* = object
+  exprs*: seq[OperandTypeVirtual]
+  asserts*: seq[Assertion]
+  operands*: seq[tuple[options: seq[FieldKind], exp: uint32]]
+
+type InstructionDecoder* = object
+  bits*: seq[Bitfield]
+  bit_length*: uint32
+  syntax*: seq[Syntax]
+  paths*: seq[InstructionDecodingPath]
+
 type Endianness* = enum
   end_big
   end_little
@@ -459,6 +481,7 @@ type IsaSpec* = object
   instructions*: seq[InstructionUnbranched]
   patterns*:
     seq[tuple[name: string, parameter_count: int, pattern: ParametrizedPattern]]
+  instruction_decoders*: Option[seq[InstructionDecoder]]
 
 type SpecParseResult* = object
   error*: Error
