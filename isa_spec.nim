@@ -183,8 +183,18 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
       var options: seq[FieldKind]
       while true:
         let (size_error, size, is_signed) = get_size(s)
+        var has_ws_after_size = false
         if size_error == "":
+          let start_index = s.get_index()
           skip_whitespaces(s)
+          has_ws_after_size = s.get_index() != start_index
+
+        if has_ws_after_size:
+          let start_index = s.get_index()
+          skip_whitespaces(s)
+          if s.get_index() != start_index:
+            break
+
           expect(
             matches(s, "immediate", tk = tk_type_name),
             "Only 'immediate' field type is allowed sizing",

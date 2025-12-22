@@ -448,15 +448,9 @@ func `?`*(input: (string, StreamSlice)): StreamSlice =
 func get_size*(s: var StreamSlice): (string, uint64, bool) =
   let cp = checkpoint(s)
 
-  if peek(s) != '<':
-    result[0] = "Expected a size declaration here"
-    return
-
-  if peek(s, 1) notin {'U', 'S'}:
+  if peek(s) notin {'U', 'S'}:
     result[0] = "Expected an U for unsigned or S for signed here"
     return
-  
-  s.skip()
   
   result[2] = read(s) == 'S'
 
@@ -466,7 +460,7 @@ func get_size*(s: var StreamSlice): (string, uint64, bool) =
 
   change_token_kind(s, tk_number, tk_type_name)
 
-  if s_number.len == 0 or read(s) != '>':
+  if s_number.len == 0:
     s.restore(cp)
     result[0] = "Expected a size declaration here"
     return

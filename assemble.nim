@@ -1304,14 +1304,20 @@ proc estimate_labels(
           block BLK_NUMBER_LITERAL:
             let restore = ctx.source[^1].s
             let (size_error, size, is_signed) = get_size(ctx.source[^1].s)
-            isa_spec.skip_whitespaces(ctx.source[^1].s)
+
+            var has_ws_after_size = false
+            if size_error == "":
+              let start_index = ctx.source[^1].s.get_index()
+              isa_spec.skip_whitespaces(ctx.source[^1].s)
+              has_ws_after_size = ctx.source[^1].s.get_index() != start_index
+
             let (number_error, number) = get_unsigned(ctx.source[^1].s)
             if size_error != "" and number_error != "":
               ctx.source[^1].s = restore
               break BLK_NUMBER_LITERAL
 
             if size_error != "" or is_signed or size mod 8 != 0 or size == 0 or
-                number_error != "":
+                not has_ws_after_size or number_error != "":
               ctx.source[^1].skip_line()
               break BLK_INNER
 
@@ -1672,7 +1678,13 @@ proc assemble*(
           block BLK_NUMBER_LITERAL:
             let restore = sources[^1].s
             let (size_error, size, is_signed) = get_size(sources[^1].s)
-            isa_spec.skip_whitespaces(sources[^1].s)
+
+            var has_ws_after_size = false
+            if size_error == "":
+              let start_index = sources[^1].s.get_index()
+              isa_spec.skip_whitespaces(sources[^1].s)
+              has_ws_after_size = sources[^1].s.get_index() != start_index
+
             let (number_error, number) = get_unsigned(sources[^1].s)
             if size_error != "" and number_error != "":
               sources[^1].s = restore
@@ -1680,7 +1692,7 @@ proc assemble*(
 
             if size_error != "":
               sources[^1].error(
-                "Expected a size before the number, like <U64> " & $number
+                "Expected a size before the number, like U64 " & $number
               )
               sources[^1].skip_line()
               break BLK_INNER
@@ -1693,6 +1705,14 @@ proc assemble*(
             if size mod 8 != 0 or size == 0:
               sources[^1].error(
                 "Only positive multiples of 8 bits are supported for now"
+              )
+              sources[^1].skip_line()
+              break BLK_INNER
+
+            if not has_ws_after_size:
+              sources[^1].error(
+                "Expected some whitespace between the size and the number, like U" &
+                  $size & " " & $number
               )
               sources[^1].skip_line()
               break BLK_INNER
@@ -2326,9 +2346,11 @@ func decode(
 
       return (inst: str, num_bit_consumed: bit_length div 8).some
 
-func disassemble*(machine_code: seq[uint8], isa_spec: IsaSpec, ip: uint64 = 0): seq[string] =
+func disassemble*(
+    machine_code: seq[uint8], isa_spec: IsaSpec, ip: uint64 = 0
+): seq[string] =
   if isa_spec.instruction_decoders.is_none():
-    return machine_code.mapIt("<U8>" & $it)
+    return machine_code.mapIt("U8 " & $it)
 
   let decoders = isa_spec.instruction_decoders.get()
   let num_byte = cast[uint64](machine_code.len)
@@ -2336,13 +2358,14 @@ func disassemble*(machine_code: seq[uint8], isa_spec: IsaSpec, ip: uint64 = 0): 
   while index < num_byte:
     block BLK_TRY_DECODER:
       for decoder in decoders:
-        let ret =
-          decoder.decode(machine_code, ip + index, isa_spec.field_types, isa_spec.endianness)
+        let ret = decoder.decode(
+          machine_code, ip + index, isa_spec.field_types, isa_spec.endianness
+        )
         if ret.is_some():
           let (inst, num_bit_consumed) = ret.get()
           result.add(inst)
           index += num_bit_consumed
           break BLK_TRY_DECODER
 
-      result.add("<U8>" & $machine_code[index])
+      result.add("U8 " & $machine_code[index])
       index += 1

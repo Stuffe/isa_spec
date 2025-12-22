@@ -6,9 +6,9 @@ endianness = little
 
 [instructions]
 
-load %a(<U4>immediate)
+load %a(U4 immediate)
 0000aaaa
 
-load %a(<U8>immediate)
+load %a(U8 immediate)
 00000001 aaaaaaaa
 

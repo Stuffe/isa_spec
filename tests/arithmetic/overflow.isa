@@ -3,8 +3,8 @@ endianness = little
 
 [instructions]
 
-loads64 %a(<S64>immediate)
+loads64 %a(S64 immediate)
 aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa 11111100
 
-loadu64 %a(<U64>immediate)
+loadu64 %a(U64 immediate)
 aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa aaaaaaaa 11111101
