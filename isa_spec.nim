@@ -167,7 +167,7 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
 
         error("Expected a closing parenthesis after the pattern type")
 
-      syntaxs.add(Syntax(kind: sk_pattern))
+      syntaxs.add(Syntax(kind: sk_pattern, text: variable_name))
       op_names.add(variable_name)
       operands.add(
         when T is OperandTypeSyntax:
@@ -234,7 +234,7 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
         "Expected a closing parenthesis after the field type",
       )
 
-      syntaxs.add(Syntax(kind: sk_field))
+      syntaxs.add(Syntax(kind: sk_field, text: variable_name))
       op_names.add(variable_name)
       operands.add(
         when T is OperandTypeSyntax:
@@ -416,7 +416,7 @@ func get_auto_instruction_decoder(
           if bfk_zero != current.id:
             if current.id != bfk_invalid:
               new_bits.add(current)
-            current = Bitfield(id: bfk_zero, is_direct: true)
+            current = Bitfield(id: bfk_zero)
           else:
             current.top += 1
 
@@ -450,7 +450,7 @@ func get_auto_instruction_decoder(
             if bit_id != current.id:
               if current.id != bfk_invalid:
                 new_bits.add(current)
-              current = Bitfield(id: bit_id, is_direct: true)
+              current = Bitfield(id: bit_id)
             else:
               current.top += 1
             i += 1
@@ -460,20 +460,20 @@ func get_auto_instruction_decoder(
       if peek(s) != '%':
         let bit_id =
           case peek(s)
-          of '0':
-            bit_length += 1
-            skip(s, tk = tk_number)
-            bfk_zero
-          of '1':
-            bit_length += 1
-            skip(s, tk = tk_number)
-            bfk_one
           of ' ':
             skip(s, tk = tk_whitespace)
             continue
+          of '0':
+            bit_length += 1
+            skip(s, tk = tk_bit_0)
+            bfk_zero
+          of '1':
+            bit_length += 1
+            skip(s, tk = tk_bit_1)
+            bfk_one
           of '?':
             bit_length += 1
-            skip(s, tk = tk_number)
+            skip(s, tk = tk_bit_dont_care)
             bfk_wildcard
           else:
             bit_length += 1
@@ -491,12 +491,12 @@ func get_auto_instruction_decoder(
         if bit_id != current.id:
           if current.id != bfk_invalid:
             new_bits.add(current)
-          current = Bitfield(id: bit_id, is_direct: true)
+          current = Bitfield(id: bit_id, is_direct: is_variable(bit_id))
         else:
           current.top += 1
       else:
         skip(s)
-        let operand_name = get_identifier(s)
+        let operand_name = get_identifier(s, tk = tk_field_ref)
         assert operand_name.len > 0,
           "(Late detection!): Expected an identifier after '%'"
 
@@ -551,28 +551,59 @@ func get_auto_instruction_decoder(
     if current.id != bfk_invalid:
       new_bits.add(current)
 
+    if bit_length mod 8 != 0:
+      return
+
     result[1].bit_length = bit_length
 
     var current_length = 0'u32
     var consumed_bits = newSeq[uint32](inst.operands.len)
-    for i in countdown(new_bits.high, 0):
+    var i = new_bits.high
+    while i >= 0:
       var bits = new_bits[i]
-      let index = to_variable_index(bits.id)
-      let root_index = index
-      let new_length = current_length + bits.top - bits.bottom + 1
-      if is_variable(bits.id):
-        if bits.is_direct:
-          # We need to adjust this for the case of non-consecutive bit fields of the same operand
+      let root_index = to_variable_index(bits.id)
+      # We need to adjust the actual top & bottom indexes for non-consecutive bit fields of the same operand
+      if bits.is_direct:
+        # For normal operands, it's a wrapping index modulo the largest field option's bit length
+        # For virtual operands, it's a wrapping index modulo 64
+        # For pattern operands, it's indexing into an inifitely zero-extended value
+        let operand = inst.operands[root_index]
+        if operand.kind != otk_pattern:
+          var max_bit_length: uint8
+          if operand.kind == otk_normal:
+            for option in operand.options:
+              max_bit_length = max_bit_length.max(field_types[option].bit_length)
+          else:
+            max_bit_length = 64
+
+          bits.top += consumed_bits[root_index]
+          bits.bottom += consumed_bits[root_index]
+          if bits.top div max_bit_length != bits.bottom div max_bit_length:
+            bits.bottom = bits.bottom mod max_bit_length
+            new_bits[i].top -= max_bit_length - bits.bottom
+            bits.top = max_bit_length - 1
+            consumed_bits[root_index] = 0
+          else:
+            bits.top = bits.top mod max_bit_length
+            bits.bottom = bits.bottom mod max_bit_length
+            consumed_bits[root_index] =
+              (consumed_bits[root_index] + bits.top - bits.bottom + 1) mod max_bit_length
+            i -= 1
+        else:
           bits.top += consumed_bits[root_index]
           bits.bottom += consumed_bits[root_index]
           consumed_bits[root_index] += bits.top - bits.bottom + 1
+          i -= 1
+      else:
+        i -= 1
 
-        let operand_index = bits.id.to_variable_index()
+      let new_length = current_length + bits.top - bits.bottom + 1
+      if bits.id.is_variable():
         let direct_decoding = (
           machine_code_slice: (current_length, new_length),
           operand_slice: (bits.bottom, bits.top + 1),
         )
-        machine_code_direct_decoding.mgetOrPut(operand_index).add(direct_decoding)
+        machine_code_direct_decoding.mgetOrPut(root_index).add(direct_decoding)
 
       # Whether we are crossing a 64-bit boundary
       if (new_length - 1) div 64 != current_length div 64:
@@ -862,50 +893,65 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     is_labels: var set[uint8],
     chunk: var InstructionChunk,
 ): (string, bool) =
+  let cp = checkpoint(s)
   let start = get_index(s)
 
+  var bit_length = 0
   while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
     const HEX_PREFIX = "#x"
     if matches(s, HEX_PREFIX, increment = false):
-      discard check(get_hex(s, HEX_PREFIX))
+      let hex_s = check(get_hex(s, HEX_PREFIX))
 
       if peek(s) == '[':
         discard read(s, tk = tk_bracket)
 
         skip_whitespaces(s)
-        if peek(s) != ':':
-          discard check(get_uint64(s))
+        let top =
+          if peek(s) != ':':
+            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+          else:
+            -1
 
         skip_whitespaces(s)
-        expect(
-          matches(s, ':', tk = tk_seperator),
-          "Expected slice syntax after base-16 number in bit pattern",
-        )
+        assert matches(s, ':', tk = tk_seperator),
+          "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
 
         skip_whitespaces(s)
-        if peek(s) != ']':
-          discard check(get_uint64(s))
+        let bottom =
+          if peek(s) != ']':
+            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+          else:
+            0
 
         skip_whitespaces(s)
-        expect(
-          matches(s, ']', tk = tk_bracket),
-          "Expected slice syntax after base-16 number in bit pattern",
-        )
+        assert matches(s, ']', tk = tk_bracket),
+          "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+
+        bit_length += top - bottom + 1
+      else:
+        for c in hex_s:
+          if c notin HexDigits:
+            continue
+          bit_length += 4
+
       continue
 
     case peek(s)
-    of '0':
-      skip(s, tk = tk_number)
-    of '1':
-      skip(s, tk = tk_number)
     of ' ':
       skip(s, tk = tk_whitespace)
       continue
+    of '0':
+      bit_length += 1
+      skip(s, tk = tk_bit_0)
+    of '1':
+      bit_length += 1
+      skip(s, tk = tk_bit_1)
     of '?':
-      skip(s, tk = tk_number)
+      bit_length += 1
+      skip(s, tk = tk_bit_dont_care)
     of '%':
       skip(s)
-      let operand_name = get_identifier(s)
+      let operand_name = get_identifier(s, tk = tk_field_ref)
       expect(operand_name.len > 0, "Expected an identifier after '%'")
 
       var is_pattern = false
@@ -923,13 +969,15 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         discard read(s, tk = tk_bracket)
 
         skip_whitespaces(s)
-        if peek(s) != ':':
-          discard check(get_uint64(s))
-        else:
-          expect(
-            is_pattern,
-            "Expected top bound in slice syntax after field reference in bit pattern",
-          )
+        let top =
+          if peek(s) != ':':
+            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+          else:
+            expect(
+              is_pattern,
+              "Expected top bound in slice syntax after field reference in bit pattern",
+            )
+            -1
 
         skip_whitespaces(s)
         expect(
@@ -938,15 +986,21 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         )
 
         skip_whitespaces(s)
-        if peek(s) != ']':
-          discard check(get_uint64(s))
+        let bottom =
+          if peek(s) != ']':
+            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+          else:
+            0
 
         skip_whitespaces(s)
         expect(
           matches(s, ']', tk = tk_bracket),
           "Expected slice syntax after field/pattern reference in bit pattern",
         )
+        bit_length += top - bottom + 1
     else:
+      bit_length += 1
+
       let c = read(s, tk = tk_field_name)
       block BLK_FIND_OPERAND:
         for i in countdown(op_names.high, 0):
@@ -962,6 +1016,13 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     matches(s, {'\n', '\0'}, tk = tk_whitespace),
     "Was expecting a newline at the end of the bit pattern",
   )
+
+  if is_patterns.len == 0 and bit_length mod 8 != 0:
+    s.restore(cp)
+    error(
+      "The width of the instruction is " & $bit_length &
+        " bits, but only multiples of 8 are supported"
+    )
 
   chunk.raw_text = $s.get_slice(start, finish)
   chunk.is_assert = false
@@ -1164,6 +1225,11 @@ func get_instruction*(
   var op_names: seq[string]
   var is_labels: set[uint8]
   var is_patterns: set[uint8]
+  let num_decoder_old =
+    if isa_spec.instruction_decoders.isSome:
+      isa_spec.instruction_decoders.get.len
+    else:
+      0
   discard check(
     get_syntax(
       s, inst.syntax, is_patterns, is_labels, op_names, inst.syntax_operands, isa_spec
@@ -1326,10 +1392,16 @@ func get_instruction*(
 
     inst.description = description
 
+    if isa_spec.instruction_decoders.isSome:
+      let p_decoders = isa_spec.instruction_decoders.get().addr
+      let num_decoder_new = p_decoders[].len
+      for i in num_decoder_old ..< num_decoder_new:
+        p_decoders[][i].description = description
+
   result[1] = inst
 
 func parse_isa_spec_inner(
-    file_name: string, source: string, with_disassembly: bool = false
+    file_name: string, source: string, with_disassembly: bool, with_tokens: bool
 ): SpecParseResult =
   var s = new_StreamSlice(source)
   start_tokenize(s)
@@ -1379,7 +1451,7 @@ func parse_isa_spec_inner(
           if peek(s) in QUOTES:
             check(descape_string_content(check(get_string(s))))
           else:
-            let raw_id = get_identifier(s)
+            let raw_id = get_identifier(s, tk = tk_string)
             if raw_id.len == 0:
               error("Expected string or identifier as name")
             $raw_id
@@ -1407,8 +1479,8 @@ func parse_isa_spec_inner(
       if not skip_newlines(s):
         error("Expected newline after setting assignment")
 
-  result.spec.field_types[fk_label] = FieldType(name: "label")
-  result.spec.field_types[fk_uimm_64] = FieldType(name: "immediate")
+  result.spec.field_types[fk_label] = FieldType(name: "label", bit_length: 64)
+  result.spec.field_types[fk_uimm_64] = FieldType(name: "immediate", bit_length: 64)
 
   if matches(s, "[fields]", tk = tk_header):
     if not skip_newlines(s):
@@ -1444,7 +1516,11 @@ func parse_isa_spec_inner(
 
         let field_name =
           if peek(s) in QUOTES:
-            let temp = check(descape_string_content(check(get_string(s))))
+            let temp = check(
+              descape_string_content(
+                check(get_string(s, tk = tk_field_name, tk_quote = tk_string))
+              )
+            )
             for c in temp:
               if c in WHITESPACE:
                 error("Field names can not contain whitespace characters")
@@ -1562,13 +1638,17 @@ func parse_isa_spec_inner(
     if not skip_newlines(s):
       error("Expected newline between instructions")
 
-  result.tokens = collect_tokens(s)
+  if with_tokens:
+    result.tokens = collect_tokens(s)
   start_tokenize(nil)
 
 func parse_isa_spec*(
-    file_name: string, source: string, with_disassembly: bool = false
+    file_name: string,
+    source: string,
+    with_disassembly: bool = false,
+    with_tokens: bool = false,
 ): SpecParseResult =
-  parse_isa_spec_inner(file_name, source, with_disassembly)
+  parse_isa_spec_inner(file_name, source, with_disassembly, with_tokens)
 
 import assemble
 export assemble

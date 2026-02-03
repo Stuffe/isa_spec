@@ -361,7 +361,7 @@ func get_bit_pattern(
         if bfk_zero != current.id:
           if current.id != bfk_invalid:
             new_bits.add(current)
-          current = Bitfield(id: bfk_zero, is_direct: true)
+          current = Bitfield(id: bfk_zero)
         else:
           current.top += 1
 
@@ -395,7 +395,7 @@ func get_bit_pattern(
           if bit_id != current.id:
             if current.id != bfk_invalid:
               new_bits.add(current)
-            current = Bitfield(id: bit_id, is_direct: true)
+            current = Bitfield(id: bit_id)
           else:
             current.top += 1
           i += 1
@@ -405,20 +405,20 @@ func get_bit_pattern(
     if peek(s) != '%':
       let bit_id =
         case peek(s)
-        of '0':
-          pattern.add('0')
-          skip(s, tk = tk_number)
-          bfk_zero
-        of '1':
-          pattern.add('1')
-          skip(s, tk = tk_number)
-          bfk_one
         of ' ':
           skip(s, tk = tk_whitespace)
           continue
+        of '0':
+          pattern.add('0')
+          skip(s, tk = tk_bit_0)
+          bfk_zero
+        of '1':
+          pattern.add('1')
+          skip(s, tk = tk_bit_1)
+          bfk_one
         of '?':
           pattern.add('0')
-          skip(s, tk = tk_number)
+          skip(s, tk = tk_bit_dont_care)
           bfk_wildcard
         else:
           pattern.add('0')
@@ -436,12 +436,12 @@ func get_bit_pattern(
       if bit_id != current.id:
         if current.id != bfk_invalid:
           new_bits.add(current)
-        current = Bitfield(id: bit_id, is_direct: true)
+        current = Bitfield(id: bit_id, is_direct: is_variable(bit_id))
       else:
         current.top += 1
     else:
       skip(s)
-      let operand_name = get_identifier(s)
+      let operand_name = get_identifier(s, tk = tk_field_ref)
       assert operand_name.len > 0, "(Late detection!): Expected an identifier after '%'"
 
       var operand_index: uint8
@@ -594,15 +594,46 @@ func get_bit_pattern(
 
   var current_length = 0'u32
   var consumed_bits = newSeq[uint32](inst.operands.len)
-  for i in countdown(new_bits.high, 0):
+  var i = new_bits.high
+  while i >= 0:
     var bits = new_bits[i]
     let index = to_variable_index(bits.id)
     let root_index = index - offset_op
-    if bits.is_direct and is_variable(bits.id):
-      # We need to adjust this for the case of non-consecutive bit fields of the same operand
-      bits.top += consumed_bits[root_index]
-      bits.bottom += consumed_bits[root_index]
-      consumed_bits[root_index] += bits.top - bits.bottom + 1
+    # We need to adjust the actual top & bottom indexes for non-consecutive bit fields of the same operand
+    if bits.is_direct:
+      # For normal operands, it's a wrapping index modulo the largest field option's bit length
+      # For virtual operands, it's a wrapping index modulo 64
+      # For pattern operands, it's indexing into an inifitely zero-extended value
+      let operand = inst.operands[root_index]
+      if operand.kind != otk_pattern:
+        var max_bit_length: uint8
+        if operand.kind == otk_normal:
+          for option in operand.options:
+            max_bit_length = max_bit_length.max(isa_spec.field_types[option].bit_length)
+        else:
+          max_bit_length = 64
+
+        bits.top += consumed_bits[root_index]
+        bits.bottom += consumed_bits[root_index]
+        if bits.top div max_bit_length != bits.bottom div max_bit_length:
+          bits.bottom = bits.bottom mod max_bit_length
+          new_bits[i].top -= max_bit_length - bits.bottom
+          bits.top = max_bit_length - 1
+          consumed_bits[root_index] = 0
+        else:
+          bits.top = bits.top mod max_bit_length
+          bits.bottom = bits.bottom mod max_bit_length
+          consumed_bits[root_index] = (consumed_bits[root_index] + bits.top - bits.bottom + 1) mod max_bit_length
+          i -= 1
+      else:
+        bits.top += consumed_bits[root_index]
+        bits.bottom += consumed_bits[root_index]
+        consumed_bits[root_index] += bits.top - bits.bottom + 1
+        i -= 1
+
+    else:
+      i -= 1
+
     let new_length = current_length + bits.top - bits.bottom + 1
     if (new_length - 1) div 64 != current_length div 64:
       # We are crossing a 64bit boundary
@@ -1692,7 +1723,7 @@ proc assemble*(
 
             if size_error != "":
               sources[^1].error(
-                "Expected a size before the number, like U64 " & $number
+                "Expected a size before the number, like: U64 " & $number
               )
               sources[^1].skip_line()
               break BLK_INNER
@@ -2137,7 +2168,7 @@ proc assemble*(
                 if to_cease_search_on_error:
                   break BLK_INSTRUCTION
           sources[^1].error(
-            if best_err.error != "": best_err.error else: "No instruction matched"
+            if best_err.error != "": best_err.error else: "Invalid instruction"
           )
           sources[^1].skip_line()
           break BLK_INNER
@@ -2148,6 +2179,12 @@ proc assemble*(
 
       if sources.len < 2:
         ret.line_info.done(ret.machine_code.len)
+
+        for name, label in sources[^1].labels:
+          if name.peek() != '$':
+            ret.labels[name] = label
+        for name, value in sources[^1].defines:
+          ret.defines[name] = value
         return ret
 
       block BLK_MERGE_PUBLICS:
@@ -2184,7 +2221,8 @@ func decode(
     ip: uint64,
     field_types: Table[FieldKind, FieldType],
     endian: types.Endianness,
-): Option[tuple[inst: string, num_bit_consumed: uint32]] =
+    is_bb_code: static[bool],
+): Option[tuple[instruction: string, num_bit_consumed: uint32, description: string]] =
   if cast[uint32](byte_stream.len) * 8 < decoder.bit_length:
     return
 
@@ -2307,28 +2345,59 @@ func decode(
           break BLK_EVAL_PATH
 
       # Translate syntax into actual string
+      when is_bb_code:
+        const COLORS = [
+          0x5b8e9e, # ISA field 0
+          0x657ac3, # ISA field 1
+          0x7a70a2, # ISA field 2
+          0x9c5595, # ISA field 3
+          0xaf805e, # ISA field 4
+          0xb1b35a, # ISA field 5
+        ]
       var op_index = 0
-      var str = ""
+      var s_inst = ""
+      var s_description = decoder.description.replace("[", "\\[")
       for part in decoder.syntax:
         case part.kind
         of sk_any_number_of_spaces, sk_at_least_one_space:
-          str &= " "
+          s_inst &= " "
         of sk_fixed:
-          str &= part.text
+          when is_bb_code:
+            s_inst &= part.text.replace("[", "\\[")
+          else:
+            s_inst &= part.text
         of sk_field:
           let (options, exp_index) = path.operands[op_index]
+          when is_bb_code:
+            let color = COLORS[op_index mod COLORS.len]
+            let bbcode_open = "[color=#" & color.toHex(6) & "]"
+            let bbcode_close = "[/color]"
           op_index += 1
 
           let value = values[exp_index]
           block BLK_FIND_FIELD_NAME:
             for option in options:
               if option == fk_label:
-                str &= "." & $cast[int64](value - ip)
+                let str = "." & $cast[int64](value - ip)
+                when is_bb_code:
+                  let bbcode = bbcode_open & str & bbcode_close
+                  s_inst &= bbcode
+                  s_description = s_description.replace("%" & part.text, bbcode)
+                else:
+                  s_inst &= str
+                  s_description = s_description.replace("%" & part.text, str)
                 break BLK_FIND_FIELD_NAME
 
               if not option.is_variable():
                 if value.in_range(option):
-                  str &= value.to_string(option)
+                  let str = value.to_string(option)
+                  when is_bb_code:
+                    let bbcode = bbcode_open & str & bbcode_close
+                    s_inst &= bbcode
+                    s_description = s_description.replace("%" & part.text, bbcode)
+                  else:
+                    s_inst &= str
+                    s_description = s_description.replace("%" & part.text, str)
                   break BLK_FIND_FIELD_NAME
                 continue
 
@@ -2337,20 +2406,39 @@ func decode(
 
               for field in field_types[option].values:
                 if field.value == value:
-                  str &= field.name
+                  let str = field.name
+                  when is_bb_code:
+                    let bbcode = bbcode_open & str & bbcode_close
+                    s_inst &= bbcode
+                    s_description = s_description.replace("%" & part.text, bbcode)
+                  else:
+                    s_inst &= str
+                    s_description = s_description.replace("%" & part.text, str)
                   break BLK_FIND_FIELD_NAME
 
             break BLK_EVAL_PATH
         of sk_pattern:
           assert false
 
-      return (inst: str, num_bit_consumed: bit_length div 8).some
+      return (
+        instruction: s_inst,
+        num_bit_consumed: bit_length div 8,
+        description: s_description,
+      ).some
 
 func disassemble*(
-    machine_code: seq[uint8], isa_spec: IsaSpec, ip: uint64 = 0
-): seq[string] =
+    machine_code: seq[uint8],
+    isa_spec: IsaSpec,
+    ip: uint64 = 0,
+    transform_unknown: proc(x: uint8): (string, string) {.gcSafe, noSideEffect.} = proc(
+        x: uint8
+    ): (string, string) {.gcSafe, noSideEffect.} =
+      (instruction: "U8 " & $x, description: ""),
+    is_bb_code: static[bool] = false,
+    endianness = isa_spec.endianness,
+): seq[tuple[instruction: string, description: string]] =
   if isa_spec.instruction_decoders.is_none():
-    return machine_code.mapIt("U8 " & $it)
+    return machine_code.map(transform_unknown)
 
   let decoders = isa_spec.instruction_decoders.get()
   let num_byte = cast[uint64](machine_code.len)
@@ -2359,13 +2447,13 @@ func disassemble*(
     block BLK_TRY_DECODER:
       for decoder in decoders:
         let ret = decoder.decode(
-          machine_code, ip + index, isa_spec.field_types, isa_spec.endianness
+          machine_code, ip + index, isa_spec.field_types, endianness, is_bb_code
         )
         if ret.is_some():
-          let (inst, num_bit_consumed) = ret.get()
-          result.add(inst)
+          let (instruction, num_bit_consumed, description) = ret.get()
+          result.add((instruction, description))
           index += num_bit_consumed
           break BLK_TRY_DECODER
 
-      result.add("U8 " & $machine_code[index])
+      result.add(transform_unknown(machine_code[index]))
       index += 1

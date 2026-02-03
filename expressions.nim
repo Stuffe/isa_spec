@@ -60,7 +60,7 @@ type ExpAddress* {.size: sizeof(uint8), pure.} = enum
 
 const INDEX_BIT_PATTERN = 0xFF'u8
 
-type ExpRef* = ref object
+type ExpRef* {.acyclic.} = ref object
   case exp_kind*: ExpKind
   of exp_number:
     value*: uint64
@@ -524,6 +524,8 @@ func eval*(
     current_address: uint64,
     instruction_byte_length: uint64,
 ): (string, uint64) =
+  assert not exp.isNil
+
   result[1] =
     case exp.exp_kind
     of exp_number:

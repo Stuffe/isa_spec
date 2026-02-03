@@ -456,6 +456,7 @@ type InstructionDecoder* = object
   bits*: seq[Bitfield]
   bit_length*: uint32
   syntax*: seq[Syntax]
+  description*: string
   paths*: seq[InstructionDecodingPath]
 
 type Endianness* = enum
