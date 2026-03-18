@@ -1018,7 +1018,7 @@ func pre_parse_instruction(
               &"Expected fixed string '{syntax.text}' after \"{$s.get_slice(original_s.get_index(), s.get_index())}\"",
             )
           else:
-            (-1, &"No instruction matched")
+            (-1, &"Invalid instruction")
     of sk_any_number_of_spaces:
       isa_spec.skip_whitespaces(s)
     of sk_at_least_one_space:
@@ -1032,7 +1032,7 @@ func pre_parse_instruction(
               &"Expected at least one whitespace character after \"{$s.get_slice(original_s.get_index(), s.get_index())}\"",
             )
           else:
-            (-1, &"No instruction matched")
+            (-1, &"Invalid instruction")
     of sk_field, sk_pattern:
       break
 
@@ -2066,8 +2066,6 @@ proc assemble*(
 
                   if actualization.kind == oak_unsized:
                     if est_ctx.estimated_labels.labels.len == 0:
-                      assert est_ctx.estimated_codes.len == 0
-
                       est_ctx.source = sources
                       est_ctx.source[^1].s = restore
                       est_ctx.code_pointer = cast[uint64](ret.machine_code.len)

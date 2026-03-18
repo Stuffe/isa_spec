@@ -74,6 +74,7 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
     is_labels: var set[uint8],
     op_names: var seq[string],
     operands: var seq[T],
+    is_in_disassembly_mode: bool,
     isa_spec: IsaSpec,
     pattern_index_bound: uint8 = uint8.high,
 ): (string, bool) =
@@ -96,6 +97,9 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
     skip_whitespaces(s)
 
     if peek(s) in {'@', '|', ')'}:
+      if is_in_disassembly_mode:
+        error("Pattern operands not supported in disassembly yet")
+
       is_patterns.incl(cast[uint8](op_names.len))
 
       var patterns: seq[OperandTypePattern]
@@ -573,6 +577,8 @@ func get_auto_instruction_decoder(
           if operand.kind == otk_normal:
             for option in operand.options:
               max_bit_length = max_bit_length.max(field_types[option].bit_length)
+            if max_bit_length == 0:
+              max_bit_length = 64
           else:
             max_bit_length = 64
 
@@ -626,7 +632,7 @@ func get_auto_instruction_decoder(
     of otk_normal:
       continue
     of otk_pattern:
-      error("Patterns not supported in disassembly")
+      assert false, "(Late detection!): Expected no patern operands in disassembly"
     of otk_virtual:
       old_virtuals.add(
         OperandTypeVirtual(variable_name: operand.variable_name, expr: operand.expr)
@@ -638,7 +644,6 @@ func get_auto_instruction_decoder(
     var new_virtuals: seq[OperandTypeVirtual]
     var old_asserts = inst.asserts
     var new_asserts: seq[Assertion]
-    var is_operand_resolved: array[256, bool]
 
     var seq_machine_code_direct_decoding = machine_code_direct_decoding.pairs.toSeq
     for i in countdown(seq_machine_code_direct_decoding.high, 0):
@@ -786,7 +791,9 @@ func get_auto_instruction_decoder(
         var any_value = 0'u64
         for option in options:
           if option.is_variable() and option in field_types:
-            any_value = field_types[option].values[0].value
+            let values = field_types[option].values
+            if values.len > 0:
+              any_value = values[0].value
           break
 
         var mask_and = any_value
@@ -873,7 +880,7 @@ func get_auto_instruction_decoder(
             num_virtual
         operand_options.add((options: option_path[operand_index], exp: exp))
       of otk_pattern:
-        error("Patterns not supported in disassembly")
+        assert false, "(Late detection!): Expected no patern operands in disassembly"
       of otk_virtual:
         continue
 
@@ -956,9 +963,9 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
 
       var is_pattern = false
       block BLK_FIND_OPERAND:
-        for i in countdown(cast[uint8](op_names.high), 0):
+        for i in countdown(op_names.high, 0):
           if op_names[i] == operand_name:
-            is_pattern = is_patterns.contains(i)
+            is_pattern = is_patterns.contains(cast[uint8](i))
             break BLK_FIND_OPERAND
 
         error(&"Expected a valid field/pattern name, got '{operand_name}'")
@@ -1170,7 +1177,14 @@ func get_instruction*(
   var is_patterns: set[uint8]
   discard check(
     get_syntax(
-      s, inst.syntax, is_patterns, is_labels, op_names, inst.operands, isa_spec,
+      s,
+      inst.syntax,
+      is_patterns,
+      is_labels,
+      op_names,
+      inst.operands,
+      decoders.is_some(),
+      isa_spec,
       pattern_index_bound,
     )
   )
@@ -1226,13 +1240,20 @@ func get_instruction*(
   var is_labels: set[uint8]
   var is_patterns: set[uint8]
   let num_decoder_old =
-    if isa_spec.instruction_decoders.isSome:
+    if isa_spec.instruction_decoders.is_some():
       isa_spec.instruction_decoders.get.len
     else:
       0
   discard check(
     get_syntax(
-      s, inst.syntax, is_patterns, is_labels, op_names, inst.syntax_operands, isa_spec
+      s,
+      inst.syntax,
+      is_patterns,
+      is_labels,
+      op_names,
+      inst.syntax_operands,
+      isa_spec.instruction_decoders.is_some(),
+      isa_spec,
     )
   )
 
@@ -1447,14 +1468,7 @@ func parse_isa_spec_inner(
 
       case name
       of "name":
-        result.spec.name =
-          if peek(s) in QUOTES:
-            check(descape_string_content(check(get_string(s))))
-          else:
-            let raw_id = get_identifier(s, tk = tk_string)
-            if raw_id.len == 0:
-              error("Expected string or identifier as name")
-            $raw_id
+        result.spec.name = check(descape_string_content(check(get_string(s))))
       of "variant":
         result.spec.variant = check(descape_string_content(check(get_string(s))))
       of "endianness":
@@ -1462,17 +1476,30 @@ func parse_isa_spec_inner(
           check(get_enum(s, {"big": end_big, "little": end_little}, tk = tk_literal))
       of "line_comments":
         result.spec.line_comments.set_len(0)
-        for entry in get_list(s):
-          result.spec.line_comments.add(check(parse_string(entry)))
+        try:
+          for entry in get_list(s):
+            let sym = check(parse_string(entry))
+            if sym.len == 0:
+              error("Expected a non-empty string to start line comments")
+            result.spec.line_comments.add(sym)
+        except ParseError:
+          error("Expected a list of strings")
       of "block_comments":
         result.spec.block_comments.set_len(0)
-        var start_sym: string
-        for is_value, text in get_table(s):
-          if not is_value:
-            start_sym = check(parse_string(text))
-          else:
-            let end_sym = check(parse_string(text))
-            result.spec.block_comments.add((start_sym, end_sym))
+        try:
+          var start_sym: string
+          for is_value, text in get_table(s):
+            if not is_value:
+              start_sym = check(parse_string(text))
+              if start_sym.len == 0:
+                error("Expected a non-empty string to start block comments")
+            else:
+              let end_sym = check(parse_string(text))
+              if end_sym.len == 0:
+                error("Expected a non-empty string to end block comments")
+              result.spec.block_comments.add((start_sym, end_sym))
+        except ParseError:
+          error("Expected a table of strings")
       else:
         error(&"Unknown setting name {$name}")
 
@@ -1481,6 +1508,10 @@ func parse_isa_spec_inner(
 
   result.spec.field_types[fk_label] = FieldType(name: "label", bit_length: 64)
   result.spec.field_types[fk_uimm_64] = FieldType(name: "immediate", bit_length: 64)
+  for i in 0'u8 .. 63'u8:
+    result.spec.field_types[fk_imm_0.succ(i)] = FieldType(name: "", bit_length: i)
+  for i in 1'u8 .. 64'u8:
+    result.spec.field_types[fk_simm_1.succ(i - 1)] = FieldType(name: "", bit_length: i)
 
   if matches(s, "[fields]", tk = tk_header):
     if not skip_newlines(s):

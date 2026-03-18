@@ -333,7 +333,7 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
 
   if matches(s, '%'):
     let operand = get_identifier(s, tk = tk_field_ref)
-    if operand.len == 0:
+    if operand.len == 0 or operand_names.len == 0:
       return ("Invalid identifier: %" & $operand, nil)
 
     for i in countdown(cast[uint8](operand_names.high), 0):

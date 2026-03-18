@@ -471,7 +471,7 @@ func parse_signed*(s: StreamSlice): (string, uint64) =
 
 func get_line_number*(s: StreamSlice): int =
   var line = 1
-  for i in 0 .. s.start - 1:
+  for i in 0 ..< s.source[].len.min(s.start):
     if s.source[i] == '\n':
       line += 1
   return line
@@ -760,7 +760,7 @@ iterator get_encapsulation*(s: var StreamSlice, tk = tk_bracket): StreamSlice =
   add_token(s, tk)
 
 proc skip_encapsulation*(s: var StreamSlice) =
-  for _ in get_encapsulation(s):
+  for _ in get_encapsulation(s, tk_none):
     discard
 
 func strip*(
