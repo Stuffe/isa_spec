@@ -513,6 +513,7 @@ type AssemblyResult* = object
   errors*: seq[Error]
   defines*: Table[StreamSlice, (FieldKind, DefineValue)]
   labels*: Table[StreamSlice, DefineValue]
+  tokens*: seq[Token]
 
 func new_line_info*(): CompleteLineInformation =
   return default(CompleteLineInformation)

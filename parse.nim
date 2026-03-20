@@ -129,6 +129,7 @@ converter toTokenString*(t: Token): TokenString =
 type RestorePoint* = object
   s: StreamSlice
   token_count: int
+  last_token_finish: int
 
 var tracked_source: ref string = nil
 var tokens: seq[Token]
@@ -136,7 +137,15 @@ var tokens: seq[Token]
 func checkpoint*(s: StreamSlice): RestorePoint =
   {.noSideEffect.}:
     if s.source == tracked_source:
-      return RestorePoint(s: s, token_count: tokens.len)
+      return RestorePoint(
+        s: s,
+        token_count: tokens.len,
+        last_token_finish:
+          if tokens.len > 0:
+            tokens[^1].s.finish
+          else:
+            0,
+      )
     else:
       return RestorePoint(s: s, token_count: -1)
 
@@ -149,6 +158,8 @@ func restore*(s: var StreamSlice, cp: RestorePoint) =
     s = cp.s
     if s.source == tracked_source:
       tokens.set_len(cp.token_count)
+      if cp.token_count > 0:
+        tokens[^1].s.finish = cp.last_token_finish
 
 func start_tokenize*(s: StreamSlice) =
   ## Starts tracking the tokens for this source, ignoring all others. Also clears the token list
@@ -171,6 +182,21 @@ func collect_tokens*(s: StreamSlice, clean_out: bool = true): seq[Token] =
     result = tokens
     if clean_out:
       tokens.set_len(0)
+
+func pause_tokenization*(): (ref string, seq[Token]) =
+  {.noSideEffect.}:
+    result = (tracked_source, tokens)
+    start_tokenize(nil)
+
+func resume_tokenization*(state: (ref string, seq[Token])) =
+  {.noSideEffect.}:
+    (tracked_source, tokens) = state
+
+func get_tokens*(s: StreamSlice): seq[Token] =
+  {.noSideEffect.}:
+    assert s.source == tracked_source,
+      "collect_tokens called with incorrect StreamSlice"
+    return tokens
 
 func add_token*(s: StreamSlice, tk: TokenKind) =
   ## Adds a token starting from the end of the last token to the start of s

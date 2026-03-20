@@ -623,14 +623,14 @@ func get_bit_pattern(
         else:
           bits.top = bits.top mod max_bit_length
           bits.bottom = bits.bottom mod max_bit_length
-          consumed_bits[root_index] = (consumed_bits[root_index] + bits.top - bits.bottom + 1) mod max_bit_length
+          consumed_bits[root_index] =
+            (consumed_bits[root_index] + bits.top - bits.bottom + 1) mod max_bit_length
           i -= 1
       else:
         bits.top += consumed_bits[root_index]
         bits.bottom += consumed_bits[root_index]
         consumed_bits[root_index] += bits.top - bits.bottom + 1
         i -= 1
-
     else:
       i -= 1
 
@@ -673,6 +673,7 @@ func skip_newlines(s: var StreamSlice) {.error, used.}
 func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
   while peek(s) in WHITESPACES:
     s.skip()
+  add_token(s, tk_whitespace)
   if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
     isa_spec.skip_whitespaces(s)
 
@@ -715,7 +716,9 @@ func parse_instruction_syntax_part(
     values: var seq[OperandValue],
     resolved_patterns: var Table[string, InstructionDebranched],
 ): seq[InstIncompleteParseResult] =
+  let root_cp = s.checkpoint()
   template error(msg: string, priority: int) =
+    s.restore(root_cp)
     return
       @[
         InstIncompleteParseResult(
@@ -764,7 +767,7 @@ func parse_instruction_syntax_part(
       s, inst, syntax_index, operand_index, isa_spec, defines, values, resolved_patterns
     )
   of sk_fixed:
-    if matches(s, syntax.text):
+    if matches(s, syntax.text, tk = tk_mnenomic):
       return parse_instruction_syntax_part(
         s, inst, syntax_index, operand_index, isa_spec, defines, values,
         resolved_patterns,
@@ -777,21 +780,20 @@ func parse_instruction_syntax_part(
         operand_index,
       )
   of sk_field:
-    let restore = s
+    let cp = s.checkpoint()
     let options = inst.operands[operand_index].options
     var op_value: OperandValue
     for j, field in options:
       let is_last = j == options.high
-      s = restore
+      s.restore(cp)
       case field
       of fk_label:
-        if peek(s) == '.':
-          skip(s)
+        if matches(s, '.', tk = tk_number):
           let jump_distance = check(get_signed(s))
           let value = check(parse_signed(jump_distance))
           op_value = OperandValue(kind: ok_relative, offset: cast[int64](value))
         else:
-          let label_name = get_identifier(s)
+          let label_name = get_identifier(s, tk = tk_label)
           if label_name.len == 0:
             if not is_last:
               continue
@@ -830,7 +832,7 @@ func parse_instruction_syntax_part(
               op_value = fixed(num)
               break BLK_PARSE_IMM
 
-            let field_string = get_identifier(s)
+            let field_string = get_identifier(s, tk = tk_const)
             if field_string.len == 0:
               if not is_last:
                 continue
@@ -846,16 +848,15 @@ func parse_instruction_syntax_part(
               error(&"Undefined constant {field_string}", operand_index)
         else:
           # Some user defined field type
-          let pre_field_restore = s
-          let field_string = get_identifier(s)
-          s = pre_field_restore
+          let pre_field_cp = s.checkpoint()
+          let field_string = get_identifier(s, tk = tk_const)
 
           let (field_kind, value) =
             defines.getOrDefault(field_string, (fk_label, DefineValue()))
           if field_kind == field:
             op_value = fixed(value.value)
-            s.skip(field_string.len)
           else:
+            s.restore(pre_field_cp)
             var found = -1
             var value: uint64
             for field_value in isa_spec.field_types[field].values:
@@ -863,7 +864,7 @@ func parse_instruction_syntax_part(
                 found = field_value.name.len
                 value = field_value.value
             if found >= 0:
-              s.skip(found)
+              s.skip(found, tk = tk_field_name)
               op_value = fixed(value)
             elif not is_last:
               continue
@@ -1084,7 +1085,9 @@ func parse_instruction(
     defines: Table[StreamSlice, (FieldKind, DefineValue)],
     resolved_patterns: var Table[string, InstructionDebranched],
 ): seq[InstIncompleteParseResult] =
+  let cp = s.checkpoint()
   let (priority, err) = pre_parse_instruction(s, inst.syntax, isa_spec)
+  s.restore(cp)
   if err != "":
     return
       @[InstIncompleteParseResult(is_err: true, error_priority: priority, error: err)]
@@ -1105,7 +1108,9 @@ func parse_instruction(
     defines: Table[StreamSlice, (FieldKind, DefineValue)],
     resolved_patterns: var Table[string, InstructionDebranched],
 ): seq[InstParseResult] =
+  let cp = s.checkpoint()
   let (priority, err) = pre_parse_instruction(s, inst.syntax, isa_spec)
+  s.restore(cp)
   if err != "":
     return @[InstParseResult(is_err: true, error_priority: priority, error: err)]
 
@@ -1333,7 +1338,7 @@ proc estimate_labels(
 
         block BLK_INNER:
           block BLK_NUMBER_LITERAL:
-            let restore = ctx.source[^1].s
+            let cp = checkpoint(ctx.source[^1].s)
             let (size_error, size, is_signed) = get_size(ctx.source[^1].s)
 
             var has_ws_after_size = false
@@ -1344,7 +1349,7 @@ proc estimate_labels(
 
             let (number_error, number) = get_unsigned(ctx.source[^1].s)
             if size_error != "" and number_error != "":
-              ctx.source[^1].s = restore
+              ctx.source[^1].s.restore(cp)
               break BLK_NUMBER_LITERAL
 
             if size_error != "" or is_signed or size mod 8 != 0 or size == 0 or
@@ -1378,7 +1383,7 @@ proc estimate_labels(
             break BLK_INNER
 
           block BLK_SPECIAL:
-            let restore = ctx.source[^1].s
+            let cp = checkpoint(ctx.source[^1].s)
             var special_test = get_identifier(ctx.source[^1].s)
 
             let public =
@@ -1539,16 +1544,16 @@ proc estimate_labels(
               ctx.source[^1].skip_line()
               break BLK_INNER
 
-            ctx.source[^1].s = restore
+            ctx.source[^1].s.restore(cp)
 
           block BLK_INSTRUCTION:
-            let restore = ctx.source[^1].s
+            let cp = checkpoint(ctx.source[^1].s)
             var final_index = ctx.source[^1].s.get_index()
 
             ctx.estimated_codes.peekLast().delay += 1
 
             for inst in isa_spec.instructions:
-              ctx.source[^1].s = restore # Reset to the beginning of the line
+              ctx.source[^1].s.restore(cp)
 
               let has_pc_rel_virtual = inst.has_pc_rel_virtual()
 
@@ -1637,21 +1642,15 @@ proc estimate_labels(
 proc assemble*(
     base_path: string, path: string, isa_spec: IsaSpec, source: string
 ): AssemblyResult =
-  if source.strip().len == 0:
-    return
-
   var resolved_patterns: Table[string, InstructionDebranched]
   resolved_patterns[""] = InstructionDebranched()
 
   var sources: ParseContext = block:
     let normal_path = normalizedPath(path).replace('\\', '/')
     let dir_path = normal_path[0 ..< normal_path.rfind('/') + 1]
-
-    @[
-      SliceParseState(
-        s: new_StreamSlice(source), dir_path: dir_path, normal_path: normal_path
-      )
-    ]
+    let s = new_StreamSlice(source)
+    start_tokenize(s)
+    @[SliceParseState(s: s, dir_path: dir_path, normal_path: normal_path)]
 
   var ret: AssemblyResult
   ret.line_info = new_line_info()
@@ -1660,12 +1659,14 @@ proc assemble*(
     if skip_rest_of_line:
       while peek(state.s) notin {'\0', '\n'}:
         skip(state.s)
+    add_token(state.s, tk = tk_text)
     while peek(state.s) in WHITESPACES + {'\n'}:
       if read(state.s) == '\n':
         state.line_counter += 1
         ret.line_info.add_line(
           state.normal_path, ret.machine_code.len, state.line_counter + 1
         )
+    add_token(state.s, tk = tk_whitespace)
 
     while skip_comment(state.s, isa_spec.line_comments, isa_spec.block_comments):
       while peek(state.s) in WHITESPACES + {'\n'}:
@@ -1674,6 +1675,7 @@ proc assemble*(
           ret.line_info.add_line(
             state.normal_path, ret.machine_code.len, state.line_counter + 1
           )
+      add_token(state.s, tk = tk_whitespace)
 
   func error(state: SliceParseState, message: string) =
     ret.errors.add(
@@ -1700,14 +1702,13 @@ proc assemble*(
       ret.line_info.add_line(
         sources[^1].normal_path, ret.machine_code.len, sources[^1].line_counter + 1
       )
+      sources[^1].skip_line(false)
       while not sources[^1].s.finished():
-        sources[^1].skip_line(false)
-
         let progress_index = get_index(sources[^1].s)
 
         block BLK_INNER:
           block BLK_NUMBER_LITERAL:
-            let restore = sources[^1].s
+            let cp = checkpoint(sources[^1].s)
             let (size_error, size, is_signed) = get_size(sources[^1].s)
 
             var has_ws_after_size = false
@@ -1718,7 +1719,7 @@ proc assemble*(
 
             let (number_error, number) = get_unsigned(sources[^1].s)
             if size_error != "" and number_error != "":
-              sources[^1].s = restore
+              sources[^1].s.restore(cp)
               break BLK_NUMBER_LITERAL
 
             if size_error != "":
@@ -1799,24 +1800,25 @@ proc assemble*(
             break BLK_INNER
 
           block BLK_SPECIAL:
-            let restore = sources[^1].s
-            var special_test = get_identifier(sources[^1].s)
+            let cp = checkpoint(sources[^1].s)
+            var special_test = get_identifier(sources[^1].s, tk = tk_label)
 
             let public =
               if special_test == "pub":
+                change_token_kind(sources[^1].s, tk_label, tk_keyword)
                 isa_spec.skip_whitespaces(sources[^1].s)
-                special_test = get_identifier(sources[^1].s)
+                special_test = get_identifier(sources[^1].s, tk = tk_label)
                 true
               else:
                 false
 
-            if special_test.len != 0 and peek(sources[^1].s) == ':':
+            if special_test.len != 0 and matches(sources[^1].s, ':', tk = tk_label):
               if special_test in sources[^1].labels:
                 sources[^1].error("Label " & $special_test & " is already declared")
                 sources[^1].skip_line()
                 break BLK_INNER
 
-              skip(sources[^1].s)
+              isa_spec.skip_whitespaces(sources[^1].s)
 
               sources[^1].labels[special_test] =
                 DefineValue(public: public, value: cast[uint64](ret.machine_code.len))
@@ -1863,6 +1865,7 @@ proc assemble*(
               break BLK_INNER
 
             if special_test == "include":
+              change_token_kind(sources[^1].s, tk_label, tk_keyword)
               const NAME_CHARS = IdentChars
               const PATH_CHARS = NAME_CHARS + {'\\', '/', '.'}
 
@@ -1870,7 +1873,7 @@ proc assemble*(
 
               var normal_path = sources[^1].dir_path
               while peek(sources[^1].s) in PATH_CHARS:
-                normal_path.add(read(sources[^1].s))
+                normal_path.add(read(sources[^1].s, tk = tk_string))
               normal_path = normalizedPath(normal_path).replace('\\', '/')
 
               let idx_slash = normal_path.rfind('/')
@@ -1883,7 +1886,7 @@ proc assemble*(
                 not file_name.contains(AllChars - NAME_CHARS)
 
               isa_spec.skip_whitespaces(sources[^1].s)
-              if not matches(sources[^1].s, "as", tk = tk_seperator):
+              if not matches(sources[^1].s, "as", tk = tk_keyword):
                 if is_file_name_legal_included_name:
                   included_name = file_name
                 else:
@@ -1902,7 +1905,7 @@ proc assemble*(
                   break BLK_INNER
 
                 while peek(sources[^1].s) in NAME_CHARS:
-                  included_name.add(read(sources[^1].s))
+                  included_name.add(read(sources[^1].s, tk = tk_label))
 
               for any_state in sources:
                 if any_state.normal_path == normal_path:
@@ -1931,12 +1934,13 @@ proc assemble*(
               break BLK_OUTER
 
             if special_test == "const":
+              change_token_kind(sources[^1].s, tk_label, tk_keyword)
               isa_spec.skip_whitespaces(sources[^1].s)
-              let definition_name = get_identifier(sources[^1].s)
+              let definition_name = get_identifier(sources[^1].s, tk = tk_const)
 
               isa_spec.skip_whitespaces(sources[^1].s)
 
-              if read(sources[^1].s) != '=':
+              if not matches(sources[^1].s, '=', tk = tk_operator):
                 sources[^1].error("Missing '=' after 'const'")
                 sources[^1].skip_line()
                 break BLK_INNER
@@ -1979,7 +1983,7 @@ proc assemble*(
                 sources[^1].skip_line(false)
                 break BLK_INNER
 
-              let define_value = get_identifier(sources[^1].s)
+              let define_value = get_identifier(sources[^1].s, tk = tk_const)
               let (field_kind, value) = sources[^1].defines.getOrDefault(
                 define_value, (fk_label, DefineValue())
               )
@@ -2000,12 +2004,13 @@ proc assemble*(
               sources[^1].skip_line()
               break BLK_INNER
 
-            sources[^1].s = restore
+            sources[^1].s.restore(cp)
 
           var best_err =
             (error_priority: int.low, error: "", final_index: sources[^1].s.get_index())
           block BLK_INSTRUCTION:
-            let restore = sources[^1].s
+            let original_s = sources[^1].s
+            let cp = checkpoint(sources[^1].s)
 
             var to_add_inst_len: bool
             block:
@@ -2019,7 +2024,7 @@ proc assemble*(
                   est_ctx.estimated_codes.peekFirst().delay -= 1
 
             for inst in isa_spec.instructions:
-              sources[^1].s = restore # Reset to the beginning of the line
+              sources[^1].s.restore(cp) # Reset to the beginning of the line
 
               # Patternized instructions may spawn multiple valid matches
               for inst_res in parse_instruction(
@@ -2065,9 +2070,11 @@ proc assemble*(
                     to_cease_search_on_error or actualization.kind != oak_resolved
 
                   if actualization.kind == oak_unsized:
+                    let state = pause_tokenization()
+
                     if est_ctx.estimated_labels.labels.len == 0:
                       est_ctx.source = sources
-                      est_ctx.source[^1].s = restore
+                      est_ctx.source[^1].s = original_s
                       est_ctx.code_pointer = cast[uint64](ret.machine_code.len)
                       est_ctx.estimated_labels.correction = 0
                       est_ctx.prefix_unknown_label = prefix_unknown_label
@@ -2076,6 +2083,8 @@ proc assemble*(
                       actualization.unknown_labels, est_ctx, resolved_label_prefixes,
                       resolved_patterns, base_path, isa_spec,
                     )
+                    resume_tokenization(state)
+
                     if actualization.unknown_labels.len != 0:
                       best_err = (
                         int.high,
@@ -2171,6 +2180,8 @@ proc assemble*(
           sources[^1].skip_line()
           break BLK_INNER
 
+        sources[^1].skip_line(false)
+
         if get_index(sources[^1].s) <= progress_index:
           sources[^1].error("Can't understand this line")
           sources[^1].skip_line()
@@ -2183,6 +2194,9 @@ proc assemble*(
             ret.labels[name] = label
         for name, value in sources[^1].defines:
           ret.defines[name] = value
+
+        ret.tokens = collect_tokens(sources[^1].s)
+        start_tokenize(nil)
         return ret
 
       block BLK_MERGE_PUBLICS:
