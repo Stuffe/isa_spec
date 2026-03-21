@@ -459,14 +459,24 @@ func get_expression_bp(
       continue
 
     if s.matches('?', tk = tk_seperator):
+      if min_bp != 0:
+        restore(s, cp)
+        break
+
       var exp_1: ExpRef
       (error, exp_1) = get_expression_bp(s, 0, operand_names)
+      if error != "":
+        return (error, nil)
+
       skip_whitespaces(s)
       if s.read(tk = tk_seperator) != ':':
         return ("Expected ':'", nil)
 
       var exp_2: ExpRef
       (error, exp_2) = get_expression_bp(s, 0, operand_names)
+      if error != "":
+        return (error, nil)
+
       exp_0 = exp_op(exp_op_conditional, [exp_0, exp_1, exp_2])
 
       continue
