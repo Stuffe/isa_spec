@@ -1429,11 +1429,7 @@ func parse_isa_spec_inner(
 
   template error(input: string): untyped =
     start_tokenize(nil)
-    return SpecParseResult(
-      error: Error(
-        loc: FileLocation(file: file_name, line: get_line_number(s)), message: input
-      )
-    )
+    return SpecParseResult(error: LineMessage(line: get_line_number(s), message: input))
 
   template check[T](input: (string, T)): T =
     let (err, res) = input

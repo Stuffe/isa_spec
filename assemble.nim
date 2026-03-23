@@ -24,6 +24,10 @@ type
     of ok_relative:
       offset: int64
 
+  OperandName = object
+    kind: TokenKind
+    value: string
+
   BitPattern = object
     bits: seq[Bitfield]
     bit_length: uint32
@@ -45,6 +49,7 @@ type
     of false:
       pattern_substitutions: seq[PatternSubstitution]
       values: seq[OperandValue]
+      names: seq[OperandName]
     of true:
       error: string
       error_priority: int
@@ -66,6 +71,7 @@ type
     dir_path: string
     normal_path: string
     included_names: seq[string]
+    has_error: bool
     defines: Table[StreamSlice, (FieldKind, DefineValue)]
     labels: Table[StreamSlice, DefineValue]
 
@@ -714,6 +720,7 @@ func parse_instruction_syntax_part(
     isa_spec: IsaSpec,
     defines: Table[StreamSlice, (FieldKind, DefineValue)],
     values: var seq[OperandValue],
+    names: var seq[OperandName],
     resolved_patterns: var Table[string, InstructionDebranched],
 ): seq[InstIncompleteParseResult] =
   let root_cp = s.checkpoint()
@@ -737,7 +744,7 @@ func parse_instruction_syntax_part(
     return
       @[
         InstIncompleteParseResult(
-          is_err: false, final_index: s.get_index(), values: values
+          is_err: false, final_index: s.get_index(), values: values, names: names
         )
       ]
 
@@ -756,7 +763,8 @@ func parse_instruction_syntax_part(
   of sk_any_number_of_spaces:
     isa_spec.skip_whitespaces(s)
     return parse_instruction_syntax_part(
-      s, inst, syntax_index, operand_index, isa_spec, defines, values, resolved_patterns
+      s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
+      resolved_patterns,
     )
   of sk_at_least_one_space:
     let start_index = s.get_index()
@@ -764,12 +772,13 @@ func parse_instruction_syntax_part(
     if s.get_index() == start_index:
       error("Expected whitespace here", operand_index)
     return parse_instruction_syntax_part(
-      s, inst, syntax_index, operand_index, isa_spec, defines, values, resolved_patterns
+      s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
+      resolved_patterns,
     )
   of sk_fixed:
     if matches(s, syntax.text, tk = tk_mnenomic):
       return parse_instruction_syntax_part(
-        s, inst, syntax_index, operand_index, isa_spec, defines, values,
+        s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
         resolved_patterns,
       )
     elif operand_index == 0:
@@ -783,6 +792,7 @@ func parse_instruction_syntax_part(
     let cp = s.checkpoint()
     let options = inst.operands[operand_index].options
     var op_value: OperandValue
+    var op_name: OperandName
     for j, field in options:
       let is_last = j == options.high
       s.restore(cp)
@@ -792,6 +802,7 @@ func parse_instruction_syntax_part(
           let jump_distance = check(get_signed(s))
           let value = check(parse_signed(jump_distance))
           op_value = OperandValue(kind: ok_relative, offset: cast[int64](value))
+          op_name = OperandName(kind: tk_number, value: $value)
         else:
           let label_name = get_identifier(s, tk = tk_label)
           if label_name.len == 0:
@@ -803,6 +814,7 @@ func parse_instruction_syntax_part(
               continue
             error("Was expecting a label name here", operand_index)
           op_value = OperandValue(kind: ok_label_ref, name: label_name)
+          op_name = OperandName(kind: tk_label, value: $label_name)
 
         break
       else:
@@ -817,6 +829,7 @@ func parse_instruction_syntax_part(
                   continue
                 error(&"Value {num} outside of range for {field}", operand_index)
               op_value = fixed(num)
+              op_name = OperandName(kind: tk_number, value: $s_uimm)
               break BLK_PARSE_IMM
 
             let (err_simm, s_simm) = get_signed(s, base.addr)
@@ -830,6 +843,7 @@ func parse_instruction_syntax_part(
                   operand_index,
                 )
               op_value = fixed(num)
+              op_name = OperandName(kind: tk_number, value: $s_simm)
               break BLK_PARSE_IMM
 
             let field_string = get_identifier(s, tk = tk_const)
@@ -842,6 +856,7 @@ func parse_instruction_syntax_part(
               defines.getOrDefault(field_string, (fk_label, DefineValue()))
             if field_kind.is_extendable_to(field):
               op_value = fixed(value.value)
+              op_name = OperandName(kind: tk_const, value: $value.value)
             else:
               if not is_last:
                 continue
@@ -855,17 +870,20 @@ func parse_instruction_syntax_part(
             defines.getOrDefault(field_string, (fk_label, DefineValue()))
           if field_kind == field:
             op_value = fixed(value.value)
+            op_name = OperandName(kind: tk_const, value: $value.value)
           else:
             s.restore(pre_field_cp)
-            var found = -1
+
+            var name: string
             var value: uint64
             for field_value in isa_spec.field_types[field].values:
-              if field_value.name.len > found and s.matches(field_value.name, false):
-                found = field_value.name.len
+              if field_value.name.len > name.len and s.matches(field_value.name, false):
+                name = $field_value.name
                 value = field_value.value
-            if found >= 0:
-              s.skip(found, tk = tk_field_name)
+            if name.len > 0:
+              s.skip(name.len, tk = tk_field_name)
               op_value = fixed(value)
+              op_name = OperandName(kind: tk_field_name, value: name)
             elif not is_last:
               continue
             else:
@@ -883,6 +901,7 @@ func parse_instruction_syntax_part(
         break
 
     values.add(op_value)
+    names.add(op_name)
     result = parse_instruction_syntax_part(
       s,
       inst,
@@ -891,6 +910,7 @@ func parse_instruction_syntax_part(
       isa_spec,
       defines,
       values,
+      names,
       resolved_patterns,
     )
     discard values.pop()
@@ -916,6 +936,7 @@ func parse_instruction_syntax_part(
         isa_spec,
         defines,
         values,
+        names,
         resolved_patterns,
       )
       if rets[0].is_err:
@@ -975,6 +996,7 @@ func parse_instruction_syntax_part(
                     final_index: ret.final_index,
                     pattern_substitutions: ret.pattern_substitutions,
                     values: ret.values,
+                    names: ret.names,
                   )
                 )
                 result[^1].pattern_substitutions.add(
@@ -1092,9 +1114,10 @@ func parse_instruction(
     return
       @[InstIncompleteParseResult(is_err: true, error_priority: priority, error: err)]
 
-  var buffer: seq[OperandValue]
+  var op_values: seq[OperandValue]
+  var op_names: seq[OperandName]
   result = parse_instruction_syntax_part(
-    s, inst, 0, 0, isa_spec, defines, buffer, resolved_patterns
+    s, inst, 0, 0, isa_spec, defines, op_values, op_names, resolved_patterns
   )
 
   for it in result.mitems:
@@ -1114,9 +1137,10 @@ func parse_instruction(
   if err != "":
     return @[InstParseResult(is_err: true, error_priority: priority, error: err)]
 
-  var buffer: seq[OperandValue]
+  var op_values: seq[OperandValue]
+  var op_names: seq[OperandName]
   var ret = parse_instruction_syntax_part(
-    s, inst, 0, 0, isa_spec, defines, buffer, resolved_patterns
+    s, inst, 0, 0, isa_spec, defines, op_values, op_names, resolved_patterns
   )
   result = newSeqOfCap[InstParseResult](ret.len)
 
@@ -1466,6 +1490,11 @@ proc estimate_labels(
                 ctx.source[^1].skip_line()
                 break BLK_INNER
 
+              isa_spec.skip_whitespaces(ctx.source[^1].s)
+              if peek(ctx.source[^1].s) notin {'\n', '\0'}:
+                ctx.source[^1].skip_line()
+                break BLK_INNER
+
               ctx.prefix_unknown_label.add(included_name)
               ctx.prefix_unknown_label.add('.')
 
@@ -1677,17 +1706,25 @@ proc assemble*(
           )
       add_token(state.s, tk = tk_whitespace)
 
-  func error(state: SliceParseState, message: string) =
-    ret.errors.add(
-      Error(
-        loc: FileLocation(file: state.normal_path, line: state.line_counter + 1),
-        message: message,
-      )
-    )
-
-  func error(normal_path: string, line: int, message: string) =
+  proc error(normal_path: string, line: int, message: string) =
     ret.errors.add(
       Error(loc: FileLocation(file: normal_path, line: line + 1), message: message)
+    )
+    if normal_path == sources[0].normal_path:
+      ret.top_file_errors.add(LineMessage(line: line + 1, message: message))
+
+  proc error(state: var SliceParseState, message: string) =
+    state.has_error = true
+    error(state.normal_path, state.line_counter, message)
+
+  proc add_top_file_error(message: string) =
+    ret.top_file_errors.add(
+      LineMessage(line: sources[0].line_counter + 1, message: message)
+    )
+
+  proc add_top_file_description(message: string) =
+    ret.top_file_descriptions.add(
+      LineMessage(line: sources[0].line_counter + 1, message: message)
     )
 
   var est_ctx: EstimationContext
@@ -1850,6 +1887,11 @@ proc assemble*(
                   let (error, words) =
                     assemble_instruction(inst, bits, actualization.resolved_values, ip)
                   if error != "":
+                    for i in countdown(sources.high, 0):
+                      if sources[i].normal_path == normal_path:
+                        sources[i].has_error = true
+                        break
+
                     error(
                       normal_path,
                       line,
@@ -1916,6 +1958,12 @@ proc assemble*(
               let full_path = base_path / normal_path
               if not fileExists(full_path):
                 sources[^1].error("File does not exist: " & normal_path)
+                sources[^1].skip_line()
+                break BLK_INNER
+
+              isa_spec.skip_whitespaces(sources[^1].s)
+              if peek(sources[^1].s) notin {'\n', '\0'}:
+                sources[^1].error("Expected newline after 'include'")
                 sources[^1].skip_line()
                 break BLK_INNER
 
@@ -2025,6 +2073,8 @@ proc assemble*(
 
             for inst in isa_spec.instructions:
               sources[^1].s.restore(cp) # Reset to the beginning of the line
+
+              var description = inst.description.replace("[", "\\[")
 
               # Patternized instructions may spawn multiple valid matches
               for inst_res in parse_instruction(
@@ -2168,7 +2218,23 @@ proc assemble*(
                   if to_add_inst_len:
                     est_ctx.estimated_labels.correction += inst_len
 
+                  block BLK_CLARIFY_DESCRIPTION:
+                    var op_index = 0
+                    for part in inst_debranched.syntax:
+                      if part.kind != sk_field:
+                        continue
+
+                      let name = inst_res.names[op_index]
+                      op_index += 1
+
+                      description = description.replace(
+                        "%" & part.text,
+                        "[color=#{" & $name.kind & "}]" & name.value & "[/color]",
+                      )
+
                   set_index(sources[^1].s, inst_res.final_index)
+                  if sources.len < 2:
+                    add_top_file_description(description)
                   sources[^1].skip_line(false)
                   break BLK_INNER
 
@@ -2188,13 +2254,7 @@ proc assemble*(
 
       if sources.len < 2:
         ret.line_info.done(ret.machine_code.len)
-
-        for name, label in sources[^1].labels:
-          if name.peek() != '$':
-            ret.labels[name] = label
-        for name, value in sources[^1].defines:
-          ret.defines[name] = value
-
+        ret.top_file_line_info = ret.line_info.get_top_file_line_information()
         ret.tokens = collect_tokens(sources[^1].s)
         start_tokenize(nil)
         return ret
@@ -2223,9 +2283,10 @@ proc assemble*(
           if value[1].public:
             sources[^1].defines[state.name & "." & name] = value
 
-        ret.line_info.add_line(
-          sources[^1].normal_path, ret.machine_code.len, sources[^1].line_counter + 1
-        )
+        if state.has_error:
+          add_top_file_error("Fail to parse " & state.normal_path)
+
+        sources[^1].skip_line(false)
 
 func decode(
     decoder: InstructionDecoder,

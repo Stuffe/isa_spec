@@ -471,6 +471,10 @@ type Error* = object
   loc*: FileLocation
   message*: string
 
+type LineMessage* = object
+  line*: int
+  message*: string
+
 type IsaSpec* = object
   name*: string
   variant*: string
@@ -485,7 +489,7 @@ type IsaSpec* = object
   instruction_decoders*: Option[seq[InstructionDecoder]]
 
 type SpecParseResult* = object
-  error*: Error
+  error*: LineMessage
   spec*: IsaSpec
   tokens*: seq[Token]
 
@@ -510,13 +514,28 @@ type CompleteLineInformation* = object
 type AssemblyResult* = object
   machine_code*: seq[uint8]
   line_info*: CompleteLineInformation
+  top_file_line_info*: FileLineInformation
+  top_file_descriptions*: seq[LineMessage]
+  top_file_errors*: seq[LineMessage]
   errors*: seq[Error]
-  defines*: Table[StreamSlice, (FieldKind, DefineValue)]
-  labels*: Table[StreamSlice, DefineValue]
   tokens*: seq[Token]
 
 func new_line_info*(): CompleteLineInformation =
   return default(CompleteLineInformation)
+
+func get_top_file_line_information*(li: CompleteLineInformation): FileLineInformation =
+  if li.segments.len == 0:
+    return
+
+  result.file_name = li.segments[0].file_name
+  for segment in li.segments:
+    if segment.file_name == result.file_name:
+      result.end_byte = segment.end_byte
+
+      let old_len = result.l2b.len
+      result.l2b.set_len(segment.l2b.len)
+      for i in old_len ..< segment.l2b.len:
+        result.l2b[i] = segment.l2b[i]
 
 func add_line*(
     li: var CompleteLineInformation, file_name: string, start_byte: int, line: int
@@ -572,6 +591,9 @@ func get_line_from_byte*(li: CompleteLineInformation, target: int): FileLocation
     return FileLocation(line: 0)
   let line = upperBound(li.segments[seg_index].l2b, target)
   return FileLocation(file: li.segments[seg_index].file_name, line: line)
+
+func get_line_from_byte*(li: FileLineInformation, target: int): int =
+  return upperBound(li.l2b, target)
 
 func get_byte_from_line*(
     line_info: CompleteLineInformation, target: FileLocation
