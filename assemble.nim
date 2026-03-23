@@ -874,13 +874,15 @@ func parse_instruction_syntax_part(
           else:
             s.restore(pre_field_cp)
 
+            var found = -1
             var name: string
             var value: uint64
             for field_value in isa_spec.field_types[field].values:
-              if field_value.name.len > name.len and s.matches(field_value.name, false):
-                name = $field_value.name
+              if field_value.name.len > found and s.matches(field_value.name, false):
                 value = field_value.value
-            if name.len > 0:
+                name = $field_value.name
+                found = name.len
+            if found >= 0:
               s.skip(name.len, tk = tk_field_name)
               op_value = fixed(value)
               op_name = OperandName(kind: tk_field_name, value: name)
