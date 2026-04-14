@@ -2293,21 +2293,24 @@ proc assemble*(
 func decode(
     decoder: InstructionDecoder,
     byte_stream: seq[uint8],
-    ip: uint64,
+    index_stream: uint64,
+    ip_start: uint64,
     field_types: Table[FieldKind, FieldType],
     endian: types.Endianness,
     is_bb_code: static[bool],
 ): Option[tuple[instruction: string, num_bit_consumed: uint32, description: string]] =
-  if cast[uint32](byte_stream.len) * 8 < decoder.bit_length:
+  let ip = ip_start + index_stream
+  if (cast[uint64](byte_stream.len) - index_stream) * 8 < decoder.bit_length:
     return
 
-  var bytes = newSeq[uint8](decoder.bit_length div 8)
+  let bytes_len = decoder.bit_length div 8
+  var bytes = newSeq[uint8](bytes_len)
   if endian == end_big:
-    for i in 0 ..< bytes.len:
-      bytes[i] = byte_stream[i]
+    for i in 0'u64 ..< bytes_len:
+      bytes[i] = byte_stream[index_stream + i]
   else:
-    for i in 0 ..< bytes.len:
-      bytes[i] = byte_stream[bytes.len - 1 - i]
+    for i in 0'u64 ..< bytes_len:
+      bytes[i] = byte_stream[index_stream + bytes_len - 1 - i]
 
   # Quick check
   block BLK_QUICK_CHECK:
@@ -2511,9 +2514,20 @@ func disassemble*(
       (instruction: "U8 " & $x, description: ""),
     is_bb_code: static[bool] = false,
     endianness = isa_spec.endianness,
-): seq[tuple[instruction: string, description: string]] =
+): seq[
+    tuple[
+      lower_byte: uint64, upper_byte: uint64, instruction: string, description: string
+    ]
+] =
   if isa_spec.instruction_decoders.is_none():
-    return machine_code.map(transform_unknown)
+    result.set_len(machine_code.len)
+    for i in 0'u64 ..< machine_code.len.uint64:
+      let s = transform_unknown(machine_code[i])
+      result[i].lower_byte = ip + i
+      result[i].upper_byte = ip + i
+      result[i].instruction = s[0]
+      result[i].description = s[1]
+    return
 
   let decoders = isa_spec.instruction_decoders.get()
   let num_byte = cast[uint64](machine_code.len)
@@ -2522,13 +2536,14 @@ func disassemble*(
     block BLK_TRY_DECODER:
       for decoder in decoders:
         let ret = decoder.decode(
-          machine_code, ip + index, isa_spec.field_types, endianness, is_bb_code
+          machine_code, index, ip, isa_spec.field_types, endianness, is_bb_code
         )
         if ret.is_some():
           let (instruction, num_bit_consumed, description) = ret.get()
-          result.add((instruction, description))
+          result.add((index, index + num_bit_consumed, instruction, description))
           index += num_bit_consumed
           break BLK_TRY_DECODER
 
-      result.add(transform_unknown(machine_code[index]))
+      let s = transform_unknown(machine_code[index])
+      result.add((index, index + 1, s[0], s[1]))
       index += 1
