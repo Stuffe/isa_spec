@@ -319,51 +319,47 @@ func get_bit_pattern(
     if matches(s, HEX_PREFIX):
       let hex_s = check(get_hex(s, ""))
 
-      skip_whitespaces(s)
-      let (top, bottom) =
-        if peek(s) == '[':
-          discard read(s, tk = tk_bracket)
-
-          skip_whitespaces(s)
-          let top =
-            if peek(s) != ':':
-              cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
-            else:
-              -1
-
-          skip_whitespaces(s)
-          assert matches(s, ':', tk = tk_seperator),
-            "(Late detection!): Expected slice syntax after field/pattern reference in bit pattern"
-
-          skip_whitespaces(s)
-          let bottom =
-            if peek(s) != ']':
-              cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
-            else:
-              0
-
-          skip_whitespaces(s)
-          assert matches(s, ']', tk = tk_bracket),
-            "(Late detection!): Expected slice syntax after field/pattern reference in bit pattern"
-
-          (top, bottom)
-        else:
-          (-1'i16, 0'i16)
-
       var length = 0
       for c in hex_s:
         if c notin HexDigits:
           continue
         length += 4
 
-      var i_from =
-        if top < 0:
-          0
-        else:
-          length - top - 1
+      skip_whitespaces(s)
+      var (top, bottom) =
+        if peek(s) == '[':
+          discard read(s, tk = tk_bracket)
 
-      for i in i_from ..< 0:
-        pattern.add('0')
+          skip_whitespaces(s)
+          let top =
+            if peek(s) != ':':
+              cast[int](check(parse_unsigned(check(get_unsigned(s)))))
+            else:
+              length - 1
+
+          skip_whitespaces(s)
+          assert matches(s, ':', tk = tk_seperator),
+            "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+
+          skip_whitespaces(s)
+          let bottom =
+            if peek(s) != ']':
+              cast[int](check(parse_unsigned(check(get_unsigned(s)))))
+            else:
+              0
+
+          skip_whitespaces(s)
+          assert matches(s, ']', tk = tk_bracket),
+            "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+
+          assert top < 0 and bottom < length or top >= bottom,
+            "(Late detection!): Flipped slice syntax after base-16 number reference in bit pattern"
+
+          (top, bottom)
+        else:
+          (length - 1, 0)
+
+      if top >= length:
         if bfk_zero != current.id:
           if current.id != bfk_invalid:
             new_bits.add(current)
@@ -371,8 +367,15 @@ func get_bit_pattern(
         else:
           current.top += 1
 
-      i_from = 0
-      let i_to = length - bottom - 1
+        pattern.add('0')
+        for i in length ..< top:
+          current.top += 1
+          pattern.add('0')
+
+        top = length - 1
+
+      let i_from = length - 1 - top
+      let i_to = length - 1 - bottom
 
       var i = 0
       for c in hex_s:
@@ -655,6 +658,9 @@ func get_bit_pattern(
       result[1].bits.add(bits)
     current_length = new_length
   reverse(result[1].bits)
+
+  assert current_length == total_length,
+    &"Mask ({current_length}) & bit pattern ({total_length}) length mismatch"
 
   let word_count = (total_length + 63) div 64
   let r = (total_length + 63) mod 64

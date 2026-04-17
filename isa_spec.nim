@@ -913,28 +913,34 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         discard read(s, tk = tk_bracket)
 
         skip_whitespaces(s)
-        let top =
-          if peek(s) != ':':
-            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
-          else:
-            -1
+        if peek(s) != ':':
+          bit_length += cast[int16](check(parse_unsigned(check(get_unsigned(s))))) + 1
+        else:
+          for c in hex_s:
+            if c notin HexDigits:
+              continue
+            bit_length += 4
 
         skip_whitespaces(s)
-        assert matches(s, ':', tk = tk_seperator),
-          "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+        expect(
+          matches(s, ':', tk = tk_seperator),
+          "Expected slice syntax after base-16 number reference in bit pattern",
+        )
 
         skip_whitespaces(s)
-        let bottom =
-          if peek(s) != ']':
-            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
-          else:
-            0
+        if peek(s) != ']':
+          bit_length -= cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
 
         skip_whitespaces(s)
-        assert matches(s, ']', tk = tk_bracket),
-          "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
+        expect(
+          matches(s, ']', tk = tk_seperator),
+          "Expected slice syntax after base-16 number reference in bit pattern",
+        )
 
-        bit_length += top - bottom + 1
+        expect(
+          bit_length > 0,
+          "Flipped slice syntax after base-16 number reference in bit pattern",
+        )
       else:
         for c in hex_s:
           if c notin HexDigits:
