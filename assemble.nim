@@ -686,7 +686,7 @@ func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
   while peek(s) in WHITESPACES:
     s.skip()
   add_token(s, tk_whitespace)
-  if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments):
+  if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments)[0]:
     isa_spec.skip_whitespaces(s)
 
 func is_defined(
@@ -1350,7 +1350,7 @@ proc estimate_labels(
         skip(state.s)
     while peek(state.s) in WHITESPACES + {'\n'}:
       skip(state.s)
-    while skip_comment(state.s, isa_spec.line_comments, isa_spec.block_comments):
+    while skip_comment(state.s, isa_spec.line_comments, isa_spec.block_comments)[0]:
       while peek(state.s) in WHITESPACES + {'\n'}:
         skip(state.s)
 
@@ -1485,8 +1485,6 @@ proc estimate_labels(
 
                 while peek(ctx.source[^1].s) in NAME_CHARS:
                   included_name.add(read(ctx.source[^1].s))
-
-              normal_path.add(".asm")
 
               for any_state in ctx.source:
                 if any_state.normal_path == normal_path:
@@ -1705,7 +1703,17 @@ proc assemble*(
         )
     add_token(state.s, tk = tk_whitespace)
 
-    while skip_comment(state.s, isa_spec.line_comments, isa_spec.block_comments):
+    while true:
+      let (has_comment, line_skip) =
+        skip_comment(state.s, isa_spec.line_comments, isa_spec.block_comments)
+      if not has_comment:
+        break
+
+      for _ in 0 ..< line_skip:
+        state.line_counter += 1
+        ret.line_info.add_line(
+          state.normal_path, ret.machine_code.len, state.line_counter + 1
+        )
       while peek(state.s) in WHITESPACES + {'\n'}:
         if read(state.s) == '\n':
           state.line_counter += 1

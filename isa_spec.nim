@@ -1542,7 +1542,7 @@ func parse_isa_spec_inner(
         skip(s, tk = tk_whitespace)
         # Allowing for lines dedicated to comments
         # But not empty lines in the middle of a field type definition
-        if skip_comment(s):
+        if skip_comment(s)[0]:
           continue
 
         skip_whitespaces(s)

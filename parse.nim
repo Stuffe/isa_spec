@@ -296,19 +296,22 @@ func matches*(s: var StreamSlice, value: set[char], tk = tk_none): bool =
 
 func skip_comment*(
     s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}
-): bool =
+): (bool, int) =
   for (start_sym, end_sym) in block_comments:
     if s.matches(start_sym):
+      var line_count = 0
       while not finished(s) and not s.matches(end_sym):
+        if peek(s) == '\n':
+          line_count += 1
         s.start += 1
       add_token(s, tk_comment)
-      return true
+      return (true, line_count)
   for lc in line_comments:
     if s.matches(lc):
       while not finished(s) and peek(s) != '\n':
         s.start += 1
       add_token(s, tk_comment)
-      return true
+      return (true, 0)
 
 func skip_whitespaces*(
     s: var StreamSlice, line_comments = @[";", "//"], block_comments = @{"/*": "*/"}
@@ -316,7 +319,7 @@ func skip_whitespaces*(
   while peek(s) in WHITESPACES:
     s.start += 1
   add_token(s, tk_whitespace)
-  if skip_comment(s, line_comments, block_comments):
+  if skip_comment(s, line_comments, block_comments)[0]:
     skip_whitespaces(s)
 
 func skip_newlines*(
@@ -327,7 +330,7 @@ func skip_newlines*(
     if read(s) == '\n':
       any_newline = true
   add_token(s, tk_whitespace)
-  if skip_comment(s, line_comments, block_comments):
+  if skip_comment(s, line_comments, block_comments)[0]:
     skip_newlines(s) or any_newline
   else:
     any_newline or finished(s)
