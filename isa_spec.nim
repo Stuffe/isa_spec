@@ -899,6 +899,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     op_names: var seq[string],
     is_labels: var set[uint8],
     chunk: var InstructionChunk,
+    allow_unaligned_bit_pattern: static[bool] = false,
 ): (string, bool) =
   let cp = checkpoint(s)
   let start = get_index(s)
@@ -1030,7 +1031,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     "Was expecting a newline at the end of the bit pattern",
   )
 
-  if is_patterns.len == 0 and bit_length mod 8 != 0:
+  if (not allow_unaligned_bit_pattern and is_patterns.len == 0) and bit_length mod 8 != 0:
     s.restore(cp)
     error(
       "The width of the instruction is " & $bit_length &
@@ -1146,7 +1147,7 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
   if not only_asserts and peek(s) notin QUOTES:
     discard check(
       get_bit_pattern(
-        s, is_patterns, field_types, inst, decoders, op_names, is_labels, chunk
+        s, is_patterns, field_types, inst, decoders, op_names, is_labels, chunk, true
       )
     )
   else:
@@ -1224,7 +1225,7 @@ func get_instruction*(
       discard check(
         get_bit_pattern(
           s, is_patterns, isa_spec.field_types, inst, decoders, op_names, is_labels,
-          chunk,
+          chunk, true,
         )
       )
       inst.bit_pattern = chunk.raw_text
@@ -1637,7 +1638,8 @@ func parse_isa_spec_inner(
 
       add_token(s, tk_new_instruction)
       skip_whitespaces(s)
-      assert matches(s, '\n', tk = tk_whitespace)
+      if not matches(s, '\n', tk = tk_whitespace):
+        error("Expected newline before pattern body")
       let (texts, parameter_indexes) = parse_parametrized_pattern(s, parameters)
       result.spec.patterns.add(
         (

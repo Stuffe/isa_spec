@@ -126,11 +126,7 @@ func offset_all_refs(exp: ExpRef, offset: uint8): ExpRef =
   else:
     exp_op(
       exp.exp_kind,
-      [
-        exp.args[0].offset_all_refs(offset),
-        exp.args[1].offset_all_refs(offset),
-        exp.args[2].offset_all_refs(offset),
-      ],
+      exp.args.mapIt(it.offset_all_refs(offset)),
     )
 
 func offset_all_refs(o: var BitPattern, offset: uint8) =
@@ -955,7 +951,7 @@ func parse_instruction_syntax_part(
         if cur_resolved_patterns.len == 0:
           for i, pattern in inst.operands[operand_index].patterns:
             let pattern_key =
-              if pattern.index == uint32.high:
+              if pattern.index == uint8.high:
                 ""
               else:
                 $pattern.index & '\0' & pattern.args.join("\0")
@@ -964,19 +960,22 @@ func parse_instruction_syntax_part(
               if pattern_key in resolved_patterns:
                 resolved_patterns[pattern_key]
               else:
+                let state = pause_tokenization()
                 let resolved_pattern =
                   isa_spec.patterns[pattern.index].pattern.resolve(pattern.args)
                 var sslice = new_StreamSlice(resolved_pattern)
                 start_tokenize(sslice)
                 let (err, instruction) =
                   get_instruction(sslice, isa_spec, pattern.index)
+
+                start_tokenize(nil)
+                resume_tokenization(state)
                 if err != "":
                   error(
-                    &"Failed to resolve pattern({err}):\n{resolved_pattern}",
+                    &"Failed to resolve pattern({err}): {resolved_pattern}",
                     2 * inst.operands.len - operand_index.int,
                   )
 
-                start_tokenize(nil)
                 resolved_patterns[pattern_key] = instruction
                 instruction
 

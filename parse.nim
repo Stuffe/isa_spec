@@ -968,8 +968,8 @@ func parse_parametrized_pattern*(
     slice.start = s.start
     slice.finish = s.start
 
-  if slice.start != slice.finish:
-    result[0].add($slice)
+  slice.finish += 1
+  result[0].add($slice)
 
   discard read(s, tk = tk_whitespace)
 
