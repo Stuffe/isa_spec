@@ -534,7 +534,7 @@ func eval*(
     current_address: uint64,
     instruction_byte_length: uint64,
 ): (string, uint64) =
-  assert not exp.isNil
+  if exp.isNil: return
 
   result[1] =
     case exp.exp_kind
