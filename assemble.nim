@@ -124,10 +124,7 @@ func offset_all_refs(exp: ExpRef, offset: uint8): ExpRef =
   of exp_number:
     exp
   else:
-    exp_op(
-      exp.exp_kind,
-      exp.args.mapIt(it.offset_all_refs(offset)),
-    )
+    exp_op(exp.exp_kind, exp.args.mapIt(it.offset_all_refs(offset)))
 
 func offset_all_refs(o: var BitPattern, offset: uint8) =
   for operand in o.operand_types.mitems:
@@ -147,7 +144,8 @@ func into_virtual_operands(o: var BitPattern, name: string, offset: uint8) =
         return old_expr
       of bfk_one:
         ExpRef(
-          exp_kind: exp_number, value: ((1'u64 shl width) - 1) shl (shift + 1 - width)
+          exp_kind: exp_number,
+          value: (not 0'u64 shr (64 - width)) shl (shift + 1 - width),
         )
       else:
         let base = ExpRef(
@@ -2334,7 +2332,7 @@ func decode(
       of bfk_zero:
         var num_bit = part.top - part.bottom + 1
         if num_bit >= num_bit_in_byte:
-          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let mask = not 0'u8 shr (8 - num_bit_in_byte)
           let bits = bytes[byte_index] and mask
           if bits != 0:
             return
@@ -2351,7 +2349,7 @@ func decode(
             byte_index += 1
 
         if num_bit > 0:
-          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let mask = not 0'u8 shr (8 - num_bit_in_byte)
           let bits = (bytes[byte_index] and mask) shr (num_bit_in_byte - num_bit)
           if bits != 0:
             return
@@ -2360,7 +2358,7 @@ func decode(
       of bfk_one:
         var num_bit = part.top - part.bottom + 1
         if num_bit >= num_bit_in_byte:
-          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let mask = not 0'u8 shr (8 - num_bit_in_byte)
           let bits = (not bytes[byte_index]) and mask
           if bits != 0:
             return
@@ -2377,7 +2375,7 @@ func decode(
             byte_index += 1
 
         if num_bit > 0:
-          let mask = (1'u8 shl num_bit_in_byte) - 1
+          let mask = not 0'u8 shr (8 - num_bit_in_byte)
           let bits = ((not bytes[byte_index]) and mask) shr (num_bit_in_byte - num_bit)
           if bits != 0:
             return
