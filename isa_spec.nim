@@ -522,7 +522,8 @@ func get_auto_instruction_decoder(
         )
 
         skip_whitespaces(s)
-        let top = cast[uint32](check(parse_unsigned(check(get_unsigned(s)))))
+        let top = check(parse_unsigned(check(get_unsigned(s))))
+        expect(top < int16.high.uint64, "Expected top bound not to exceed 32767")
 
         skip_whitespaces(s)
         expect(
@@ -533,9 +534,10 @@ func get_auto_instruction_decoder(
         skip_whitespaces(s)
         let bottom =
           if peek(s) != ']':
-            cast[uint32](check(parse_unsigned(check(get_unsigned(s)))))
+            check(parse_unsigned(check(get_unsigned(s))))
           else:
             0
+        expect(bottom <= top, "Expected top bound not to be less than bottom bound")
 
         skip_whitespaces(s)
         expect(
@@ -548,9 +550,13 @@ func get_auto_instruction_decoder(
           current = Bitfield(id: bfk_invalid)
 
         new_bits.add(
-          Bitfield(id: to_bit_field_kind(operand_index), top: top, bottom: bottom)
+          Bitfield(
+            id: to_bit_field_kind(operand_index),
+            top: cast[uint16](top),
+            bottom: cast[uint16](bottom),
+          )
         )
-        bit_length += top - bottom + 1
+        bit_length += cast[uint32](top - bottom + 1)
 
     if current.id != bfk_invalid:
       new_bits.add(current)
@@ -910,17 +916,28 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     if matches(s, HEX_PREFIX, increment = false):
       let hex_s = check(get_hex(s, HEX_PREFIX))
 
+      var hex_max_length = 0'u64
+      for c in hex_s:
+        if c notin HexDigits:
+          continue
+        hex_max_length += 4
+      expect(
+        hex_max_length < int16.high.uint64,
+        "Expected hex number not to exceed 32767 digits",
+      )
+
       if peek(s) == '[':
         discard read(s, tk = tk_bracket)
 
         skip_whitespaces(s)
+
         if peek(s) != ':':
-          bit_length += cast[int16](check(parse_unsigned(check(get_unsigned(s))))) + 1
-        else:
-          for c in hex_s:
-            if c notin HexDigits:
-              continue
-            bit_length += 4
+          hex_max_length = check(parse_unsigned(check(get_unsigned(s)))) + 1
+
+        expect(
+          hex_max_length < int16.high.uint64, "Expected top bound not to exceed 32767"
+        )
+        bit_length += cast[int16](hex_max_length)
 
         skip_whitespaces(s)
         expect(
@@ -930,7 +947,12 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
 
         skip_whitespaces(s)
         if peek(s) != ']':
-          bit_length -= cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+          let bottom_index = check(parse_unsigned(check(get_unsigned(s))))
+          expect(
+            bottom_index < hex_max_length,
+            "Expected top bound not to be less than bottom bound",
+          )
+          bit_length -= cast[int16](bottom_index)
 
         skip_whitespaces(s)
         expect(
@@ -985,13 +1007,15 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         skip_whitespaces(s)
         let top =
           if peek(s) != ':':
-            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+            let top = check(parse_unsigned(check(get_unsigned(s))))
+            expect(top < int16.high.uint64, "Expected top bound not to exceed 32767")
+            cast[int16](top)
           else:
             expect(
               is_pattern,
               "Expected top bound in slice syntax after field reference in bit pattern",
             )
-            -1
+            int16.high
 
         skip_whitespaces(s)
         expect(
@@ -1002,7 +1026,12 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         skip_whitespaces(s)
         let bottom =
           if peek(s) != ']':
-            cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
+            let bottom = check(parse_unsigned(check(get_unsigned(s))))
+            expect(
+              bottom <= top.uint64,
+              "Expected top bound not to be less than bottom bound",
+            )
+            cast[int16](bottom)
           else:
             0
 
@@ -1011,7 +1040,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
           matches(s, ']', tk = tk_bracket),
           "Expected slice syntax after field/pattern reference in bit pattern",
         )
-        bit_length += top - bottom + 1
+        bit_length += cast[int](top - bottom + 1)
     else:
       bit_length += 1
 

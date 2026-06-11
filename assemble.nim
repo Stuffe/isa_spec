@@ -315,7 +315,7 @@ func get_bit_pattern(
     if matches(s, HEX_PREFIX):
       let hex_s = check(get_hex(s, ""))
 
-      var length = 0
+      var length = 0'i16
       for c in hex_s:
         if c notin HexDigits:
           continue
@@ -329,7 +329,7 @@ func get_bit_pattern(
           skip_whitespaces(s)
           let top =
             if peek(s) != ':':
-              cast[int](check(parse_unsigned(check(get_unsigned(s)))))
+              cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
             else:
               length - 1
 
@@ -340,7 +340,7 @@ func get_bit_pattern(
           skip_whitespaces(s)
           let bottom =
             if peek(s) != ']':
-              cast[int](check(parse_unsigned(check(get_unsigned(s)))))
+              cast[int16](check(parse_unsigned(check(get_unsigned(s)))))
             else:
               0
 

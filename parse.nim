@@ -418,7 +418,7 @@ func get_number(
 
   let dec_start = dec_start + DEC_FIRST
   if peek(s) notin dec_start:
-    return ("Expected a number literal", empty_slice(s))
+    return ("err", empty_slice(s))
   skip(s)
   result[1].finish += 1
   while peek(s) in DEC_NEXT:
@@ -429,10 +429,14 @@ func get_number(
     base[] = 10
 
 func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
-  get_number(s, base, {'-', '+'})
+  result = get_number(s, base, {'-', '+'})
+  if result[0].len > 0:
+    result[0] = "Expected a signed number literal"
 
 func get_unsigned*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
-  get_number(s, base, {})
+  result = get_number(s, base, {})
+  if result[0].len > 0:
+    result[0] = "Expected an unsigned number literal"
 
 func get_hex*(s: var StreamSlice, prefix: string = "0x"): (string, StreamSlice) =
   result[1] = s
