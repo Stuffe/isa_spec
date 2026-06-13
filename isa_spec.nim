@@ -1089,6 +1089,10 @@ func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
 ): (string, bool) =
   while true:
     skip_whitespaces(s)
+    if peek(s) == '\n':
+      skip(s)
+      continue
+
     if peek(s) != '%':
       return
     let cp = checkpoint(s)
