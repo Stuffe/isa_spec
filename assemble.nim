@@ -824,7 +824,7 @@ func parse_instruction_syntax_part(
             let (err_uimm, s_uimm) = get_unsigned(s, base.addr)
             if err_uimm == "":
               let num = check(parse_unsigned(s_uimm))
-              if not num.in_range(field, base != 10):
+              if not num.in_range(field):
                 if not is_last:
                   continue
                 error(&"Value {num} outside of range for {field}", operand_index)
@@ -835,7 +835,7 @@ func parse_instruction_syntax_part(
             let (err_simm, s_simm) = get_signed(s, base.addr)
             if err_simm == "":
               let num = check(parse_signed(s_simm))
-              if not num.in_range(field, base != 10):
+              if not num.in_range(field):
                 if not is_last:
                   continue
                 error(

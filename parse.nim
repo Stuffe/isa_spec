@@ -371,10 +371,15 @@ func get_sub_identifier*(s: var StreamSlice, tk = tk_identifier): StreamSlice =
   add_token(s, tk)
 
 func get_number(
-    s: var StreamSlice, base: ptr int, dec_start: set[char]
+    s: var StreamSlice, base: ptr int, optional_start_symbols: set[char]
 ): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
+
+  if peek(s) in optional_start_symbols:
+    result[1].finish += 1
+    skip(s)
+
   if peek(s) in {'0', '#'}:
     if peek(s, 1) == 'x':
       const HEX = HexDigits + {'_'}
@@ -416,8 +421,7 @@ func get_number(
   const DEC_FIRST = Digits
   const DEC_NEXT = DEC_FIRST + {'_'}
 
-  let dec_start = dec_start + DEC_FIRST
-  if peek(s) notin dec_start:
+  if peek(s) notin DEC_FIRST:
     return ("err", empty_slice(s))
   skip(s)
   result[1].finish += 1
@@ -462,44 +466,63 @@ func xdigit_to_value*(c: char): int =
   return c.ord - 'a'.ord + 10
 
 func parse_unsigned*(s: StreamSlice): (string, uint64) =
+  var start_digits = 0
+  if s[0] == '-':
+    return ("Invalid unsigned int literal", 0'u64)
+
+  if s[0] == '+':
+    start_digits = 1
+
   var num: BiggestUInt
-  let len =
-    try:
-      if s.len < 3:
-        parseBiggestUInt($s, num)
-      else:
-        case s[1]
-        of 'x':
-          parseHex($s[2 ..^ 1], num)
-        of 'o':
-          parseOct($s[2 ..^ 1], num)
-        of 'b':
-          parseBin($s[2 ..^ 1], num)
-        else:
-          parseBiggestUInt($s, num)
-    except ValueError:
-      0
-  if len == 0:
-    return ("Invalid int literal", 0'u64)
+  if s.len - start_digits < 3 or s[start_digits + 1] notin {'x', 'o', 'b'}:
+    let len = parseBiggestUInt($s, num)
+    if len != s.len:
+      return ("Invalid int literal", 0'u64)
+  else:
+    var len = 0
+    case s[start_digits + 1]
+    of 'x':
+      len = parseHex($s[start_digits + 2 ..^ 1], num)
+    of 'o':
+      len = parseOct($s[start_digits + 2 ..^ 1], num)
+    else:
+      len = parseBin($s[start_digits + 2 ..^ 1], num)
+
+    if len != s.len - start_digits - 2:
+      return ("Invalid int literal", 0'u64)
+
   return ("", cast[uint64](num))
 
 func parse_signed*(s: StreamSlice): (string, uint64) =
+  var is_negative = false
+  var start_digits = 0
+  if s[0] == '-':
+    is_negative = true
+    start_digits = 1
+  elif s[0] == '+':
+    start_digits = 1
+
   var num: BiggestInt
-  let len =
-    if s.len < 3:
-      parseBiggestInt($s, num)
+  if s.len - start_digits < 3 or s[start_digits + 1] notin {'x', 'o', 'b'}:
+    let len = parseBiggestInt($s, num)
+    if len != s.len:
+      return ("Invalid int literal", 0'u64)
+  else:
+    var len = 0
+    case s[start_digits + 1]
+    of 'x':
+      len = parseHex($s[start_digits + 2 ..^ 1], num)
+    of 'o':
+      len = parseOct($s[start_digits + 2 ..^ 1], num)
     else:
-      case s[1]
-      of 'x':
-        parseHex($s[2 ..^ 1], num)
-      of 'o':
-        parseOct($s[2 ..^ 1], num)
-      of 'b':
-        parseBin($s[2 ..^ 1], num)
-      else:
-        parseBiggestInt($s, num)
-  if len == 0:
-    return ("Invalid int literal", 0'u64)
+      len = parseBin($s[start_digits + 2 ..^ 1], num)
+
+    if len != s.len - start_digits - 2:
+      return ("Invalid int literal", 0'u64)
+
+    if is_negative:
+      num = -num
+
   return ("", cast[uint64](num))
 
 func get_line_number*(s: StreamSlice): int =

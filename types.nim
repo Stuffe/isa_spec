@@ -536,6 +536,13 @@ func get_top_file_line_information*(li: CompleteLineInformation): FileLineInform
       result.l2b.set_len(segment.l2b.len)
       for i in old_len ..< segment.l2b.len:
         result.l2b[i] = segment.l2b[i]
+  
+  var last_line = result.l2b[^1]
+  for i in countdown(result.l2b.high, 0):
+    if result.l2b[i] == -1:
+      result.l2b[i] = last_line
+    else:
+      last_line = result.l2b[i]
 
 func add_line*(
     li: var CompleteLineInformation, file_name: string, start_byte: int, line: int
@@ -544,20 +551,27 @@ func add_line*(
     li.segments.len == 0 or # This is the first segment
     li.segments[^1].file_name != file_name or # This is a new file
     line <= li.segments[^1].l2b.len
-  ): # We jumped back inside the file, e.g. because of duplicate includes
+      # We jumped back inside the file, e.g. because of duplicate includes
+  ):
     if li.segments.len > 0:
       assert start_byte >= li.segments[^1].end_byte - 1
         # See end of function for why we subtract 1
-      li.segments[^1].end_byte = start_byte
+
+      if start_byte == li.segments[^1].start_byte:
+        li.segments.setLen(li.segments.len - 1)
+      else:
+        li.segments[^1].end_byte = start_byte
     else:
       assert start_byte == 0, "Output should start at byte 0"
+
     li.segments.add(FileLineInformation(file_name: file_name, start_byte: start_byte))
 
   assert line > li.segments[^1].l2b.len, "Duplicate line insertion for " & $line
   if li.segments[^1].l2b.len > 0:
     assert li.segments[^1].l2b[^1] <= start_byte, "Invalid start_byte insertion"
-  while line > li.segments[^1].l2b.len:
-    li.segments[^1].l2b.add start_byte
+  while li.segments[^1].l2b.len + 1 < line:
+    li.segments[^1].l2b.add(-1)
+  li.segments[^1].l2b.add(start_byte)
 
   # To make sure line_info instances are always usable, we set `end_byte` here.
   # But we don't know how long the last line is, so we add 1. This allows at least
@@ -567,16 +581,12 @@ func add_line*(
   assert start_byte >= li.segments[^1].end_byte - 1
   li.segments[^1].end_byte = start_byte + 1
 
-func add_segments*(li: var CompleteLineInformation, oli: CompleteLineInformation) =
-  for segment in oli.segments:
-    for line, l2b in segment.l2b:
-      li.add_line(segment.file_name, l2b, line + 1)
-
 func done*(li: var CompleteLineInformation, total_length: int) =
   if li.segments.len != 0:
-    li.segments[^1].end_byte = total_length
-    if li.segments[^1].l2b.len > 0:
-      assert li.segments[^1].l2b[^1] <= total_length, "Invalid total_length"
+    if total_length == li.segments[^1].start_byte:
+      li.segments.setLen(li.segments.len - 1)
+    else:
+      li.segments[^1].end_byte = total_length
 
 func get_line_from_byte*(li: CompleteLineInformation, target: int): FileLocation =
   let seg_index = lowerBound(li.segments, target) do(
@@ -600,11 +610,12 @@ func get_byte_from_line*(
 ): seq[int] =
   if target.line < 1:
     return
+
   for segment in line_info.segments:
     if segment.file_name != target.file:
       continue
-    if target.line <= segment.l2b.len:
-      result.add segment.l2b[target.line - 1]
+    if target.line <= segment.l2b.len and segment.l2b[target.line - 1] >= 0:
+      result.add(segment.l2b[target.line - 1])
 
 proc lsr*(a: int, b: int): int =
   return cast[int](cast[uint64](a) shr cast[uint64](b))
