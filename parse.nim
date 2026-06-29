@@ -1,4 +1,4 @@
-import std/[options, parseutils, setutils, strutils, hashes, tables, strformat]
+import std/[options, setutils, strutils, hashes, tables, strformat]
 
 type StreamSlice* = object
   source: ref string
@@ -473,25 +473,43 @@ func parse_unsigned*(s: StreamSlice): (string, uint64) =
   if s[0] == '+':
     start_digits = 1
 
-  var num: BiggestUInt
+  var base = 0'u64
+  var digits = {'_'}
+
   if s.len - start_digits < 3 or s[start_digits + 1] notin {'x', 'o', 'b'}:
-    let len = parseBiggestUInt($s, num)
-    if len != s.len:
-      return ("Invalid int literal", 0'u64)
+    base = 10
+    digits = digits + {'0' .. '9'}
   else:
-    var len = 0
     case s[start_digits + 1]
     of 'x':
-      len = parseHex($s[start_digits + 2 ..^ 1], num)
+      base = 16
+      digits = digits + HexDigits
     of 'o':
-      len = parseOct($s[start_digits + 2 ..^ 1], num)
+      base = 8
+      digits = digits + {'0' .. '7'}
     else:
-      len = parseBin($s[start_digits + 2 ..^ 1], num)
+      base = 2
+      digits = digits + {'0' .. '1'}
 
-    if len != s.len - start_digits - 2:
+    start_digits += 2
+
+  let overflow_threshold_mul = uint64.high div base
+  var num = 0'u64
+  for i in start_digits ..< s.len:
+    if s[i] notin digits:
       return ("Invalid int literal", 0'u64)
 
-  return ("", cast[uint64](num))
+    if num > overflow_threshold_mul:
+      return ("Int literal too big", 0'u64)
+
+    num *= base
+
+    let digit = cast[uint64](xdigit_to_value(s[i]))
+    if num > uint64.high - digit:
+      return ("Int literal too big", 0'u64)
+    num += digit
+
+  return ("", num)
 
 func parse_signed*(s: StreamSlice): (string, uint64) =
   var is_negative = false
@@ -502,28 +520,52 @@ func parse_signed*(s: StreamSlice): (string, uint64) =
   elif s[0] == '+':
     start_digits = 1
 
-  var num: BiggestInt
+  var base = 0'u64
+  var digits = {'_'}
+
   if s.len - start_digits < 3 or s[start_digits + 1] notin {'x', 'o', 'b'}:
-    let len = parseBiggestInt($s, num)
-    if len != s.len:
-      return ("Invalid int literal", 0'u64)
+    base = 10
+    digits = digits + {'0' .. '9'}
   else:
-    var len = 0
     case s[start_digits + 1]
     of 'x':
-      len = parseHex($s[start_digits + 2 ..^ 1], num)
+      base = 16
+      digits = digits + HexDigits
     of 'o':
-      len = parseOct($s[start_digits + 2 ..^ 1], num)
+      base = 8
+      digits = digits + {'0' .. '7'}
     else:
-      len = parseBin($s[start_digits + 2 ..^ 1], num)
+      base = 2
+      digits = digits + {'0' .. '1'}
 
-    if len != s.len - start_digits - 2:
+    start_digits += 2
+
+  let overflow_threshold_mul = uint64.high div base
+  var num = 0'u64
+  for i in start_digits ..< s.len:
+    if s[i] notin digits:
       return ("Invalid int literal", 0'u64)
 
-    if is_negative:
-      num = -num
+    if num > overflow_threshold_mul:
+      return ("Int literal too big", 0'u64)
 
-  return ("", cast[uint64](num))
+    num *= base
+
+    let digit = cast[uint64](xdigit_to_value(s[i]))
+    if num > uint64.high - digit:
+      return ("Int literal too big", 0'u64)
+    num += digit
+
+  if is_negative:
+    if num > int64.high.uint64 + 1:
+      return ("Int literal too big", 0'u64)
+
+    num = (not num) + 1
+  else:
+    if num > int64.high.uint64:
+      return ("Int literal too big", 0'u64)
+
+  return ("", num)
 
 func get_line_number*(s: StreamSlice): int =
   var line = 1

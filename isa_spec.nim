@@ -7,6 +7,34 @@ const MAX_FIELD_SIZE* = 64
 
 type WithError[T] = tuple[error: string, value: T]
 
+type OperandMaxWidthTable = Table[
+  uint8, tuple[bit_pattern_direct_width: uint8, bit_pattern_indirect_width: uint8]
+]
+
+proc merge_indirect_width(
+    t: var OperandMaxWidthTable, operand_index: uint8, width: uint8
+) =
+  let old = t.getOrDefault(operand_index)
+  t[operand_index] = (
+    old.bit_pattern_direct_width, old.bit_pattern_indirect_width.max(min(64'u8, width))
+  )
+
+proc increment_direct_width(t: var OperandMaxWidthTable, operand_index: uint8) =
+  let old = t.getOrDefault(operand_index)
+  t[operand_index] =
+    (min(64'u8, old.bit_pattern_direct_width + 1), old.bit_pattern_indirect_width)
+
+proc merge_widths(t: var OperandMaxWidthTable, other: OperandMaxWidthTable) =
+  for k, v in other.pairs:
+    if k in t:
+      let old = t[k]
+      t[k] = (
+        old.bit_pattern_direct_width.max(v.bit_pattern_direct_width),
+        old.bit_pattern_indirect_width.max(v.bit_pattern_indirect_width),
+      )
+    else:
+      t[k] = v
+
 template error(msg: string): untyped =
   result[0] = msg
   return
@@ -288,22 +316,22 @@ func get_uint64(s: var StreamSlice): WithError[uint64] =
 #       inst.get.exprs.add(OperandTypeVirtual(variable_name: variable_name, expr: expr))
 #     op_names.add(variable_name)
 
-func get_mask_expr_underlying_arguments(exp: ExpRef): (string, ExpRef, ExpRef) =
-  var exp = exp
-  var parity = 0
-  while exp.exp_kind == exp_op_not_boolean:
-    exp = exp.args[0]
-    parity += 1
+# func get_mask_expr_underlying_arguments(exp: ExpRef): (string, ExpRef, ExpRef) =
+#   var exp = exp
+#   var parity = 0
+#   while exp.exp_kind == exp_op_not_boolean:
+#     exp = exp.args[0]
+#     parity += 1
 
-  if parity mod 2 == 0 and exp.exp_kind != exp_op_ne:
-    result[0] = "Not an NE expression"
-    return
-  if parity mod 2 != 0 and exp.exp_kind != exp_op_eq:
-    result[0] = "Not an NE expression"
-    return
+#   if parity mod 2 == 0 and exp.exp_kind != exp_op_ne:
+#     result[0] = "Not an NE expression"
+#     return
+#   if parity mod 2 != 0 and exp.exp_kind != exp_op_eq:
+#     result[0] = "Not an NE expression"
+#     return
 
-  discard eval(exp.args[0], @[], uint64.high, 0)
-  return ("", exp.args[0], exp.args[1])
+#   discard eval(exp.args[0], @[], uint64.high, 0)
+#   return ("", exp.args[0], exp.args[1])
 
 func get_auto_instruction_decoder(
     inst: InstructionDebranched, field_types: Table[FieldKind, FieldType]
@@ -906,9 +934,11 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     is_labels: var set[uint8],
     chunk: var InstructionChunk,
     allow_unaligned_bit_pattern: static[bool] = false,
-): (string, bool) =
+): (string, OperandMaxWidthTable) =
   let cp = checkpoint(s)
   let start = get_index(s)
+
+  var bit_pattern_widths: OperandMaxWidthTable
 
   var bit_length = 0
   while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
@@ -990,15 +1020,16 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
       let operand_name = get_identifier(s, tk = tk_field_ref)
       expect(operand_name.len > 0, "Expected an identifier after '%'")
 
-      var is_pattern = false
+      var operand_index: uint8
       block BLK_FIND_OPERAND:
         for i in countdown(op_names.high, 0):
           if op_names[i] == operand_name:
-            is_pattern = is_patterns.contains(cast[uint8](i))
+            operand_index = cast[uint8](i)
             break BLK_FIND_OPERAND
 
         error(&"Expected a valid field/pattern name, got '{operand_name}'")
 
+      let is_pattern = is_patterns.contains(operand_index)
       if peek(s) != '[':
         expect(is_pattern, "Expected slice syntax after field reference in bit pattern")
       else:
@@ -1041,16 +1072,28 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
           "Expected slice syntax after field/pattern reference in bit pattern",
         )
         bit_length += cast[int](top - bottom + 1)
+
+        if not is_pattern:
+          bit_pattern_widths.merge_indirect_width(
+            operand_index, cast[uint8](min(64, top - bottom + 1))
+          )
     else:
       bit_length += 1
 
       let c = read(s, tk = tk_field_name)
+
+      var operand_index: uint8
       block BLK_FIND_OPERAND:
         for i in countdown(op_names.high, 0):
           if op_names[i][0] == c:
+            operand_index = cast[uint8](i)
             break BLK_FIND_OPERAND
 
         error(&"No operand starts with character '{c}'.")
+
+      let is_pattern = is_patterns.contains(operand_index)
+      if not is_pattern:
+        bit_pattern_widths.increment_direct_width(operand_index)
 
   skip_whitespaces(s)
 
@@ -1080,6 +1123,8 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
       else:
         inst
     decoders.get.add(check(get_auto_instruction_decoder(inst_debranched, field_types)))
+
+  result[1] = bit_pattern_widths
 
 func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
@@ -1141,7 +1186,7 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
     is_labels: set[uint8],
     chunk: var InstructionChunk,
     only_asserts: static[bool],
-): (string, bool) =
+): (string, OperandMaxWidthTable) =
   let ss = s
   skip_whitespaces(s)
   expect(s != ss, "Expected whitespace after 'if'")
@@ -1178,7 +1223,7 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
     chunk.virtuals.finish = cast[uint16](inst.operands.len)
 
   if not only_asserts and peek(s) notin QUOTES:
-    discard check(
+    result[1] = check(
       get_bit_pattern(
         s, is_patterns, field_types, inst, decoders, op_names, is_labels, chunk, true
       )
@@ -1229,6 +1274,7 @@ func get_instruction*(
     )
   )
 
+  var bit_pattern_widths: OperandMaxWidthTable
   block BLK_BIT_PATTERN:
     var chunk: InstructionChunk
     while true:
@@ -1238,7 +1284,7 @@ func get_instruction*(
 
       skip_whitespaces(s)
       if matches(s, "if", tk = tk_keyword):
-        discard check(
+        let new_bit_pattern_widths = check(
           get_if(
             s, is_patterns, isa_spec.field_types, inst, decoders, op_names, is_labels,
             chunk, false,
@@ -1247,6 +1293,7 @@ func get_instruction*(
 
         inst.asserts.add(Assertion(exp: chunk.cond, msg: chunk.raw_text))
         chunk.virtuals.start = chunk.virtuals.finish
+        bit_pattern_widths.merge_widths(new_bit_pattern_widths)
         continue
 
       if peek(s) == '#' and peek(s, 1) in {' ', '\t'}:
@@ -1255,14 +1302,33 @@ func get_instruction*(
       expect(not matches(s, "jump_switch", tk = tk_keyword)):
         "Jump switch not allowed in patterns"
 
-      discard check(
+      let new_bit_pattern_widths = check(
         get_bit_pattern(
           s, is_patterns, isa_spec.field_types, inst, decoders, op_names, is_labels,
           chunk, true,
         )
       )
+
       inst.bit_pattern = chunk.raw_text
+      bit_pattern_widths.merge_widths(new_bit_pattern_widths)
       break
+
+    for op_index, op in inst.operands.mpairs:
+      if op.kind != otk_normal:
+        continue
+
+      let widths = bit_pattern_widths.getOrDefault(cast[uint8](op_index))
+      var width = widths.bit_pattern_direct_width.max(widths.bit_pattern_indirect_width)
+      if width == 0:
+        width = 64
+
+      for i in countdown(op.options.high, 0):
+        let field_kind = op.options[i]
+        if field_kind != fk_imm_0:
+          continue
+
+        op.options[i] = fk_simm_1.succ(width - 1)
+        op.options.insert(fk_uimm_1.succ(width - 1), i)
 
   skip_newlines(s)
 
@@ -1297,6 +1363,7 @@ func get_instruction*(
     )
   )
 
+  var bit_pattern_widths: OperandMaxWidthTable
   block BLK_BIT_PATTERN:
     var chunk: InstructionChunk
     while true:
@@ -1306,7 +1373,7 @@ func get_instruction*(
 
       skip_whitespaces(s)
       if matches(s, "if", tk = tk_keyword):
-        discard check(
+        let new_bit_pattern_widths = check(
           get_if(
             s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
             op_names, is_labels, chunk, false,
@@ -1314,6 +1381,7 @@ func get_instruction*(
         )
 
         chunk.virtuals.start = chunk.virtuals.finish
+        bit_pattern_widths.merge_widths(new_bit_pattern_widths)
         continue
 
       if peek(s) in {'\n', '\0'} or (peek(s) == '#' and peek(s, 1) in {' ', '\t'}):
@@ -1383,7 +1451,7 @@ func get_instruction*(
 
           skip_whitespaces(s)
           if matches(s, "if", tk = tk_keyword):
-            discard check(
+            let new_bit_pattern_widths = check(
               get_if(
                 s, is_patterns, isa_spec.field_types, inst,
                 isa_spec.instruction_decoders, op_names, is_labels, chunk, true,
@@ -1391,6 +1459,7 @@ func get_instruction*(
             )
 
             chunk.virtuals.start = chunk.virtuals.finish
+            bit_pattern_widths.merge_widths(new_bit_pattern_widths)
             continue
 
           break
@@ -1409,7 +1478,7 @@ func get_instruction*(
           chunk.cond =
             exp_op(exp_op_jump_switch, [exp_var(idx_jump_switch), exp_num(size)])
 
-          discard check(
+          let new_bit_pattern_widths = check(
             get_bit_pattern(
               s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
               op_names, is_labels, chunk,
@@ -1417,6 +1486,7 @@ func get_instruction*(
           )
 
           chunk.virtuals.start = chunk.virtuals.finish
+          bit_pattern_widths.merge_widths(new_bit_pattern_widths)
 
         skip_whitespaces(s)
         expect(
@@ -1429,16 +1499,34 @@ func get_instruction*(
       chunk.virtuals.finish = chunk.virtuals.branch
       chunk.cond = exp_num(1)
 
-      discard check(
+      let new_bit_pattern_widths = check(
         get_bit_pattern(
           s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
           op_names, is_labels, chunk,
         )
       )
+      bit_pattern_widths.merge_widths(new_bit_pattern_widths)
 
       break
 
     expect(inst.virtual_operands.len <= uint16.high.int, "Too many virtual operands")
+
+    for op_index, op in inst.syntax_operands.mpairs:
+      if op.is_pattern:
+        continue
+
+      let widths = bit_pattern_widths.getOrDefault(cast[uint8](op_index))
+      var width = widths.bit_pattern_direct_width.max(widths.bit_pattern_indirect_width)
+      if width == 0:
+        width = 64
+
+      for i in countdown(op.options.high, 0):
+        let field_kind = op.options[i]
+        if field_kind != fk_imm_0:
+          continue
+
+        op.options[i] = fk_simm_1.succ(width - 1)
+        op.options.insert(fk_uimm_1.succ(width - 1), i)
 
   block BLK_DESCRIPTION:
     var description: string
@@ -1543,9 +1631,9 @@ func parse_isa_spec_inner(
         error("Expected newline after setting assignment")
 
   result.spec.field_types[fk_label] = FieldType(name: "label", bit_length: 64)
-  result.spec.field_types[fk_uimm_64] = FieldType(name: "immediate", bit_length: 64)
-  for i in 0'u8 .. 63'u8:
-    result.spec.field_types[fk_imm_0.succ(i)] = FieldType(name: "", bit_length: i)
+  result.spec.field_types[fk_imm_0] = FieldType(name: "immediate", bit_length: 64)
+  for i in 1'u8 .. 64'u8:
+    result.spec.field_types[fk_uimm_1.succ(i - 1)] = FieldType(name: "", bit_length: i)
   for i in 1'u8 .. 64'u8:
     result.spec.field_types[fk_simm_1.succ(i - 1)] = FieldType(name: "", bit_length: i)
 
