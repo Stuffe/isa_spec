@@ -23,7 +23,7 @@ template parametrize_args*(arg: untyped): (string, string) =
 func translate*(
     raw_id: int64,
     original_text: string,
-    replacements: varargs[(string, string), parametrize_args]
+    replacements: varargs[(string, string), parametrize_args],
 ): string =
   let id = raw_id - 3133_700000000000000'i64
   var text = original_text
@@ -32,8 +32,9 @@ func translate*(
     if id in translation_entries:
       text = translation_entries[id].text
 
-  for replacement in replacements:
-    text = text.replace(replacement[0], replacement[1])
+  text = text.replace("{{", "\0\0\0")
+  text = text.multiReplace(replacements)
+  text = text.replace("\0\0\0", "{")
 
   return text
 
