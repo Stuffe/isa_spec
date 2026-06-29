@@ -1,4 +1,6 @@
-import std/[algorithm, options, tables], parse, expressions
+import std/[algorithm, options, tables]
+
+import expressions, parse, translations
 
 #!fmt: off
 type FieldKind* {.pure.} = enum
@@ -36,13 +38,13 @@ func is_extendable_to*(a: FieldKind, b: FieldKind): bool =
 func `$`*(field: FieldKind): string =
   case field
   of fk_label:
-    "label"
+    translate((31337_17885987456433, "label"))  ## Assembly label
   of fk_imm_0 .. fk_uimm_64:
-    "unsigned " & $(field.ord - fk_imm_0.ord) & "-bit immediate"
+    translate((31337_74639900282369, "unsigned {n}-bit immediate"), ("n", field.ord - fk_imm_0.ord))  ## Assembly immediate
   of fk_simm_1 .. fk_simm_64:
-    "signed " & $(field.ord - fk_simm_1.ord + 1) & "-bit immediate"
+    translate((31337_18299156828551, "signed {n}-bit immediate"), ("n", field.ord - fk_simm_1.ord + 1))  ## Assembly immediate
   of fk_var_0 .. fk_var_125:
-    "variable " & $(field.ord - fk_var_0.ord)
+    translate((31337_12246885387560, "variable {name}"), ("name", field.ord - fk_var_0.ord))  ## Assembly variable
 
 func to_immediate_field_kind*(size: uint8, is_signed: bool): FieldKind =
   assert size <= 64

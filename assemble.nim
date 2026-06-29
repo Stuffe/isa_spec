@@ -3,7 +3,7 @@ import
     algorithm, bitops, deques, options, os, parseutils, sequtils, setutils, strformat,
     strutils, tables,
   ]
-import types, parse, expressions, label_prefix_trie
+import expressions, label_prefix_trie, parse, translations, types
 
 import isa_spec
 
@@ -455,7 +455,12 @@ func get_bit_pattern(
             break BLK_FIND_OP_INDEX
 
         error(
-          &"Expected a valid operand name, got '{operand_name}' among {$operand_names}"
+          translate(
+            31337_68530592279217,
+            "Expected a valid operand name, got '{operand_name}' among {all_operand_names}",
+            ("operand_name", operand_name),
+            ("all_operand_names", operand_names),
+          )
         )
 
       skip_whitespaces(s)
@@ -586,12 +591,19 @@ func get_bit_pattern(
   if not allow_unaligned_bit_pattern:
     if total_length == 0:
       error(
-        "Instruction '" & instruction_name & "' is missing the bit field definition"
+        translate(
+          31337_15585581119466,
+          "Instruction '{instruction_name}' is missing the bit field definition",
+          ("instruction_name", instruction_name),
+        )
       )
     if total_length mod 8 != 0:
       error(
-        "The width of instruction '" & instruction_name & "' is " & $total_length &
-          " bits, but only multiples of 8 are supported"
+        translate(
+          31337_76017808702292,
+          "The width of instruction '{instruction_name}' is {width} bits, but only multiples of 8 are supported",
+          ("instruction_name", instruction_name, "width", total_length),
+        )
       )
   result[1].bit_length = total_length
 
@@ -737,7 +749,8 @@ func parse_instruction_syntax_part(
     isa_spec.skip_whitespaces(s)
     if peek(s) notin {'\n', '\0'}:
       error(
-        "Unknown code found after instruction: " & $from_line_start_to_here(s),
+        translate(31337_84557608492963, "Unknown code found after instruction: ") &
+          $from_line_start_to_here(s),
         operand_index,
       )
 
@@ -770,7 +783,7 @@ func parse_instruction_syntax_part(
     let start_index = s.get_index()
     isa_spec.skip_whitespaces(s)
     if s.get_index() == start_index:
-      error("Expected whitespace here", operand_index)
+      error(translate(31337_18981788561705, "Expected whitespace here"), operand_index)
     return parse_instruction_syntax_part(
       s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
       resolved_patterns,
@@ -782,10 +795,15 @@ func parse_instruction_syntax_part(
         resolved_patterns,
       )
     elif operand_index == 0:
-      error(&"Unknown instruction", operand_index)
+      error(translate(31337_21828993759952, "Unknown instruction"), operand_index)
     else:
       error(
-        &"Expected '{syntax.text}' after '" & $from_line_start_to_here(s) & "'",
+        translate(
+          31337_19581803133960,
+          "Expected '{syntax}' after '{partial_instruction}'",
+          ("syntax", syntax.text),
+          ("partial_instruction", from_line_start_to_here(s)),
+        ),
         operand_index,
       )
   of sk_field:
@@ -808,11 +826,17 @@ func parse_instruction_syntax_part(
           if label_name.len == 0:
             if not is_last:
               continue
-            error("Was expecting a label name here", operand_index)
+            error(
+              translate(31337_83023561541280, "Was expecting a label name here"),
+              operand_index,
+            )
           if label_name.is_defined(isa_spec, defines):
             if not is_last:
               continue
-            error("Was expecting a label name here", operand_index)
+            error(
+              translate(31337_58826692693389, "Was expecting a label name here"),
+              operand_index,
+            )
           op_value = OperandValue(kind: ok_label_ref, name: label_name)
           op_name = OperandName(kind: tk_label, value: $label_name)
 
@@ -827,7 +851,15 @@ func parse_instruction_syntax_part(
               if not num.in_range(field):
                 if not is_last:
                   continue
-                error(&"Value {num} outside of range for {field}", operand_index)
+                error(
+                  translate(
+                    31337_12097260550100,
+                    "Value {num} outside of range for {field}",
+                    ("num", num),
+                    ("field", field),
+                  ),
+                  operand_index,
+                )
               op_value = fixed(num)
               op_name = OperandName(kind: tk_number, value: $s_uimm)
               break BLK_PARSE_IMM
@@ -839,7 +871,12 @@ func parse_instruction_syntax_part(
                 if not is_last:
                   continue
                 error(
-                  &"Value {cast[int64](num)} outside of range for {field}",
+                  translate(
+                    31337_53378617686677,
+                    "Value {num} outside of range for {field}",
+                    ("num", cast[int64](num)),
+                    ("field", field),
+                  ),
                   operand_index,
                 )
               op_value = fixed(num)
@@ -850,7 +887,10 @@ func parse_instruction_syntax_part(
             if field_string.len == 0:
               if not is_last:
                 continue
-              error("Expected either a number or a symbol", operand_index)
+              error(
+                translate(31337_33085034295813, "Expected either a number or a symbol"),
+                operand_index,
+              )
 
             let (field_kind, value) =
               defines.getOrDefault(field_string, (fk_label, DefineValue()))
@@ -860,7 +900,14 @@ func parse_instruction_syntax_part(
             else:
               if not is_last:
                 continue
-              error(&"Undefined constant {field_string}", operand_index)
+              error(
+                translate(
+                  31337_86607635528717,
+                  "Undefined constant {field_string}",
+                  ("field_string", field_string),
+                ),
+                operand_index,
+              )
         else:
           # Some user defined field type
           let pre_field_cp = s.checkpoint()
@@ -892,12 +939,21 @@ func parse_instruction_syntax_part(
               # TODO: Add multiple field types to error message if multiple are allowed
               if field_string.len == 0:
                 error(
-                  &"Missing a '{isa_spec.field_types[field].name}' operand here",
+                  translate(
+                    31337_66273157704409,
+                    "Missing a '{field_type}' operand here",
+                    ("field_type", isa_spec.field_types[field].name),
+                  ),
                   operand_index,
                 )
               else:
                 error(
-                  &"'{field_string}' is not a '{isa_spec.field_types[field].name}'",
+                  translate(
+                    31337_79977943868423,
+                    "'{field_string}' is not a '{field_type}'",
+                    ("field_string", field_string),
+                    ("field_type", isa_spec.field_types[field].name),
+                  ),
                   operand_index,
                 )
         break
@@ -970,7 +1026,12 @@ func parse_instruction_syntax_part(
                 resume_tokenization(state)
                 if err != "":
                   error(
-                    &"Failed to resolve pattern({err}): {resolved_pattern}",
+                    translate(
+                      31337_87525828760679,
+                      "Failed to resolve pattern({err}): {resolved_pattern}",
+                      ("err", err),
+                      ("resolved_pattern", resolved_pattern),
+                    ),
                     2 * inst.operands.len - operand_index.int,
                   )
 
@@ -1043,10 +1104,18 @@ func pre_parse_instruction(
           if original_s.get_index() != s.get_index():
             (
               0,
-              &"Expected fixed string '{syntax.text}' after \"{$s.get_slice(original_s.get_index(), s.get_index())}\"",
+              translate(
+                31337_19581803133960,
+                "Expected '{syntax}' after '{partial_instruction}'",
+                ("syntax", syntax.text),
+                (
+                  "partial_instruction",
+                  s.get_slice(original_s.get_index(), s.get_index()),
+                ),
+              ),
             )
           else:
-            (-1, &"Invalid instruction")
+            (-1, translate(31337_37770431994640, "Invalid instruction"))
     of sk_any_number_of_spaces:
       isa_spec.skip_whitespaces(s)
     of sk_at_least_one_space:
@@ -1057,10 +1126,17 @@ func pre_parse_instruction(
           if original_s.get_index() != s.get_index():
             (
               0,
-              &"Expected at least one whitespace character after \"{$s.get_slice(original_s.get_index(), s.get_index())}\"",
+              translate(
+                31337_69537550553443,
+                "Expected at least one whitespace character after '{partial_instruction}'",
+                (
+                  "partial_instruction",
+                  s.get_slice(original_s.get_index(), s.get_index()),
+                ),
+              ),
             )
           else:
-            (-1, &"Invalid instruction")
+            (-1, translate(31337_37770431994640, "Invalid instruction"))
     of sk_field, sk_pattern:
       break
 
@@ -1090,16 +1166,29 @@ func pre_parse_instruction(
       discard
 
     if has_failed:
-      let key =
+      let partial_instruction = s.get_slice(original_s.get_index(), s_index)
+      let msg =
         case syntax.kind
         of sk_fixed:
-          "Expected fixed string '" & syntax.text & "'"
+          translate(
+            31337_19581803133960,
+            "Expected '{syntax}' after '{partial_instruction}'",
+            ("syntax", syntax.text),
+            ("partial_instruction", partial_instruction),
+          )
         of sk_at_least_one_space:
-          "Expected at least one whitespace character"
+          translate(
+            31337_69537550553443,
+            "Expected at least one whitespace character after '{partial_instruction}'",
+            ("partial_instruction", partial_instruction),
+          )
         else:
-          "Unexpected end of instruction"
-      return
-        (priority, &"{key} after \"{$s.get_slice(original_s.get_index(), s_index)}\"")
+          translate(
+            31337_82512572175623,
+            "Unexpected end of instruction after {partial_instruction}",
+            ("partial_instruction", partial_instruction),
+          )
+      return (priority, msg)
 
     priority += 1
 
@@ -1191,7 +1280,14 @@ func assemble_instruction(
     if operand.kind == otk_virtual:
       let (err, new_field) = eval(operand.expr, fields, ip, byte_length)
       if err != "":
-        error(&"Error evaluating operand %{operand.variable_name}: {err}")
+        error(
+          translate(
+            31337_71714150108621,
+            "Error evaluating operand %{operand_name}: {err}",
+            ("operand_name", operand.variable_name),
+            ("err", err),
+          )
+        )
 
       fields.insert(new_field, i)
 
@@ -1199,14 +1295,25 @@ func assemble_instruction(
     let exp = assertion.exp
     let (err, value) = eval(exp, fields, ip, byte_length)
     if err != "":
-      error(&"Error evaluating assert {assertion.msg}: {err}")
+      error(
+        translate(
+          31337_57794055991905,
+          "Error evaluating assert {assertion}: {err}",
+          ("assertion", assertion.msg),
+          ("err", err),
+        )
+      )
 
     if value != 0:
       let msg = assertion.msg
       if msg == "":
         let operand_names = inst.operand_names()
         let source = exp.to_str(operand_names)
-        error(&"Assert {source} did not match")
+        error(
+          translate(
+            31337_30066682696902, "Assert {source} did not match", ("source", source)
+          )
+        )
       else:
         error(msg)
 
@@ -1774,33 +1881,50 @@ proc assemble*(
 
             if size_error != "":
               sources[^1].error(
-                "Expected a size before the number, like: U64 " & $number
+                translate(
+                  31337_45433710484419,
+                  "Expected a size before the number, like: U64 {number}",
+                  ("number", number),
+                )
               )
               sources[^1].skip_line()
               break BLK_INNER
 
             if is_signed:
-              sources[^1].error("Signed numbers are not supported")
+              sources[^1].error(
+                translate(31337_83649060120708, "Signed numbers are not supported")
+              )
               sources[^1].skip_line()
               break BLK_INNER
 
             if size mod 8 != 0 or size == 0:
               sources[^1].error(
-                "Only positive multiples of 8 bits are supported for now"
+                translate(
+                  31337_67922577781529,
+                  "Only positive multiples of 8 bits are supported for now",
+                )
               )
               sources[^1].skip_line()
               break BLK_INNER
 
             if not has_ws_after_size:
               sources[^1].error(
-                "Expected some whitespace between the size and the number, like U" &
-                  $size & " " & $number
+                translate(
+                  31337_80097289956044,
+                  "Expected some whitespace between the size and the number, like U{size} {number}",
+                  ("size", size),
+                  ("number", number),
+                )
               )
               sources[^1].skip_line()
               break BLK_INNER
 
             if number_error != "":
-              sources[^1].error("Expected a number after a size declaration")
+              sources[^1].error(
+                translate(
+                  31337_60515742509356, "Expected a number after a size declaration"
+                )
+              )
               sources[^1].skip_line()
               break BLK_INNER
 
@@ -1864,7 +1988,13 @@ proc assemble*(
 
             if special_test.len != 0 and matches(sources[^1].s, ':', tk = tk_label):
               if special_test in sources[^1].labels:
-                sources[^1].error("Label " & $special_test & " is already declared")
+                sources[^1].error(
+                  translate(
+                    31337_39195841380612,
+                    "Label {name} is already declared",
+                    ("name", special_test),
+                  )
+                )
                 sources[^1].skip_line()
                 break BLK_INNER
 
@@ -1908,8 +2038,12 @@ proc assemble*(
                     error(
                       normal_path,
                       line,
-                      "Could not assemble instruction on resolving label " &
-                        $special_test & ": " & error,
+                      translate(
+                        31337_51460031660101,
+                        "Could not assemble instruction on resolving label {name}: {err}",
+                        ("name", special_test),
+                        ("err", error),
+                      ),
                     )
 
                   ret.machine_code.write_bytes(
@@ -1946,8 +2080,11 @@ proc assemble*(
                   included_name = file_name
                 else:
                   sources[^1].error(
-                    "The file name " & file_name &
-                      " cannot be used as referencable alias, declare another alias using the keyword 'as', e.g. \"include .A as A\""
+                    translate(
+                      31337_62050046600010,
+                      "The file name {name} cannot be used as referencable alias, declare another alias using the keyword 'as', e.g. 'include .A as A'",
+                      ("name", file_name),
+                    )
                   )
                   sources[^1].skip_line()
                   break BLK_INNER
@@ -1955,7 +2092,11 @@ proc assemble*(
                 let old_s = sources[^1].s
                 isa_spec.skip_whitespaces(sources[^1].s)
                 if old_s == sources[^1].s:
-                  sources[^1].error("Expected some whitespace after 'as'")
+                  sources[^1].error(
+                    translate(
+                      31337_35071857261934, "Expected some whitespace after 'as'"
+                    )
+                  )
                   sources[^1].skip_line()
                   break BLK_INNER
 
@@ -1964,19 +2105,26 @@ proc assemble*(
 
               for any_state in sources:
                 if any_state.normal_path == normal_path:
-                  sources[^1].error("Recursive inclusion of: " & normal_path)
+                  sources[^1].error(
+                    translate(31337_19131785861372, "Recursive inclusion of: ") &
+                      normal_path
+                  )
                   sources[^1].skip_line()
                   break BLK_INNER
 
               let full_path = base_path / normal_path
               if not fileExists(full_path):
-                sources[^1].error("File does not exist: " & normal_path)
+                sources[^1].error(
+                  translate(31337_66575346967082, "File does not exist: ") & normal_path
+                )
                 sources[^1].skip_line()
                 break BLK_INNER
 
               isa_spec.skip_whitespaces(sources[^1].s)
               if peek(sources[^1].s) notin {'\n', '\0'}:
-                sources[^1].error("Expected newline after 'include'")
+                sources[^1].error(
+                  translate(31337_58979769991732, "Expected newline after 'include'")
+                )
                 sources[^1].skip_line()
                 break BLK_INNER
 
@@ -2002,19 +2150,33 @@ proc assemble*(
               isa_spec.skip_whitespaces(sources[^1].s)
 
               if not matches(sources[^1].s, '=', tk = tk_operator):
-                sources[^1].error("Missing '=' after 'const'")
+                sources[^1].error(
+                  translate(31337_47300717145684, "Missing '=' after 'const'")
+                )
                 sources[^1].skip_line()
                 break BLK_INNER
 
               if definition_name in sources[^1].defines:
-                sources[^1].error($definition_name & " is already declared")
+                sources[^1].error(
+                  translate(
+                    31337_42442531119863,
+                    "{constant_name} is already declared",
+                    ("constant_name", definition_name),
+                  )
+                )
                 sources[^1].skip_line()
                 break BLK_INNER
 
               for field_values in isa_spec.field_types.values:
                 for field in field_values.values:
                   if field.name == definition_name:
-                    sources[^1].error($definition_name & " is already declared")
+                    sources[^1].error(
+                      translate(
+                        31337_42442531119863,
+                        "{constant_name} is already declared",
+                        ("constant_name", definition_name),
+                      )
+                    )
                     sources[^1].skip_line()
                     break BLK_INNER
 
@@ -2061,7 +2223,12 @@ proc assemble*(
                     sources[^1].skip_line(false)
                     break BLK_INNER
 
-              sources[^1].error("Definition value must be either a number or a field")
+              sources[^1].error(
+                translate(
+                  31337_90294506138532,
+                  "Definition value must be either a number or a field",
+                )
+              )
               sources[^1].skip_line()
               break BLK_INNER
 
@@ -2151,10 +2318,16 @@ proc assemble*(
                     if actualization.unknown_labels.len != 0:
                       best_err = (
                         int.high,
-                        "Undefined label " &
-                          $actualization.unknown_labels[0][
-                            prefix_unknown_label.len .. ^1
-                          ],
+                        translate(
+                          31337_60631582636278,
+                          "Undefined label {name}",
+                          (
+                            "name",
+                            actualization.unknown_labels[0][
+                              prefix_unknown_label.len .. ^1
+                            ],
+                          ),
+                        ),
                         inst_res.final_index,
                       )
                       break BLK_INSTRUCTION
@@ -2179,10 +2352,17 @@ proc assemble*(
                     if actualization.kind in {oak_private_label, oak_undefined_label}:
                       let msg =
                         if actualization.kind == oak_private_label:
-                          "Cannot reference private label " &
-                            $actualization.private_label
+                          translate(
+                            31337_59248806788382,
+                            "Cannot reference private label {name}",
+                            ("name", actualization.private_label),
+                          )
                         else:
-                          "Undefined label " & $actualization.undefined_label
+                          translate(
+                            31337_60631582636278,
+                            "Undefined label {name}",
+                            ("name", actualization.undefined_label),
+                          )
                       best_err = (int.high, msg, inst_res.final_index)
                       break BLK_INSTRUCTION
 
@@ -2191,9 +2371,17 @@ proc assemble*(
                   if actualization.kind in {oak_private_label, oak_undefined_label}:
                     let msg =
                       if actualization.kind == oak_private_label:
-                        "Cannot reference private label " & $actualization.private_label
+                        translate(
+                          31337_59248806788382,
+                          "Cannot reference private label {name}",
+                          ("name", actualization.private_label),
+                        )
                       else:
-                        "Undefined label " & $actualization.undefined_label
+                        translate(
+                          31337_60631582636278,
+                          "Undefined label {name}",
+                          ("name", actualization.undefined_label),
+                        )
                     best_err = (int.high, msg, inst_res.final_index)
                     break BLK_INSTRUCTION
 
@@ -2254,7 +2442,10 @@ proc assemble*(
                 if to_cease_search_on_error:
                   break BLK_INSTRUCTION
           sources[^1].error(
-            if best_err.error != "": best_err.error else: "Invalid instruction"
+            if best_err.error != "":
+              best_err.error
+            else:
+              translate(31337_23413102374088, "Invalid instruction")
           )
           sources[^1].skip_line()
           break BLK_INNER
@@ -2262,7 +2453,9 @@ proc assemble*(
         sources[^1].skip_line(false)
 
         if get_index(sources[^1].s) <= progress_index:
-          sources[^1].error("Can't understand this line")
+          sources[^1].error(
+            translate(31337_35210741057769, "Can't understand this line")
+          )
           sources[^1].skip_line()
 
       if sources.len < 2:
@@ -2297,7 +2490,11 @@ proc assemble*(
             sources[^1].defines[state.name & "." & name] = value
 
         if state.has_error:
-          add_top_file_error("Fail to parse " & state.normal_path)
+          add_top_file_error(
+            translate(
+              31337_15728875852508, "Fail to parse {file}", ("file", state.normal_path)
+            )
+          )
 
         sources[^1].skip_line(false)
 

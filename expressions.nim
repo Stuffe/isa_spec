@@ -1,5 +1,5 @@
 import std/[bitops, options, sequtils]
-import parse
+import parse, translations
 
 type ExpKind* {.pure.} = enum
   # Interanal expression
@@ -327,28 +327,47 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
       elif identifier == "output":
         exp_var(INDEX_BIT_PATTERN)
       else:
-        return ("Unrecognized address: $" & $identifier, nil)
+        return (
+          translate(
+            31337_49919016022369,
+            "Unrecognized address: ${identifier}",
+            ("identifier", identifier),
+          ),
+          nil,
+        )
 
     return ("", exp)
 
   if matches(s, '%'):
     let operand = get_identifier(s, tk = tk_field_ref)
     if operand.len == 0 or operand_names.len == 0:
-      return ("Invalid identifier: %" & $operand, nil)
+      return (
+        translate(
+          31337_86940018019179, "Invalid identifier: %{operand}", ("operand", operand)
+        ),
+        nil,
+      )
 
     for i in countdown(cast[uint8](operand_names.high), 0):
       if operand_names[i] == operand:
         let exp = exp_var(i)
         return ("", exp)
 
-    return ("Unrecognized identifier: %" & $operand, nil)
+    return (
+      translate(
+        31337_16677833364088,
+        "Unrecognized identifier: %{operand}",
+        ("operand", operand),
+      ),
+      nil,
+    )
 
   let opt_exp_kind = s.find(FUNC_OPS, tk = tk_operator)
   if opt_exp_kind.is_some():
     let (exp_kind, n_ary) = opt_exp_kind.get()
 
     if s.read(tk = tk_bracket) != '(':
-      return ("Expected '('", nil)
+      return (translate(31337_21791372106633, "Expected '('"), nil)
 
     let (error, exp_i) = get_expression_bp(s, 0, operand_names)
     if error != "":
@@ -358,7 +377,7 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
     for i in 1 ..< n_ary:
       skip_whitespaces(s)
       if s.read(tk = tk_seperator) != ',':
-        return ("Expected ','", nil)
+        return (translate(31337_62520916869207, "Expected ','"), nil)
 
       let (error, exp_i) = get_expression_bp(s, 0, operand_names)
       if error != "":
@@ -367,7 +386,7 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
       exp.args.add(exp_i)
 
     if s.read(tk = tk_bracket) != ')':
-      return ("Expected ')'", nil)
+      return (translate(31337_18996202754936, "Expected ')'"), nil)
 
     return ("", exp)
 
@@ -395,7 +414,7 @@ func get_expression_bp(
 
       skip_whitespaces(s)
       if s.read(tk = tk_bracket) != ')':
-        return ("Expected ')'", nil)
+        return (translate(31337_50863314907270, "Expected ')'"), nil)
 
       break BLK_FIRST_TERM
 
@@ -408,7 +427,8 @@ func get_expression_bp(
 
     let opt_exp_kind = s.find(PREFIX_OPS, tk = tk_operator)
     if opt_exp_kind.is_none():
-      return ("Unrecognized prefix operator " & $s[0], nil)
+      return
+        (translate(31337_15525193700799, "Unrecognized prefix operator ") & $s[0], nil)
 
     let exp_kind = opt_exp_kind.get()
     let bp = get_binding_power_prefix(exp_kind)
@@ -436,11 +456,21 @@ func get_expression_bp(
 
           skip_whitespaces(s)
           if s.read(tk = tk_bracket) != ']':
-            return ("Expected ']' or ':', got '" & $sep & "'", nil)
+            return (
+              translate(
+                31337_76203559781109, "Expected ']' or ':', got '{sep}'", ("sep", sep)
+              ),
+              nil,
+            )
 
           exp_op(exp_op_bit_extract, [exp_0, exp_1, exp_2])
         else:
-          return ("Expected ']' or ':', got '" & $sep & "'", nil)
+          return (
+            translate(
+              31337_76203559781109, "Expected ']' or ':', got '{sep}'", ("sep", sep)
+            ),
+            nil,
+          )
 
       continue
 
@@ -470,7 +500,7 @@ func get_expression_bp(
 
       skip_whitespaces(s)
       if s.read(tk = tk_seperator) != ':':
-        return ("Expected ':'", nil)
+        return (translate(31337_17795651801484, "Expected ':'"), nil)
 
       var exp_2: ExpRef
       (error, exp_2) = get_expression_bp(s, 0, operand_names)
@@ -534,7 +564,8 @@ func eval*(
     current_address: uint64,
     instruction_byte_length: uint64,
 ): (string, uint64) =
-  if exp.isNil: return
+  if exp.isNil:
+    return
 
   result[1] =
     case exp.exp_kind
@@ -543,7 +574,7 @@ func eval*(
     of exp_operand:
       if exp.is_address:
         if current_address == uint64.high:
-          result[0] = "Instruction pointer not available"
+          result[0] = translate(31337_36919792698704, "Instruction pointer not available")
           return
 
         case exp.location
@@ -555,7 +586,7 @@ func eval*(
         if exp.index == INDEX_BIT_PATTERN:
           operands[0]
         elif exp.index.int >= operands.len:
-          result[0] = "Operand " & $exp.index & " not found"
+          result[0] = translate(31337_14037712136328, "Operand {op} not found", ("op", exp.index))
           return
         else:
           operands[exp.index]
@@ -686,7 +717,7 @@ func eval*(
       of exp_op_div_u:
         for i in 1 ..< args.len:
           if args[i] == 0:
-            result[0] = "Cannot divide by zero"
+            result[0] = translate(31337_34225684975413, "Cannot divide by zero")
             return
 
           args[0] = args[0] div args[i]
@@ -694,7 +725,7 @@ func eval*(
       of exp_op_div:
         for i in 1 ..< args.len:
           if args[i] == 0:
-            result[0] = "Cannot divide by zero"
+            result[0] = translate(31337_56491055329828, "Cannot divide by zero")
             return
 
           args[0] = cast[uint64](cast[int64](args[0]) div cast[int64](args[i]))
@@ -702,7 +733,7 @@ func eval*(
       of exp_op_mod_u:
         for i in 1 ..< args.len:
           if args[i] == 0:
-            result[0] = "Cannot divide by zero"
+            result[0] = translate(31337_67607141463624, "Cannot divide by zero")
             return
 
           args[0] = args[0] mod args[i]
@@ -710,7 +741,7 @@ func eval*(
       of exp_op_mod:
         for i in 1 ..< args.len:
           if args[i] == 0:
-            result[0] = "Cannot divide by zero"
+            result[0] = translate(31337_19897103703179, "Cannot divide by zero")
             return
 
           args[0] = cast[uint64](cast[int64](args[0]) mod cast[int64](args[i]))
@@ -725,7 +756,7 @@ func eval*(
         log2(args[0])
       of exp_op_log2:
         if cast[int64](args[0]) <= 0:
-          result[0] = "Cannot take log of a non-positive number"
+          result[0] = translate(31337_57240566137582, "Cannot take log of a non-positive number")
           return
 
         log2(args[0])

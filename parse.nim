@@ -1,5 +1,7 @@
 import std/[options, setutils, strutils, hashes, tables, strformat]
 
+import translations
+
 type StreamSlice* = object
   source: ref string
   start: int
@@ -282,16 +284,20 @@ func matches*(s: var StreamSlice, value: string, increment = true, tk = tk_none)
     add_token(s, tk)
   return true
 
-func matches*(s: var StreamSlice, value: char, tk = tk_none): bool =
+func matches*(s: var StreamSlice, value: char, increment = true, tk = tk_none): bool =
   if peek(s) == value:
-    s.start += 1
-    add_token(s, tk)
+    if increment:
+      s.start += 1
+      add_token(s, tk)
     return true
 
-func matches*(s: var StreamSlice, value: set[char], tk = tk_none): bool =
+func matches*(
+    s: var StreamSlice, value: set[char], increment = true, tk = tk_none
+): bool =
   if peek(s) in value:
-    s.start += 1
-    add_token(s, tk)
+    if increment:
+      s.start += 1
+      add_token(s, tk)
     return true
 
 func skip_comment*(
@@ -422,7 +428,7 @@ func get_number(
   const DEC_NEXT = DEC_FIRST + {'_'}
 
   if peek(s) notin DEC_FIRST:
-    return ("err", empty_slice(s))
+    return (translate(31337_22452670489981, "Expected a number literal"), empty_slice(s))
   skip(s)
   result[1].finish += 1
   while peek(s) in DEC_NEXT:
@@ -435,19 +441,19 @@ func get_number(
 func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
   result = get_number(s, base, {'-', '+'})
   if result[0].len > 0:
-    result[0] = "Expected a signed number literal"
+    result[0] = translate(31337_73973243772156, "Expected a signed number literal")
 
 func get_unsigned*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
   result = get_number(s, base, {})
   if result[0].len > 0:
-    result[0] = "Expected an unsigned number literal"
+    result[0] = translate(31337_71666516845083, "Expected an unsigned number literal")
 
 func get_hex*(s: var StreamSlice, prefix: string = "0x"): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
 
   if not matches(s, prefix, increment = false):
-    return ("Expected " & prefix, empty_slice(s))
+    return (translate(31337_72110029133381, "Expected {prefix}", ("prefix", prefix)), empty_slice(s))
 
   skip(s, prefix.len)
   result[1].finish += prefix.len
@@ -468,7 +474,7 @@ func xdigit_to_value*(c: char): int =
 func parse_unsigned*(s: StreamSlice): (string, uint64) =
   var start_digits = 0
   if s[0] == '-':
-    return ("Invalid unsigned int literal", 0'u64)
+    return (translate(31337_51855228989260, "Invalid unsigned int literal"), 0'u64)
 
   if s[0] == '+':
     start_digits = 1
@@ -497,16 +503,16 @@ func parse_unsigned*(s: StreamSlice): (string, uint64) =
   var num = 0'u64
   for i in start_digits ..< s.len:
     if s[i] notin digits:
-      return ("Invalid int literal", 0'u64)
+      return (translate(31337_64926004981217, "Invalid int literal"), 0'u64)
 
     if num > overflow_threshold_mul:
-      return ("Int literal too big", 0'u64)
+      return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
 
     num *= base
 
     let digit = cast[uint64](xdigit_to_value(s[i]))
     if num > uint64.high - digit:
-      return ("Int literal too big", 0'u64)
+      return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
     num += digit
 
   return ("", num)
@@ -544,26 +550,26 @@ func parse_signed*(s: StreamSlice): (string, uint64) =
   var num = 0'u64
   for i in start_digits ..< s.len:
     if s[i] notin digits:
-      return ("Invalid int literal", 0'u64)
+      return (translate(31337_64926004981217, "Invalid int literal"), 0'u64)
 
     if num > overflow_threshold_mul:
-      return ("Int literal too big", 0'u64)
+      return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
 
     num *= base
 
     let digit = cast[uint64](xdigit_to_value(s[i]))
     if num > uint64.high - digit:
-      return ("Int literal too big", 0'u64)
+      return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
     num += digit
 
   if is_negative:
     if num > int64.high.uint64 + 1:
-      return ("Int literal too big", 0'u64)
+      return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
 
     num = (not num) + 1
   else:
     if num > int64.high.uint64:
-      return ("Int literal too big", 0'u64)
+      return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
 
   return ("", num)
 
@@ -584,15 +590,17 @@ func `?`*[T](input: (string, T)): T =
 
 func `?`*(input: (string, StreamSlice)): StreamSlice =
   if input[0] != "":
-    raise
-      newException(ParseError, "Line " & $get_line_number(input[1]) & ": " & input[0])
+    raise newException(
+      ParseError,
+      translate(31337_22378976352410, "Line {num}: ", ("num", get_line_number(input[1]))) & input[0],
+    )
   return input[1]
 
 func get_size*(s: var StreamSlice): (string, uint64, bool) =
   let cp = checkpoint(s)
 
   if peek(s) notin {'U', 'S'}:
-    result[0] = "Expected an U for unsigned or S for signed here"
+    result[0] = translate(31337_43326454052643, "Expected an U for unsigned or S for signed here")
     return
 
   result[2] = read(s) == 'S'
@@ -605,7 +613,7 @@ func get_size*(s: var StreamSlice): (string, uint64, bool) =
 
   if s_number.len == 0:
     s.restore(cp)
-    result[0] = "Expected a size declaration here"
+    result[0] = translate(31337_77089554485217, "Expected a size declaration here")
     return
   add_token(s, tk_type_name)
 
@@ -674,16 +682,21 @@ func get_enum*[T](
   var joined_options = ""
   for i, (str, _) in options:
     if i != 0: # Not the first element
-      if i == options.high: # This is the last element
-        joined_options &= " or "
-      else:
-        joined_options &= ", "
+      joined_options &= ", "
     joined_options &= str
   let current = get_identifier(s, tk = tk)
   if current.len != 0:
-    return ("Expected one of " & joined_options & ", got " & $current, default(T))
+    return (
+      translate(31337_19807940646400, "Expected one of {expected}, got {actual}").multiReplace(
+        ("expected", joined_options), ("actual", $current)
+      ),
+      default(T),
+    )
   else:
-    return ("Expected one of " & joined_options, default(T))
+    return (
+      translate(31337_73113688099439, "Expected one of {expected}").replace("expected", joined_options),
+      default(T),
+    )
 
 func find*[T: string | char](
     s: var StreamSlice, candidates: openArray[T], tk = tk_none
@@ -704,7 +717,7 @@ func get_bool*(s: var StreamSlice): (string, bool) =
   let index = find(s, ["false", "true"], tk = tk_literal)
 
   if index == -1:
-    return ("Expected a bool here.", false)
+    return (translate(31337_29112746104375, "Expected a bool here."), false)
 
   return ("", bool(index))
 
@@ -717,14 +730,16 @@ func get_string*(
 
   if quote notin QUOTES:
     s.restore(cp)
-    return ("Expected an opening quote (one of \", ' or `)", empty_slice(s))
+    return (
+      translate(31337_27682737127628, "Expected an opening quote (one of \", ' or `)"), empty_slice(s)
+    )
 
   while peek(s) != quote:
     if read(s) == '\\':
       discard read(s)
     if finished(s):
       s.restore(cp)
-      return ("Unexpected EOF while parsing a string", empty_slice(s))
+      return (translate(31337_75565287060042, "Unexpected EOF while parsing a string"), empty_slice(s))
 
   add_token(s, tk)
 
@@ -741,7 +756,7 @@ func descape_string_content*(s: StreamSlice): (string, string) =
       result[1].add c
       continue
     if it.finished():
-      return ("Unfinished escape sequence", "")
+      return (translate(31337_10198498286711, "Unfinished escape sequence"), "")
     let nc = it.read()
     case nc
     of 'a':
@@ -780,17 +795,17 @@ func descape_string_content*(s: StreamSlice): (string, string) =
       if peek(it) in DIGITS:
         value = 8 * value + read(it).ord - '0'.ord
       if value > 255:
-        return ("Invalid octal escape sequence", "")
+        return (translate(31337_36313699368590, "Invalid octal escape sequence"), "")
       result[1].add char(value)
     of 'x':
       var digit1 = read(it)
       var digit2 = read(it)
       if digit1 not_in HEX_DIGITS or digit2 not_in HEX_DIGITS:
-        return ("Invalid hex escape sequence", "")
+        return (translate(31337_44942745729831, "Invalid hex escape sequence"), "")
       let value = xdigit_to_value(digit1) * 16 + xdigit_to_value(digit2)
       result[1].add char(value)
     else:
-      return (&"Invalid escape character '{nc}'", "")
+      return (translate(31337_56457570130031, "Invalid escape character '{nc}'", ("nc", nc)), "")
 
 func make_escaped_string*(s: string, quote = '"'): string =
   result &= quote
@@ -829,7 +844,12 @@ iterator get_encapsulation*(s: var StreamSlice, tk = tk_bracket): StreamSlice =
     s.restore(cp)
       # TODO: Ideally we would not restore here (and in other places where we raise) I think, but that's a behavior change for later
     raise newParseError(
-      s, &"Expected an opening parantheses (one of '(', '[' or '{{'), got '{open}'"
+      s,
+      translate(
+        31337_33400766069212,
+        "Expected an opening parantheses (one of '(', '[' or '{{'), got '{open}'",
+        ("open", open),
+      ),
     )
 
   skip_newlines(s)
@@ -851,7 +871,9 @@ iterator get_encapsulation*(s: var StreamSlice, tk = tk_bracket): StreamSlice =
         raise newParseError(s, err)
     elif finished(s):
       s.restore(cp)
-      raise newParseError(s, "Expected '" & close & "', got EOF")
+      raise newParseError(
+        s, translate(31337_25983481845150, "Expected '{symbol}', got EOF", ("symbol", close))
+      )
 
   inner.finish = s.start - 1
   yield inner
@@ -939,7 +961,7 @@ iterator get_list*(s: var StreamSlice): StreamSlice =
         raise newParseError(s, err)
       if list.start == start:
         s = restore
-        raise newParseError(s, "Expecated a list value")
+        raise newParseError(s, translate(31337_64743950507593, "Expecated a list value"))
 
       yield element
 
@@ -967,13 +989,13 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
         raise newParseError(s, err)
       if key.len == 0:
         s = restore
-        raise newParseError(s, "Expected a key")
+        raise newParseError(s, translate(31337_13040813748160, "Expected a key"))
       yield (false, key)
       skip_whitespaces(list)
 
       if read(list, tk_seperator) != ':':
         s = restore
-        raise newParseError(s, "Expected ':' after the key")
+        raise newParseError(s, translate(31337_66187706284192, "Expected ':' after the key"))
       skip_whitespaces(list)
 
       let value = get_list_value(list).on_err:
@@ -982,7 +1004,7 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
 
       if value.len == 0:
         s = restore
-        raise newParseError(s, "Expected a value")
+        raise newParseError(s, translate(31337_49180229055343, "Expected a value"))
 
       yield (true, value)
 
@@ -992,7 +1014,7 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
         skip_newlines(list)
       elif not finished(list):
         s = restore
-        raise newParseError(s, "Expected a ',' or end of table")
+        raise newParseError(s, translate(31337_12492443144951, "Expected a ',' or end of table"))
 
 proc get_whole_table*(s: var StreamSlice): OrderedTable[StreamSlice, StreamSlice] =
   var key: StreamSlice
@@ -1053,7 +1075,10 @@ func get_table_value*(s: var StreamSlice): string =
     closing_char = c
   else:
     raise newParseError(
-      s, "Expected '\"', ''', or '`' at the start of UI table cell content"
+      s,
+      translate(
+        31337_11064758781325, "Expected '\"', ''', or '`' at the start of UI table cell content"
+      ),
     )
 
   var was_escape = false
@@ -1061,8 +1086,9 @@ func get_table_value*(s: var StreamSlice): string =
     c = peek(s)
     if c in {'\r', '\n', '\0'}:
       if was_escape:
-        raise
-          newParseError(s, "Expected some character after the escape character '\\'")
+        raise newParseError(
+          s, translate(31337_82386938622647, "Expected some character after the escape character '\\'")
+        )
       break
     skip(s)
 
@@ -1082,7 +1108,8 @@ iterator get_ui_table*(
     s: var StreamSlice
 ): tuple[is_row_header: bool, content: string] =
   if read(s, tk_bracket) != ']':
-    raise newParseError(s, "Expected ']' at the start of the UI table")
+    raise
+      newParseError(s, translate(31337_85095060656242, "Expected ']' at the start of the UI table"))
 
   var is_row_header = true
 
@@ -1104,7 +1131,8 @@ iterator get_ui_table*(
 
     let next_char = peek(s)
     if next_char == '\0':
-      raise newParseError(s, "Expected '[' at the end of the UI table")
+      raise
+        newParseError(s, translate(31337_33545106210094, "Expected '[' at the end of the UI table"))
     if next_char in {'\n', '\r'}:
       is_row_header = true
       skip_newlines(s)
@@ -1112,11 +1140,14 @@ iterator get_ui_table*(
       skip(s, tk = tk_seperator)
     else:
       raise newParseError(
-        s, "Expected ',' or '\\n' at the end of the UI table cell content"
+        s,
+        translate(
+          31337_66543091234026, "Expected ',' or '\\n' at the end of the UI table cell content"
+        ),
       )
 
   if finished(s):
-    raise newParseError(s, "Expected '[' at the end of the UI table")
+    raise newParseError(s, translate(31337_49158020311750, "Expected '[' at the end of the UI table"))
 
   skip(s, tk = tk_bracket)
 
@@ -1124,7 +1155,9 @@ iterator get_ui_disassembly_table*(
     s: var StreamSlice
 ): tuple[is_row_header: bool, is_column_header: bool, content: string] =
   if read(s, tk_bracket) != ']':
-    raise newParseError(s, "Expected ']' at the start of the UI disassembly table")
+    raise newParseError(
+      s, translate(31337_52765180261200, "Expected ']' at the start of the UI disassembly table")
+    )
 
   var is_column_header = true
   var is_row_header = true
@@ -1147,7 +1180,9 @@ iterator get_ui_disassembly_table*(
 
     let next_char = peek(s)
     if next_char == '\0':
-      raise newParseError(s, "Expected '[' at the end of the UI disassembly table")
+      raise newParseError(
+        s, translate(31337_52918417608842, "Expected '[' at the end of the UI disassembly table")
+      )
     if next_char in {'\n', '\r'}:
       is_row_header = true
       is_column_header = false
@@ -1156,10 +1191,16 @@ iterator get_ui_disassembly_table*(
       skip(s, tk = tk_seperator)
     else:
       raise newParseError(
-        s, "Expected ',' or '\\n' at the end of the UI disassembly table cell content"
+        s,
+        translate(
+          31337_31593726953356,
+          "Expected ',' or '\\n' at the end of the UI disassembly table cell content",
+        ),
       )
 
   if finished(s):
-    raise newParseError(s, "Expected '[' at the end of the UI disassembly table")
+    raise newParseError(
+      s, translate(31337_35446186237729, "Expected '[' at the end of the UI disassembly table")
+    )
 
   skip(s, tk = tk_bracket)
