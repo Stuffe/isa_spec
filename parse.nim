@@ -989,13 +989,13 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
         raise newParseError(s, err)
       if key.len == 0:
         s = restore
-        raise newParseError(s, translate(31337_13040813748160, "Expected a key"))
+        raise newParseError(s, translate(31337_13040813748160, "Expected a key"))  ## Of a table (map) data structure
       yield (false, key)
       skip_whitespaces(list)
 
       if read(list, tk_seperator) != ':':
         s = restore
-        raise newParseError(s, translate(31337_66187706284192, "Expected ':' after the key"))
+        raise newParseError(s, translate(31337_66187706284192, "Expected ':' after the key"))  ## Of a table (map) data structure
       skip_whitespaces(list)
 
       let value = get_list_value(list).on_err:
@@ -1004,7 +1004,7 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
 
       if value.len == 0:
         s = restore
-        raise newParseError(s, translate(31337_49180229055343, "Expected a value"))
+        raise newParseError(s, translate(31337_49180229055343, "Expected a value"))  ## Of a table (map) data structure
 
       yield (true, value)
 
@@ -1014,7 +1014,7 @@ iterator get_table*(s: var StreamSlice): (bool, StreamSlice) =
         skip_newlines(list)
       elif not finished(list):
         s = restore
-        raise newParseError(s, translate(31337_12492443144951, "Expected a ',' or end of table"))
+        raise newParseError(s, translate(31337_12492443144951, "Expected a ',' or end of table"))  ## Of a table (map) data structure
 
 proc get_whole_table*(s: var StreamSlice): OrderedTable[StreamSlice, StreamSlice] =
   var key: StreamSlice
