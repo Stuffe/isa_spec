@@ -391,10 +391,10 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
     return ("", exp)
 
   let s_value = get_unsigned(s).on_err:
-    return ("", nil)
+    return (err, nil)
 
   let value = parse_unsigned(s_value).on_err:
-    return ("", nil)
+    return (err, nil)
 
   let exp = exp_num(value)
   ("", exp)
@@ -443,6 +443,8 @@ func get_expression_bp(
     if s.matches('[', tk = tk_bracket):
       var exp_1: ExpRef
       (error, exp_1) = get_expression_bp(s, 0, operand_names)
+      if error != "":
+        return (error, nil)
 
       skip_whitespaces(s)
       let sep = s.read(tk = tk_bracket)
@@ -453,6 +455,8 @@ func get_expression_bp(
           change_token_kind(s, tk_bracket, tk_seperator)
           var exp_2: ExpRef
           (error, exp_2) = get_expression_bp(s, 0, operand_names)
+          if error != "":
+            return (error, nil)
 
           skip_whitespaces(s)
           if s.read(tk = tk_bracket) != ']':
