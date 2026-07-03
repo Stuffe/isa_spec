@@ -391,10 +391,10 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
     return ("", exp)
 
   let s_value = get_unsigned(s).on_err:
-    return (err, nil)
+    return (err, exp_num(0))
 
   let value = parse_unsigned(s_value).on_err:
-    return (err, nil)
+    return (err, exp_num(0))
 
   let exp = exp_num(value)
   ("", exp)
@@ -419,11 +419,11 @@ func get_expression_bp(
       break BLK_FIRST_TERM
 
     (error, exp_0) = get_atom(s, operand_names)
-    if exp_0 != nil:
-      break BLK_FIRST_TERM
-
     if error != "":
-      return (error, nil)
+      if exp_0 == nil:
+        return (error, nil)
+    elif exp_0 != nil:
+      break BLK_FIRST_TERM
 
     let opt_exp_kind = s.find(PREFIX_OPS, tk = tk_operator)
     if opt_exp_kind.is_none():
@@ -436,6 +436,9 @@ func get_expression_bp(
     if error != "":
       return (error, nil)
     exp_0 = exp_op(exp_kind, [exp_0])
+
+  if error != "":
+    return (error, nil)
 
   while not s.finished():
     let cp = checkpoint(s)
