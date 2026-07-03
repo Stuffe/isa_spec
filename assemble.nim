@@ -2459,8 +2459,8 @@ proc assemble*(
           sources[^1].skip_line()
 
       if sources.len < 2:
-        ret.line_info.done(ret.machine_code.len)
-        ret.top_file_line_info = ret.line_info.get_top_file_line_information()
+        ret.top_file_line_info = ret.line_info.done(ret.machine_code.len)
+        debugecho "Top file line info: ", ret.top_file_line_info
         ret.tokens = collect_tokens(sources[^1].s)
         start_tokenize(nil)
         return ret

@@ -525,27 +525,6 @@ type AssemblyResult* = object
 func new_line_info*(): CompleteLineInformation =
   return default(CompleteLineInformation)
 
-func get_top_file_line_information*(li: CompleteLineInformation): FileLineInformation =
-  if li.segments.len == 0:
-    return
-
-  result.file_name = li.segments[0].file_name
-  for segment in li.segments:
-    if segment.file_name == result.file_name:
-      result.end_byte = segment.end_byte
-
-      let old_len = result.l2b.len
-      result.l2b.set_len(segment.l2b.len)
-      for i in old_len ..< segment.l2b.len:
-        result.l2b[i] = segment.l2b[i]
-  
-  var last_line = result.l2b[^1]
-  for i in countdown(result.l2b.high, 0):
-    if result.l2b[i] == -1:
-      result.l2b[i] = last_line
-    else:
-      last_line = result.l2b[i]
-
 func add_line*(
     li: var CompleteLineInformation, file_name: string, start_byte: int, line: int
 ) =
@@ -559,10 +538,7 @@ func add_line*(
       assert start_byte >= li.segments[^1].end_byte - 1
         # See end of function for why we subtract 1
 
-      if start_byte == li.segments[^1].start_byte:
-        li.segments.setLen(li.segments.len - 1)
-      else:
-        li.segments[^1].end_byte = start_byte
+      li.segments[^1].end_byte = start_byte
     else:
       assert start_byte == 0, "Output should start at byte 0"
 
@@ -583,12 +559,30 @@ func add_line*(
   assert start_byte >= li.segments[^1].end_byte - 1
   li.segments[^1].end_byte = start_byte + 1
 
-func done*(li: var CompleteLineInformation, total_length: int) =
+func done*(li: var CompleteLineInformation, total_length: int): FileLineInformation =
   if li.segments.len != 0:
-    if total_length == li.segments[^1].start_byte:
-      li.segments.setLen(li.segments.len - 1)
+    li.segments[^1].end_byte = total_length
+
+  result.file_name = li.segments[0].file_name
+  for segment in li.segments:
+    if segment.file_name == result.file_name:
+      result.end_byte = segment.end_byte
+
+      let old_len = result.l2b.len
+      result.l2b.set_len(segment.l2b.len)
+      for i in old_len ..< segment.l2b.len:
+        result.l2b[i] = segment.l2b[i]
+  
+  var last_line = result.l2b[^1]
+  for i in countdown(result.l2b.high, 0):
+    if result.l2b[i] == -1:
+      result.l2b[i] = last_line
     else:
-      li.segments[^1].end_byte = total_length
+      last_line = result.l2b[i]
+
+  for i in countdown(li.segments.high, 0):
+    if li.segments[i].start_byte == li.segments[i].end_byte:
+      li.segments.delete(i)
 
 func get_line_from_byte*(li: CompleteLineInformation, target: int): FileLocation =
   let seg_index = lowerBound(li.segments, target) do(
