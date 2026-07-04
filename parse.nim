@@ -377,7 +377,7 @@ func get_sub_identifier*(s: var StreamSlice, tk = tk_identifier): StreamSlice =
   add_token(s, tk)
 
 func get_number(
-    s: var StreamSlice, base: ptr int, optional_start_symbols: set[char]
+    s: var StreamSlice, base: var int, optional_start_symbols: set[char]
 ): (string, StreamSlice) =
   result[1] = s
   result[1].finish = s.start
@@ -396,8 +396,7 @@ func get_number(
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
-      if base != nil:
-        base[] = 16
+      base = 16
       return result
     if peek(s, 1) == 'o':
       const OCT = Digits - {'8', '9'} + {'_'}
@@ -408,8 +407,7 @@ func get_number(
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
-      if base != nil:
-        base[] = 8
+      base = 8
       return result
     if peek(s, 1) == 'b':
       const BIN = {'0', '1', '_'}
@@ -420,8 +418,7 @@ func get_number(
         skip(s)
         result[1].finish += 1
       add_token(s, tk_number)
-      if base != nil:
-        base[] = 2
+      base = 2
       return result
 
   const DEC_FIRST = Digits
@@ -435,18 +432,25 @@ func get_number(
     skip(s)
     result[1].finish += 1
   add_token(s, tk_number)
-  if base != nil:
-    base[] = 10
+  base = 10
 
-func get_signed*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
+func get_signed*(s: var StreamSlice, base: var int): (string, StreamSlice) =
   result = get_number(s, base, {'-', '+'})
   if result[0].len > 0:
     result[0] = translate(31337_73973243772156, "Expected a signed number literal")
 
-func get_unsigned*(s: var StreamSlice, base: ptr int = nil): (string, StreamSlice) =
+func get_signed*(s: var StreamSlice): (string, StreamSlice) =
+  var base: int
+  return get_signed(s, base)
+
+func get_unsigned*(s: var StreamSlice, base: var int): (string, StreamSlice) =
   result = get_number(s, base, {})
   if result[0].len > 0:
     result[0] = translate(31337_71666516845083, "Expected an unsigned number literal")
+
+func get_unsigned*(s: var StreamSlice): (string, StreamSlice) =
+  var base: int
+  return get_unsigned(s, base)
 
 func get_hex*(s: var StreamSlice, prefix: string = "0x"): (string, StreamSlice) =
   result[1] = s

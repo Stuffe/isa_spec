@@ -1672,10 +1672,9 @@ func get_instruction*(
     inst.description = description
 
     if isa_spec.instruction_decoders.isSome:
-      let p_decoders = isa_spec.instruction_decoders.get().addr
-      let num_decoder_new = p_decoders[].len
+      let num_decoder_new = isa_spec.instruction_decoders.get().len
       for i in num_decoder_old ..< num_decoder_new:
-        p_decoders[][i].description = description
+        isa_spec.instruction_decoders.get()[i].description = description
 
   result[1] = inst
 

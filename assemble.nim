@@ -245,30 +245,28 @@ func get_bit_pattern(
     for sub in pattern_substitutions.mitems():
       let index = sub.index
 
-      let root_operand = root_operand_types[index].addr
-      assert root_operand.kind == otk_pattern
+      assert root_operand_types[index].kind == otk_pattern
 
       for x in sub.values:
         operand_values.add(x)
 
-      let bits = sub.bits.addr
-      let root_name = root_operand[].variable_name
+      let root_name = root_operand_types[index].variable_name
       let offset_op = operand_types.len.uint8
-      bits[].into_virtual_operands(root_name, offset_op)
-      let pattern_operands = bits.operand_types
-      let num_word = bits.fixed_pattern.len.uint8
+      sub.bits.into_virtual_operands(root_name, offset_op)
+      let pattern_operands = sub.bits.operand_types
+      let num_word = sub.bits.fixed_pattern.len.uint8
       let top_word_index = offset_op + pattern_operands.len.uint8 - num_word
       let bottom_word_index = index.uint8
-      let top_word_size = cast[uint8](bits.bit_length)
+      let top_word_size = cast[uint8](sub.bits.bit_length)
       pattern_to_virtuals.add(
         (top_word_index, bottom_word_index, num_word, top_word_size)
       )
 
-      root_operand[] = pattern_operands[^1]
+      root_operand_types[index] = pattern_operands[^1]
       for i in 0 ..< pattern_operands.high:
         operand_types.add(pattern_operands[i])
 
-      for assertion in bits.asserts:
+      for assertion in sub.bits.asserts:
         asserts.add(assertion)
 
     offset_op = operand_types.len.uint8
@@ -845,7 +843,7 @@ func parse_instruction_syntax_part(
         if not is_variable(field):
           block BLK_PARSE_IMM:
             var base: int
-            let (err_uimm, s_uimm) = get_unsigned(s, base.addr)
+            let (err_uimm, s_uimm) = get_unsigned(s, base)
             if err_uimm == "":
               let num = check(parse_unsigned(s_uimm))
               if not num.in_range(field):
@@ -864,7 +862,7 @@ func parse_instruction_syntax_part(
               op_name = OperandName(kind: tk_number, value: $s_uimm)
               break BLK_PARSE_IMM
 
-            let (err_simm, s_simm) = get_signed(s, base.addr)
+            let (err_simm, s_simm) = get_signed(s, base)
             if err_simm == "":
               let num = check(parse_signed(s_simm))
               if not num.in_range(field):
