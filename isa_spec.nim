@@ -111,7 +111,10 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
 
   while matches(s, '%'):
     let variable_name = $get_identifier(s)
-    expect(variable_name.len > 0, translate(31337_64093416909416, "Expected an identifier after '%'"))
+    expect(
+      variable_name.len > 0,
+      translate(31337_64093416909416, "Expected an identifier after '%'"),
+    )
 
     expect(
       variable_name notin op_names,
@@ -135,7 +138,11 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
 
     if peek(s) in {'@', '|', ')'}:
       if is_in_disassembly_mode:
-        error(translate(31337_50971737349470, "Pattern operands not supported in disassembly yet"))
+        error(
+          translate(
+            31337_50971737349470, "Pattern operands not supported in disassembly yet"
+          )
+        )
 
       is_patterns.incl(cast[uint8](op_names.len))
 
@@ -154,7 +161,8 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
         skip(s)
         let pattern_name = get_identifier(s, tk = tk_pattern_name)
         expect(
-          pattern_name.len > 0, translate(31337_16564670893367, "Was expecting a pattern name here")
+          pattern_name.len > 0,
+          translate(31337_16564670893367, "Was expecting a pattern name here"),
         )
 
         var arguments: seq[string]
@@ -189,7 +197,11 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
             if s.matches(',', tk = tk_seperator):
               continue
 
-            error(translate(31337_55537815420873, "Expected ',' or ')' after pattern argument"))
+            error(
+              translate(
+                31337_55537815420873, "Expected ',' or ')' after pattern argument"
+              )
+            )
 
         block BLK_FIND_PATTERN:
           for i, pattern in isa_spec.patterns:
@@ -197,7 +209,10 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
               patterns.add(OperandTypePattern(index: i.uint8, args: arguments))
               expect(
                 cast[uint8](i) < pattern_index_bound,
-                translate(31337_33105996916812, "Patterns can only invoke those defined before them"),
+                translate(
+                  31337_33105996916812,
+                  "Patterns can only invoke those defined before them",
+                ),
               )
               break BLK_FIND_PATTERN
 
@@ -218,7 +233,12 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
           skip_whitespaces(s)
           continue
 
-        error(translate(31337_27111936748508, "Expected a closing parenthesis after the pattern type"))
+        error(
+          translate(
+            31337_27111936748508,
+            "Expected a closing parenthesis after the pattern type",
+          )
+        )
 
       syntaxs.add(Syntax(kind: sk_pattern, text: variable_name))
       op_names.add(variable_name)
@@ -250,7 +270,9 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
 
           expect(
             matches(s, "immediate", tk = tk_type_name),
-            translate(31337_70153972378282, "Only 'immediate' field type is allowed sizing"),
+            translate(
+              31337_70153972378282, "Only 'immediate' field type is allowed sizing"
+            ),
           )
 
           expect(
@@ -267,7 +289,10 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
           let field_name = get_identifier(s, tk = tk_type_name)
           expect(
             field_name.len > 0,
-            translate(31337_78591996283483, "Was expecting a field name or a sized immediate here"),
+            translate(
+              31337_78591996283483,
+              "Was expecting a field name or a sized immediate here",
+            ),
           )
 
           block BLK_FIND_FIELD:
@@ -295,7 +320,9 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
 
       expect(
         matches(s, ')', tk = tk_bracket),
-        translate(31337_55444523984237, "Expected a closing parenthesis after the field type"),
+        translate(
+          31337_55444523984237, "Expected a closing parenthesis after the field type"
+        ),
       )
 
       syntaxs.add(Syntax(kind: sk_field, text: variable_name))
@@ -313,7 +340,9 @@ func get_syntax[T: OperandTypeSyntax | OperandType](
 
   expect(
     matches(s, '\n', tk = tk_whitespace),
-    translate(31337_52710717731997, "Was expecting a newline here after syntax declaration"),
+    translate(
+      31337_52710717731997, "Was expecting a newline here after syntax declaration"
+    ),
   )
 
 func get_uint64(s: var StreamSlice): WithError[uint64] =
@@ -370,50 +399,6 @@ func get_auto_instruction_decoder(
 ): (string, InstructionDecoder) =
   result[1].syntax = inst.syntax
 
-  const MAX_NUM_PATH = 10 # Arbitrary
-  var all_option_paths: seq[seq[seq[FieldKind]]]
-  block BLK_OPTION_PATHS:
-    all_option_paths.set_len(1)
-    for operand in inst.operands:
-      if operand.kind != otk_normal:
-        break
-
-      var options = operand.options
-      if options.len <= 1 or options.all_it(it notin {fk_simm_1 .. fk_simm_64}):
-        for path in all_option_paths.mitems:
-          path.add(options)
-        continue
-
-      all_option_paths.reverse()
-      let old_option_paths = all_option_paths
-      all_option_paths.set_len(0)
-
-      for i in countdown(options.high, 0):
-        let option = options[i]
-        if option notin {fk_simm_1 .. fk_simm_64}:
-          continue
-
-        options.delete(i)
-        for path in old_option_paths:
-          all_option_paths.add(path & @[@[option]])
-
-      if options.len > 0:
-        for path in old_option_paths:
-          all_option_paths.add(path & @[options])
-
-      all_option_paths.reverse()
-
-      if all_option_paths.len > MAX_NUM_PATH:
-        error(
-          translate(
-            31337_82876816015252,
-            "Too many operand option paths for automatic disassembly, at most {num_path} are allowed",
-            ("num_path", MAX_NUM_PATH),
-          )
-        )
-
-  var s = new_StreamSlice(inst.bit_pattern)
-
   # List of operand names directly declared in the instruction
   let operand_names = inst.operand_names()
   let instruction_name = inst.name()
@@ -425,7 +410,10 @@ func get_auto_instruction_decoder(
     seq[tuple[machine_code_slice: (uint32, uint32), operand_slice: (uint32, uint32)]],
   ]
 
+  var bit_pattern_widths: OperandMaxWidthTable
   block BLK_BIT_PATTERN:
+    var s = new_StreamSlice(inst.bit_pattern)
+
     # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
     # nvalid indecies. They are instead used to track the length of the field before being updated
     # to the correct bounds in a seperate pass
@@ -545,10 +533,12 @@ func get_auto_instruction_decoder(
             bfk_wildcard
           else:
             bit_length += 1
+
             let c = read(s, tk = tk_field_name)
             var operand_index = bfk_invalid
             for i in countdown(cast[uint8](operand_names.high), 0):
               if operand_names[i][0] == c:
+                bit_pattern_widths.increment_direct_width(i)
                 operand_index = to_bit_field_kind(i)
                 break
 
@@ -588,7 +578,8 @@ func get_auto_instruction_decoder(
         expect(
           matches(s, '[', tk = tk_bracket),
           translate(
-            31337_48942522553057, "Expected slice syntax after field/pattern reference in bit pattern"
+            31337_48942522553057,
+            "Expected slice syntax after field/pattern reference in bit pattern",
           ),
         )
 
@@ -603,7 +594,8 @@ func get_auto_instruction_decoder(
         expect(
           matches(s, ':', tk = tk_seperator),
           translate(
-            31337_15904571494199, "Expected slice syntax after field/pattern reference in bit pattern"
+            31337_15904571494199,
+            "Expected slice syntax after field/pattern reference in bit pattern",
           ),
         )
 
@@ -615,14 +607,17 @@ func get_auto_instruction_decoder(
             0
         expect(
           bottom <= top,
-          translate(31337_31223930569837, "Expected top bound not to be less than bottom bound"),
+          translate(
+            31337_31223930569837, "Expected top bound not to be less than bottom bound"
+          ),
         )
 
         skip_whitespaces(s)
         expect(
           matches(s, ']', tk = tk_bracket),
           translate(
-            31337_28197258085607, "Expected slice syntax after field/pattern reference in bit pattern"
+            31337_28197258085607,
+            "Expected slice syntax after field/pattern reference in bit pattern",
           ),
         )
 
@@ -638,6 +633,9 @@ func get_auto_instruction_decoder(
           )
         )
         bit_length += cast[uint32](top - bottom + 1)
+        bit_pattern_widths.merge_indirect_width(
+          operand_index, cast[uint8](min(64'u64, top - bottom + 1))
+        )
 
     if current.id != bfk_invalid:
       new_bits.add(current)
@@ -712,6 +710,64 @@ func get_auto_instruction_decoder(
         result[1].bits.add(bits)
       current_length = new_length
     reverse(result[1].bits)
+
+  const MAX_NUM_PATH = 10 # Arbitrary
+  var all_option_paths: seq[seq[seq[FieldKind]]]
+  block BLK_OPTION_PATHS:
+    all_option_paths.set_len(1)
+    for op_index, operand in inst.operands:
+      if operand.kind != otk_normal:
+        break
+
+      var options = operand.options
+
+      let widths = bit_pattern_widths.getOrDefault(cast[uint8](op_index))
+      var width = widths.bit_pattern_direct_width.max(widths.bit_pattern_indirect_width)
+      if width == 0:
+        width = 64
+
+      let simm = fk_simm_1.succ(width - 1)
+      let uimm = fk_uimm_1.succ(width - 1)
+      for i in countdown(options.high, 0):
+        let field_kind = options[i]
+        if field_kind != fk_imm_0:
+          continue
+
+        options[i] = simm
+        options.insert(uimm, i)
+
+      if options.len <= 1 or options.all_it(it notin {fk_simm_1 .. fk_simm_64}):
+        for path in all_option_paths.mitems:
+          path.add(options)
+        continue
+
+      all_option_paths.reverse()
+      let old_option_paths = all_option_paths
+      all_option_paths.set_len(0)
+
+      for i in countdown(options.high, 0):
+        let option = options[i]
+        if option notin {fk_simm_1 .. fk_simm_64}:
+          continue
+
+        options.delete(i)
+        for path in old_option_paths:
+          all_option_paths.add(path & @[@[option]])
+
+      if options.len > 0:
+        for path in old_option_paths:
+          all_option_paths.add(path & @[options])
+
+      all_option_paths.reverse()
+
+      if all_option_paths.len > MAX_NUM_PATH:
+        error(
+          translate(
+            31337_82876816015252,
+            "Too many operand option paths for automatic disassembly, at most {num_path} are allowed",
+            ("num_path", MAX_NUM_PATH),
+          )
+        )
 
   var old_virtuals: seq[OperandTypeVirtual]
   for operand in inst.operands:
@@ -834,7 +890,8 @@ func get_auto_instruction_decoder(
           # $[{end_exc - 1} : {start_inc}] != $output[{output_end_exc - 1} : {output_start_inc}] => Repeat field references do not match
           new_asserts.add(
             Assertion(
-              msg: translate(31337_19678805612580, "Repeat field references do not match"),
+              msg:
+                translate(31337_19678805612580, "Repeat field references do not match"),
               exp: exp_op(
                 exp_op_ne,
                 [
@@ -1001,7 +1058,9 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         hex_max_length += 4
       expect(
         hex_max_length < int16.high.uint64,
-        translate(31337_48321097736953, "Expected hex number not to exceed 32767 digits"),
+        translate(
+          31337_48321097736953, "Expected hex number not to exceed 32767 digits"
+        ),
       )
 
       if peek(s) == '[':
@@ -1022,7 +1081,8 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         expect(
           matches(s, ':', tk = tk_seperator),
           translate(
-            31337_62334191081955, "Expected slice syntax after base-16 number reference in bit pattern"
+            31337_62334191081955,
+            "Expected slice syntax after base-16 number reference in bit pattern",
           ),
         )
 
@@ -1031,7 +1091,10 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
           let bottom_index = check(parse_unsigned(check(get_unsigned(s))))
           expect(
             bottom_index < hex_max_length,
-            translate(31337_70814401439344, "Expected top bound not to be less than bottom bound"),
+            translate(
+              31337_70814401439344,
+              "Expected top bound not to be less than bottom bound",
+            ),
           )
           bit_length -= cast[int16](bottom_index)
 
@@ -1039,14 +1102,16 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         expect(
           matches(s, ']', tk = tk_seperator),
           translate(
-            31337_40815956642962, "Expected slice syntax after base-16 number reference in bit pattern"
+            31337_40815956642962,
+            "Expected slice syntax after base-16 number reference in bit pattern",
           ),
         )
 
         expect(
           bit_length > 0,
           translate(
-            31337_52261961290701, "Flipped slice syntax after base-16 number reference in bit pattern"
+            31337_52261961290701,
+            "Flipped slice syntax after base-16 number reference in bit pattern",
           ),
         )
       else:
@@ -1073,7 +1138,10 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     of '%':
       skip(s)
       let operand_name = get_identifier(s, tk = tk_field_ref)
-      expect(operand_name.len > 0, translate(31337_67707174963301, "Expected an identifier after '%'"))
+      expect(
+        operand_name.len > 0,
+        translate(31337_67707174963301, "Expected an identifier after '%'"),
+      )
 
       var operand_index: uint8
       block BLK_FIND_OPERAND:
@@ -1094,7 +1162,10 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
       if peek(s) != '[':
         expect(
           is_pattern,
-          translate(31337_63246722572594, "Expected slice syntax after field reference in bit pattern"),
+          translate(
+            31337_63246722572594,
+            "Expected slice syntax after field reference in bit pattern",
+          ),
         )
       else:
         discard read(s, tk = tk_bracket)
@@ -1122,7 +1193,8 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         expect(
           matches(s, ':', tk = tk_seperator),
           translate(
-            31337_79975911393070, "Expected slice syntax after field/pattern reference in bit pattern"
+            31337_79975911393070,
+            "Expected slice syntax after field/pattern reference in bit pattern",
           ),
         )
 
@@ -1132,7 +1204,10 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
             let bottom = check(parse_unsigned(check(get_unsigned(s))))
             expect(
               bottom <= top.uint64,
-              translate(31337_25285447732570, "Expected top bound not to be less than bottom bound"),
+              translate(
+                31337_25285447732570,
+                "Expected top bound not to be less than bottom bound",
+              ),
             )
             cast[int16](bottom)
           else:
@@ -1142,7 +1217,8 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         expect(
           matches(s, ']', tk = tk_bracket),
           translate(
-            31337_77234329031993, "Expected slice syntax after field/pattern reference in bit pattern"
+            31337_77234329031993,
+            "Expected slice syntax after field/pattern reference in bit pattern",
           ),
         )
         bit_length += cast[int](top - bottom + 1)
@@ -1163,7 +1239,11 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
             operand_index = cast[uint8](i)
             break BLK_FIND_OPERAND
 
-        error(translate(31337_77851254343918, "No operand starts with character '{c}'.", ("c", c)))
+        error(
+          translate(
+            31337_77851254343918, "No operand starts with character '{c}'.", ("c", c)
+          )
+        )
 
       let is_pattern = is_patterns.contains(operand_index)
       if not is_pattern:
@@ -1174,7 +1254,9 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
   let finish = get_index(s)
   expect(
     matches(s, {'\n', '\0'}, tk = tk_whitespace),
-    translate(31337_59388744207582, "Was expecting a newline at the end of the bit pattern"),
+    translate(
+      31337_59388744207582, "Was expecting a newline at the end of the bit pattern"
+    ),
   )
 
   if (not allow_unaligned_bit_pattern and is_patterns.len == 0) and bit_length mod 8 != 0:
@@ -1221,7 +1303,10 @@ func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
     skip(s)
 
     let variable_name = $get_identifier(s)
-    expect(variable_name.len > 0, translate(31337_77449878176461, "Expected an identifier after '%'"))
+    expect(
+      variable_name.len > 0,
+      translate(31337_77449878176461, "Expected an identifier after '%'"),
+    )
 
     skip_whitespaces(s)
     if not matches(s, '=', tk = tk_operator):
@@ -1282,7 +1367,9 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
 
   let expr = check(get_expression(s, op_names)):
     translate(
-      31337_59877879891546, "Could not interpret 'if'-condition expression: {err}", ("err", err)
+      31337_59877879891546,
+      "Could not interpret 'if'-condition expression: {err}",
+      ("err", err),
     )
 
   skip_whitespaces(s)
@@ -1327,7 +1414,8 @@ func get_if[T: InstructionUnbranched | InstructionDebranched](
     expect(
       chunk.virtuals.branch == chunk.virtuals.finish,
       translate(
-        31337_15736101961248, "Block containing an assertion message cannot have virtual operands"
+        31337_15736101961248,
+        "Block containing an assertion message cannot have virtual operands",
       ),
     )
 
@@ -1492,10 +1580,15 @@ func get_instruction*(
         continue
 
       if peek(s) in {'\n', '\0'} or (peek(s) == '#' and peek(s, 1) in {' ', '\t'}):
-        expect(inst.chunks.len > 0, translate(31337_78139854554293, "Expected a bit pattern line"))
+        expect(
+          inst.chunks.len > 0,
+          translate(31337_78139854554293, "Expected a bit pattern line"),
+        )
         expect(
           chunk.virtuals.start == chunk.virtuals.branch,
-          translate(31337_80363105384966, "Expected a bit pattern after virtual operands"),
+          translate(
+            31337_80363105384966, "Expected a bit pattern after virtual operands"
+          ),
         )
         expect(
           not inst.chunks[^1].is_assert,
@@ -1533,7 +1626,11 @@ func get_instruction*(
               )
               break BLK_FIND_LABEL
 
-          error(translate(31337_64872345458928, "'%{label} not defined", ("label", label_name)))
+          error(
+            translate(
+              31337_64872345458928, "'%{label} not defined", ("label", label_name)
+            )
+          )
 
         skip_whitespaces(s)
         let expr_anchor =
@@ -1650,13 +1747,15 @@ func get_instruction*(
       if width == 0:
         width = 64
 
+      let simm = fk_simm_1.succ(width - 1)
+      let uimm = fk_uimm_1.succ(width - 1)
       for i in countdown(op.options.high, 0):
         let field_kind = op.options[i]
         if field_kind != fk_imm_0:
           continue
 
-        op.options[i] = fk_simm_1.succ(width - 1)
-        op.options.insert(fk_uimm_1.succ(width - 1), i)
+        op.options[i] = simm
+        op.options.insert(uimm, i)
 
   block BLK_DESCRIPTION:
     var description: string
@@ -1710,7 +1809,8 @@ func parse_isa_spec_inner(
       if s.len == 0:
         error(
           translate(
-            31337_25249187420360, "Expected the name of an option or start of the next section"
+            31337_25249187420360,
+            "Expected the name of an option or start of the next section",
           )
         )
 
@@ -1720,7 +1820,9 @@ func parse_isa_spec_inner(
 
       skip_whitespaces(s)
       if name in seen_names:
-        error(translate(31337_39427635035157, "Duplicate setting '{name}'", ("name", name)))
+        error(
+          translate(31337_39427635035157, "Duplicate setting '{name}'", ("name", name))
+        )
       seen_names.add(name)
 
       case name
@@ -1738,7 +1840,10 @@ func parse_isa_spec_inner(
             let sym = check(parse_string(entry))
             if sym.len == 0:
               error(
-                translate(31337_18304638469397, "Expected a non-empty string to start line comments")
+                translate(
+                  31337_18304638469397,
+                  "Expected a non-empty string to start line comments",
+                )
               )
             result.spec.line_comments.add(sym)
         except ParseError:
@@ -1753,23 +1858,31 @@ func parse_isa_spec_inner(
               if start_sym.len == 0:
                 error(
                   translate(
-                    31337_59115040206693, "Expected a non-empty string to start block comments"
+                    31337_59115040206693,
+                    "Expected a non-empty string to start block comments",
                   )
                 )
             else:
               let end_sym = check(parse_string(text))
               if end_sym.len == 0:
                 error(
-                  translate(31337_70205284263092, "Expected a non-empty string to end block comments")
+                  translate(
+                    31337_70205284263092,
+                    "Expected a non-empty string to end block comments",
+                  )
                 )
               result.spec.block_comments.add((start_sym, end_sym))
         except ParseError:
           error(translate(31337_55929094649794, "Expected a table of strings"))
       else:
-        error(translate(31337_11703098452145, "Unknown setting name {name}", ("name", name)))
+        error(
+          translate(31337_11703098452145, "Unknown setting name {name}", ("name", name))
+        )
 
       if not skip_newlines(s):
-        error(translate(31337_85972591916322, "Expected newline after setting assignment"))
+        error(
+          translate(31337_85972591916322, "Expected newline after setting assignment")
+        )
 
   result.spec.field_types[fk_label] = FieldType(name: "label", bit_length: 64)
   result.spec.field_types[fk_imm_0] = FieldType(name: "immediate", bit_length: 64)
@@ -1794,7 +1907,9 @@ func parse_isa_spec_inner(
       if $field_type_name in name_to_fields:
         error(
           translate(
-            31337_62712568576067, "Duplicate field type name: {name}", ("name", $field_type_name)
+            31337_62712568576067,
+            "Duplicate field type name: {name}",
+            ("name", $field_type_name),
           )
         )
 
@@ -1824,7 +1939,10 @@ func parse_isa_spec_inner(
             for c in temp:
               if c in WHITESPACE:
                 error(
-                  translate(31337_67219559926029, "Field names can not contain whitespace characters")
+                  translate(
+                    31337_67219559926029,
+                    "Field names can not contain whitespace characters",
+                  )
                 )
             temp
           else:
@@ -1917,15 +2035,25 @@ func parse_isa_spec_inner(
         while not matches(s, ')', tk = tk_bracket):
           skip_whitespaces(s)
           if peek(s) != '`':
-            error(translate(31337_62674382892779, "Expected a ` before the pattern parameter"))
+            error(
+              translate(
+                31337_62674382892779, "Expected a ` before the pattern parameter"
+              )
+            )
 
           var parameter_name = check(get_string(s, tk = tk_pattern_variable))
           if parameter_name.len == 0:
-            error(translate(31337_75146029145419, "Expected a name for the pattern parameter"))
+            error(
+              translate(
+                31337_75146029145419, "Expected a name for the pattern parameter"
+              )
+            )
 
           parameters.add(parameter_name)
           if parameters.len > 53: ## Arbitrary limit, picked an "uncommon" number
-            error(translate(31337_23683372416862, "Pattern can have at most 53 parameters"))
+            error(
+              translate(31337_23683372416862, "Pattern can have at most 53 parameters")
+            )
 
           skip_whitespaces(s)
           discard matches(s, ',', tk = tk_seperator)
@@ -1953,7 +2081,9 @@ func parse_isa_spec_inner(
         )
 
   if not matches(s, "[instructions]", tk = tk_header):
-    error(translate(31337_25123045290962, "Was expecting the [instructions] header here"))
+    error(
+      translate(31337_25123045290962, "Was expecting the [instructions] header here")
+    )
 
   if not skip_newlines(s):
     error(translate(31337_62103010038950, "Expected newline after section header"))

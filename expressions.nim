@@ -208,7 +208,7 @@ func to_str*(exp: ExpRef, operand_names: seq[string]): string =
   let op_name = exp.exp_kind.to_str()
   for i in 1 ..< exp.args.len:
     let arg_i = exp.args[i].to_str(operand_names)
-    result = "(" & result & " " & op_name & arg_i & ")"
+    result = "(" & result & " " & op_name & " " & arg_i & ")"
 
 func `$`*(exp: ExpRef): string =
   exp.to_str(@[])
