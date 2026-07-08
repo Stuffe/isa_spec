@@ -26,7 +26,7 @@ func translate*(
     replacements: varargs[(string, string), parametrize_args],
 ): string =
   let id = raw_id - 3133_700000000000000'i64
-  var text = original_text
+  var text = original_text.multiReplace(("[nbsp]", " "))
 
   {.noSideEffect.}:
     if id in translation_entries:
