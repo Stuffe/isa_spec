@@ -581,7 +581,8 @@ func eval*(
     of exp_operand:
       if exp.is_address:
         if current_address == uint64.high:
-          result[0] = translate(31337_36919792698704, "Instruction pointer not available")
+          result[0] =
+            translate(31337_36919792698704, "Instruction pointer not available")
           return
 
         case exp.location
@@ -593,7 +594,8 @@ func eval*(
         if exp.index == INDEX_BIT_PATTERN:
           operands[0]
         elif exp.index.int >= operands.len:
-          result[0] = translate(31337_14037712136328, "Operand {op} not found", ("op", exp.index))
+          result[0] =
+            translate(31337_14037712136328, "Operand {op} not found", ("op", exp.index))
           return
         else:
           operands[exp.index]
@@ -723,35 +725,31 @@ func eval*(
         args.foldl(a * b)
       of exp_op_div_u:
         for i in 1 ..< args.len:
-          if args[i] == 0:
-            result[0] = translate(31337_34225684975413, "Cannot divide by zero")
-            return
-
-          args[0] = args[0] div args[i]
+          args[0] = if args[i] == 0:
+            0'u64
+          else:
+            args[0] div args[i]
         args[0]
       of exp_op_div:
         for i in 1 ..< args.len:
-          if args[i] == 0:
-            result[0] = translate(31337_56491055329828, "Cannot divide by zero")
-            return
-
-          args[0] = cast[uint64](cast[int64](args[0]) div cast[int64](args[i]))
+          args[0] = if args[i] == 0:
+            0'u64
+          else:
+            cast[uint64](cast[int64](args[0]) div cast[int64](args[i]))
         args[0]
       of exp_op_mod_u:
         for i in 1 ..< args.len:
-          if args[i] == 0:
-            result[0] = translate(31337_67607141463624, "Cannot divide by zero")
-            return
-
-          args[0] = args[0] mod args[i]
+          args[0] = if args[i] == 0:
+            0'u64
+          else:
+            args[0] mod args[i]
         args[0]
       of exp_op_mod:
         for i in 1 ..< args.len:
-          if args[i] == 0:
-            result[0] = translate(31337_19897103703179, "Cannot divide by zero")
-            return
-
-          args[0] = cast[uint64](cast[int64](args[0]) mod cast[int64](args[i]))
+          args[0] = if args[i] == 0:
+            0'u64
+          else:
+            cast[uint64](cast[int64](args[0]) mod cast[int64](args[i]))
         args[0]
       of exp_op_lsl:
         args[0] shl args[1]
@@ -763,10 +761,9 @@ func eval*(
         log2(args[0])
       of exp_op_log2:
         if cast[int64](args[0]) <= 0:
-          result[0] = translate(31337_57240566137582, "Cannot take log of a non-positive number")
-          return
-
-        log2(args[0])
+          0'u64
+        else:
+          log2(args[0])
       of exp_op_popcount:
         cast[uint64](popcount(args[0]))
       of exp_op_trailing_zeros:

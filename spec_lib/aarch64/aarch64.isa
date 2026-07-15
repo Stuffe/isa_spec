@@ -673,9 +673,8 @@ and  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm(U64 immediate)
 %N = 1
 %immr = (64 - trailing_zeros(%imm)) & 0x3F
 %imms = popcount(%imm) - 1
-if %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F) {
-    10010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
-}
+assert(%imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F), "Invalid logical immediate encoding")
+10010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 # Calculates the bitwise and of %xn and %imm, writing the result to %xd.
 
 
@@ -793,9 +792,8 @@ eor  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm(U64 immediate)
 %N = 1
 %immr = (64 - trailing_zeros(%imm)) & 0x3F
 %imms = popcount(%imm) - 1
-if %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F) {
-    11010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
-}
+assert(%imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F), "Invalid logical immediate encoding")
+11010010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 # Calculates %xn xor %imm, writing the result to %xd.
 
 
@@ -981,9 +979,8 @@ mov  %xd(register_64sp) , %imm(U64 immediate)
 %N = 1
 %immr = (64 - trailing_zeros(%imm)) & 0x3F
 %imms = popcount(%imm) - 1
-if %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F) {
-    10110010 0 %N[0:0] %immr[5:0] %imms[5:0] 11111 %xd[4:0]
-}
+assert(%imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F), "Invalid logical immediate encoding")
+10110010 0 %N[0:0] %immr[5:0] %imms[5:0] 11111 %xd[4:0]
 # Copies %imm to %xd.
 
 
@@ -1022,9 +1019,8 @@ orr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm(U64 immediate)
 %N = 1
 %immr = (64 - trailing_zeros(%imm)) & 0x3F
 %imms = popcount(%imm) - 1
-if %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F) {
-    10110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
-}
+assert(%imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F), "Invalid logical immediate encoding")
+10110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 # Calculates the bitwise or of %xn and %imm, writing the result to %xd
 
 
@@ -1176,9 +1172,8 @@ tst  %xn(register_64) , %_(pound) %imm(U64 immediate)
 %N = 1
 %immr = (64 - trailing_zeros(%imm)) & 0x3F
 %imms = popcount(%imm) - 1
-if %imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F) {
-    11110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] 11111
-}
+assert(%imm == ((2 << %imms) - 1) << ((64 - %immr) & 0x3F), "Invalid logical immediate encoding")
+11110010 0 %N[0:0] %immr[5:0] %imms[5:0] %xn[4:0] 11111
 # Calculates the bitwise and of %xn and %imm, setting flags.
 
 // syscall
@@ -1188,7 +1183,7 @@ svc  %_(pound) %imm(U16 immediate)
 
 
 // bitfield move
-ubfm  %xd(register_64) , %xn(register_64) , %_(pound) %immr(immediate) , %_(pound) %imms(immediate)
+ubfm  %xd(register_64) , %xn(register_64) , %_r(pound) %immr(immediate) , %_s(pound) %imms(immediate)
 11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 # Copies a bitfield from %xn to %xd. The source and destination bits are determined by %immr and %imms. If %imms >= %immr, this copies a bitfield starting at %immr to the least significant bits of the destination register. The size of the bitfield is (%imms - %immr + 1). If %imms < %immr, this copies a bitfield starting at the least significant bits from the source register to 64-%immr of the destination register. The size of the bitfield is (%imms + 1).
 
