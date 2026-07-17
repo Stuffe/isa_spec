@@ -711,7 +711,7 @@ func get_auto_instruction_decoder(
       current_length = new_length
     reverse(result[1].bits)
 
-  const MAX_NUM_PATH = 10 # Arbitrary
+  const MAX_NUM_PATH = 32 # Arbitrary
   var all_option_paths: seq[seq[seq[FieldKind]]]
   block BLK_OPTION_PATHS:
     all_option_paths.set_len(1)
