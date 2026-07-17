@@ -761,13 +761,17 @@ func get_auto_instruction_decoder(
       all_option_paths.reverse()
 
       if all_option_paths.len > MAX_NUM_PATH:
-        error(
-          translate(
-            31337_82876816015252,
-            "Too many operand option paths for automatic disassembly, at most {num_path} are allowed",
-            ("num_path", MAX_NUM_PATH),
+        when false:
+          # TODO: Make this a warning instead before adding it back
+          error(
+            translate(
+              31337_82876816015252,
+              "Too many operand option paths for automatic disassembly, at most {num_path} are allowed",
+              ("num_path", MAX_NUM_PATH),
+            )
           )
-        )
+
+        return
 
   var old_virtuals: seq[OperandTypeVirtual]
   for operand in inst.operands:
@@ -1281,7 +1285,11 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
         inst.debranch()
       else:
         inst
-    decoders.get.add(check(get_auto_instruction_decoder(inst_debranched, field_types)))
+    let decoder = check(get_auto_instruction_decoder(inst_debranched, field_types))
+    if decoder.bit_length > 0:
+      decoders.get.add(decoder)
+    else:
+      decoders = none(seq[InstructionDecoder])
 
   result[1] = bit_pattern_widths
 
