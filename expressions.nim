@@ -36,6 +36,8 @@ type ExpKind* {.pure.} = enum
   exp_op_asr
   exp_op_log2_u
   exp_op_log2
+  exp_op_highest_bit_u
+  exp_op_highest_bit
   exp_op_popcount
   exp_op_trailing_zeros
 
@@ -44,7 +46,6 @@ type ExpKind* {.pure.} = enum
   exp_op_conditional # Ternary operator ?:, expressional if-else
   exp_op_12_bit_set_member # 12 is picked arbitrarily
   exp_op_unbounded_set_member
-  exp_op_jump_switch # Special jump table based on the width of the expression
   exp_op_bit_join # Subset of exp_op_or_bitwise, with the constraint of disjointness
 
   # Leaf expression
@@ -80,9 +81,9 @@ func exp_op*(op: ExpKind, args: openArray[ExpRef]): ExpRef =
   of exp_op_boolean, exp_op_not_boolean, exp_op_eq, exp_op_ne, exp_op_lt_u, exp_op_lt,
       exp_op_ge_u, exp_op_ge, exp_op_le_u, exp_op_le, exp_op_gt_u, exp_op_gt,
       exp_op_not_bitwise, exp_op_lsl, exp_op_lsr, exp_op_asr, exp_op_log2_u,
-      exp_op_log2, exp_op_popcount, exp_op_trailing_zeros, exp_op_bit_extract,
-      exp_op_conditional, exp_op_12_bit_set_member, exp_op_unbounded_set_member,
-      exp_op_jump_switch:
+      exp_op_log2, exp_op_highest_bit_u, exp_op_highest_bit, exp_op_popcount,
+      exp_op_trailing_zeros, exp_op_bit_extract, exp_op_conditional,
+      exp_op_12_bit_set_member, exp_op_unbounded_set_member:
     var exp = ExpRef(exp_kind: op)
     exp.args.set_len(args.len)
     for i in 0 ..< args.len:
@@ -153,9 +154,10 @@ func exp_num*(value: uint64): ExpRef =
 func to_str(exp: ExpKind): string =
   const OP_INDEXES = [
     "!!", "!", "&&", "||", "==", "!=", "<u", "<", ">=u", ">=", "<=u", "<=", ">u", ">",
-    "~", "&", "|", "^", "+", "-", "*", "/u", "/", "%u", "%", "<<", ">>", "asr", "ulog2",
-    "log2", "popcount", "trailing_zeros", "[]", "?:", "12_bit_set_member",
-    "unbounded_set_member", "jump_switch", "bit_join", "number", "operand",
+    "~", "&", "|", "^", "+", "-", "*", "/u", "/", "%u", "%", "<<", ">>", "asr",
+    "log2_u", "log2", "highest_bit_u", "highest_bit", "popcount", "trailing_zeros",
+    "[]", "?:", "12_bit_set_member", "unbounded_set_member", "bit_join", "number",
+    "operand",
   ]
   static:
     assert OP_INDEXES.len == ExpKind.high.int + 1
@@ -182,11 +184,11 @@ func to_str*(exp: ExpRef, operand_names: seq[string]): string =
   let arg0 = exp.args[0].to_str(operand_names)
   if exp.exp_kind in {
     exp_op_not_bitwise, exp_op_boolean, exp_op_not_boolean, exp_op_log2_u, exp_op_log2,
-    exp_op_popcount, exp_op_trailing_zeros,
+    exp_op_highest_bit_u, exp_op_highest_bit, exp_op_popcount, exp_op_trailing_zeros,
   } or (exp.exp_kind in {exp_op_add, exp_op_sub} and exp.args.len < 2):
     return exp.exp_kind.to_str() & "(" & arg0 & ")"
 
-  if exp.exp_kind in {exp_op_asr, exp_op_jump_switch}:
+  if exp.exp_kind in {exp_op_asr}:
     let arg1 = exp.args[1].to_str(operand_names)
     return exp.exp_kind.to_str() & "(" & arg0 & ", " & arg1 & ")"
 
@@ -228,8 +230,10 @@ func is_pc_rel*(exp: ExpRef, label_ops: set[uint8] = {}): bool =
 
 const FUNC_OPS = [
   ("asr", (exp_op_asr, 2)),
-  ("ulog2", (exp_op_log2_u, 1)),
+  ("log2_u", (exp_op_log2_u, 1)),
   ("log2", (exp_op_log2, 1)),
+  ("highest_bit_u", (exp_op_highest_bit_u, 1)),
+  ("highest_bit", (exp_op_highest_bit, 1)),
   ("popcount", (exp_op_popcount, 1)),
   ("trailing_zeros", (exp_op_trailing_zeros, 1)),
 ]
@@ -241,8 +245,10 @@ const PREFIX_OPS = [
   ("+", exp_op_add),
   ("-", exp_op_sub),
   ("asr", exp_op_asr),
-  ("ulog2", exp_op_log2_u),
+  ("log2_u", exp_op_log2_u),
   ("log2", exp_op_log2),
+  ("highest_bit_u", exp_op_highest_bit_u),
+  ("highest_bit", exp_op_highest_bit),
   ("popcount", exp_op_popcount),
   ("trailing_zeros", exp_op_trailing_zeros),
 ]
@@ -376,7 +382,7 @@ func get_atom(s: var StreamSlice, operand_names: seq[string]): (string, ExpRef) 
     var exp = exp_op(exp_kind, [exp_i])
     for i in 1 ..< n_ary:
       skip_whitespaces(s)
-      if s.read(tk = tk_seperator) != ',':
+      if s.read(tk = tk_separator) != ',':
         return (translate(31337_62520916869207, "Expected ','"), nil)
 
       let (error, exp_i) = get_expression_bp(s, 0, operand_names)
@@ -455,7 +461,7 @@ func get_expression_bp(
         if sep == ']':
           exp_op(exp_op_bit_extract, [exp_0, exp_1])
         elif sep == ':':
-          change_token_kind(s, tk_bracket, tk_seperator)
+          change_token_kind(s, tk_bracket, tk_separator)
           var exp_2: ExpRef
           (error, exp_2) = get_expression_bp(s, 0, operand_names)
           if error != "":
@@ -495,7 +501,7 @@ func get_expression_bp(
 
       continue
 
-    if s.matches('?', tk = tk_seperator):
+    if s.matches('?', tk = tk_separator):
       if min_bp != 0:
         restore(s, cp)
         break
@@ -506,7 +512,7 @@ func get_expression_bp(
         return (error, nil)
 
       skip_whitespaces(s)
-      if s.read(tk = tk_seperator) != ':':
+      if s.read(tk = tk_separator) != ':':
         return (translate(31337_17795651801484, "Expected ':'"), nil)
 
       var exp_2: ExpRef
@@ -543,6 +549,8 @@ func get_expression*(
   get_expression_bp(s, 0, operand_names)
 
 func log2*(n: uint64): uint64 =
+  # Result is 0 if n is 0
+
   # This is a modified version of the algorithm described in
   # https://graphics.stanford.edu/~seander/bithacks.html#IntegerLogDeBruijn
 
@@ -725,31 +733,35 @@ func eval*(
         args.foldl(a * b)
       of exp_op_div_u:
         for i in 1 ..< args.len:
-          args[0] = if args[i] == 0:
-            0'u64
-          else:
-            args[0] div args[i]
+          args[0] =
+            if args[i] == 0:
+              0'u64
+            else:
+              args[0] div args[i]
         args[0]
       of exp_op_div:
         for i in 1 ..< args.len:
-          args[0] = if args[i] == 0:
-            0'u64
-          else:
-            cast[uint64](cast[int64](args[0]) div cast[int64](args[i]))
+          args[0] =
+            if args[i] == 0:
+              0'u64
+            else:
+              cast[uint64](cast[int64](args[0]) div cast[int64](args[i]))
         args[0]
       of exp_op_mod_u:
         for i in 1 ..< args.len:
-          args[0] = if args[i] == 0:
-            0'u64
-          else:
-            args[0] mod args[i]
+          args[0] =
+            if args[i] == 0:
+              0'u64
+            else:
+              args[0] mod args[i]
         args[0]
       of exp_op_mod:
         for i in 1 ..< args.len:
-          args[0] = if args[i] == 0:
-            0'u64
-          else:
-            cast[uint64](cast[int64](args[0]) mod cast[int64](args[i]))
+          args[0] =
+            if args[i] == 0:
+              0'u64
+            else:
+              cast[uint64](cast[int64](args[0]) mod cast[int64](args[i]))
         args[0]
       of exp_op_lsl:
         args[0] shl args[1]
@@ -764,6 +776,18 @@ func eval*(
           0'u64
         else:
           log2(args[0])
+      of exp_op_highest_bit:
+        if args[0] == 0:
+          0'u64
+        elif args[0].testBit(63):
+          log2(not args[0]) + 1
+        else:
+          log2(args[0]) + 1
+      of exp_op_highest_bit_u:
+        if args[0] == 0:
+          0'u64
+        else:
+          log2(args[0]) + 1
       of exp_op_popcount:
         cast[uint64](popcount(args[0]))
       of exp_op_trailing_zeros:
@@ -782,15 +806,6 @@ func eval*(
           args[1]
         else:
           args[2]
-      of exp_op_jump_switch:
-        let magnitude =
-          if args[0] == uint64.high:
-            0'u64
-          elif args[0].testBit(63):
-            log2(not args[0]) + 1
-          else:
-            log2(args[0]) + 1
-        uint64(magnitude < args[1])
       of exp_op_bit_extract, exp_op_bit_join, exp_number, exp_operand:
         assert false
         return

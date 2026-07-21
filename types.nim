@@ -38,13 +38,21 @@ func is_extendable_to*(a: FieldKind, b: FieldKind): bool =
 func `$`*(field: FieldKind): string =
   case field
   of fk_label:
-    translate((31337_17885987456433, "label"))  ## Assembly label
+    translate((31337_17885987456433, "label")) ## Assembly label
   of fk_imm_0 .. fk_uimm_64:
-    translate((31337_74639900282369, "unsigned {n}-bit immediate"), ("n", field.ord - fk_imm_0.ord))  ## Assembly immediate
+    translate(
+      (31337_74639900282369, "unsigned {n}-bit immediate"),
+      ("n", field.ord - fk_imm_0.ord),
+    ) ## Assembly immediate
   of fk_simm_1 .. fk_simm_64:
-    translate((31337_18299156828551, "signed {n}-bit immediate"), ("n", field.ord - fk_simm_1.ord + 1))  ## Assembly immediate
+    translate(
+      (31337_18299156828551, "signed {n}-bit immediate"),
+      ("n", field.ord - fk_simm_1.ord + 1),
+    ) ## Assembly immediate
   of fk_var_0 .. fk_var_125:
-    translate((31337_12246885387560, "variable {name}"), ("name", field.ord - fk_var_0.ord))  ## Assembly variable
+    translate(
+      (31337_12246885387560, "variable {name}"), ("name", field.ord - fk_var_0.ord)
+    ) ## Assembly variable
 
 func to_immediate_field_kind*(size: uint8, is_signed: bool): FieldKind =
   assert size <= 64
@@ -160,15 +168,6 @@ type OperandTypePattern* = object
   index*: uint8
   args*: seq[string]
 
-type OperandTypeSyntax* = object
-  variable_name*: string
-
-  case is_pattern*: bool
-  of false:
-    options*: seq[FieldKind]
-  of true:
-    patterns*: seq[OperandTypePattern]
-
 type OperandTypeVirtual* = object
   variable_name*: string
 
@@ -229,23 +228,15 @@ type Assertion* = object
   exp*: ExpRef
   msg*: string
 
-type InstructionChunk* = object
+type InstructionBranch* = object
   cond*: ExpRef
-  virtuals*: tuple[start: uint16, branch: uint16, finish: uint16]
-  is_assert*: bool
-  raw_text*: string
-
-func bit_pattern*(i: InstructionChunk): string =
-  return i.raw_text
-
-func assertion_msg*(i: InstructionChunk): string =
-  return i.raw_text
+  bit_pattern*: string
 
 type InstructionUnbranched* = object
   syntax*: seq[Syntax]
-  syntax_operands*: seq[OperandTypeSyntax]
-  virtual_operands*: seq[OperandTypeVirtual]
-  chunks*: seq[InstructionChunk]
+  operands*: seq[OperandType]
+  asserts*: seq[Assertion]
+  chunks*: seq[InstructionBranch]
   description*: string
 
 type InstructionDebranched* = object
@@ -260,29 +251,11 @@ func name*(i: InstructionUnbranched | InstructionDebranched): string =
     if part.kind == sk_fixed:
       return part.text
 
-func operands*(i: InstructionUnbranched): seq[OperandType] =
-  for op in i.syntax_operands:
-    let op =
-      if op.is_pattern:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_pattern, patterns: op.patterns
-        )
-      else:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_normal, options: op.options
-        )
-    result.add(op)
+func operands*(i: InstructionUnbranched): seq[OperandType] {.error.}
 
-func operand_names*(i: InstructionUnbranched): seq[string] =
-  for f in i.syntax_operands:
-    result.add(f.variable_name)
-
-func operand_names*(i: InstructionDebranched): seq[string] =
+func operand_names*(i: InstructionUnbranched | InstructionDebranched): seq[string] =
   for f in i.operands:
     result.add(f.variable_name)
-
-func syntax_operand_names*(i: InstructionUnbranched): seq[string] =
-  i.operand_names()
 
 func syntax_operand_names*(i: InstructionDebranched): seq[string] =
   for f in i.operands:
@@ -290,96 +263,41 @@ func syntax_operand_names*(i: InstructionDebranched): seq[string] =
       result.add(f.variable_name)
 
 func has_pc_rel_virtual*(inst: InstructionUnbranched): bool =
-  for op in inst.virtual_operands:
+  for op in inst.operands:
+    if op.kind != otk_virtual:
+      continue
     if op.expr.is_pc_rel():
       return true
   false
 
 iterator debranch*(inst: InstructionUnbranched): InstructionDebranched =
-  var operands: seq[OperandType]
-  for op in inst.syntax_operands:
-    let op =
-      if op.is_pattern:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_pattern, patterns: op.patterns
-        )
-      else:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_normal, options: op.options
-        )
-    operands.add(op)
-
-  var asserts: seq[Assertion]
+  var asserts = inst.asserts
   for chunk in inst.chunks:
-    for idx in chunk.virtuals.start ..< chunk.virtuals.branch:
-      let op = inst.virtual_operands[idx]
-      operands.add(
-        OperandType(variable_name: op.variable_name, kind: otk_virtual, expr: op.expr)
-      )
-
-    if chunk.is_assert:
-      asserts.add(Assertion(exp: chunk.cond, msg: chunk.assertion_msg))
-      continue
-
-    asserts.add(Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond])))
-
-    for idx in chunk.virtuals.branch ..< chunk.virtuals.finish:
-      let op = inst.virtual_operands[idx]
-      operands.add(
-        OperandType(variable_name: op.variable_name, kind: otk_virtual, expr: op.expr)
-      )
+    asserts.add(Assertion(exp: chunk.cond))
 
     yield InstructionDebranched(
       syntax: inst.syntax,
-      operands: operands,
+      operands: inst.operands,
       asserts: asserts,
       bit_pattern: chunk.bit_pattern,
       description: inst.description,
     )
 
-    discard asserts.pop()
-    asserts.add(Assertion(exp: chunk.cond))
+    asserts[^1] = Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond]))
 
 func debranch*(
     inst: InstructionUnbranched, branch_taken: uint8
 ): Option[InstructionDebranched] =
-  var operands: seq[OperandType]
-  for op in inst.syntax_operands:
-    let op =
-      if op.is_pattern:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_pattern, patterns: op.patterns
-        )
-      else:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_normal, options: op.options
-        )
-    operands.add(op)
-
   var branch_taken = branch_taken
-  var asserts: seq[Assertion]
+  var asserts = inst.asserts
   for chunk in inst.chunks:
-    for idx in chunk.virtuals.start ..< chunk.virtuals.branch:
-      let op = inst.virtual_operands[idx]
-      operands.add(
-        OperandType(variable_name: op.variable_name, kind: otk_virtual, expr: op.expr)
-      )
-
-    if chunk.is_assert:
-      asserts.add(Assertion(exp: chunk.cond, msg: chunk.assertion_msg))
-      continue
+    asserts.add(Assertion(exp: chunk.cond))
 
     if branch_taken == 0:
-      for idx in chunk.virtuals.branch ..< chunk.virtuals.finish:
-        let op = inst.virtual_operands[idx]
-        operands.add(
-          OperandType(variable_name: op.variable_name, kind: otk_virtual, expr: op.expr)
-        )
-
       return
         InstructionDebranched(
           syntax: inst.syntax,
-          operands: operands,
+          operands: inst.operands,
           asserts: asserts,
           bit_pattern: chunk.bit_pattern,
           description: inst.description,
@@ -387,53 +305,20 @@ func debranch*(
 
     branch_taken -= 1
 
+    asserts[^1] = Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond]))
+
 func debranch*(inst: InstructionUnbranched): InstructionDebranched =
-  var operands: seq[OperandType]
-  for op in inst.syntax_operands:
-    let op =
-      if op.is_pattern:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_pattern, patterns: op.patterns
-        )
-      else:
-        OperandType(
-          variable_name: op.variable_name, kind: otk_normal, options: op.options
-        )
-    operands.add(op)
-
-  var last_branch = 0
-  var bit_pattern: string
-  for idx in countdown(inst.chunks.high, 0):
+  var asserts = inst.asserts
+  for idx in 0 ..< inst.chunks.high:
     let chunk = inst.chunks[idx]
-    if not chunk.is_assert:
-      last_branch = idx
-      bit_pattern = chunk.bit_pattern
-      break
-
-  var asserts: seq[Assertion]
-  for idx in 0 .. last_branch:
-    let chunk = inst.chunks[idx]
-    for idx in chunk.virtuals.start ..< chunk.virtuals.branch:
-      let op = inst.virtual_operands[idx]
-      operands.add(
-        OperandType(variable_name: op.variable_name, kind: otk_virtual, expr: op.expr)
-      )
-
-    if chunk.is_assert:
-      asserts.add(Assertion(exp: chunk.cond, msg: chunk.assertion_msg))
-      continue
-
-    for idx in chunk.virtuals.branch ..< chunk.virtuals.finish:
-      let op = inst.virtual_operands[idx]
-      operands.add(
-        OperandType(variable_name: op.variable_name, kind: otk_virtual, expr: op.expr)
-      )
+    asserts.add(Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond])))
+  asserts.add(Assertion(exp: inst.chunks[^1].cond))
 
   return InstructionDebranched(
     syntax: inst.syntax,
-    operands: operands,
+    operands: inst.operands,
     asserts: asserts,
-    bit_pattern: bit_pattern,
+    bit_pattern: inst.chunks[^1].bit_pattern,
     description: inst.description,
   )
 
@@ -572,7 +457,7 @@ func done*(li: var CompleteLineInformation, total_length: int): FileLineInformat
       result.l2b.set_len(segment.l2b.len)
       for i in old_len ..< segment.l2b.len:
         result.l2b[i] = segment.l2b[i]
-  
+
   var last_line = result.l2b[^1]
   for i in countdown(result.l2b.high, 0):
     if result.l2b[i] == -1:

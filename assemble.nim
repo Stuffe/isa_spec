@@ -330,7 +330,7 @@ func get_bit_pattern(
               length - 1
 
           skip_whitespaces(s)
-          assert matches(s, ':', tk = tk_seperator),
+          assert matches(s, ':', tk = tk_separator),
             "(Late detection!): Expected slice syntax after base-16 number in bit pattern"
 
           skip_whitespaces(s)
@@ -474,7 +474,7 @@ func get_bit_pattern(
               -1
 
           skip_whitespaces(s)
-          assert matches(s, ':', tk = tk_seperator),
+          assert matches(s, ':', tk = tk_separator),
             "(Late detection!): Expected slice syntax after field/pattern reference in bit pattern"
 
           skip_whitespaces(s)
@@ -732,6 +732,7 @@ func parse_instruction_syntax_part(
     values: var seq[OperandValue],
     names: var seq[OperandName],
     resolved_patterns: var Table[string, InstructionDebranched],
+    error_on_incomplete: static[bool] = true,
 ): seq[InstIncompleteParseResult] =
   let root_cp = s.checkpoint()
   template error(msg: string, priority: int) =
@@ -745,12 +746,13 @@ func parse_instruction_syntax_part(
 
   if syntax_index >= inst.syntax.len:
     isa_spec.skip_whitespaces(s)
-    if peek(s) notin {'\n', '\0'}:
-      error(
-        translate(31337_84557608492963, "Unknown code found after instruction: ") &
-          $from_line_start_to_here(s),
-        operand_index,
-      )
+    when error_on_incomplete:
+      if peek(s) notin {'\n', '\0'}:
+        error(
+          translate(31337_84557608492963, "Unknown code found after instruction: ") &
+            $from_line_start_to_here(s),
+          operand_index,
+        )
 
     return
       @[
@@ -775,7 +777,7 @@ func parse_instruction_syntax_part(
     isa_spec.skip_whitespaces(s)
     return parse_instruction_syntax_part(
       s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
-      resolved_patterns,
+      resolved_patterns, error_on_incomplete,
     )
   of sk_at_least_one_space:
     let start_index = s.get_index()
@@ -784,13 +786,13 @@ func parse_instruction_syntax_part(
       error(translate(31337_18981788561705, "Expected whitespace here"), operand_index)
     return parse_instruction_syntax_part(
       s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
-      resolved_patterns,
+      resolved_patterns, error_on_incomplete,
     )
   of sk_fixed:
     if matches(s, syntax.text, tk = tk_mnenomic):
       return parse_instruction_syntax_part(
         s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
-        resolved_patterns,
+        resolved_patterns, error_on_incomplete,
       )
     elif operand_index == 0:
       error(translate(31337_21828993759952, "Unknown instruction"), operand_index)
@@ -968,6 +970,7 @@ func parse_instruction_syntax_part(
       values,
       names,
       resolved_patterns,
+      error_on_incomplete,
     )
     discard values.pop()
     return result
@@ -975,110 +978,96 @@ func parse_instruction_syntax_part(
     assert inst.operands[operand_index].kind == otk_pattern
 
     var cur_resolved_patterns: seq[InstructionDebranched]
+    block BLK_RESOLVE_PATTERN:
+      let state = pause_tokenization()
+      for i, pattern in inst.operands[operand_index].patterns:
+        let pattern_key =
+          if pattern.index == uint8.high:
+            ""
+          else:
+            $pattern.index & '\0' & pattern.args.join("\0")
 
-    let start_s = s.get_index()
+        let instruction =
+          if pattern_key in resolved_patterns:
+            resolved_patterns[pattern_key]
+          else:
+            let resolved_pattern =
+              isa_spec.patterns[pattern.index].pattern.resolve(pattern.args)
+            var sslice = new_StreamSlice(resolved_pattern)
+            start_tokenize(sslice)
+            let (err, instruction) = get_instruction(sslice, isa_spec, pattern.index)
+
+            if err != "":
+              error(
+                translate(
+                  31337_87525828760679,
+                  "Failed to resolve pattern({err}): {resolved_pattern}",
+                  ("err", err),
+                  ("resolved_pattern", resolved_pattern),
+                ),
+                2 * inst.operands.len - operand_index.int,
+              )
+
+            resolved_patterns[pattern_key] = instruction
+            instruction
+
+        cur_resolved_patterns.add(instruction)
+
+      resume_tokenization(state)
+
     let cp = checkpoint(s)
-    var skip = 0
     var best_err = InstIncompleteParseResult(is_err: true)
 
-    while true:
-      let sub_cp = s.checkpoint()
-
-      let rets = parse_instruction_syntax_part(
-        s,
-        inst,
-        syntax_index,
-        operand_index + 1,
-        isa_spec,
-        defines,
-        values,
-        names,
-        resolved_patterns,
-      )
-      if rets[0].is_err:
-        if result.len == 0 and rets[0].error_priority >= best_err.error_priority:
-          best_err = rets[0]
-        s.restore(sub_cp)
-      else:
-        if cur_resolved_patterns.len == 0:
-          for i, pattern in inst.operands[operand_index].patterns:
-            let pattern_key =
-              if pattern.index == uint8.high:
-                ""
-              else:
-                $pattern.index & '\0' & pattern.args.join("\0")
-
-            let instruction =
-              if pattern_key in resolved_patterns:
-                resolved_patterns[pattern_key]
-              else:
-                let state = pause_tokenization()
-                let resolved_pattern =
-                  isa_spec.patterns[pattern.index].pattern.resolve(pattern.args)
-                var sslice = new_StreamSlice(resolved_pattern)
-                start_tokenize(sslice)
-                let (err, instruction) =
-                  get_instruction(sslice, isa_spec, pattern.index)
-
-                start_tokenize(nil)
-                resume_tokenization(state)
-                if err != "":
-                  error(
-                    translate(
-                      31337_87525828760679,
-                      "Failed to resolve pattern({err}): {resolved_pattern}",
-                      ("err", err),
-                      ("resolved_pattern", resolved_pattern),
-                    ),
-                    2 * inst.operands.len - operand_index.int,
-                  )
-
-                resolved_patterns[pattern_key] = instruction
-                instruction
-
-            cur_resolved_patterns.add(instruction)
-
-          s.restore(sub_cp)
-
-        for i, sub_instruction in cur_resolved_patterns:
-          var sub_s = s.get_slice(start_s, start_s + skip)
-          for sub_inst in parse_instruction(
-            sub_s, sub_instruction, isa_spec, defines, resolved_patterns
-          ):
-            if sub_inst.is_err:
-              if result.len == 0 and sub_inst.error_priority > best_err.error_priority:
-                best_err = InstIncompleteParseResult(
-                  is_err: true,
-                  error_priority: sub_inst.error_priority + operand_index.int,
-                  error: sub_inst.error,
+    for i, sub_instruction in cur_resolved_patterns:
+      for sub_inst in parse_instruction(
+        s, sub_instruction, isa_spec, defines, resolved_patterns
+      ):
+        if sub_inst.is_err:
+          s.restore(cp)
+          if result.len == 0 and sub_inst.error_priority > best_err.error_priority:
+            best_err = InstIncompleteParseResult(
+              is_err: true,
+              error_priority: sub_inst.error_priority + operand_index.int,
+              error: sub_inst.error,
+            )
+        else:
+          var sub_s = s
+          sub_s.set_index(sub_inst.final_index)
+          let rets = parse_instruction_syntax_part(
+            sub_s,
+            inst,
+            syntax_index,
+            operand_index + 1,
+            isa_spec,
+            defines,
+            values,
+            names,
+            resolved_patterns,
+            error_on_incomplete,
+          )
+          if rets[0].is_err:
+            s.restore(cp)
+            if result.len == 0 and rets[0].error_priority >= best_err.error_priority:
+              best_err = rets[0]
+          else:
+            let tokens = s.restore_with_tokens(cp)
+            for ret in rets:
+              result.add(
+                InstIncompleteParseResult(
+                  is_err: false,
+                  final_index: ret.final_index,
+                  pattern_substitutions: ret.pattern_substitutions,
+                  values: ret.values,
+                  names: ret.names,
                 )
-            else:
-              for ret in rets:
-                result.add(
-                  InstIncompleteParseResult(
-                    is_err: false,
-                    final_index: ret.final_index,
-                    pattern_substitutions: ret.pattern_substitutions,
-                    values: ret.values,
-                    names: ret.names,
-                  )
+              )
+              result[^1].pattern_substitutions.add(
+                PatternSubstitution(
+                  index: operand_index.uint8,
+                  bits: sub_inst.bits,
+                  values: sub_inst.operands,
                 )
-                result[^1].pattern_substitutions.add(
-                  PatternSubstitution(
-                    index: operand_index.uint8,
-                    bits: sub_inst.bits,
-                    values: sub_inst.operands,
-                  )
-                )
-
-          s.restore(sub_cp)
-
-      if peek(s) in {'\n', '\0'}:
-        break
-
-      skip += 1
-      s.restore(cp)
-      skip(s, skip)
+              )
 
     if result.len == 0:
       return @[best_err]
@@ -1209,7 +1198,16 @@ func parse_instruction(
   var op_values: seq[OperandValue]
   var op_names: seq[OperandName]
   result = parse_instruction_syntax_part(
-    s, inst, 0, 0, isa_spec, defines, op_values, op_names, resolved_patterns
+    s,
+    inst,
+    0,
+    0,
+    isa_spec,
+    defines,
+    op_values,
+    op_names,
+    resolved_patterns,
+    error_on_incomplete = true,
   )
 
   for it in result.mitems:
@@ -1232,7 +1230,16 @@ func parse_instruction(
   var op_values: seq[OperandValue]
   var op_names: seq[OperandName]
   var ret = parse_instruction_syntax_part(
-    s, inst, 0, 0, isa_spec, defines, op_values, op_names, resolved_patterns
+    s,
+    inst,
+    0,
+    0,
+    isa_spec,
+    defines,
+    op_values,
+    op_names,
+    resolved_patterns,
+    error_on_incomplete = false,
   )
   result = newSeqOfCap[InstParseResult](ret.len)
 
@@ -1302,7 +1309,7 @@ func assemble_instruction(
         )
       )
 
-    if value != 0:
+    if value == 0:
       let msg = assertion.msg
       if msg == "":
         let operand_names = inst.operand_names()
@@ -1572,7 +1579,7 @@ proc estimate_labels(
                 not file_name.contains(AllChars - NAME_CHARS)
 
               isa_spec.skip_whitespaces(ctx.source[^1].s)
-              if not matches(ctx.source[^1].s, "as", tk = tk_seperator):
+              if not matches(ctx.source[^1].s, "as", tk = tk_separator):
                 if is_file_name_legal_included_name:
                   included_name = file_name
                 else:
@@ -2582,8 +2589,8 @@ func decode(
           byte_index += 1
           num_bit_in_byte = 8
 
-          num_bit = num_bit mod 8
           byte_index += num_bit div 8
+          num_bit = num_bit mod 8
 
         if num_bit > 0:
           num_bit_in_byte -= num_bit
@@ -2624,7 +2631,7 @@ func decode(
         if err != "":
           break BLK_EVAL_PATH
 
-        if value != 0:
+        if value == 0:
           break BLK_EVAL_PATH
 
       # Translate syntax into actual string
@@ -2642,7 +2649,10 @@ func decode(
       var s_description = decoder.description.replace("[", "\\[")
       for part in decoder.syntax:
         case part.kind
-        of sk_any_number_of_spaces, sk_at_least_one_space:
+        of sk_any_number_of_spaces:
+          if s_inst.len > 0 and s_inst[^1] != ' ':
+            s_inst &= " "
+        of sk_at_least_one_space:
           s_inst &= " "
         of sk_fixed:
           when is_bb_code:
