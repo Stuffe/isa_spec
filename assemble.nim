@@ -735,12 +735,14 @@ func parse_instruction_syntax_part(
     error_on_incomplete: static[bool] = true,
 ): seq[InstIncompleteParseResult] =
   let root_cp = s.checkpoint()
-  template error(msg: string, priority: int) =
+  template error(msg: string, priority: int, sub_priority: int = 0) =
     s.restore(root_cp)
     return
       @[
         InstIncompleteParseResult(
-          is_err: true, error_priority: priority + 0xFF00, error: msg
+          is_err: true,
+          error_priority: 0xFF0000 + (priority shl 8) + sub_priority,
+          error: msg,
         )
       ]
 
@@ -812,6 +814,7 @@ func parse_instruction_syntax_part(
     var op_value: OperandValue
     var op_name: OperandName
     var err_msg: string
+    var err_sub_priority: int
     for j, field in options:
       let is_last = j == options.high
       s.restore(cp)
@@ -831,7 +834,7 @@ func parse_instruction_syntax_part(
 
             if not is_last:
               continue
-            error(err_msg, operand_index)
+            error(err_msg, operand_index, err_sub_priority)
 
           if label_name.is_defined(isa_spec, defines):
             if err_msg == "":
@@ -840,7 +843,7 @@ func parse_instruction_syntax_part(
 
             if not is_last:
               continue
-            error(err_msg, operand_index)
+            error(err_msg, operand_index, err_sub_priority)
 
           op_value = OperandValue(kind: ok_label_ref, name: label_name)
           op_name = OperandName(kind: tk_label, value: $label_name)
@@ -850,44 +853,47 @@ func parse_instruction_syntax_part(
         if not is_variable(field):
           block BLK_PARSE_IMM:
             var base: int
+            if field in {fk_simm_1 .. fk_simm_64}:
+              let (err_simm, s_simm) = get_signed(s, base)
+              if err_simm == "":
+                let num = check(parse_signed(s_simm))
+                if not num.in_range(field):
+                  if err_sub_priority < 1 or err_msg == "":
+                    err_msg = translate(
+                      31337_53378617686677,
+                      "Value {num} outside of range for {field}",
+                      ("num", $s_simm),
+                      ("field", field),
+                    )
+                    err_sub_priority = 1
+
+                  if not is_last:
+                    continue
+                  error(err_msg, operand_index, err_sub_priority)
+
+                op_value = fixed(num)
+                op_name = OperandName(kind: tk_number, value: $s_simm)
+                break BLK_PARSE_IMM
+
             let (err_uimm, s_uimm) = get_unsigned(s, base)
             if err_uimm == "":
               let num = check(parse_unsigned(s_uimm))
               if not num.in_range(field):
-                if err_msg == "":
+                if err_sub_priority < 1 or err_msg == "":
                   err_msg = translate(
                     31337_12097260550100,
                     "Value {num} outside of range for {field}",
-                    ("num", num),
+                    ("num", $s_uimm),
                     ("field", field),
                   )
+                  err_sub_priority = 1
 
                 if not is_last:
                   continue
-                error(err_msg, operand_index)
+                error(err_msg, operand_index, err_sub_priority)
 
               op_value = fixed(num)
               op_name = OperandName(kind: tk_number, value: $s_uimm)
-              break BLK_PARSE_IMM
-
-            let (err_simm, s_simm) = get_signed(s, base)
-            if err_simm == "":
-              let num = check(parse_signed(s_simm))
-              if not num.in_range(field):
-                if err_msg == "":
-                  err_msg = translate(
-                    31337_53378617686677,
-                    "Value {num} outside of range for {field}",
-                    ("num", cast[int64](num)),
-                    ("field", field),
-                  )
-
-                if not is_last:
-                  continue
-                error(err_msg, operand_index)
-
-              op_value = fixed(num)
-              op_name = OperandName(kind: tk_number, value: $s_simm)
               break BLK_PARSE_IMM
 
             let field_string = get_identifier(s, tk = tk_const)
@@ -899,7 +905,7 @@ func parse_instruction_syntax_part(
 
               if not is_last:
                 continue
-              error(err_msg, operand_index)
+              error(err_msg, operand_index, err_sub_priority)
 
             let (field_kind, value) =
               defines.getOrDefault(field_string, (fk_label, DefineValue()))
@@ -916,7 +922,7 @@ func parse_instruction_syntax_part(
 
               if not is_last:
                 continue
-              error(err_msg, operand_index)
+              error(err_msg, operand_index, err_sub_priority)
         else:
           # Some user defined field type
           let pre_field_cp = s.checkpoint()
@@ -961,7 +967,7 @@ func parse_instruction_syntax_part(
 
               if not is_last:
                 continue
-              error(err_msg, operand_index)
+              error(err_msg, operand_index, err_sub_priority)
 
         break
 

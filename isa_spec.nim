@@ -99,17 +99,17 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
       ),
     )
 
-    var size_assertion = (MAX_FIELD_SIZE.uint64, false)
+    var size_assertion = (MAX_FIELD_SIZE.uint64 + 1, false)
     if matches(s, ':', tk = tk_bracket):
       let (size_error, size, is_signed) = get_size(s)
       if size_error != "":
         error(size_error)
 
       expect(
-        1 <= size and size <= MAX_FIELD_SIZE,
+        0 <= size and size <= MAX_FIELD_SIZE,
         translate(
           31337_61352853872444,
-          "Only immediates of width 1 to {max_field_size} are allowed",
+          "Only immediates of width 0 to {max_field_size} are allowed",
           ("max_field_size", MAX_FIELD_SIZE),
         ),
       )
@@ -119,17 +119,21 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         var expr_kind: ExpKind
         if is_signed:
           msg = translate(
-            31337_56352157276583, "Operand value outside of {n}-bit signed range", ("n", size)
+            31337_56352157276583,
+            "Operand value outside of {n}-bit signed range",
+            ("n", size),
           )
           expr_kind = exp_op_highest_bit
         else:
           msg = translate(
-            31337_45247724910259, "Operand value outside of {n}-bit unsigned range", ("n", size)
+            31337_45247724910259,
+            "Operand value outside of {n}-bit unsigned range",
+            ("n", size),
           )
           expr_kind = exp_op_highest_bit_u
 
         let expr = exp_op(
-          exp_op_lt_u,
+          exp_op_le_u,
           [exp_op(expr_kind, [exp_var(cast[uint32](op_names.len))]), exp_num(size)],
         )
         inst.asserts.add(Assertion(exp: expr, msg: msg))
@@ -276,12 +280,20 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
               options.add(field_kind)
               if field_kind == fk_label:
                 is_labels.incl(cast[uint8](op_names.len))
-              elif field_kind == fk_imm_0 and size_assertion[0] > 0:
-                let imm_size = size_assertion[0] - 1
-                if size_assertion[1]:
-                  options[^1] = fk_simm_1.succ(imm_size)
-                else:
-                  options[^1] = fk_uimm_1.succ(imm_size)
+              elif field_kind == fk_imm_0:
+                if size_assertion[0] > MAX_FIELD_SIZE:
+                  error(
+                    translate(
+                      31337,
+                      "Immediate operand must have size constraint, e.g. %a:U8(immediate), %b:S1(immediate|label)",
+                    )
+                  )
+                elif size_assertion[0] > 0:
+                  let imm_size = size_assertion[0] - 1
+                  if size_assertion[1]:
+                    options[^1] = fk_simm_1.succ(imm_size)
+                  else:
+                    options[^1] = fk_uimm_1.succ(imm_size)
               break BLK_FIND_FIELD
 
           error(
@@ -1321,7 +1333,8 @@ func get_asserts[T: InstructionUnbranched | InstructionDebranched](
 
     skip_whitespaces(s)
     expect(
-      matches(s, ')', tk = tk_bracket), translate(31337_18247681204565, "Expected ')' after assertion")
+      matches(s, ')', tk = tk_bracket),
+      translate(31337_18247681204565, "Expected ')' after assertion"),
     )
 
     skip_whitespaces(s)
@@ -1477,23 +1490,11 @@ func get_instruction*(
   result[1] = inst
 
 func parse_isa_spec_inner(
-    file_name: string, source: string, with_disassembly: bool, with_tokens: bool
-): SpecParseResult =
-  var s = new_StreamSlice(source)
-  start_tokenize(s)
+    s: var StreamSlice, with_disassembly: bool, with_tokens: bool
+): WithError[SpecParseResult] =
+  result[1].spec.line_comments = @[";", "//"]
+  result[1].spec.block_comments = @{"/*": "*/"}
 
-  template error(input: string): untyped =
-    start_tokenize(nil)
-    return SpecParseResult(error: LineMessage(line: get_line_number(s), message: input))
-
-  template check[T](input: WithError[T]): T =
-    let (err, res) = input
-    if err != "":
-      error(err)
-    res
-
-  result.spec.line_comments = @[";", "//"]
-  result.spec.block_comments = @{"/*": "*/"}
   skip_newlines(s)
 
   if matches(s, "[settings]", tk = tk_header):
@@ -1526,14 +1527,14 @@ func parse_isa_spec_inner(
 
       case name
       of "name":
-        result.spec.name = check(descape_string_content(check(get_string(s))))
+        result[1].spec.name = check(descape_string_content(check(get_string(s))))
       of "variant":
-        result.spec.variant = check(descape_string_content(check(get_string(s))))
+        result[1].spec.variant = check(descape_string_content(check(get_string(s))))
       of "endianness":
-        result.spec.endianness =
+        result[1].spec.endianness =
           check(get_enum(s, {"big": end_big, "little": end_little}, tk = tk_literal))
       of "line_comments":
-        result.spec.line_comments.set_len(0)
+        result[1].spec.line_comments.set_len(0)
         try:
           for entry in get_list(s):
             let sym = check(parse_string(entry))
@@ -1544,11 +1545,11 @@ func parse_isa_spec_inner(
                   "Expected a non-empty string to start line comments",
                 )
               )
-            result.spec.line_comments.add(sym)
+            result[1].spec.line_comments.add(sym)
         except ParseError:
           error(translate(31337_33890983338825, "Expected a list of strings"))
       of "block_comments":
-        result.spec.block_comments.set_len(0)
+        result[1].spec.block_comments.set_len(0)
         try:
           var start_sym: string
           for is_value, text in get_table(s):
@@ -1570,7 +1571,7 @@ func parse_isa_spec_inner(
                     "Expected a non-empty string to end block comments",
                   )
                 )
-              result.spec.block_comments.add((start_sym, end_sym))
+              result[1].spec.block_comments.add((start_sym, end_sym))
         except ParseError:
           error(translate(31337_55929094649794, "Expected a table of strings"))
       else:
@@ -1583,12 +1584,14 @@ func parse_isa_spec_inner(
           translate(31337_85972591916322, "Expected newline after setting assignment")
         )
 
-  result.spec.field_types[fk_label] = FieldType(name: "label", bit_length: 64)
-  result.spec.field_types[fk_imm_0] = FieldType(name: "immediate", bit_length: 64)
+  result[1].spec.field_types[fk_label] = FieldType(name: "label", bit_length: 64)
+  result[1].spec.field_types[fk_imm_0] = FieldType(name: "immediate", bit_length: 64)
   for i in 1'u8 .. 64'u8:
-    result.spec.field_types[fk_uimm_1.succ(i - 1)] = FieldType(name: "", bit_length: i)
+    result[1].spec.field_types[fk_uimm_1.succ(i - 1)] =
+      FieldType(name: "", bit_length: i)
   for i in 1'u8 .. 64'u8:
-    result.spec.field_types[fk_simm_1.succ(i - 1)] = FieldType(name: "", bit_length: i)
+    result[1].spec.field_types[fk_simm_1.succ(i - 1)] =
+      FieldType(name: "", bit_length: i)
 
   if matches(s, "[fields]", tk = tk_header):
     if not skip_newlines(s):
@@ -1702,7 +1705,7 @@ func parse_isa_spec_inner(
 
       skip_newlines(s)
 
-      result.spec.field_types[next_field_index] = field_type
+      result[1].spec.field_types[next_field_index] = field_type
       next_field_index.inc()
       if not next_field_index.is_variable():
         error(
@@ -1719,50 +1722,60 @@ func parse_isa_spec_inner(
 
     while not matches(s, '[', increment = false):
       skip_whitespaces(s)
-      if not matches(s, '@'):
-        error(translate(31337_73627734748417, "Expected an @ before the pattern name"))
+      expect(
+        matches(s, '@'),
+        translate(31337_73627734748417, "Expected an @ before the pattern name"),
+      )
 
       let pattern_name = get_identifier(s, tk = tk_pattern_name)
-      if pattern_name.len == 0:
-        error(translate(31337_72958581072457, "Expected a name for the pattern"))
+      expect(
+        pattern_name.len > 0,
+        translate(31337_72958581072457, "Expected a name for the pattern"),
+      )
 
       var parameters: seq[StreamSlice]
 
       skip_whitespaces(s)
-      if matches(s, '(', tk = tk_bracket):
-        # This is a parametrized pattern, parse and store the parameter list
-        while not matches(s, ')', tk = tk_bracket):
+      expect(
+        matches(s, '(', tk = tk_bracket),
+        translate(31337, "Expected a ( before the pattern parameter list"),
+      )
+
+      # This is a parametrized pattern, parse and store the parameter list
+      while not matches(s, ')', tk = tk_bracket):
+        skip_whitespaces(s)
+
+        if parameters.len > 0:
+          expect(
+            matches(s, ',', tk = tk_separator),
+            translate(31337, "Expected ',' between pattern parameters"),
+          )
           skip_whitespaces(s)
-          if peek(s) != '`':
-            error(
-              translate(
-                31337_62674382892779, "Expected a ` before the pattern parameter"
-              )
-            )
 
-          var parameter_name = check(get_string(s, tk = tk_pattern_variable))
-          if parameter_name.len == 0:
-            error(
-              translate(
-                31337_75146029145419, "Expected a name for the pattern parameter"
-              )
-            )
+        let parameter_name = get_identifier(s, tk = tk_pattern_variable)
+        expect(
+          parameter_name.len > 0,
+          translate(31337_75146029145419, "Expected a name for the pattern parameter"),
+        )
 
-          parameters.add(parameter_name)
-          if parameters.len > 53: ## Arbitrary limit, picked an "uncommon" number
-            error(
-              translate(31337_23683372416862, "Pattern can have at most 53 parameters")
-            )
+        parameters.add(parameter_name)
 
-          skip_whitespaces(s)
-          discard matches(s, ',', tk = tk_separator)
+        const MAX_PARAMETERS = 53 ## Arbitrary limit, picked an "uncommon" number
+        expect(
+          parameters.len > MAX_PARAMETERS,
+          translate(
+            31337_23683372416862,
+            "Pattern can have at most {max_parameters} parameters",
+            ("max_parameters", MAX_PARAMETERS),
+          ),
+        )
 
       add_token(s, tk_new_instruction)
       skip_whitespaces(s)
       if not matches(s, '\n', tk = tk_whitespace):
         error(translate(31337_63072912015761, "Expected newline before pattern body"))
       let (texts, parameter_indexes) = parse_parametrized_pattern(s, parameters)
-      result.spec.patterns.add(
+      result[1].spec.patterns.add(
         (
           name: $pattern_name,
           parameter_count: parameters.len,
@@ -1770,7 +1783,7 @@ func parse_isa_spec_inner(
         )
       )
 
-      if result.spec.patterns.len >= uint8.high.int:
+      if result[1].spec.patterns.len >= uint8.high.int:
         error(
           translate(
             31337_35053289858864,
@@ -1788,20 +1801,20 @@ func parse_isa_spec_inner(
     error(translate(31337_62103010038950, "Expected newline after section header"))
 
   if with_disassembly:
-    result.spec.instruction_decoders = some(newSeq[InstructionDecoder]())
+    result[1].spec.instruction_decoders = some(newSeq[InstructionDecoder]())
 
   while peek(s) != '\0':
     add_token(s, tk_new_instruction)
-    var (error_message, inst) = get_instruction(s, result.spec)
+    var (error_message, inst) = get_instruction(s, result[1].spec)
     if error_message != "":
       error(error_message)
-    result.spec.instructions.add(inst)
+    result[1].spec.instructions.add(inst)
 
     if not skip_newlines(s):
       error(translate(31337_29837913233106, "Expected newline between instructions"))
 
   if with_tokens:
-    result.tokens = collect_tokens(s)
+    result[1].tokens = collect_tokens(s)
   start_tokenize(nil)
 
 func parse_isa_spec*(
@@ -1810,7 +1823,15 @@ func parse_isa_spec*(
     with_disassembly: bool = false,
     with_tokens: bool = false,
 ): SpecParseResult =
-  parse_isa_spec_inner(file_name, source, with_disassembly, with_tokens)
+  var s = new_StreamSlice(source)
+  start_tokenize(s)
+
+  let (err, ret) = parse_isa_spec_inner(s, with_disassembly, with_tokens)
+  if err != "":
+    start_tokenize(nil)
+    return SpecParseResult(error: LineMessage(line: get_line_number(s), message: err))
+
+  return ret
 
 import assemble
 export assemble
