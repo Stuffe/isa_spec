@@ -811,6 +811,7 @@ func parse_instruction_syntax_part(
     let options = inst.operands[operand_index].options
     var op_value: OperandValue
     var op_name: OperandName
+    var err_msg: string
     for j, field in options:
       let is_last = j == options.high
       s.restore(cp)
@@ -824,19 +825,23 @@ func parse_instruction_syntax_part(
         else:
           let label_name = get_identifier(s, tk = tk_label)
           if label_name.len == 0:
+            if err_msg == "":
+              err_msg =
+                translate(31337_83023561541280, "Was expecting a label name here")
+
             if not is_last:
               continue
-            error(
-              translate(31337_83023561541280, "Was expecting a label name here"),
-              operand_index,
-            )
+            error(err_msg, operand_index)
+
           if label_name.is_defined(isa_spec, defines):
+            if err_msg == "":
+              err_msg =
+                translate(31337_83023561541280, "Was expecting a label name here")
+
             if not is_last:
               continue
-            error(
-              translate(31337_58826692693389, "Was expecting a label name here"),
-              operand_index,
-            )
+            error(err_msg, operand_index)
+
           op_value = OperandValue(kind: ok_label_ref, name: label_name)
           op_name = OperandName(kind: tk_label, value: $label_name)
 
@@ -849,17 +854,18 @@ func parse_instruction_syntax_part(
             if err_uimm == "":
               let num = check(parse_unsigned(s_uimm))
               if not num.in_range(field):
-                if not is_last:
-                  continue
-                error(
-                  translate(
+                if err_msg == "":
+                  err_msg = translate(
                     31337_12097260550100,
                     "Value {num} outside of range for {field}",
                     ("num", num),
                     ("field", field),
-                  ),
-                  operand_index,
-                )
+                  )
+
+                if not is_last:
+                  continue
+                error(err_msg, operand_index)
+
               op_value = fixed(num)
               op_name = OperandName(kind: tk_number, value: $s_uimm)
               break BLK_PARSE_IMM
@@ -868,29 +874,32 @@ func parse_instruction_syntax_part(
             if err_simm == "":
               let num = check(parse_signed(s_simm))
               if not num.in_range(field):
-                if not is_last:
-                  continue
-                error(
-                  translate(
+                if err_msg == "":
+                  err_msg = translate(
                     31337_53378617686677,
                     "Value {num} outside of range for {field}",
                     ("num", cast[int64](num)),
                     ("field", field),
-                  ),
-                  operand_index,
-                )
+                  )
+
+                if not is_last:
+                  continue
+                error(err_msg, operand_index)
+
               op_value = fixed(num)
               op_name = OperandName(kind: tk_number, value: $s_simm)
               break BLK_PARSE_IMM
 
             let field_string = get_identifier(s, tk = tk_const)
             if field_string.len == 0:
+              if err_msg == "":
+                err_msg = translate(
+                  31337_33085034295813, "Expected either a number or a symbol"
+                )
+
               if not is_last:
                 continue
-              error(
-                translate(31337_33085034295813, "Expected either a number or a symbol"),
-                operand_index,
-              )
+              error(err_msg, operand_index)
 
             let (field_kind, value) =
               defines.getOrDefault(field_string, (fk_label, DefineValue()))
@@ -898,16 +907,16 @@ func parse_instruction_syntax_part(
               op_value = fixed(value.value)
               op_name = OperandName(kind: tk_const, value: $value.value)
             else:
-              if not is_last:
-                continue
-              error(
-                translate(
+              if err_msg == "":
+                err_msg = translate(
                   31337_86607635528717,
                   "Undefined constant {field_string}",
                   ("field_string", field_string),
-                ),
-                operand_index,
-              )
+                )
+
+              if not is_last:
+                continue
+              error(err_msg, operand_index)
         else:
           # Some user defined field type
           let pre_field_cp = s.checkpoint()
@@ -933,29 +942,27 @@ func parse_instruction_syntax_part(
               s.skip(name.len, tk = tk_field_name)
               op_value = fixed(value)
               op_name = OperandName(kind: tk_field_name, value: name)
-            elif not is_last:
-              continue
             else:
               # TODO: Add multiple field types to error message if multiple are allowed
-              if field_string.len == 0:
-                error(
-                  translate(
+              if err_msg == "":
+                if field_string.len == 0:
+                  err_msg = translate(
                     31337_66273157704409,
                     "Missing a '{field_type}' operand here",
                     ("field_type", isa_spec.field_types[field].name),
-                  ),
-                  operand_index,
-                )
-              else:
-                error(
-                  translate(
+                  )
+                else:
+                  err_msg = translate(
                     31337_79977943868423,
                     "'{field_string}' is not a '{field_type}'",
                     ("field_string", field_string),
                     ("field_type", isa_spec.field_types[field].name),
-                  ),
-                  operand_index,
-                )
+                  )
+
+              if not is_last:
+                continue
+              error(err_msg, operand_index)
+
         break
 
     values.add(op_value)
