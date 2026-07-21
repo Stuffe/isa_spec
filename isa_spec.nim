@@ -119,12 +119,12 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         var expr_kind: ExpKind
         if is_signed:
           msg = translate(
-            31337, "Operand value outside of {n}-bit signed range", ("n", size)
+            31337_56352157276583, "Operand value outside of {n}-bit signed range", ("n", size)
           )
           expr_kind = exp_op_highest_bit
         else:
           msg = translate(
-            31337, "Operand value outside of {n}-bit unsigned range", ("n", size)
+            31337_45247724910259, "Operand value outside of {n}-bit unsigned range", ("n", size)
           )
           expr_kind = exp_op_highest_bit_u
 
@@ -1321,7 +1321,7 @@ func get_asserts[T: InstructionUnbranched | InstructionDebranched](
 
     skip_whitespaces(s)
     expect(
-      matches(s, ')', tk = tk_bracket), translate(31337, "Expected ')' after assertion")
+      matches(s, ')', tk = tk_bracket), translate(31337_18247681204565, "Expected ')' after assertion")
     )
 
     skip_whitespaces(s)
@@ -1361,7 +1361,7 @@ func get_ifs(
 
     expect(
       matches(s, ',', tk = tk_separator),
-      translate(31337, "Expected ',' after 'if' condition"),
+      translate(31337_23037984432484, "Expected ',' after 'if' condition"),
     )
 
     let bit_pattern = check(get_bit_pattern(s, is_patterns, inst, op_names))
