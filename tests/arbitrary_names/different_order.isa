@@ -1,4 +1,4 @@
 [instructions]
 
-mov  %t(immediate) , %s(immediate)
+mov  %t:U4(immediate) , %s:U4(immediate)
 ssss tttt

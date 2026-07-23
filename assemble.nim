@@ -50,6 +50,7 @@ type
       pattern_substitutions: seq[PatternSubstitution]
       values: seq[OperandValue]
       names: seq[OperandName]
+      tokens: (StreamSlice, seq[Token])
     of true:
       error: string
       error_priority: int
@@ -60,6 +61,7 @@ type
     of false:
       bits: BitPattern
       operands: seq[OperandValue]
+      tokens: (StreamSlice, seq[Token])
     of true:
       error: string
       error_priority: int
@@ -686,11 +688,14 @@ func skip_comment(s: var StreamSlice) {.error, used.}
 func skip_whitespaces(s: var StreamSlice) {.error, used.}
 func skip_newlines(s: var StreamSlice) {.error, used.}
 
+func skip_comment(isa_spec: IsaSpec, s: var StreamSlice): (bool, int) {.discardable.} =
+  return skip_comment(s, isa_spec.line_comments, isa_spec.block_comments)
+
 func skip_whitespaces(isa_spec: IsaSpec, s: var StreamSlice) =
   while peek(s) in WHITESPACES:
     s.skip()
   add_token(s, tk_whitespace)
-  if skip_comment(s, isa_spec.line_comments, isa_spec.block_comments)[0]:
+  if isa_spec.skip_comment(s)[0]:
     isa_spec.skip_whitespaces(s)
 
 func is_defined(
@@ -756,10 +761,15 @@ func parse_instruction_syntax_part(
           operand_index,
         )
 
+    let tokens = s.get_tokens()
     return
       @[
         InstIncompleteParseResult(
-          is_err: false, final_index: s.get_index(), values: values, names: names
+          is_err: false,
+          final_index: s.get_index(),
+          values: values,
+          names: names,
+          tokens: tokens,
         )
       ]
 
@@ -1011,6 +1021,7 @@ func parse_instruction_syntax_part(
             let (err, instruction) = get_instruction(sslice, isa_spec, pattern.index)
 
             if err != "":
+              resume_tokenization(state)
               error(
                 translate(
                   31337_87525828760679,
@@ -1031,21 +1042,24 @@ func parse_instruction_syntax_part(
     let cp = checkpoint(s)
     var best_err = InstIncompleteParseResult(is_err: true)
 
-    for i, sub_instruction in cur_resolved_patterns:
-      for sub_inst in parse_instruction(
-        s, sub_instruction, isa_spec, defines, resolved_patterns
+    for i, pattern_inst in cur_resolved_patterns:
+      for pattern_inst_res in parse_instruction(
+        s, pattern_inst, isa_spec, defines, resolved_patterns
       ):
-        if sub_inst.is_err:
+        if pattern_inst_res.is_err:
           s.restore(cp)
-          if result.len == 0 and sub_inst.error_priority > best_err.error_priority:
+          if result.len == 0 and
+              pattern_inst_res.error_priority > best_err.error_priority:
             best_err = InstIncompleteParseResult(
               is_err: true,
-              error_priority: sub_inst.error_priority + operand_index.int,
-              error: sub_inst.error,
+              error_priority: pattern_inst_res.error_priority + operand_index.int,
+              error: pattern_inst_res.error,
             )
         else:
+          resume_tokenization(pattern_inst_res.tokens)
+
           var sub_s = s
-          sub_s.set_index(sub_inst.final_index)
+          sub_s.set_index(pattern_inst_res.final_index)
           let rets = parse_instruction_syntax_part(
             sub_s,
             inst,
@@ -1058,27 +1072,18 @@ func parse_instruction_syntax_part(
             resolved_patterns,
             error_on_incomplete,
           )
+          s.restore(cp)
           if rets[0].is_err:
-            s.restore(cp)
             if result.len == 0 and rets[0].error_priority >= best_err.error_priority:
               best_err = rets[0]
           else:
-            let tokens = s.restore_with_tokens(cp)
             for ret in rets:
-              result.add(
-                InstIncompleteParseResult(
-                  is_err: false,
-                  final_index: ret.final_index,
-                  pattern_substitutions: ret.pattern_substitutions,
-                  values: ret.values,
-                  names: ret.names,
-                )
-              )
+              result.add(ret)
               result[^1].pattern_substitutions.add(
                 PatternSubstitution(
                   index: operand_index.uint8,
-                  bits: sub_inst.bits,
-                  values: sub_inst.operands,
+                  bits: pattern_inst_res.bits,
+                  values: pattern_inst_res.operands,
                 )
               )
 
@@ -1256,33 +1261,45 @@ func parse_instruction(
   )
   result = newSeqOfCap[InstParseResult](ret.len)
 
+  var best_err = InstParseResult(is_err: true)
   for it in ret.mitems():
-    result.add(
-      if it.is_err:
-        InstParseResult(
+    if it.is_err:
+      if it.error_priority > best_err.error_priority:
+        best_err = InstParseResult(
           is_err: true,
           final_index: it.final_index,
           error_priority: it.error_priority,
           error: it.error,
         )
-      else:
-        it.pattern_substitutions.reverse()
-        let (err, bits) = get_bit_pattern(
-          inst.bit_pattern, isa_spec, inst, it.values, it.pattern_substitutions, true
-        )
+    else:
+      it.pattern_substitutions.reverse()
+      let (err, bits) = get_bit_pattern(
+        inst.bit_pattern, isa_spec, inst, it.values, it.pattern_substitutions, true
+      )
 
-        if err == "":
+      if err == "":
+        result.add(
           InstParseResult(
-            is_err: false, final_index: it.final_index, operands: it.values, bits: bits
-          )
-        else:
-          InstParseResult(
-            is_err: true,
+            is_err: false,
             final_index: it.final_index,
-            error_priority: int.high,
-            error: err,
+            operands: it.values,
+            bits: bits,
+            tokens: it.tokens,
           )
-    )
+        )
+      elif it.error_priority > best_err.error_priority:
+        return
+          @[
+            InstParseResult(
+              is_err: true,
+              final_index: it.final_index,
+              error_priority: int.high,
+              error: err,
+            )
+          ]
+
+  if result.len == 0:
+    result.add(best_err)
 
 func assemble_instruction(
     inst: InstructionDebranched, bits: BitPattern, fields: var seq[uint64], ip: uint64
@@ -1533,6 +1550,28 @@ proc estimate_labels(
               break BLK_INNER
 
             ctx.code_pointer += cast[uint64](literal.len)
+            ctx.source[^1].skip_line(false)
+            break BLK_INNER
+
+          block BLK_PAD_TO_DIRECTIVE:
+            if peek(ctx.source[^1].s) != '@':
+              break BLK_PAD_TO_DIRECTIVE
+
+            let (number_error, s_number) = get_unsigned(ctx.source[^1].s)
+            if number_error != "":
+              ctx.source[^1].skip_line()
+              break BLK_INNER
+
+            let (err, number) = parse_unsigned(s_number)
+            if err != "":
+              ctx.source[^1].skip_line()
+              break BLK_INNER
+
+            if ctx.code_pointer > number:
+              ctx.source[^1].skip_line()
+              break BLK_INNER
+
+            ctx.code_pointer = number
             ctx.source[^1].skip_line(false)
             break BLK_INNER
 
@@ -1988,6 +2027,43 @@ proc assemble*(
             for i in literal.low .. literal.high:
               ret.machine_code.add(cast[uint8](ord(literal[i])))
 
+            sources[^1].skip_line(false)
+            break BLK_INNER
+
+          block BLK_PAD_TO_DIRECTIVE:
+            if not matches(sources[^1].s, '@', tk = tk_operator):
+              break BLK_PAD_TO_DIRECTIVE
+
+            let (number_error, s_number) = get_unsigned(sources[^1].s)
+            if number_error != "":
+              sources[^1].error(
+                translate(31337_48895355188042, "Expect a number literal after '@'")
+              )
+              sources[^1].skip_line()
+              break BLK_INNER
+
+            change_token_kind(sources[^1].s, tk_number, tk_label)
+
+            let (err, number) = parse_unsigned(s_number)
+            if err != "":
+              sources[^1].error(
+                translate(31337_48895355188042, "Expect a number literal after '@'")
+              )
+              sources[^1].skip_line()
+              break BLK_INNER
+
+            if cast[uint64](ret.machine_code.len) > number:
+              sources[^1].error(
+                translate(
+                  31337_51466436379956,
+                  "Can only pad forward, current address is at: {address}",
+                  ("address", ret.machine_code.len),
+                )
+              )
+              sources[^1].skip_line()
+              break BLK_INNER
+
+            ret.machine_code.setLen(number)
             sources[^1].skip_line(false)
             break BLK_INNER
 
@@ -2455,6 +2531,7 @@ proc assemble*(
                   if sources.len < 2:
                     add_top_file_description(description)
                   sources[^1].skip_line(false)
+                  resume_tokenization(inst_res.tokens)
                   break BLK_INNER
 
                 if to_cease_search_on_error:

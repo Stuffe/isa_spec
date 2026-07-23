@@ -101,15 +101,16 @@ type TokenKind* = enum
   tk_mnenomic
   tk_literal # false, true, big, little, ...
   tk_type_name # S64, immediate, custom field names
-  tk_pattern_name # @pattern
-  tk_pattern_variable # @pattern
+  tk_pattern_name # concat in "pattern concat(a, b)"
+  tk_pattern_variable # a, b in "pattern concat(a, b)"
+  tk_pattern_variable_ref # a in "{a}"
   tk_field_name # The names defined within custom fields
   tk_field_ref # %a, %some_name
   tk_bit_0 # Bit 0 in the bit pattern
   tk_bit_1 # Bit 1 in the bit pattern
   tk_bit_dont_care # ? in the bit pattern
   tk_label
-  tk_const
+  tk_const # @0xFF (pad-to directive)
   tk_header # [settings], [fields], [patterns], [instructions]
 
   # Control instructions
@@ -202,20 +203,21 @@ func collect_tokens*(s: StreamSlice, clean_out: bool = true): seq[Token] =
     if clean_out:
       tokens.set_len(0)
 
-func pause_tokenization*(): (ref string, seq[Token]) =
+func pause_tokenization*(): (StreamSlice, seq[Token]) =
   {.noSideEffect.}:
-    result = (tracked_source, tokens)
+    result = (StreamSlice(source: tracked_source), tokens)
     start_tokenize(nil)
 
-func resume_tokenization*(state: (ref string, seq[Token])) =
+func resume_tokenization*(state: (StreamSlice, seq[Token])) =
   {.noSideEffect.}:
-    (tracked_source, tokens) = state
+    tracked_source = state[0].source
+    tokens = state[1]
 
-func get_tokens*(s: StreamSlice): seq[Token] =
+func get_tokens*(s: StreamSlice): (StreamSlice, seq[Token]) =
   {.noSideEffect.}:
     assert s.source == tracked_source,
       "collect_tokens called with incorrect StreamSlice"
-    return tokens
+    result = (StreamSlice(source: tracked_source), tokens)
 
 func add_token*(s: StreamSlice, tk: TokenKind) =
   ## Adds a token starting from the end of the last token to the start of s
@@ -528,6 +530,9 @@ func parse_unsigned*(s: StreamSlice): (string, uint64) =
     if s[i] notin digits:
       return (translate(31337_64926004981217, "Invalid int literal"), 0'u64)
 
+    if s[i] == '_':
+      continue
+
     if num > overflow_threshold_mul:
       return (translate(31337_33551107641907, "Int literal too big"), 0'u64)
 
@@ -574,6 +579,9 @@ func parse_signed*(s: StreamSlice): (string, uint64) =
   for i in start_digits ..< s.len:
     if s[i] notin digits:
       return (translate(31337_64926004981217, "Invalid int literal"), 0'u64)
+
+    if s[i] == '_':
+      continue
 
     if num > overflow_threshold_mul:
       return (translate(31337_33551107641907, "Int literal too big"), 0'u64)

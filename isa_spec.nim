@@ -140,18 +140,9 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
 
       size_assertion = (size, is_signed)
 
-    expect(
-      matches(s, '(', tk = tk_bracket),
-      translate(
-        31337_42160516340132,
-        "Expected parenthesis after the operand name, like: {variable_name}(immediate)",
-        ("variable_name", variable_name),
-      ),
-    )
+    if matches(s, '[', tk = tk_bracket):
+      skip_whitespaces(s)
 
-    skip_whitespaces(s)
-
-    if peek(s) in {'@', '|', ')'}:
       if decoders.is_some():
         when false:
           # TODO: Make this a warning instead before adding it back
@@ -166,7 +157,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
 
       var patterns: seq[OperandTypePattern]
       while true:
-        if matches(s, ')', tk = tk_bracket):
+        if matches(s, ']', tk = tk_bracket):
           patterns.add(OperandTypePattern(index: uint8.high))
           break
 
@@ -176,7 +167,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
           continue
 
         skip_whitespaces(s)
-        skip(s)
+
         let pattern_name = get_identifier(s, tk = tk_pattern_name)
         expect(
           pattern_name.len > 0,
@@ -189,23 +180,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         if s.matches('(', tk = tk_bracket):
           while true:
             skip_whitespaces(s)
-            let argument =
-              if peek(s) == '"':
-                check(descape_string_content(check(get_string(s))))
-              else:
-                var ret = ""
-                while peek(s) notin {',', ')', '"', '\0', '\n'}:
-                  ret.add(read(s))
-                  discard skip_comment(s)
-                expect(
-                  peek(s) != '"',
-                  translate(
-                    31337_30468457272940,
-                    "Pattern argument specified without enclosing double-quotes cannot contain double-quotes",
-                  ),
-                )
-                ret.strip(leading = false, chars = WHITESPACES)
-
+            let argument = check(descape_string_content(check(get_string(s))))
             arguments.add(argument)
 
             skip_whitespaces(s)
@@ -244,7 +219,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
           )
 
         skip_whitespaces(s)
-        if s.matches(')', tk = tk_bracket):
+        if s.matches(']', tk = tk_bracket):
           break
 
         if s.matches('|', tk = tk_separator):
@@ -263,7 +238,9 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         OperandType(kind: otk_pattern, variable_name: variable_name, patterns: patterns)
       )
       op_names.add(variable_name)
-    else:
+    elif matches(s, '(', tk = tk_bracket):
+      skip_whitespaces(s)
+
       var options: seq[FieldKind]
       while true:
         let field_name = get_identifier(s, tk = tk_type_name)
@@ -284,8 +261,8 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
                 if size_assertion[0] > MAX_FIELD_SIZE:
                   error(
                     translate(
-                      31337,
-                      "Immediate operand must have size constraint, e.g. %a:U8(immediate), %b:S1(immediate|label)",
+                      31337_90809893168338,
+                      "Immediate operand must have size constraint, e.g. %a:U8(immediate), %b:S16(immediate|label)",
                     )
                   )
                 elif size_assertion[0] > 0:
@@ -323,6 +300,14 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         OperandType(kind: otk_normal, variable_name: variable_name, options: options)
       )
       op_names.add(variable_name)
+    else:
+      error(
+        translate(
+          31337_42160516340132,
+          "Expected either '(' or '[' after the operand name, like: {variable_name}(immediate), {variable_name}[pattern()]",
+          ("variable_name", variable_name),
+        )
+      )
 
     add_string_syntax(s, inst.syntax)
 
@@ -1357,24 +1342,24 @@ func get_ifs(
     let cp = checkpoint(s)
 
     skip_whitespaces(s)
-    if not matches(s, "if", tk = tk_keyword):
+    if not matches(s, "when", tk = tk_keyword):
       s.restore(cp)
       return
 
     let ss = s
     skip_whitespaces(s)
-    expect(s != ss, translate(31337_68066163358870, "Expected whitespace after 'if'"))
+    expect(s != ss, translate(31337_68066163358870, "Expected whitespace after 'when'"))
 
     let expr = check(get_expression(s, op_names)):
       translate(
         31337_59877879891546,
-        "Could not interpret 'if'-condition expression: {err}",
+        "Could not interpret 'when'-condition expression: {err}",
         ("err", err),
       )
 
     expect(
-      matches(s, ',', tk = tk_separator),
-      translate(31337_23037984432484, "Expected ',' after 'if' condition"),
+      matches(s, ':', tk = tk_separator),
+      translate(31337_23037984432484, "Expected ':' after 'when'-condition"),
     )
 
     let bit_pattern = check(get_bit_pattern(s, is_patterns, inst, op_names))
@@ -1720,12 +1705,17 @@ func parse_isa_spec_inner(
     if not skip_newlines(s):
       error(translate(31337_45267257140327, "Expected newline after section header"))
 
+    const KEYWORD_PATTERN = "pattern"
     while not matches(s, '[', increment = false):
-      skip_whitespaces(s)
+      add_token(s, tk_new_instruction)
       expect(
-        matches(s, '@'),
-        translate(31337_73627734748417, "Expected an @ before the pattern name"),
+        matches(s, KEYWORD_PATTERN, tk = tk_keyword),
+        translate(
+          31337_73627734748417, "Expected keyword 'pattern' before the pattern name"
+        ),
       )
+
+      skip_whitespaces(s)
 
       let pattern_name = get_identifier(s, tk = tk_pattern_name)
       expect(
@@ -1738,7 +1728,9 @@ func parse_isa_spec_inner(
       skip_whitespaces(s)
       expect(
         matches(s, '(', tk = tk_bracket),
-        translate(31337, "Expected a ( before the pattern parameter list"),
+        translate(
+          31337_61772889138477, "Expected a '(' before the pattern parameter list"
+        ),
       )
 
       # This is a parametrized pattern, parse and store the parameter list
@@ -1748,7 +1740,7 @@ func parse_isa_spec_inner(
         if parameters.len > 0:
           expect(
             matches(s, ',', tk = tk_separator),
-            translate(31337, "Expected ',' between pattern parameters"),
+            translate(31337_47258389995911, "Expected ',' between pattern parameters"),
           )
           skip_whitespaces(s)
 
@@ -1760,21 +1752,41 @@ func parse_isa_spec_inner(
 
         parameters.add(parameter_name)
 
-        const MAX_PARAMETERS = 53 ## Arbitrary limit, picked an "uncommon" number
-        expect(
-          parameters.len > MAX_PARAMETERS,
-          translate(
-            31337_23683372416862,
-            "Pattern can have at most {max_parameters} parameters",
-            ("max_parameters", MAX_PARAMETERS),
-          ),
-        )
-
-      add_token(s, tk_new_instruction)
       skip_whitespaces(s)
       if not matches(s, '\n', tk = tk_whitespace):
         error(translate(31337_63072912015761, "Expected newline before pattern body"))
-      let (texts, parameter_indexes) = parse_parametrized_pattern(s, parameters)
+
+      var text: string
+      var texts: seq[string]
+      var parameter_indexes: seq[int]
+      var last_index = s.get_index()
+      while true:
+        while s.peek() notin {'\n', '\0'}:
+          if skip_comment(s)[0]:
+            continue
+
+          let curr_index = s.get_index()
+          let cp = checkpoint(s)
+          if matches(s, '{', tk = tk_bracket):
+            let parameter_name = get_identifier(s, tk = tk_pattern_variable_ref)
+            if matches(s, '}', tk = tk_bracket) and parameter_name in parameters:
+              parameter_indexes.add(parameters.find(parameter_name))
+              texts.add(text)
+              text.setLen(0)
+              last_index = curr_index + parameter_name.len + 2 # 2 for the brackets
+              continue
+
+            s.restore(cp)
+
+          text.add(read(s, tk = tk_text))
+
+        text.add(read(s, tk = tk_whitespace))
+
+        if matches(s, KEYWORD_PATTERN, increment = false) or
+            matches(s, '[', increment = false):
+          texts.add(text)
+          break
+
       result[1].spec.patterns.add(
         (
           name: $pattern_name,
@@ -1791,6 +1803,8 @@ func parse_isa_spec_inner(
             ("max_patterns", uint8.high),
           )
         )
+
+      skip_newlines(s)
 
   if not matches(s, "[instructions]", tk = tk_header):
     error(

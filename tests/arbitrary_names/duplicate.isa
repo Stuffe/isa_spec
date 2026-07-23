@@ -3,5 +3,5 @@
 
 // The point of this test is to verify that in the event of name collision, the last one is used.
 // This mirrors the concept of variable shadowing/variable reassignment in most languages
-mov  %reg_source(immediate) , %reg_target(immediate)
+mov  %reg_source:U8(immediate) , %reg_target:U8(immediate)
 rrrr rrrr

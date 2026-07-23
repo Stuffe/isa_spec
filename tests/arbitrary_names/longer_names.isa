@@ -1,9 +1,9 @@
 [instructions]
 
-mov  %target(immediate) , %source(immediate)
+mov  %target:U4(immediate) , %source:U4(immediate)
 ssss tttt
 
-jmp  %target(immediate)
+jmp  %target:U4(immediate)
 %rel = %target - $start
 0000 rrrr
 

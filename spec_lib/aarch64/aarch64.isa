@@ -646,12 +646,13 @@ add  %xd(register_64) , %xn(register_64) , %xm(register_64)
 # Adds %xn and %xm, writing the result to %xd.
 
 // add immediate to 64-bit register
-add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
+add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm:U12(immediate)
 10010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
 # Add %imm to %xn, writing the result to %xd.
 
 // add large immediate to 64-bit register
-add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
+add  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm:U24(immediate)
+assert(%imm[11:0] == 0, "Low 12 bits of the 24-bit immediate must be zero")
 10010001 01 %imm[23:12] %xn[4:0] %xd[4:0]
 # Add %imm to %xn, writing the result to %xd.
 
@@ -684,7 +685,7 @@ asr  %xd(register_64) , %xn(register_64) , %xm(register_64)
 # Right shifts %xn by %xm % 64, preserving the sign of %xn. The result is stored in %xd.
 
 // arithmetic right shift immediate
-asr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm(immediate)
+asr  %xd(register_64sp) , %xn(register_64) , %_(pound) %imm:U6(immediate)
 10010011 01 %imm[5:0] 111111 %xn[4:0] %xd[4:0]
 # Right shifts %xn by %imm, preserving the sign of %xn. The result is stored in %xd.
 
@@ -720,7 +721,7 @@ br  %xn(register_64)
 
 
 // break
-brk  %_(pound) %imm(immediate)
+brk  %_(pound) %imm:U16(immediate)
 11010100 001 %imm[15:0] 00000
 # Raises a breakpoint exception. The user can put any value in %imm.
 
@@ -896,7 +897,7 @@ lsl  %xd(register_64) , %xn(register_64) , %xm(register_64)
 # Left shifts %xn by %xm % 64. The result is stored in %xd.
 
 // left shift immediate
-lsl  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
+lsl  %xd(register_64) , %xn(register_64) , %_(pound) %imm:U6(immediate)
 %immr = (0 - %imm) & 0x3F
 %imms = 63 - %imm
 11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
@@ -909,7 +910,7 @@ lsr  %xd(register_64) , %xn(register_64) , %xm(register_64)
 # Right shifts %xn by %xm % 64. The result is stored in %xd.
 
 // right shift immediate
-lsr  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
+lsr  %xd(register_64) , %xn(register_64) , %_(pound) %imm:U6(immediate)
 11010011 01 %imm[5:0] 111111 %xn[4:0] %xd[4:0]
 # Right shifts %xn by %imm. The result is stored in %xd.
 
@@ -1041,7 +1042,7 @@ ror  %xd(register_64) , %xn(register_64) , %xm(register_64)
 # Rotates %xn right by %xm % 64, writing the result to %xd.
 
 // rotate right immediate
-ror  %xd(register_64) , %xn(register_64) , %_(pound) %imm(immediate)
+ror  %xd(register_64) , %xn(register_64) , %_(pound) %imm:U6(immediate)
 10010011 110 %xn[4:0] %imm[5:0] %xn[4:0] %xd[4:0]
 # Rotates %xn right by %imm, writing the result to %xd.
 
@@ -1151,12 +1152,13 @@ sub  %xd(register_64) , %xn(register_64) , %xm(register_64)
 # Subtracts %xm from %xn, writing the result to %xd.
 
 // subtract immediate from 64-bit register
-sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
+sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm:U12(immediate)
 11010001 00 %imm[11:0] %xn[4:0] %xd[4:0]
 # Subtracts %imm from %xn, writing the result to %xd.
 
 // subtract large immediate from 64-bit register
-sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm(immediate)
+sub  %xd(register_64sp) , %xn(register_64sp) , %_(pound) %imm:U24(immediate)
+assert(%imm[11:0] == 0, "Low 12 bits of the 24-bit immediate must be zero")
 11010001 01 %imm[23:12] %xn[4:0] %xd[4:0]
 # Subtracts %imm from %xn, writing the result to %xd.
 
@@ -1183,7 +1185,7 @@ svc  %_(pound) %imm:U16(immediate)
 
 
 // bitfield move
-ubfm  %xd(register_64) , %xn(register_64) , %_r(pound) %immr(immediate) , %_s(pound) %imms(immediate)
+ubfm  %xd(register_64) , %xn(register_64) , %_r(pound) %immr:U6(immediate) , %_s(pound) %imms:U6(immediate)
 11010011 01 %immr[5:0] %imms[5:0] %xn[4:0] %xd[4:0]
 # Copies a bitfield from %xn to %xd. The source and destination bits are determined by %immr and %imms. If %imms >= %immr, this copies a bitfield starting at %immr to the least significant bits of the destination register. The size of the bitfield is (%imms - %immr + 1). If %imms < %immr, this copies a bitfield starting at the least significant bits from the source register to 64-%immr of the destination register. The size of the bitfield is (%imms + 1).
 
