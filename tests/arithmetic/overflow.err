@@ -1,0 +1,2 @@
+(loc: (file: "arithmetic/overflow.asm", line: 8), message: "Int literal too big")
+(loc: (file: "arithmetic/overflow.asm", line: 17), message: "Value -6148914691236517205 outside of range for unsigned 64-bit immediate")

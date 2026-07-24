@@ -4,6 +4,10 @@ endianness = little
 
 [instructions]
 
-log2 %a:U64(immediate)
+log2 %a:S64(immediate)
 %b = log2(%a)
 bbbbbbbb 00001011
+
+log2_u %a:U64(immediate)
+%b = log2_u(%a)
+bbbbbbbb 00001100

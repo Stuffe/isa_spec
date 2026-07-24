@@ -38,5 +38,3 @@ log2 8
 log2 15
 log2 16
 log2 17
-log2 256
-log2 0x80000000

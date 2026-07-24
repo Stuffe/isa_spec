@@ -2,8 +2,6 @@ import std/[algorithm, options, parseutils, sets, sequtils, strutils, tables]
 
 import expressions, parse, translations, types
 
-export parse.new_StreamSlice
-
 const MAX_FIELD_SIZE* = 64
 
 type Nothing = enum
@@ -384,7 +382,7 @@ func get_auto_instruction_decoder(
   ]
 
   block BLK_BIT_PATTERN:
-    var s = new_StreamSlice(inst.bit_pattern)
+    var s = new_stream_slice(inst.bit_pattern)
 
     # For `is_direct=true`: During parsing of the bit pattern, `top` and `bottom` are actually i
     # nvalid indecies. They are instead used to track the length of the field before being updated
@@ -995,7 +993,7 @@ func add_branch(
   inst.chunks.add(InstructionBranch(cond: condition, bit_pattern: bit_pattern))
 
   if decoders.is_some:
-    let inst_debranched = inst.debranch()
+    let inst_debranched = inst.debranch_to_last_branch()
     let decoder = check(get_auto_instruction_decoder(inst_debranched, field_types))
 
     if decoder.bit_length > 0:
@@ -1365,12 +1363,6 @@ func get_ifs(
     let bit_pattern = check(get_bit_pattern(s, is_patterns, inst, op_names))
     check(add_branch(inst, field_types, decoders, expr, bit_pattern))
 
-    skip_whitespaces(s)
-    expect(
-      matches(s, {'\n', '\0'}, tk = tk_whitespace),
-      translate(31337_30471946613226, "Expected newline after '}'"),
-    )
-
 func get_instruction*(
     s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound: uint8
 ): WithError[InstructionDebranched] =
@@ -1387,6 +1379,7 @@ func get_instruction*(
 
   block BLK_BIT_PATTERN:
     check(get_virtuals(s, inst, op_names, is_labels))
+
     check(get_asserts(s, inst, op_names, is_labels))
 
     inst.bit_pattern = check(get_bit_pattern(s, is_patterns, inst, op_names, true))
@@ -1426,6 +1419,7 @@ func get_instruction*(
     )
 
     check(get_asserts(s, inst, op_names, is_labels))
+
     check(
       get_ifs(
         s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
@@ -1772,7 +1766,7 @@ func parse_isa_spec_inner(
             if matches(s, '}', tk = tk_bracket) and parameter_name in parameters:
               parameter_indexes.add(parameters.find(parameter_name))
               texts.add(text)
-              text.setLen(0)
+              text.set_len(0)
               last_index = curr_index + parameter_name.len + 2 # 2 for the brackets
               continue
 
@@ -1828,8 +1822,7 @@ func parse_isa_spec_inner(
       error(translate(31337_29837913233106, "Expected newline between instructions"))
 
   if with_tokens:
-    result[1].tokens = collect_tokens(s)
-  start_tokenize(nil)
+    result[1].tokens = collect_token_strings(s)
 
 func parse_isa_spec*(
     file_name: string,
@@ -1837,12 +1830,10 @@ func parse_isa_spec*(
     with_disassembly: bool = false,
     with_tokens: bool = false,
 ): SpecParseResult =
-  var s = new_StreamSlice(source)
-  start_tokenize(s)
+  var s = new_stream_slice(source, with_tokens = with_tokens)
 
   let (err, ret) = parse_isa_spec_inner(s, with_disassembly, with_tokens)
   if err != "":
-    start_tokenize(nil)
     return SpecParseResult(error: LineMessage(line: get_line_number(s), message: err))
 
   return ret

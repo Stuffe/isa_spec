@@ -50,7 +50,7 @@ type
       pattern_substitutions: seq[PatternSubstitution]
       values: seq[OperandValue]
       names: seq[OperandName]
-      tokens: (StreamSlice, seq[Token])
+      tokens: seq[Token]
     of true:
       error: string
       error_priority: int
@@ -61,7 +61,7 @@ type
     of false:
       bits: BitPattern
       operands: seq[OperandValue]
-      tokens: (StreamSlice, seq[Token])
+      tokens: seq[Token]
     of true:
       error: string
       error_priority: int
@@ -86,7 +86,7 @@ type
   EstimatedInstructionLengths = Deque[tuple[delay: uint32, len: uint32]]
 
   EstimationContext = object
-    source: ParseContext
+    sources: ParseContext
     code_pointer: uint64
     estimated_codes: EstimatedInstructionLengths
     estimated_labels: EstimatedLabels
@@ -221,7 +221,7 @@ func get_bit_pattern(
     assert err == "", "(Late detection!): " & err
     res
 
-  var s = new_StreamSlice(str)
+  var s = new_stream_slice(str)
   var operand_types: seq[OperandType]
   var operand_values: seq[OperandValue]
   var asserts: seq[Assertion]
@@ -761,7 +761,6 @@ func parse_instruction_syntax_part(
           operand_index,
         )
 
-    let tokens = s.get_tokens()
     return
       @[
         InstIncompleteParseResult(
@@ -769,7 +768,7 @@ func parse_instruction_syntax_part(
           final_index: s.get_index(),
           values: values,
           names: names,
-          tokens: tokens,
+          tokens: s.collect_tokens(),
         )
       ]
 
@@ -906,6 +905,21 @@ func parse_instruction_syntax_part(
               op_name = OperandName(kind: tk_number, value: $s_uimm)
               break BLK_PARSE_IMM
 
+            let (err_simm, s_simm) = get_signed(s, base)
+            if err_simm == "":
+              if err_sub_priority < 1 or err_msg == "":
+                err_msg = translate(
+                  31337_12097260550100,
+                  "Value {num} outside of range for {field}",
+                  ("num", $s_simm),
+                  ("field", field),
+                )
+                err_sub_priority = 1
+
+              if not is_last:
+                continue
+              error(err_msg, operand_index, err_sub_priority)
+
             let field_string = get_identifier(s, tk = tk_const)
             if field_string.len == 0:
               if err_msg == "":
@@ -1002,7 +1016,6 @@ func parse_instruction_syntax_part(
 
     var cur_resolved_patterns: seq[InstructionDebranched]
     block BLK_RESOLVE_PATTERN:
-      let state = pause_tokenization()
       for i, pattern in inst.operands[operand_index].patterns:
         let pattern_key =
           if pattern.index == uint8.high:
@@ -1016,12 +1029,10 @@ func parse_instruction_syntax_part(
           else:
             let resolved_pattern =
               isa_spec.patterns[pattern.index].pattern.resolve(pattern.args)
-            var sslice = new_StreamSlice(resolved_pattern)
-            start_tokenize(sslice)
+            var sslice = new_stream_slice(resolved_pattern)
             let (err, instruction) = get_instruction(sslice, isa_spec, pattern.index)
 
             if err != "":
-              resume_tokenization(state)
               error(
                 translate(
                   31337_87525828760679,
@@ -1036,8 +1047,6 @@ func parse_instruction_syntax_part(
             instruction
 
         cur_resolved_patterns.add(instruction)
-
-      resume_tokenization(state)
 
     let cp = checkpoint(s)
     var best_err = InstIncompleteParseResult(is_err: true)
@@ -1056,12 +1065,9 @@ func parse_instruction_syntax_part(
               error: pattern_inst_res.error,
             )
         else:
-          resume_tokenization(pattern_inst_res.tokens)
-
-          var sub_s = s
-          sub_s.set_index(pattern_inst_res.final_index)
+          s.set_index(pattern_inst_res.final_index)
           let rets = parse_instruction_syntax_part(
-            sub_s,
+            s,
             inst,
             syntax_index,
             operand_index + 1,
@@ -1465,7 +1471,8 @@ func actualize_operand_values(
 ): seq[uint64] =
   var ret = newSeqOfCap[uint64](operands.len)
   for i, op in operands:
-    assert op.kind == ok_fixed, "This variant is only for fixed operands"
+    assert op.kind == ok_fixed,
+      "This variant is only for fixed operands, " & $op.kind & " found"
     ret.add(op.value)
   ret
 
@@ -1496,105 +1503,105 @@ proc estimate_labels(
   if ctx.estimated_codes.len == 0:
     ctx.estimated_codes.addLast((0'u32, 0'u32))
 
-  let original_num_source = ctx.source.len
+  let original_num_source = ctx.sources.len
 
   while true:
     block BLK_OUTER:
-      assert ctx.source.len > 0
+      assert ctx.sources.len > 0
 
-      while not ctx.source[^1].s.finished():
-        ctx.source[^1].skip_line(false)
+      while not ctx.sources[^1].s.finished():
+        ctx.sources[^1].skip_line(false)
 
-        let progress_index = get_index(ctx.source[^1].s)
+        let progress_index = get_index(ctx.sources[^1].s)
 
         block BLK_INNER:
           block BLK_NUMBER_LITERAL:
-            let cp = checkpoint(ctx.source[^1].s)
-            let (size_error, size, is_signed) = get_size(ctx.source[^1].s)
+            let cp = checkpoint(ctx.sources[^1].s)
+            let (size_error, size, is_signed) = get_size(ctx.sources[^1].s)
 
             var has_ws_after_size = false
             if size_error == "":
-              let start_index = ctx.source[^1].s.get_index()
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
-              has_ws_after_size = ctx.source[^1].s.get_index() != start_index
+              let start_index = ctx.sources[^1].s.get_index()
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
+              has_ws_after_size = ctx.sources[^1].s.get_index() != start_index
 
-            let (number_error, number) = get_unsigned(ctx.source[^1].s)
+            let (number_error, number) = get_unsigned(ctx.sources[^1].s)
             if size_error != "" and number_error != "":
-              ctx.source[^1].s.restore(cp)
+              ctx.sources[^1].s.restore(cp)
               break BLK_NUMBER_LITERAL
 
             if size_error != "" or is_signed or size mod 8 != 0 or size == 0 or
                 not has_ws_after_size or number_error != "":
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             let (err, _) = parse_unsigned(number)
             if err != "":
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             ctx.code_pointer += size div 8
-            ctx.source[^1].skip_line(false)
+            ctx.sources[^1].skip_line(false)
             break BLK_INNER
 
           block BLK_STRING_LITERAL:
-            if peek(ctx.source[^1].s) notin QUOTES:
+            if peek(ctx.sources[^1].s) notin QUOTES:
               break BLK_STRING_LITERAL
 
-            let raw_literal = get_string(ctx.source[^1].s).on_err:
-              ctx.source[^1].skip_line()
+            let raw_literal = get_string(ctx.sources[^1].s).on_err:
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             let literal = descape_string_content(raw_literal).on_err:
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             ctx.code_pointer += cast[uint64](literal.len)
-            ctx.source[^1].skip_line(false)
+            ctx.sources[^1].skip_line(false)
             break BLK_INNER
 
           block BLK_PAD_TO_DIRECTIVE:
-            if peek(ctx.source[^1].s) != '@':
+            if peek(ctx.sources[^1].s) != '@':
               break BLK_PAD_TO_DIRECTIVE
 
-            let (number_error, s_number) = get_unsigned(ctx.source[^1].s)
+            let (number_error, s_number) = get_unsigned(ctx.sources[^1].s)
             if number_error != "":
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             let (err, number) = parse_unsigned(s_number)
             if err != "":
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             if ctx.code_pointer > number:
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
             ctx.code_pointer = number
-            ctx.source[^1].skip_line(false)
+            ctx.sources[^1].skip_line(false)
             break BLK_INNER
 
           block BLK_SPECIAL:
-            let cp = checkpoint(ctx.source[^1].s)
-            var special_test = get_identifier(ctx.source[^1].s)
+            let cp = checkpoint(ctx.sources[^1].s)
+            var special_test = get_identifier(ctx.sources[^1].s)
 
             let public =
               if special_test == "pub":
-                isa_spec.skip_whitespaces(ctx.source[^1].s)
-                special_test = get_identifier(ctx.source[^1].s)
+                isa_spec.skip_whitespaces(ctx.sources[^1].s)
+                special_test = get_identifier(ctx.sources[^1].s)
                 true
               else:
                 false
 
-            if special_test.len != 0 and peek(ctx.source[^1].s) == ':':
-              if special_test in ctx.source[^1].labels:
-                ctx.source[^1].skip_line()
+            if special_test.len != 0 and peek(ctx.sources[^1].s) == ':':
+              if special_test in ctx.sources[^1].labels:
+                ctx.sources[^1].skip_line()
                 break BLK_INNER
 
-              skip(ctx.source[^1].s)
+              skip(ctx.sources[^1].s)
 
-              ctx.source[^1].labels[special_test] =
+              ctx.sources[^1].labels[special_test] =
                 DefineValue(public: public, value: uint64.high)
 
               let fully_qualified_label = ctx.prefix_unknown_label & special_test
@@ -1605,7 +1612,7 @@ proc estimate_labels(
               if unknown_label_idx >= 0:
                 unknown_labels.del(unknown_label_idx)
 
-              ctx.source[^1].skip_line(false)
+              ctx.sources[^1].skip_line(false)
               if unknown_labels.len == 0:
                 return
               break BLK_INNER
@@ -1614,11 +1621,11 @@ proc estimate_labels(
               const NAME_CHARS = IdentChars
               const PATH_CHARS = NAME_CHARS + {'\\', '/', '.'}
 
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
 
-              var normal_path = ctx.source[^1].dir_path
-              while peek(ctx.source[^1].s) in PATH_CHARS:
-                normal_path.add(read(ctx.source[^1].s))
+              var normal_path = ctx.sources[^1].dir_path
+              while peek(ctx.sources[^1].s) in PATH_CHARS:
+                normal_path.add(read(ctx.sources[^1].s))
               normal_path = normalizedPath(normal_path).replace('\\', '/')
 
               let idx_slash = normal_path.rfind('/')
@@ -1630,46 +1637,46 @@ proc estimate_labels(
               let is_file_name_legal_included_name =
                 not file_name.contains(AllChars - NAME_CHARS)
 
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
-              if not matches(ctx.source[^1].s, "as", tk = tk_separator):
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
+              if not matches(ctx.sources[^1].s, "as", tk = tk_separator):
                 if is_file_name_legal_included_name:
                   included_name = file_name
                 else:
-                  ctx.source[^1].skip_line()
+                  ctx.sources[^1].skip_line()
                   break BLK_INNER
               else:
-                let old_s = ctx.source[^1].s
-                isa_spec.skip_whitespaces(ctx.source[^1].s)
-                if old_s == ctx.source[^1].s:
-                  ctx.source[^1].skip_line()
+                let old_s = ctx.sources[^1].s
+                isa_spec.skip_whitespaces(ctx.sources[^1].s)
+                if old_s == ctx.sources[^1].s:
+                  ctx.sources[^1].skip_line()
                   break BLK_INNER
 
-                while peek(ctx.source[^1].s) in NAME_CHARS:
-                  included_name.add(read(ctx.source[^1].s))
+                while peek(ctx.sources[^1].s) in NAME_CHARS:
+                  included_name.add(read(ctx.sources[^1].s))
 
-              for any_state in ctx.source:
+              for any_state in ctx.sources:
                 if any_state.normal_path == normal_path:
-                  ctx.source[^1].skip_line()
+                  ctx.sources[^1].skip_line()
                   break BLK_INNER
 
               let full_path = base_path / normal_path
               if not fileExists(full_path):
-                ctx.source[^1].skip_line()
+                ctx.sources[^1].skip_line()
                 break BLK_INNER
 
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
-              if peek(ctx.source[^1].s) notin {'\n', '\0'}:
-                ctx.source[^1].skip_line()
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
+              if peek(ctx.sources[^1].s) notin {'\n', '\0'}:
+                ctx.sources[^1].skip_line()
                 break BLK_INNER
 
               ctx.prefix_unknown_label.add(included_name)
               ctx.prefix_unknown_label.add('.')
 
               let source = readFile(full_path)
-              ctx.source.add(
+              ctx.sources.add(
                 SliceParseState(
                   name: included_name,
-                  s: new_StreamSlice(source),
+                  s: new_stream_slice(source),
                   dir_path: dir_path,
                   normal_path: normal_path,
                 )
@@ -1677,87 +1684,87 @@ proc estimate_labels(
               break BLK_OUTER
 
             if special_test == "const":
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
-              let definition_name = get_identifier(ctx.source[^1].s)
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
+              let definition_name = get_identifier(ctx.sources[^1].s)
 
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
 
-              if read(ctx.source[^1].s) != '=':
-                ctx.source[^1].skip_line()
+              if read(ctx.sources[^1].s) != '=':
+                ctx.sources[^1].skip_line()
                 break BLK_INNER
 
-              if definition_name in ctx.source[^1].defines:
-                ctx.source[^1].skip_line()
+              if definition_name in ctx.sources[^1].defines:
+                ctx.sources[^1].skip_line()
                 break BLK_INNER
 
               for field_values in isa_spec.field_types.values:
                 for field in field_values.values:
                   if field.name == definition_name:
-                    ctx.source[^1].skip_line()
+                    ctx.sources[^1].skip_line()
                     break BLK_INNER
 
-              isa_spec.skip_whitespaces(ctx.source[^1].s)
+              isa_spec.skip_whitespaces(ctx.sources[^1].s)
 
-              let (err_uimm, s_uimm) = get_unsigned(ctx.source[^1].s)
+              let (err_uimm, s_uimm) = get_unsigned(ctx.sources[^1].s)
               if err_uimm == "":
                 let value = parse_unsigned(s_uimm).on_err:
-                  ctx.source[^1].skip_line()
+                  ctx.sources[^1].skip_line()
                   break BLK_INNER
 
-                ctx.source[^1].defines[definition_name] =
+                ctx.sources[^1].defines[definition_name] =
                   (get_tighest_uimm(value), DefineValue(public: public, value: value))
-                ctx.source[^1].skip_line(false)
+                ctx.sources[^1].skip_line(false)
                 break BLK_INNER
 
-              let (err_simm, s_simm) = get_signed(ctx.source[^1].s)
+              let (err_simm, s_simm) = get_signed(ctx.sources[^1].s)
               if err_simm == "":
                 let value = parse_signed(s_simm).on_err:
-                  ctx.source[^1].skip_line()
+                  ctx.sources[^1].skip_line()
                   break BLK_INNER
 
-                ctx.source[^1].defines[definition_name] =
+                ctx.sources[^1].defines[definition_name] =
                   (get_tighest_simm(value), DefineValue(public: public, value: value))
-                ctx.source[^1].skip_line(false)
+                ctx.sources[^1].skip_line(false)
                 break BLK_INNER
 
-              let define_value = get_identifier(ctx.source[^1].s)
-              let (field_kind, value) = ctx.source[^1].defines.getOrDefault(
+              let define_value = get_identifier(ctx.sources[^1].s)
+              let (field_kind, value) = ctx.sources[^1].defines.getOrDefault(
                 define_value, (fk_label, DefineValue())
               )
               if field_kind != fk_label:
-                ctx.source[^1].defines[definition_name] = (field_kind, value)
-                ctx.source[^1].skip_line(false)
+                ctx.sources[^1].defines[definition_name] = (field_kind, value)
+                ctx.sources[^1].skip_line(false)
                 break BLK_INNER
 
               for field_kind, field_values in isa_spec.field_types:
                 for field in field_values.values:
                   if field.name == define_value:
-                    ctx.source[^1].defines[definition_name] =
+                    ctx.sources[^1].defines[definition_name] =
                       (field_kind, DefineValue(public: public, value: field.value))
-                    ctx.source[^1].skip_line(false)
+                    ctx.sources[^1].skip_line(false)
                     break BLK_INNER
 
-              ctx.source[^1].skip_line()
+              ctx.sources[^1].skip_line()
               break BLK_INNER
 
-            ctx.source[^1].s.restore(cp)
+            ctx.sources[^1].s.restore(cp)
 
           block BLK_INSTRUCTION:
-            let cp = checkpoint(ctx.source[^1].s)
-            var final_index = ctx.source[^1].s.get_index()
+            let cp = checkpoint(ctx.sources[^1].s)
+            var final_index = ctx.sources[^1].s.get_index()
 
             ctx.estimated_codes.peekLast().delay += 1
 
             for inst in isa_spec.instructions:
-              ctx.source[^1].s.restore(cp)
+              ctx.sources[^1].s.restore(cp)
 
               let has_pc_rel_virtual = inst.has_pc_rel_virtual()
 
               for inst_res in parse_instruction(
-                ctx.source[^1].s,
+                ctx.sources[^1].s,
                 inst,
                 isa_spec,
-                ctx.source[^1].defines,
+                ctx.sources[^1].defines,
                 resolved_patterns,
               ):
                 final_index = inst_res.final_index
@@ -1766,24 +1773,24 @@ proc estimate_labels(
                 if inst_res.is_err:
                   continue
 
-                if has_pc_rel_virtual or inst_res.values.is_any_pc_rel():
-                  let inst_debranched = inst.debranch()
-
+                block BLK_PC_DEPENDANT:
+                  let inst_debranched = inst.debranch_to_widest_branch()
                   let s_bits = inst_debranched.bit_pattern
                   var values = inst_res.values
                   var pattern_subs = inst_res.pattern_substitutions
                   let (err, bits) = get_bit_pattern(
                     s_bits, isa_spec, inst_debranched, values, pattern_subs
                   )
-                  let inst_len = cast[uint64](bits.bit_length div 8)
-                  if err == "":
-                    ctx.estimated_codes.peekLast().len = cast[uint32](inst_len)
-                    ctx.estimated_codes.addLast((0'u32, 0'u32))
-                    ctx.code_pointer += inst_len
+                  if has_pc_rel_virtual or values.is_any_pc_rel():
+                    let inst_len = cast[uint64](bits.bit_length div 8)
+                    if err == "":
+                      ctx.estimated_codes.peekLast().len = cast[uint32](inst_len)
+                      ctx.estimated_codes.addLast((0'u32, 0'u32))
+                      ctx.code_pointer += inst_len
 
-                  set_index(ctx.source[^1].s, inst_res.final_index)
-                  ctx.source[^1].skip_line(false)
-                  break BLK_INNER
+                    set_index(ctx.sources[^1].s, inst_res.final_index)
+                    ctx.sources[^1].skip_line(false)
+                    break BLK_INNER
 
                 for inst_debranched in inst.debranch():
                   let s_bits = inst_debranched.bit_pattern
@@ -1804,17 +1811,17 @@ proc estimate_labels(
                   instruction_count += 1
                   ctx.code_pointer += cast[uint64](bits.bit_length div 8)
 
-                  set_index(ctx.source[^1].s, inst_res.final_index)
-                  ctx.source[^1].skip_line(false)
+                  set_index(ctx.sources[^1].s, inst_res.final_index)
+                  ctx.sources[^1].skip_line(false)
                   break BLK_INNER
 
-            ctx.source[^1].skip_line()
+            ctx.sources[^1].skip_line()
             break BLK_INNER
 
-        if get_index(ctx.source[^1].s) <= progress_index:
-          ctx.source[^1].skip_line()
+        if get_index(ctx.sources[^1].s) <= progress_index:
+          ctx.sources[^1].skip_line()
 
-      if ctx.source.len <= original_num_source:
+      if ctx.sources.len <= original_num_source:
         return
 
       block BLK_MERGE_PUBLICS:
@@ -1824,16 +1831,16 @@ proc estimate_labels(
         let idx = ctx.prefix_unknown_label.rfind('.')
         ctx.prefix_unknown_label.set_len(idx + 1)
 
-        let state = ctx.source.pop()
+        let state = ctx.sources.pop()
 
         for name, label in state.labels:
           if label.public:
             let new_name = state.name & "." & name
-            ctx.source[^1].labels[new_name] = label
+            ctx.sources[^1].labels[new_name] = label
 
         for name, value in state.defines:
           if value[1].public:
-            ctx.source[^1].defines[state.name & "." & name] = value
+            ctx.sources[^1].defines[state.name & "." & name] = value
 
 proc assemble*(
     base_path: string, path: string, isa_spec: IsaSpec, source: string
@@ -1844,8 +1851,7 @@ proc assemble*(
   var sources: ParseContext = block:
     let normal_path = normalizedPath(path).replace('\\', '/')
     let dir_path = normal_path[0 ..< normal_path.rfind('/') + 1]
-    let s = new_StreamSlice(source)
-    start_tokenize(s)
+    let s = new_stream_slice(source, with_tokens = true)
     @[SliceParseState(s: s, dir_path: dir_path, normal_path: normal_path)]
 
   var ret: AssemblyResult
@@ -2063,7 +2069,7 @@ proc assemble*(
               sources[^1].skip_line()
               break BLK_INNER
 
-            ret.machine_code.setLen(number)
+            ret.machine_code.set_len(number)
             sources[^1].skip_line(false)
             break BLK_INNER
 
@@ -2217,7 +2223,7 @@ proc assemble*(
               isa_spec.skip_whitespaces(sources[^1].s)
               if peek(sources[^1].s) notin {'\n', '\0'}:
                 sources[^1].error(
-                  translate(31337_58979769991732, "Expected newline after 'include'")
+                  translate(31337_58979769991732, "Expected a new line after 'include'")
                 )
                 sources[^1].skip_line()
                 break BLK_INNER
@@ -2229,7 +2235,7 @@ proc assemble*(
               sources.add(
                 SliceParseState(
                   name: included_name,
-                  s: new_StreamSlice(source),
+                  s: new_stream_slice(source, with_tokens = true),
                   dir_path: dir_path,
                   normal_path: normal_path,
                 )
@@ -2394,20 +2400,18 @@ proc assemble*(
                     to_cease_search_on_error or actualization.kind != oak_resolved
 
                   if actualization.kind == oak_unsized:
-                    let state = pause_tokenization()
-
                     if est_ctx.estimated_labels.labels.len == 0:
-                      est_ctx.source = sources
-                      est_ctx.source[^1].s = original_s
+                      est_ctx.sources = sources
+                      est_ctx.sources[^1].s = original_s
                       est_ctx.code_pointer = cast[uint64](ret.machine_code.len)
                       est_ctx.estimated_labels.correction = 0
                       est_ctx.prefix_unknown_label = prefix_unknown_label
 
+                    stop_tokenization(est_ctx.sources[^1].s)
                     estimate_labels(
                       actualization.unknown_labels, est_ctx, resolved_label_prefixes,
                       resolved_patterns, base_path, isa_spec,
                     )
-                    resume_tokenization(state)
 
                     if actualization.unknown_labels.len != 0:
                       best_err = (
@@ -2531,7 +2535,7 @@ proc assemble*(
                   if sources.len < 2:
                     add_top_file_description(description)
                   sources[^1].skip_line(false)
-                  resume_tokenization(inst_res.tokens)
+                  sources[^1].s.restore_tokens(inst_res.tokens)
                   break BLK_INNER
 
                 if to_cease_search_on_error:
@@ -2555,8 +2559,7 @@ proc assemble*(
 
       if sources.len < 2:
         ret.top_file_line_info = ret.line_info.done(ret.machine_code.len)
-        ret.tokens = collect_tokens(sources[^1].s)
-        start_tokenize(nil)
+        ret.tokens = collect_token_strings(sources[^1].s)
         return ret
 
       block BLK_MERGE_PUBLICS:

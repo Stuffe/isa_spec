@@ -271,6 +271,7 @@ func has_pc_rel_virtual*(inst: InstructionUnbranched): bool =
   false
 
 iterator debranch*(inst: InstructionUnbranched): InstructionDebranched =
+  let has_pc_rel = inst.has_pc_rel_virtual()
   var asserts = inst.asserts
   for chunk in inst.chunks:
     asserts.add(Assertion(exp: chunk.cond))
@@ -283,31 +284,27 @@ iterator debranch*(inst: InstructionUnbranched): InstructionDebranched =
       description: inst.description,
     )
 
-    asserts[^1] = Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond]))
+    if has_pc_rel:
+      asserts.set_len(asserts.len - 1)
+    else:
+      asserts[^1] = Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond]))
 
-func debranch*(
-    inst: InstructionUnbranched, branch_taken: uint8
-): Option[InstructionDebranched] =
-  var branch_taken = branch_taken
+func debranch_to_widest_branch*(inst: InstructionUnbranched): InstructionDebranched =
   var asserts = inst.asserts
-  for chunk in inst.chunks:
-    asserts.add(Assertion(exp: chunk.cond))
+  for idx in 0 ..< inst.chunks.high:
+    let chunk = inst.chunks[idx]
+    asserts.add(Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond])))
+  asserts.add(Assertion(exp: inst.chunks[^1].cond))
 
-    if branch_taken == 0:
-      return
-        InstructionDebranched(
-          syntax: inst.syntax,
-          operands: inst.operands,
-          asserts: asserts,
-          bit_pattern: chunk.bit_pattern,
-          description: inst.description,
-        ).some
+  return InstructionDebranched(
+    syntax: inst.syntax,
+    operands: inst.operands,
+    asserts: asserts,
+    bit_pattern: inst.chunks[^1].bit_pattern,
+    description: inst.description,
+  )
 
-    branch_taken -= 1
-
-    asserts[^1] = Assertion(exp: exp_op(exp_op_not_boolean, [chunk.cond]))
-
-func debranch*(inst: InstructionUnbranched): InstructionDebranched =
+func debranch_to_last_branch*(inst: InstructionUnbranched): InstructionDebranched =
   var asserts = inst.asserts
   for idx in 0 ..< inst.chunks.high:
     let chunk = inst.chunks[idx]
@@ -378,7 +375,7 @@ type IsaSpec* = object
 type SpecParseResult* = object
   error*: LineMessage
   spec*: IsaSpec
-  tokens*: seq[Token]
+  tokens*: seq[TokenString]
 
 type DefineValue* = object
   public*: bool
@@ -405,7 +402,7 @@ type AssemblyResult* = object
   top_file_descriptions*: seq[LineMessage]
   top_file_errors*: seq[LineMessage]
   errors*: seq[Error]
-  tokens*: seq[Token]
+  tokens*: seq[TokenString]
 
 func new_line_info*(): CompleteLineInformation =
   return default(CompleteLineInformation)

@@ -3,6 +3,6 @@ endianness = little
 
 [instructions]
 
-extract  %a(immediate) , %b(immediate) , %c(immediate)
+extract  %a:U64(immediate) , %b:U6(immediate) , %c:U6(immediate)
 %d = %a[%b:%c]
 dddddddd dddddddd dddddddd dddddddd dddddddd dddddddd dddddddd dddddddd

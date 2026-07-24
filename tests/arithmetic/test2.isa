@@ -4,11 +4,11 @@ endianness = little
 
 [instructions]
 
-zeros %a(immediate)
+zeros %a:U64(immediate)
 %b = trailing_zeros(%a)
 bbbbbbbb
 
-popcount %a(immediate)
+popcount %a:U64(immediate)
 %b = popcount(%a)
 bbbbbbbb
 
