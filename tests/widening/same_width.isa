@@ -5,8 +5,6 @@ nop
 00000000
 
 jmp %a(label)
-jump_switch(%a) {
-    3: 100000aa
-    4: 10010aaa
-    5: 1010aaaa
-}
+when highest_bit(%a) <= 2: 100000aa
+when highest_bit(%a) <= 3: 10010aaa
+when highest_bit(%a) <= 4: 1010aaaa

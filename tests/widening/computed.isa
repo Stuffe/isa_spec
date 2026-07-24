@@ -8,9 +8,7 @@ nop
 11111111
 
 jmp %a(label)
-jump_switch(%a, $start) {
-    // implicit %jump_switch = %a - $start
-    2: 100000jj
-    3: 10010000 00000jjj
-    4: 10100000 00000000 0000jjjj
-}
+%j = %a - $start
+when highest_bit(%j) <= 2: 100000jj
+when highest_bit(%j) <= 3: 10010000 00000jjj
+when highest_bit(%j) <= 4: 10100000 00000000 0000jjjj

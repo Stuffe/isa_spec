@@ -3,6 +3,6 @@
 
 [instructions]
 
-test %a(immediate)
+test %a:U64(immediate)
 %b = 2 * (%a + 1)
 00bbbbbb

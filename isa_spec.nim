@@ -175,24 +175,29 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         var arguments: seq[string]
 
         skip_whitespaces(s)
-        if s.matches('(', tk = tk_bracket):
-          while true:
-            skip_whitespaces(s)
-            let argument = check(descape_string_content(check(get_string(s))))
-            arguments.add(argument)
+        expect(
+          s.matches('(', tk = tk_bracket),
+          translate(
+            31337_61772889138477, "Expected a '(' before the pattern parameter list"
+          ),
+        )
+        while true:
+          skip_whitespaces(s)
+          if s.matches(')', tk = tk_bracket):
+            break
 
-            skip_whitespaces(s)
-            if s.matches(')', tk = tk_bracket):
-              break
-
-            if s.matches(',', tk = tk_separator):
-              continue
-
-            error(
+          skip_whitespaces(s)
+          if arguments.len > 0:
+            expect(
+              s.matches(',', tk = tk_separator),
               translate(
                 31337_55537815420873, "Expected ',' or ')' after pattern argument"
               )
             )
+            skip_whitespaces(s)
+
+          let argument = check(descape_string_content(check(get_string(s))))
+          arguments.add(argument)
 
         block BLK_FIND_PATTERN:
           for i, pattern in isa_spec.patterns:
@@ -260,7 +265,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
                   error(
                     translate(
                       31337_90809893168338,
-                      "Immediate operand must have size constraint, e.g. %a:U8(immediate), %b:S16(immediate|label)",
+                      "Immediate operand must have size constraint, e.g. %a:U8(immediate).",
                     )
                   )
                 elif size_assertion[0] > 0:
