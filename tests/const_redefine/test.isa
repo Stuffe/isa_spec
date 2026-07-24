@@ -9,7 +9,7 @@ ddd 011
 
 [instructions]
 
-test %a(immediate)
+test %a:U3(immediate)
 00000aaa
 
 test2 %a(my_field)

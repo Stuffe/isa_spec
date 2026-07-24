@@ -752,8 +752,8 @@ func parse_instruction_syntax_part(
       ]
 
   if syntax_index >= inst.syntax.len:
-    isa_spec.skip_whitespaces(s)
     when error_on_incomplete:
+      isa_spec.skip_whitespaces(s)
       if peek(s) notin {'\n', '\0'}:
         error(
           translate(31337_84557608492963, "Unknown code found after instruction: ") &
@@ -1036,7 +1036,7 @@ func parse_instruction_syntax_part(
               error(
                 translate(
                   31337_87525828760679,
-                  "Failed to resolve pattern({err}): {resolved_pattern}",
+                  "Failed to resolve pattern ({err}): {resolved_pattern}",
                   ("err", err),
                   ("resolved_pattern", resolved_pattern),
                 ),
@@ -1066,6 +1066,7 @@ func parse_instruction_syntax_part(
             )
         else:
           s.set_index(pattern_inst_res.final_index)
+          s.restore_tokens(pattern_inst_res.tokens)
           let rets = parse_instruction_syntax_part(
             s,
             inst,
@@ -1574,11 +1575,16 @@ proc estimate_labels(
               ctx.sources[^1].skip_line()
               break BLK_INNER
 
+            ctx.estimated_codes.peekLast().delay += 1
             if ctx.code_pointer > number:
-              ctx.sources[^1].skip_line()
-              break BLK_INNER
+              ctx.estimated_codes.peekLast().len = cast[uint32](0)
+            else:
+              ctx.estimated_codes.peekLast().len =
+                cast[uint32](number - ctx.code_pointer)
+              ctx.code_pointer = number
 
-            ctx.code_pointer = number
+            ctx.estimated_codes.addLast((0'u32, 0'u32))
+
             ctx.sources[^1].skip_line(false)
             break BLK_INNER
 
@@ -2058,7 +2064,8 @@ proc assemble*(
               sources[^1].skip_line()
               break BLK_INNER
 
-            if cast[uint64](ret.machine_code.len) > number:
+            let pc = cast[uint64](ret.machine_code.len)
+            if pc > number:
               sources[^1].error(
                 translate(
                   31337_51466436379956,
@@ -2068,6 +2075,16 @@ proc assemble*(
               )
               sources[^1].skip_line()
               break BLK_INNER
+
+            block BLK_ADJUST_LABEL_ESTIMATES:
+              if est_ctx.estimated_codes.len != 0:
+                if est_ctx.estimated_codes.peekFirst().delay <= 1:
+                  let len = est_ctx.estimated_codes.popFirst().len
+                  if len > 0:
+                    est_ctx.estimated_labels.correction -= len
+                    est_ctx.estimated_labels.correction += number - pc
+                else:
+                  est_ctx.estimated_codes.peekFirst().delay -= 1
 
             ret.machine_code.set_len(number)
             sources[^1].skip_line(false)
@@ -2341,7 +2358,7 @@ proc assemble*(
             let cp = checkpoint(sources[^1].s)
 
             var to_add_inst_len: bool
-            block:
+            block BLK_ADJUST_LABEL_ESTIMATES:
               if est_ctx.estimated_codes.len != 0:
                 if est_ctx.estimated_codes.peekFirst().delay <= 1:
                   let len = est_ctx.estimated_codes.popFirst().len

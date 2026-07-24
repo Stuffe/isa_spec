@@ -510,7 +510,7 @@ pattern si_5(size)
 00 %index[3:0]
 
 pattern si(size)
-%pattern[si_0("{size}") | @si_1("{size}") | @si_2("{size}") | @si_3("{size}") | @si_4("{size}") | @si_5("{size}")]
+%pattern[si_0("{size}") | si_1("{size}") | si_2("{size}") | si_3("{size}") | si_4("{size}") | si_5("{size}")]
 %pattern
 
 pattern m_sp(size)
@@ -630,7 +630,7 @@ assert(%magnitude <= 0x8000_0000, "Displacement out of range")
 %scale[1:0] %index[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24] %index[3:3] %base[3:3] 10 100
 
 pattern m_(mem, size)
-{mem} [ %pattern[m_sp("{size}") | @m_bp("{size}") | @m_b("{size}") | @m_d32("{size}") | @m_sp_d7("{size}") | @m_sp_d8("{size}") | @m_b_d7("{size}") | @m_b_d8("{size}") | @m_sp_d31("{size}") | @m_sp_d32("{size}") | @m_b_d31("{size}") | @m_b_d32("{size}") | @m_bp_si("{size}") | @m_b_si("{size}") | @m_si("{size}")| @m_si_d31("{size}") | @m_si_d32("{size}") | @m_b_si_d7("{size}") | @m_b_si_d8("{size}") | @m_b_si_d31("{size}") | @m_b_si_d32("{size}")] ]
+{mem} [ %pattern[m_sp("{size}") | m_bp("{size}") | m_b("{size}") | m_d32("{size}") | m_sp_d7("{size}") | m_sp_d8("{size}") | m_b_d7("{size}") | m_b_d8("{size}") | m_sp_d31("{size}") | m_sp_d32("{size}") | m_b_d31("{size}") | m_b_d32("{size}") | m_bp_si("{size}") | m_b_si("{size}") | m_si("{size}")| m_si_d31("{size}") | m_si_d32("{size}") | m_b_si_d7("{size}") | m_b_si_d8("{size}") | m_b_si_d31("{size}") | m_b_si_d32("{size}")] ]
 %pattern
 
 pattern vsi_0(rm)
@@ -667,7 +667,7 @@ pattern vsi_5(rm)
 00 %index[3:0]
 
 pattern vsi(rm)
-%pattern[vsi_0("{rm}") | @vsi_1("{rm}") | @vsi_2("{rm}") | @vsi_3("{rm}") | @vsi_4("{rm}") | @vsi_5("{rm}")]
+%pattern[vsi_0("{rm}") | vsi_1("{rm}") | vsi_2("{rm}") | vsi_3("{rm}") | vsi_4("{rm}") | vsi_5("{rm}")]
 %pattern
 
 pattern vm_bp_si(rm, size)
@@ -731,7 +731,7 @@ assert(%magnitude <= 0x8000_0000, "Displacement out of range")
 %scale[1:0] %index[2:0] %base[2:0] %disp[7:0] %disp[15:8] %disp[23:16] %disp[31:24] %index[3:3] %base[3:3] 10 100
 
 pattern vm_(rm, mem, size)
-{mem} [ %pattern[vm_bp_si("{rm}", "{size}") | @vm_b_si("{rm}", "{size}") | @vm_si("{rm}", "{size}") | @vm_si_d31("{rm}", "{size}") | @vm_si_d32("{rm}", "{size}") | @vm_b_si_d7("{rm}", "{size}") | @vm_b_si_d8("{rm}", "{size}") | @vm_b_si_d31("{rm}", "{size}") | @vm_b_si_d32("{rm}", "{size}")] ]
+{mem} [ %pattern[vm_bp_si("{rm}", "{size}") | vm_b_si("{rm}", "{size}") | vm_si("{rm}", "{size}") | vm_si_d31("{rm}", "{size}") | vm_si_d32("{rm}", "{size}") | vm_b_si_d7("{rm}", "{size}") | vm_b_si_d8("{rm}", "{size}") | vm_b_si_d31("{rm}", "{size}") | vm_b_si_d32("{rm}", "{size}")] ]
 %pattern
 
 pattern op(op)
@@ -19434,7 +19434,14 @@ assert(%imm0[63:31] == 0x1FFFFFFFF, "Immediate out of range")
 %pf %args
 # Call Procedure
 
-%pf[pf("(pf_bnd)", ""          , "(pf_br)", ""           , "(pf_66)", ""           , "(pf_67)", ""           )] jmp  %args[rel_32("#xE9") | rel_8("#xEB") | e("#xFF", "100", "r64") | e_1("#x40", "#xFF", "100", "r64_rex")]
+%pf[pf("(pf_bnd)", ""          , "(pf_br)", ""           , "(pf_66)", ""           , "(pf_67)", ""           )] jmp  %abs:U64(label | immediate)
+%rel = %abs - $end
+assert(highest_bit(%rel) <= 32, "Offset out of range")
+when highest_bit(%rel) <= 8: %pf #xEB %rel[7:0]
+%pf #xE9 %rel[7:0] %rel[15:8] %rel[23:16] %rel[31:24]
+# Jump
+
+%pf[pf("(pf_bnd)", ""          , "(pf_br)", ""           , "(pf_66)", ""           , "(pf_67)", ""           )] jmp  %args[e("#xFF", "100", "r64") | e_1("#x40", "#xFF", "100", "r64_rex")]
 %pf %args
 # Jump
 

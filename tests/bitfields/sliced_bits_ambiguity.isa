@@ -3,7 +3,7 @@ endianness = little
 
 [instructions]
 
-auipc x%rd(immediate), %imm(immediate)
+auipc x%rd:U5(immediate), %imm:U20(immediate)
 %imm[19:0] %rd[4:0] 0010111
 
 j %label(label)

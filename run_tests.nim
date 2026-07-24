@@ -222,8 +222,23 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
     if spec_result.error.message != "":
       if tests.spec_error_file != "":
         let expected_spec_error = readFile(tests.spec_error_file)
-        if expected_spec_error != spec_result.error.message:
-          fail(test_name, tests.spec_file, &"Wrong error message: Got \"{spec_result.error}\", Expected \"{expected_spec_error}\"")
+        var expected_line = 0
+        var expect_message: string
+        for i in 0 .. expected_spec_error.high:
+          if expected_spec_error[i] == ',':
+            expect_message = expected_spec_error[i + 1 .. ^1]
+            break
+          if expected_spec_error[i] notin {'0' .. '9'}:
+            continue
+          expected_line = expected_line * 10 + ord(expected_spec_error[i]) - ord('0')
+
+        var fail_msg: string
+        if expected_line != spec_result.error.line:
+          fail_msg &= &"Wrong line number: Got {spec_result.error.line}, Expected {expected_line}. "
+        if expect_message != spec_result.error.message:
+          fail_msg &= &"Wrong error message: Got \"{spec_result.error}\", Expected \"{expected_spec_error}\". "
+        if fail_msg != "":
+          fail(test_name, tests.spec_file, fail_msg)
       else:
         fail(test_name, tests.spec_file, &"Unexpected Spec failure: \"{spec_result.error}\"")
       continue
@@ -254,7 +269,7 @@ for (kind, test_dir) in TEST_PATH.walk_dir():
           for i, expected in expected_asm_error:
             if i > asm_result.errors.high:
               fail(test_name, asm_test.source_file, &"Expected more error messages, at least {expected}")
-            if expected.strip() != $asm_result.errors[i]:
+            if expected != $asm_result.errors[i]:
               fail(test_name, asm_test.source_file, &"Wrong error message:\n" &
                                                     &" Got {asm_result.errors[i]} \n" &
                                                     &"Expected {expected}")

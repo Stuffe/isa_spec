@@ -24,17 +24,17 @@ r6r7 1011
 
 [instructions]
 
-Test(%a(register)!=%b(immediate)) =>%c(error);
+Test(%a(register)!=%b:U8(immediate)) =>%c(error);
 cccccccc bbbbbbbb aaaaaaaa 10011000 
 # pop error if a != b
 
 
-%a(register)=%b(immediate);
+%a(register)=%b:U16(immediate);
 aaaaaaaa bbbbbbbb bbbbbbbb 11000000 
 # Set register to b
 
 
-%a(register16)=%b(immediate);
+%a(register16)=%b:U16(immediate);
 aaaaaaaa bbbbbbbb bbbbbbbb 11000000 
 # Set register to b
 

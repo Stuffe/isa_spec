@@ -1431,10 +1431,7 @@ func get_instruction*(
     let (err, bit_pattern) = get_bit_pattern(s, is_patterns, inst, op_names)
 
     if err != "":
-      expect(
-        inst.chunks.len > 0,
-        translate(31337_78139854554293, "Expected a bit pattern line"),
-      )
+      expect(inst.chunks.len > 0, err)
       s.restore(cp)
       break BLK_BIT_PATTERN
 
