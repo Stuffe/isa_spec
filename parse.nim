@@ -964,7 +964,7 @@ iterator get_list*(s: var StreamSlice): StreamSlice =
       if list.start == start:
         s = restore
         raise
-          newParseError(s, translate(31337_64743950507593, "Expecated a list value"))
+          newParseError(s, translate(31337_64743950507593, "Expected a list value"))
 
       yield element
 
