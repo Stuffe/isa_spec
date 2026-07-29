@@ -2371,7 +2371,7 @@ proc assemble*(
             for inst in isa_spec.instructions:
               sources[^1].s.restore(cp) # Reset to the beginning of the line
 
-              var description = inst.description.replace("[", "\\[")
+              var description = inst.description
 
               # Patternized instructions may spawn multiple valid matches
               for inst_res in parse_instruction(
@@ -2545,7 +2545,8 @@ proc assemble*(
 
                       description = description.replace(
                         "%" & part.text,
-                        "[color=#{" & $name.kind & "}]" & name.value & "[/color]",
+                        "[color_weak=#{" & $name.kind & "}]" & name.value &
+                          "[/color_weak]",
                       )
 
                   set_index(sources[^1].s, inst_res.final_index)
@@ -2773,8 +2774,8 @@ func decode(
           let (options, exp_index) = path.operands[op_index]
           when is_bb_code:
             let color = COLORS[op_index mod COLORS.len]
-            let bbcode_open = "[color=#" & color.toHex(6) & "]"
-            let bbcode_close = "[/color]"
+            let bbcode_open = "[color_weak=#" & color.toHex(6) & "]"
+            let bbcode_close = "[/color_weak]"
           op_index += 1
 
           let value = values[exp_index]
