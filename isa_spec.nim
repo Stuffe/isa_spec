@@ -1732,7 +1732,7 @@ func parse_isa_spec_inner(
       # This is a parametrized pattern, parse and store the parameter list
       while not matches(s, ')', tk = tk_bracket):
         if peek(s) in {'\n', '\0'}:
-          error(translate(31337, "Expected a ')' after the pattern parameter list"))
+          error(translate(31337_42907704133778, "Expected a ')' after the pattern parameter list"))
 
         skip_whitespaces(s)
 
@@ -1780,7 +1780,7 @@ func parse_isa_spec_inner(
           text.add(read(s, tk = tk_text))
 
         if s.peek() == '\0':
-          error(translate(31337, "Pattern must have a body"))
+          error(translate(31337_43708359021513, "Pattern must have a body"))
 
         text.add(read(s, tk = tk_whitespace))
 
