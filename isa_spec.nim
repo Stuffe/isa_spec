@@ -192,7 +192,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
               s.matches(',', tk = tk_separator),
               translate(
                 31337_55537815420873, "Expected ',' or ')' after pattern argument"
-              )
+              ),
             )
             skip_whitespaces(s)
 
@@ -1731,6 +1731,9 @@ func parse_isa_spec_inner(
 
       # This is a parametrized pattern, parse and store the parameter list
       while not matches(s, ')', tk = tk_bracket):
+        if peek(s) in {'\n', '\0'}:
+          error(translate(31337, "Expected a ')' after the pattern parameter list"))
+
         skip_whitespaces(s)
 
         if parameters.len > 0:
@@ -1775,6 +1778,9 @@ func parse_isa_spec_inner(
             s.restore(cp)
 
           text.add(read(s, tk = tk_text))
+
+        if s.peek() == '\0':
+          error(translate(31337, "Pattern must have a body"))
 
         text.add(read(s, tk = tk_whitespace))
 
