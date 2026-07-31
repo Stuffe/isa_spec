@@ -1669,11 +1669,9 @@ func parse_isa_spec_inner(
             translate(
               31337_68462760531745,
               "The bit pattern of {field_name} is only {actual} bits long, expected {expected}",
-              (
-                ("field_name", $field_name),
-                ("actual", cur_bit_length),
-                ("expected", field_type.bit_length),
-              ),
+              ("field_name", $field_name),
+              ("actual", cur_bit_length),
+              ("expected", field_type.bit_length),
             )
           )
 
@@ -1732,7 +1730,11 @@ func parse_isa_spec_inner(
       # This is a parametrized pattern, parse and store the parameter list
       while not matches(s, ')', tk = tk_bracket):
         if peek(s) in {'\n', '\0'}:
-          error(translate(31337_42907704133778, "Expected a ')' after the pattern parameter list"))
+          error(
+            translate(
+              31337_42907704133778, "Expected a ')' after the pattern parameter list"
+            )
+          )
 
         skip_whitespaces(s)
 

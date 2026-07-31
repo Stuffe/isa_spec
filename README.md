@@ -34,7 +34,7 @@ mov %a(register), %b(register)
 00aaabbb
 Move a value from %b to %a
 
-mov %a(register), %b(immediate)
+mov %a(register), %b:U3(immediate)
 01000aaa bbbbbbbb
 Move a byte %b to %a
 
