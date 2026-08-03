@@ -1668,7 +1668,7 @@ func parse_isa_spec_inner(
           error(
             translate(
               31337_68462760531745,
-              "The bit pattern of {field_name} is only {actual} bits long, expected {expected}",
+              "The bit pattern of {field_name} is {actual} bits long, expected {expected}",
               ("field_name", $field_name),
               ("actual", cur_bit_length),
               ("expected", field_type.bit_length),
