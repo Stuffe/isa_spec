@@ -1016,6 +1016,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
   let cp = checkpoint(s)
   let start = get_index(s)
 
+  var bit_length_known = true
   var bit_length = 0
   while peek(s) in IdentChars + {'?', '%', ' ', '#'}:
     const HEX_PREFIX = "#x"
@@ -1138,6 +1139,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
             "Expected slice syntax after field reference in bit pattern",
           ),
         )
+        bit_length_known = false
       else:
         discard read(s, tk = tk_bracket)
 
@@ -1192,7 +1194,10 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
             "Expected slice syntax after field/pattern reference in bit pattern",
           ),
         )
-        bit_length += cast[int](top - bottom + 1)
+        if top != int16.high:
+          bit_length += cast[int](top - bottom + 1)
+        else:
+          bit_length_known = false
     else:
       bit_length += 1
 
@@ -1221,7 +1226,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     ),
   )
 
-  if (not allow_unaligned_bit_pattern and is_patterns.len == 0) and bit_length mod 8 != 0:
+  if (not allow_unaligned_bit_pattern and bit_length_known) and bit_length mod 8 != 0:
     s.restore(cp)
     error(
       translate(
