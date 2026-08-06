@@ -1226,15 +1226,20 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     ),
   )
 
-  if (not allow_unaligned_bit_pattern and bit_length_known) and bit_length mod 8 != 0:
-    s.restore(cp)
-    error(
-      translate(
-        31337_87843223218582,
-        "The width of the instruction is {width} bits, but only multiples of 8 are supported",
-        ("width", bit_length),
+  if (not allow_unaligned_bit_pattern and bit_length_known):
+    if bit_length mod 8 != 0:
+      s.restore(cp)
+      error(
+        translate(
+          31337_87843223218582,
+          "The width of the instruction is {width} bits, but only multiples of 8 are supported",
+          ("width", bit_length),
+        )
       )
-    )
+
+    if bit_length == 0:
+      s.restore(cp)
+      error(translate(31337, "The width of the instruction cannot be 0"))
 
   result[1] = $s.get_slice(start, finish)
 
