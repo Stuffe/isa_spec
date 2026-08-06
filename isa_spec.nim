@@ -1239,7 +1239,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
 
     if bit_length == 0:
       s.restore(cp)
-      error(translate(31337, "The width of the instruction cannot be 0"))
+      error(translate(31337_48639756889210, "The width of the instruction cannot be 0"))
 
   result[1] = $s.get_slice(start, finish)
 
