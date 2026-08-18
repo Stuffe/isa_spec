@@ -1933,6 +1933,9 @@ proc assemble*(
         let progress_index = get_index(sources[^1].s)
 
         block BLK_INNER:
+          var best_err =
+            (error_priority: int.low, error: "", final_index: sources[^1].s.get_index())
+
           block BLK_NUMBER_LITERAL:
             let cp = checkpoint(sources[^1].s)
             let (size_error, size, is_signed) = get_size(sources[^1].s)
@@ -1949,15 +1952,17 @@ proc assemble*(
               break BLK_NUMBER_LITERAL
 
             if size_error != "":
-              sources[^1].error(
+              best_err = (
+                int.high,
                 translate(
                   31337_45433710484419,
                   "Expected a size before the number, like: U64 {number}",
                   ("number", number),
-                )
+                ),
+                sources[^1].s.get_index(),
               )
-              sources[^1].skip_line()
-              break BLK_INNER
+              sources[^1].s.restore(cp)
+              break BLK_NUMBER_LITERAL
 
             if is_signed:
               sources[^1].error(
@@ -1989,13 +1994,15 @@ proc assemble*(
               break BLK_INNER
 
             if number_error != "":
-              sources[^1].error(
+              best_err = (
+                int.high,
                 translate(
                   31337_60515742509356, "Expected a number after a size declaration"
-                )
+                ),
+                sources[^1].s.get_index(),
               )
-              sources[^1].skip_line()
-              break BLK_INNER
+              sources[^1].s.restore(cp)
+              break BLK_NUMBER_LITERAL
 
             var value = parse_unsigned(number).on_err:
               sources[^1].error(err)
@@ -2037,6 +2044,8 @@ proc assemble*(
               break BLK_INNER
 
             for i in literal.low .. literal.high:
+              if literal[i] == '\n':
+                sources[^1].line_counter += 1
               ret.machine_code.add(cast[uint8](ord(literal[i])))
 
             sources[^1].skip_line(false)
@@ -2351,8 +2360,6 @@ proc assemble*(
 
             sources[^1].s.restore(cp)
 
-          var best_err =
-            (error_priority: int.low, error: "", final_index: sources[^1].s.get_index())
           block BLK_INSTRUCTION:
             let original_s = sources[^1].s
             let cp = checkpoint(sources[^1].s)
