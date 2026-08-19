@@ -590,7 +590,7 @@ func eval*(
       if exp.is_address:
         if current_address == uint64.high:
           result[0] =
-            translate(31337_36919792698704, "Instruction pointer not available")
+            translate(31337_36919792698704, "Program counter not available")
           return
 
         case exp.location

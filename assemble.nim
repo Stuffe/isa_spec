@@ -454,14 +454,9 @@ func get_bit_pattern(
             operand_index = i + offset_op
             break BLK_FIND_OP_INDEX
 
-        error(
-          translate(
-            31337_68530592279217,
-            "Expected a valid operand name, got '{operand_name}' among {all_operand_names}",
-            ("operand_name", operand_name),
-            ("all_operand_names", operand_names),
-          )
-        )
+        assert false,
+          "(Late detection!): Expected a valid operand name, got '" & $operand_name &
+            "' among " & $operand_names
 
       skip_whitespaces(s)
       let (top, bottom) =
