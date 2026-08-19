@@ -2116,9 +2116,9 @@ proc assemble*(
                   special_test in sources[^1].labels:
                 sources[^1].error(
                   translate(
-                    31337_39195841380612,
-                    "Label {name} is already declared",
-                    ("name", special_test),
+                    31337_42442531119863,
+                    "{constant_name} is already declared",
+                    ("constant_name", special_test),
                   )
                 )
                 sources[^1].skip_line()
