@@ -76,6 +76,7 @@ type
     has_error: bool
     defines: Table[StreamSlice, (FieldKind, DefineValue)]
     labels: Table[StreamSlice, DefineValue]
+    public: bool
 
   ParseContext = seq[SliceParseState]
 
@@ -1596,7 +1597,8 @@ proc estimate_labels(
                 false
 
             if special_test.len != 0 and peek(ctx.sources[^1].s) == ':':
-              if special_test in ctx.sources[^1].labels:
+              if special_test in ctx.sources[^1].defines or
+                  special_test in ctx.sources[^1].labels:
                 ctx.sources[^1].skip_line()
                 break BLK_INNER
 
@@ -1680,6 +1682,7 @@ proc estimate_labels(
                   s: new_stream_slice(source),
                   dir_path: dir_path,
                   normal_path: normal_path,
+                  public: public,
                 )
               )
               break BLK_OUTER
@@ -1694,7 +1697,8 @@ proc estimate_labels(
                 ctx.sources[^1].skip_line()
                 break BLK_INNER
 
-              if definition_name in ctx.sources[^1].defines:
+              if definition_name in ctx.sources[^1].defines or
+                  definition_name in ctx.sources[^1].labels:
                 ctx.sources[^1].skip_line()
                 break BLK_INNER
 
@@ -2108,7 +2112,8 @@ proc assemble*(
                 false
 
             if special_test.len != 0 and matches(sources[^1].s, ':', tk = tk_label):
-              if special_test in sources[^1].labels:
+              if special_test in sources[^1].defines or
+                  special_test in sources[^1].labels:
                 sources[^1].error(
                   translate(
                     31337_39195841380612,
@@ -2259,6 +2264,7 @@ proc assemble*(
                   s: new_stream_slice(source, with_tokens = true),
                   dir_path: dir_path,
                   normal_path: normal_path,
+                  public: public,
                 )
               )
               break BLK_OUTER
@@ -2277,7 +2283,8 @@ proc assemble*(
                 sources[^1].skip_line()
                 break BLK_INNER
 
-              if definition_name in sources[^1].defines:
+              if definition_name in sources[^1].defines or
+                  definition_name in sources[^1].labels:
                 sources[^1].error(
                   translate(
                     31337_42442531119863,
@@ -2594,16 +2601,21 @@ proc assemble*(
         let state = sources.pop()
 
         for name, label in state.labels:
+          var label = label
           let new_name =
             if label.public:
               state.name & "." & name
             else:
               # Generate a unique, not typable name for internal labels
               "$" & state.name & "[" & $(state.line_counter + 1) & "]." & name
+          
+          label.public = label.public and state.public
           sources[^1].labels[new_name] = label
 
         for name, value in state.defines:
+          var value = value
           if value[1].public:
+            value[1].public = value[1].public and state.public
             sources[^1].defines[state.name & "." & name] = value
 
         if state.has_error:
