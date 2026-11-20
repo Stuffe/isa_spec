@@ -1,2 +1,2 @@
-gs o16 a32  montmul 
-o16  montmul 
+o16 gs  a32 montmul 
+gs  a32 montmul 

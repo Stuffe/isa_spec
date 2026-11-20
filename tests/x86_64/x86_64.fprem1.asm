@@ -1,2 +1,2 @@
-o16 gs fprem1 
+o16 a32 fprem1 
 fprem1 

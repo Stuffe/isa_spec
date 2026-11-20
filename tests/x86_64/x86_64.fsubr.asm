@@ -1,35 +1,35 @@
 a32 o16 fsubr 
-o16 gs fsubr 
-a32 gs fsubr st0
-a32 o16 gs fsubr st7
-gs a32 fsubr st2
-a32 gs fsubr st6,st0
-a32 gs o16 fsubr st3,st0
-a32 o16 gs fsubr st4,st0
-gs o16 fsubr st0,st5
-a32 o16 gs fsubr st0,st4
-a32 gs o16 fsubr st0,st7
-gs fsubr dword [rsp]
-gs fsubr dword [rax]
-gs o16 fsubr dword [r15 + 2 * rdi + 0x72]
-gs fsubr dword [ebp]
-a32 fsubr dword [r13d]
-gs fsubr dword [r11d + r11d * 2 + 0x41d90d1b]
-gs o16 fsubr dword [r13]
-gs o16 fsubr dword [r11 + r11 * 2 + 0x41d90d1b]
-fsubr dword [rbx + 8 * rdx]
-gs a32 o16 fsubr dword [r12d]
-gs fsubr dword [esp + 1 * ebp]
-o16 gs a32 fsubr dword [eax]
-gs fsubr qword [r13]
+o16 gs a32 fsubr 
+o16 gs a32 fsubr st0
+o16 gs a32 fsubr st2
+gs a32 fsubr st5
+o16 a32 fsubr st3,st0
+a32 o16 fsubr st0,st0
+gs o16 fsubr st2,st0
+a32 o16 fsubr st0,st1
+a32 o16 gs fsubr st0,st2
+gs a32 fsubr st0,st0
+o16 fsubr dword [r13]
+gs o16 fsubr dword [rbx + 8 * rdx]
+o16 fsubr dword [r12]
+gs a32 fsubr dword [r12d]
+a32 o16 fsubr dword [edx - 0x80000000]
+fsubr dword [eax]
+o16 fsubr dword [rdx - 0x80000000]
+gs o16 fsubr dword [rsp + 1 * rbp]
+gs o16 fsubr dword [rax]
+o16 gs fsubr dword [ebp]
+gs o16 fsubr dword [r15d + 2 * edi + 0x72]
+a32 fsubr dword [esp + 1 * ebp]
+fsubr qword [r11 + r11 * 2 + 0x6d98f82a]
+o16 fsubr qword [r15 + 2 * rdi + 0x72]
+gs fsubr qword [rsp + 1 * rbp]
+gs a32 o16 fsubr qword [r15d + 2 * edi + 0x72]
+gs o16 a32 fsubr qword [r12d]
+gs o16 fsubr qword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 gs fsubr qword [r13]
+o16 fsubr qword [rbp]
 gs o16 fsubr qword [rbx + 8 * rdx]
-fsubr qword [rsp + 1 * rbp]
-a32 fsubr qword [r11d + r11d * 2 + 0x12a921ae]
-o16 gs a32 fsubr qword [ebx + 8 * edx]
-o16 gs a32 fsubr qword [ebp]
-fsubr qword [rbp]
-gs o16 fsubr qword [r15 + 2 * rdi + 0x72]
-fsubr qword [rsp + 1 * rbp]
-o16 a32 gs fsubr qword [r11d + r11d * 2 + 0x12a921ae]
-o16 a32 fsubr qword [esp + 1 * ebp]
-gs a32 fsubr qword [esp]
+gs o16 fsubr qword [r13d]
+a32 o16 gs fsubr qword [edx - 0x80000000]
+gs a32 o16 fsubr qword [ebx + 8 * edx]

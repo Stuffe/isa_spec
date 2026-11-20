@@ -1,315 +1,315 @@
-o16 gs shl byte [rbp],1
-o16 shl byte [rax],1
+o16 gs shl byte [rax],1
+o16 gs shl byte [rdx - 0x80000000],1
+gs shl byte [rbx + 8 * rdx],1
+o16 gs shl byte [r12d],1
+a32 o16 gs shl byte [ebp],1
+o16 a32 gs shl byte [eax],1
+o16 shl byte [rdx - 0x80000000],1
+gs shl byte [r15 + 2 * rdi + 0x72],1
 gs o16 shl byte [rsp],1
-gs o16 shl byte [esp],1
-o16 shl byte [edx - 0x80000000],1
+gs o16 a32 shl byte [esp + 1 * ebp],1
 o16 a32 gs shl byte [ebx + 8 * edx],1
-gs o16 shl byte [rax],1
-o16 shl byte [r14 + 1 * rdx + 0x7FFFFFFF],1
-o16 gs shl byte [rbx + 8 * rdx],1
-o16 shl byte [r14d + 1 * edx + 0x7FFFFFFF],1
-o16 gs a32 shl byte [esp + 1 * ebp],1
-o16 gs shl byte [ebx + 8 * edx],1
-a32 gs o16 shl r11b,1
-gs a32 o16 shl r10b,1
-gs a32 shl dil,1
-o16 gs shl dl,1
-gs o16 a32 shl cl,1
-gs shl dil,1
-gs shl qword [r11 + r11 * 2 + 0x2ff7e1d9],1
-gs shl qword [rsp],1
-gs shl qword [rbp],1
-a32 shl qword [ebp],1
-a32 gs shl qword [r13d],1
-shl qword [eax],1
-a32 gs shl r9,1
-a32 gs shl rdi,1
-a32 gs shl r15,1
-gs shl dword [rsp + 1 * rbp],1
-shl dword [rsp],1
-shl dword [r11 + r11 * 2 + 0x2f0c4fd4],1
-a32 shl dword [ebp],1
-gs a32 shl dword [ebx + 8 * edx],1
-a32 gs shl dword [r15d + 2 * edi + 0x72],1
-shl dword [r11 + r11 * 2 + 0x2f0c4fd4],1
-gs shl dword [r14 + 1 * rdx + 0x7FFFFFFF],1
-gs shl dword [rbx + 8 * rdx],1
-gs shl dword [edx - 0x80000000],1
-gs shl dword [ebp],1
-a32 gs shl dword [esp],1
-shl r8d,1
-shl ecx,1
-gs shl ebp,1
+gs a32 shl byte [ebp],1
+o16 gs a32 shl al,1
+gs a32 shl bpl,1
+gs o16 a32 shl r13b,1
+gs o16 shl r13b,1
+o16 a32 shl dl,1
+o16 a32 shl r12b,1
+gs shl qword [r15 + 2 * rdi + 0x72],1
+shl qword [r14 + 1 * rdx + 0x7FFFFFFF],1
+shl qword [rdx - 0x80000000],1
+a32 gs shl qword [esp + 1 * ebp],1
+gs a32 shl qword [esp],1
+a32 shl qword [ebx + 8 * edx],1
+a32 gs shl r12,1
+gs shl rsp,1
+a32 gs shl r10,1
+shl dword [rsp + 1 * rbp],1
+shl dword [r12],1
+shl dword [rax],1
+shl dword [ebp],1
+gs shl dword [esp + 1 * ebp],1
+gs shl dword [esp],1
+shl dword [rsp + 1 * rbp],1
+gs shl dword [rdx - 0x80000000],1
+gs shl dword [rax],1
+a32 gs shl dword [ebx + 8 * edx],1
+gs shl dword [esp + 1 * ebp],1
+a32 gs shl dword [r11d + r11d * 2 + 0x62450ee0],1
+shl esp,1
 a32 gs shl ebp,1
-a32 gs shl r13d,1
-a32 gs shl esp,1
-gs o16 shl word [r12],1
-o16 gs shl word [rbx + 8 * rdx],1
-o16 gs shl word [r13],1
-a32 gs o16 shl word [ebx + 8 * edx],1
-a32 shl word [eax],1
+gs a32 shl r13d,1
+a32 gs shl r11d,1
+a32 gs shl eax,1
+a32 shl r15d,1
+shl word [r15 + 2 * rdi + 0x72],1
+shl word [r13],1
+o16 shl word [rsp + 1 * rbp],1
+o16 gs a32 shl word [r14d + 1 * edx + 0x7FFFFFFF],1
 o16 a32 gs shl word [ebp],1
-o16 shl word [r11 + r11 * 2 + 0x4ab2056c],1
-gs shl word [rbp],1
-shl word [rax],1
-a32 o16 shl word [r12d],1
-a32 o16 shl word [ebp],1
-a32 shl word [r13d],1
-a32 gs o16 shl r8w,1
-o16 a32 shl r10w,1
-o16 shl bx,1
-a32 gs o16 shl bp,1
-a32 shl r11w,1
-shl r13w,1
-gs o16 shl byte [rdx - 0x80000000],cl
-gs shl byte [rax],cl
-o16 shl byte [r12],cl
-gs shl byte [edx - 0x80000000],cl
-a32 o16 gs shl byte [esp],cl
-a32 o16 shl byte [r13d],cl
-gs o16 shl byte [rdx - 0x80000000],cl
+gs a32 shl word [esp + 1 * ebp],1
+shl word [rsp + 1 * rbp],1
+gs shl word [rsp],1
+shl word [r14 + 1 * rdx + 0x7FFFFFFF],1
+gs a32 shl word [r12d],1
+o16 gs shl word [r11d + r11d * 2 + 0x699b7a96],1
+a32 o16 shl word [esp + 1 * ebp],1
+gs shl di,1
+gs shl r15w,1
+a32 gs o16 shl r12w,1
+gs shl ax,1
+a32 gs o16 shl cx,1
+gs a32 shl bx,1
 o16 gs shl byte [rax],cl
-gs shl byte [r12],cl
-o16 a32 gs shl byte [edx - 0x80000000],cl
-o16 gs a32 shl byte [esp + 1 * ebp],cl
-gs a32 o16 shl byte [r13d],cl
-a32 shl spl,cl
-a32 o16 shl r13b,cl
-o16 shl r15b,cl
-a32 gs shl sil,cl
-a32 gs shl r11b,cl
-gs a32 o16 shl dil,cl
+o16 shl byte [rbx + 8 * rdx],cl
+o16 shl byte [r14 + 1 * rdx + 0x7FFFFFFF],cl
+o16 a32 gs shl byte [r12d],cl
+gs o16 a32 shl byte [ebx + 8 * edx],cl
+a32 o16 gs shl byte [eax],cl
+o16 shl byte [r11 + r11 * 2 + 0xd859550],cl
+o16 gs shl byte [r15 + 2 * rdi + 0x72],cl
+gs o16 shl byte [r13],cl
+o16 gs a32 shl byte [r13d],cl
+a32 gs shl byte [r15d + 2 * edi + 0x72],cl
+gs o16 shl byte [r12d],cl
+a32 o16 shl bl,cl
+a32 gs shl cl,cl
+a32 o16 gs shl r8b,cl
+a32 gs shl dl,cl
+o16 gs shl al,cl
+o16 gs a32 shl spl,cl
+shl qword [rbp],cl
+gs shl qword [rsp + 1 * rbp],cl
 shl qword [r14 + 1 * rdx + 0x7FFFFFFF],cl
-gs shl qword [r12],cl
-gs shl qword [r15 + 2 * rdi + 0x72],cl
-shl qword [eax],cl
-shl qword [r13d],cl
-a32 shl qword [ebp],cl
-gs a32 shl rdx,cl
-gs shl rbp,cl
-gs shl r15,cl
+gs shl qword [r13d],cl
+gs a32 shl qword [ebx + 8 * edx],cl
+a32 gs shl qword [r12d],cl
+gs shl rcx,cl
+shl rsi,cl
+a32 shl r9,cl
 shl dword [rsp + 1 * rbp],cl
-gs shl dword [rdx - 0x80000000],cl
 shl dword [rsp],cl
-shl dword [esp],cl
-a32 shl dword [r13d],cl
-a32 gs shl dword [r11d + r11d * 2 + 0x42523f93],cl
-gs shl dword [r12],cl
-shl dword [rsp + 1 * rbp],cl
-gs shl dword [rdx - 0x80000000],cl
+shl dword [rdx - 0x80000000],cl
+shl dword [ebp],cl
+shl dword [ebx + 8 * edx],cl
+gs a32 shl dword [r11d + r11d * 2 + 0x30a76171],cl
+gs shl dword [rbx + 8 * rdx],cl
+shl dword [rdx - 0x80000000],cl
+gs shl dword [rbp],cl
 a32 gs shl dword [ebx + 8 * edx],cl
-a32 gs shl dword [r11d + r11d * 2 + 0x42523f93],cl
-gs a32 shl dword [esp],cl
+gs a32 shl dword [eax],cl
+gs shl dword [r13d],cl
+gs shl edi,cl
+a32 shl r13d,cl
+gs a32 shl ebp,cl
 shl edi,cl
-shl r9d,cl
-a32 shl r14d,cl
-gs a32 shl esp,cl
-shl ecx,cl
-gs a32 shl r15d,cl
-o16 gs shl word [rsp],cl
-gs o16 shl word [r15 + 2 * rdi + 0x72],cl
-o16 shl word [rbx + 8 * rdx],cl
-a32 o16 gs shl word [r14d + 1 * edx + 0x7FFFFFFF],cl
-o16 shl word [eax],cl
-a32 gs shl word [r13d],cl
-o16 gs shl word [rbx + 8 * rdx],cl
-o16 shl word [r12],cl
-o16 gs shl word [rdx - 0x80000000],cl
-gs a32 o16 shl word [ebx + 8 * edx],cl
-gs a32 shl word [eax],cl
-gs o16 a32 shl word [ebp],cl
-a32 gs shl r11w,cl
-a32 o16 gs shl r13w,cl
-o16 a32 shl r9w,cl
-a32 o16 gs shl ax,cl
-gs shl r13w,cl
-a32 o16 shl cx,cl
-gs shl byte [rbp],4
-o16 shl byte [rbp],127
-gs shl byte [rbp],-56
-o16 shl byte [rax],4
-o16 gs shl byte [rax],127
-o16 gs shl byte [rax],-56
-gs o16 shl byte [r14 + 1 * rdx + 0x7FFFFFFF],4
-o16 shl byte [r14 + 1 * rdx + 0x7FFFFFFF],127
-gs shl byte [r14 + 1 * rdx + 0x7FFFFFFF],-56
-gs a32 o16 shl byte [r12d],-128
-shl byte [r12d],-56
-o16 a32 gs shl byte [r12d],127
-gs o16 shl byte [eax],-128
-o16 gs shl byte [eax],-56
-o16 a32 shl byte [eax],127
-o16 gs a32 shl byte [edx - 0x80000000],-128
-a32 o16 gs shl byte [edx - 0x80000000],-56
-o16 a32 shl byte [edx - 0x80000000],127
-shl byte [rsp],-5
-gs shl byte [rsp],-128
-o16 shl byte [rsp],0
-gs shl byte [rdx - 0x80000000],-5
-gs o16 shl byte [rdx - 0x80000000],-128
-gs shl byte [rdx - 0x80000000],0
-o16 shl byte [r14 + 1 * rdx + 0x7FFFFFFF],-5
-shl byte [r14 + 1 * rdx + 0x7FFFFFFF],-128
-gs o16 shl byte [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs a32 o16 shl byte [esp],-5
-gs o16 shl byte [esp],-56
-gs shl byte [esp],4
-o16 gs a32 shl byte [r15d + 2 * edi + 0x72],-5
-o16 gs shl byte [r15d + 2 * edi + 0x72],-56
-gs a32 o16 shl byte [r15d + 2 * edi + 0x72],4
-o16 gs a32 shl byte [esp + 1 * ebp],-5
-o16 gs a32 shl byte [esp + 1 * ebp],-56
-gs a32 o16 shl byte [esp + 1 * ebp],4
-a32 gs shl cl,-5
-o16 gs shl cl,-128
-a32 o16 gs shl cl,4
-gs a32 o16 shl r9b,-5
-o16 a32 shl r9b,-128
-gs o16 a32 shl r9b,4
-a32 o16 gs shl r10b,-5
-shl r10b,-128
-gs o16 a32 shl r10b,4
-gs a32 shl r8b,127
-gs a32 shl r8b,-5
-a32 o16 shl r8b,-128
-gs o16 a32 shl r11b,127
-a32 gs shl r11b,-5
-gs o16 shl r11b,-128
-shl r10b,127
-gs a32 o16 shl r10b,-5
-gs a32 o16 shl r10b,-128
-gs shl qword [rbx + 8 * rdx],-128
-shl qword [rbx + 8 * rdx],8
-gs shl qword [rbx + 8 * rdx],0
-gs shl qword [rsp],-128
-shl qword [rsp],8
-shl qword [rsp],0
-gs shl qword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-gs shl qword [r14 + 1 * rdx + 0x7FFFFFFF],8
-shl qword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs a32 shl qword [esp + 1 * ebp],66
-gs shl qword [esp + 1 * ebp],8
-gs a32 shl qword [esp + 1 * ebp],127
-gs shl qword [ebx + 8 * edx],66
-shl qword [ebx + 8 * edx],8
-shl qword [ebx + 8 * edx],127
-a32 shl qword [ebp],66
-gs shl qword [ebp],8
-a32 gs shl qword [ebp],127
-a32 gs shl rdx,66
-gs a32 shl rdx,0
-shl rdx,-128
-a32 shl rcx,66
-a32 shl rcx,0
-gs a32 shl rcx,-128
-shl rbp,66
-a32 shl rbp,0
-a32 shl rbp,-128
-gs shl dword [r13],-128
-shl dword [r13],-78
-gs shl dword [r13],18
-shl dword [rdx - 0x80000000],-128
-shl dword [rdx - 0x80000000],-78
-gs shl dword [rdx - 0x80000000],18
-shl dword [rbx + 8 * rdx],-128
-shl dword [rbx + 8 * rdx],-78
-shl dword [rbx + 8 * rdx],18
-shl dword [ebx + 8 * edx],-78
-gs shl dword [ebx + 8 * edx],5
-shl dword [ebx + 8 * edx],127
-a32 shl dword [r13d],-78
-gs a32 shl dword [r13d],5
-gs a32 shl dword [r13d],127
-a32 shl dword [edx - 0x80000000],-78
-a32 gs shl dword [edx - 0x80000000],5
-gs a32 shl dword [edx - 0x80000000],127
-shl dword [rsp],18
-gs shl dword [rsp],0
-shl dword [rsp],5
-shl dword [rbp],18
-shl dword [rbp],0
-gs shl dword [rbp],5
-shl dword [r15 + 2 * rdi + 0x72],18
+gs a32 shl r9d,cl
+gs shl r14d,cl
+o16 shl word [r13],cl
+o16 shl word [rbp],cl
+shl word [rdx - 0x80000000],cl
+a32 shl word [r11d + r11d * 2 + 0x640af81],cl
+shl word [edx - 0x80000000],cl
+a32 o16 gs shl word [esp],cl
+gs o16 shl word [r12],cl
+gs shl word [rbp],cl
+shl word [rdx - 0x80000000],cl
+gs shl word [r11d + r11d * 2 + 0x640af81],cl
+gs shl word [r14d + 1 * edx + 0x7FFFFFFF],cl
+o16 shl word [ebp],cl
+o16 gs shl r8w,cl
+gs o16 shl sp,cl
+a32 gs o16 shl ax,cl
+a32 o16 gs shl r9w,cl
+shl ax,cl
+gs a32 o16 shl r15w,cl
+o16 shl byte [r15 + 2 * rdi + 0x72],-128
+shl byte [r15 + 2 * rdi + 0x72],-10
+gs o16 shl byte [r15 + 2 * rdi + 0x72],-126
+o16 shl byte [rsp + 1 * rbp],-128
+gs shl byte [rsp + 1 * rbp],-10
+o16 gs shl byte [rsp + 1 * rbp],-126
+o16 gs shl byte [rax],-128
+o16 shl byte [rax],-10
+gs o16 shl byte [rax],-126
+a32 o16 gs shl byte [r11d + r11d * 2 + 0x41ff02f2],-128
+gs shl byte [r11d + r11d * 2 + 0x41ff02f2],0
+a32 gs o16 shl byte [r11d + r11d * 2 + 0x41ff02f2],97
+a32 shl byte [esp],-128
+o16 a32 gs shl byte [esp],0
+gs shl byte [esp],97
+gs a32 shl byte [r15d + 2 * edi + 0x72],-128
+o16 shl byte [r15d + 2 * edi + 0x72],0
+gs shl byte [r15d + 2 * edi + 0x72],97
+gs shl byte [rbx + 8 * rdx],97
+shl byte [rbx + 8 * rdx],-10
+gs shl byte [rbx + 8 * rdx],127
+o16 shl byte [r15 + 2 * rdi + 0x72],97
+gs o16 shl byte [r15 + 2 * rdi + 0x72],-10
+gs shl byte [r15 + 2 * rdi + 0x72],127
+o16 gs shl byte [rsp + 1 * rbp],97
+gs shl byte [rsp + 1 * rbp],-10
+shl byte [rsp + 1 * rbp],127
+a32 gs o16 shl byte [esp + 1 * ebp],0
+gs a32 shl byte [esp + 1 * ebp],-10
+a32 o16 shl byte [esp + 1 * ebp],97
+gs o16 shl byte [r14d + 1 * edx + 0x7FFFFFFF],0
+shl byte [r14d + 1 * edx + 0x7FFFFFFF],-10
+gs a32 o16 shl byte [r14d + 1 * edx + 0x7FFFFFFF],97
+a32 gs o16 shl byte [ebx + 8 * edx],0
+o16 shl byte [ebx + 8 * edx],-10
+shl byte [ebx + 8 * edx],97
+gs a32 shl r10b,97
+shl r10b,-126
+o16 shl r10b,127
+a32 shl cl,97
+o16 shl cl,-126
+gs a32 shl cl,127
+a32 gs o16 shl r9b,97
+a32 o16 gs shl r9b,-126
+gs a32 o16 shl r9b,127
+o16 gs a32 shl dl,97
+a32 gs shl dl,-128
+a32 shl dl,-10
+a32 o16 shl al,97
+gs a32 o16 shl al,-128
+a32 gs o16 shl al,-10
+a32 gs o16 shl r12b,97
+o16 a32 shl r12b,-128
+gs shl r12b,-10
+gs shl qword [rsp + 1 * rbp],37
+gs shl qword [rsp + 1 * rbp],-54
+gs shl qword [rsp + 1 * rbp],-123
+gs shl qword [r14 + 1 * rdx + 0x7FFFFFFF],37
+gs shl qword [r14 + 1 * rdx + 0x7FFFFFFF],-54
+shl qword [r14 + 1 * rdx + 0x7FFFFFFF],-123
+shl qword [rsp],37
+shl qword [rsp],-54
+shl qword [rsp],-123
+a32 gs shl qword [r15d + 2 * edi + 0x72],-123
+shl qword [r15d + 2 * edi + 0x72],127
+a32 shl qword [r15d + 2 * edi + 0x72],37
+shl qword [esp],-123
+gs shl qword [esp],127
+gs shl qword [esp],37
+shl qword [ebp],-123
+a32 shl qword [ebp],127
+a32 shl qword [ebp],37
+gs shl r11,127
+shl r11,37
+a32 gs shl r11,-123
+a32 gs shl rsi,127
+shl rsi,37
+a32 shl rsi,-123
+gs shl r12,127
+gs a32 shl r12,37
+a32 shl r12,-123
+gs shl dword [rbp],-102
+gs shl dword [rbp],0
+shl dword [rbp],-66
+shl dword [r15 + 2 * rdi + 0x72],-102
 gs shl dword [r15 + 2 * rdi + 0x72],0
-shl dword [r15 + 2 * rdi + 0x72],5
-shl dword [esp],5
-a32 shl dword [esp],-128
-shl dword [esp],18
-a32 gs shl dword [edx - 0x80000000],5
-a32 shl dword [edx - 0x80000000],-128
-gs a32 shl dword [edx - 0x80000000],18
-a32 gs shl dword [r13d],5
-gs a32 shl dword [r13d],-128
-gs shl dword [r13d],18
-a32 shl r12d,0
-gs shl r12d,-128
-a32 shl r12d,18
-a32 gs shl esi,0
-gs a32 shl esi,-128
-gs a32 shl esi,18
-shl r14d,0
-gs shl r14d,-128
-a32 gs shl r14d,18
-a32 gs shl esp,0
-shl esp,18
-gs shl esp,127
-a32 gs shl r12d,0
-a32 shl r12d,18
-gs shl r12d,127
-a32 shl eax,0
-a32 gs shl eax,18
-a32 gs shl eax,127
-o16 shl word [rax],2
-gs shl word [rax],63
-gs o16 shl word [rax],-112
-gs shl word [rdx - 0x80000000],2
-gs o16 shl word [rdx - 0x80000000],63
-shl word [rdx - 0x80000000],-112
-shl word [rsp],2
-shl word [rsp],63
-o16 shl word [rsp],-112
-o16 a32 shl word [r12d],-112
-o16 gs a32 shl word [r12d],0
-shl word [r12d],2
-gs a32 o16 shl word [esp],-112
-o16 a32 shl word [esp],0
-gs a32 o16 shl word [esp],2
-a32 o16 shl word [ebp],-112
-gs shl word [ebp],0
-a32 o16 shl word [ebp],2
-gs shl word [rax],127
-o16 shl word [rax],2
-o16 shl word [rax],-128
-shl word [r12],127
-shl word [r12],2
-o16 gs shl word [r12],-128
-gs o16 shl word [r15 + 2 * rdi + 0x72],127
-shl word [r15 + 2 * rdi + 0x72],2
-o16 gs shl word [r15 + 2 * rdi + 0x72],-128
-a32 o16 gs shl word [r13d],127
-gs shl word [r13d],63
-shl word [r13d],2
-a32 o16 shl word [ebx + 8 * edx],127
-gs shl word [ebx + 8 * edx],63
-a32 shl word [ebx + 8 * edx],2
-gs o16 a32 shl word [ebp],127
-a32 shl word [ebp],63
-gs o16 a32 shl word [ebp],2
-gs a32 o16 shl dx,-112
-o16 a32 gs shl dx,0
-a32 o16 shl dx,-128
-gs shl r11w,-112
-gs o16 a32 shl r11w,0
-shl r11w,-128
-gs a32 o16 shl si,-112
-a32 gs o16 shl si,0
-a32 gs shl si,-128
-a32 gs o16 shl bp,0
-gs o16 a32 shl bp,127
-gs shl bp,-128
-o16 gs shl di,0
-gs a32 shl di,127
-a32 o16 gs shl di,-128
-o16 a32 shl r10w,0
-o16 shl r10w,127
-o16 shl r10w,-128
+gs shl dword [r15 + 2 * rdi + 0x72],-66
+gs shl dword [rdx - 0x80000000],-102
+gs shl dword [rdx - 0x80000000],0
+gs shl dword [rdx - 0x80000000],-66
+gs shl dword [r11d + r11d * 2 + 0x6ef970d9],-128
+a32 shl dword [r11d + r11d * 2 + 0x6ef970d9],-66
+gs shl dword [r11d + r11d * 2 + 0x6ef970d9],127
+shl dword [r13d],-128
+a32 gs shl dword [r13d],-66
+gs shl dword [r13d],127
+a32 shl dword [esp + 1 * ebp],-128
+a32 shl dword [esp + 1 * ebp],-66
+a32 shl dword [esp + 1 * ebp],127
+gs shl dword [r12],-66
+shl dword [r12],-102
+shl dword [r12],-128
+gs shl dword [r14 + 1 * rdx + 0x7FFFFFFF],-66
+gs shl dword [r14 + 1 * rdx + 0x7FFFFFFF],-102
+shl dword [r14 + 1 * rdx + 0x7FFFFFFF],-128
+gs shl dword [rbx + 8 * rdx],-66
+gs shl dword [rbx + 8 * rdx],-102
+shl dword [rbx + 8 * rdx],-128
+gs shl dword [r12d],-128
+shl dword [r12d],127
+a32 shl dword [r12d],-102
+shl dword [ebx + 8 * edx],-128
+gs a32 shl dword [ebx + 8 * edx],127
+a32 shl dword [ebx + 8 * edx],-102
+shl dword [esp],-128
+shl dword [esp],127
+gs a32 shl dword [esp],-102
+gs shl r14d,-66
+a32 shl r14d,-128
+gs shl r14d,0
+a32 gs shl r15d,-66
+a32 shl r15d,-128
+a32 gs shl r15d,0
+gs shl edi,-66
+a32 shl edi,-128
+shl edi,0
+a32 gs shl ebx,-66
+a32 shl ebx,127
+shl ebx,-102
+a32 shl r8d,-66
+gs shl r8d,127
+gs shl r8d,-102
+a32 gs shl eax,-66
+a32 shl eax,127
+gs shl eax,-102
+gs o16 shl word [r15 + 2 * rdi + 0x72],-128
+o16 shl word [r15 + 2 * rdi + 0x72],115
+o16 shl word [r15 + 2 * rdi + 0x72],-104
+o16 shl word [rdx - 0x80000000],-128
+shl word [rdx - 0x80000000],115
+shl word [rdx - 0x80000000],-104
+gs shl word [rsp + 1 * rbp],-128
+gs o16 shl word [rsp + 1 * rbp],115
+o16 shl word [rsp + 1 * rbp],-104
+a32 o16 shl word [r15d + 2 * edi + 0x72],127
+gs o16 a32 shl word [r15d + 2 * edi + 0x72],0
+gs a32 o16 shl word [r15d + 2 * edi + 0x72],-128
+o16 gs shl word [esp + 1 * ebp],127
+a32 o16 gs shl word [esp + 1 * ebp],0
+o16 a32 gs shl word [esp + 1 * ebp],-128
+o16 a32 gs shl word [ebp],127
+shl word [ebp],0
+a32 gs o16 shl word [ebp],-128
+gs shl word [rdx - 0x80000000],0
+o16 gs shl word [rdx - 0x80000000],-104
+o16 shl word [rdx - 0x80000000],127
+o16 gs shl word [rbx + 8 * rdx],0
+o16 shl word [rbx + 8 * rdx],-104
+gs shl word [rbx + 8 * rdx],127
+o16 gs shl word [r14 + 1 * rdx + 0x7FFFFFFF],0
+o16 shl word [r14 + 1 * rdx + 0x7FFFFFFF],-104
+o16 shl word [r14 + 1 * rdx + 0x7FFFFFFF],127
+gs a32 o16 shl word [eax],115
+o16 shl word [eax],127
+a32 o16 shl word [eax],-128
+a32 shl word [r14d + 1 * edx + 0x7FFFFFFF],115
+o16 a32 shl word [r14d + 1 * edx + 0x7FFFFFFF],127
+gs shl word [r14d + 1 * edx + 0x7FFFFFFF],-128
+o16 a32 gs shl word [ebx + 8 * edx],115
+gs o16 shl word [ebx + 8 * edx],127
+o16 shl word [ebx + 8 * edx],-128
+gs o16 a32 shl si,-113
+a32 gs shl si,0
+gs a32 shl si,127
+o16 gs a32 shl bx,-113
+a32 gs o16 shl bx,0
+a32 shl bx,127
+gs a32 shl r15w,-113
+o16 gs shl r15w,0
+o16 a32 shl r15w,127
+gs o16 a32 shl r14w,-128
+o16 shl r14w,-113
+o16 gs shl r14w,-104
+gs o16 shl r13w,-128
+gs shl r13w,-113
+a32 shl r13w,-104
+gs o16 shl r12w,-128
+o16 shl r12w,-113
+shl r12w,-104

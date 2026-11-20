@@ -1,270 +1,270 @@
- gs movq qword [rbx + 8 * rdx],xmm10
-movq qword [rbx + 8 * rdx],xmm6
- gs movq qword [rbx + 8 * rdx],xmm0
-gs  movq qword [rdx - 0x80000000],xmm10
- gs movq qword [rdx - 0x80000000],xmm6
-gs  movq qword [rdx - 0x80000000],xmm0
-gs  movq qword [rax],xmm10
-movq qword [rax],xmm6
-gs movq qword [rax],xmm0
-gs  movq qword [r12d],xmm5
- a32 gs movq qword [r12d],xmm9
-a32  movq qword [r12d],xmm1
-gs  a32 movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm5
- a32 gs movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs a32  movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm1
-gs a32 movq qword [esp],xmm5
-gs a32 movq qword [esp],xmm9
-a32 gs movq qword [esp],xmm1
-gs  movq qword [r15 + 2 * rdi + 0x72],xmm12
-gs  movq qword [r15 + 2 * rdi + 0x72],xmm7
-gs movq qword [r15 + 2 * rdi + 0x72],xmm0
-movq qword [r14 + 1 * rdx + 0x7FFFFFFF],xmm12
-movq qword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
-gs  movq qword [r14 + 1 * rdx + 0x7FFFFFFF],xmm0
-movq qword [rbx + 8 * rdx],xmm12
-gs  movq qword [rbx + 8 * rdx],xmm7
-gs movq qword [rbx + 8 * rdx],xmm0
-gs movq qword [esp],xmm5
-a32 gs movq qword [esp],xmm15
-gs a32  movq qword [esp],xmm1
-a32 gs  movq qword [ebx + 8 * edx],xmm5
- gs a32 movq qword [ebx + 8 * edx],xmm15
-movq qword [ebx + 8 * edx],xmm1
-gs movq qword [edx - 0x80000000],xmm5
-movq qword [edx - 0x80000000],xmm15
-gs  a32 movq qword [edx - 0x80000000],xmm1
-gs o16 movq mm7,qword [rsp + 1 * rbp]
-gs o16 movq mm7,qword [r11 + r11 * 2 + 0x62eaacaf]
-gs movq mm7,qword [rsp]
-gs o16 movq mm6,qword [rsp + 1 * rbp]
-gs movq mm6,qword [r11 + r11 * 2 + 0x62eaacaf]
-o16 movq mm6,qword [rsp]
-movq mm3,qword [rsp + 1 * rbp]
-movq mm3,qword [r11 + r11 * 2 + 0x62eaacaf]
-o16 movq mm3,qword [rsp]
-a32 o16 gs movq mm7,qword [r13d]
-gs movq mm7,qword [edx - 0x80000000]
-a32 gs movq mm7,qword [esp]
-gs o16 a32 movq mm3,qword [r13d]
-o16 gs a32 movq mm3,qword [edx - 0x80000000]
-movq mm3,qword [esp]
-a32 movq mm2,qword [r13d]
-o16 movq mm2,qword [edx - 0x80000000]
-o16 gs a32 movq mm2,qword [esp]
-o16 movq mm6,qword [r13]
-o16 movq mm6,qword [rsp]
-movq mm6,qword [rsp + 1 * rbp]
-gs o16 movq mm4,qword [r13]
-movq mm4,qword [rsp]
+ gs movq qword [rsp + 1 * rbp],xmm2
+ gs movq qword [rsp + 1 * rbp],xmm11
+gs movq qword [rsp + 1 * rbp],xmm3
+gs movq qword [r11 + r11 * 2 + 0x2dd7b069],xmm2
+movq qword [r11 + r11 * 2 + 0x2dd7b069],xmm11
+ gs movq qword [r11 + r11 * 2 + 0x2dd7b069],xmm3
+movq qword [r12],xmm2
+gs  movq qword [r12],xmm11
+ gs movq qword [r12],xmm3
+a32 gs  movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm1
+a32 movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm14
+movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm8
+gs movq qword [ebp],xmm1
+ a32 movq qword [ebp],xmm14
+ a32 movq qword [ebp],xmm8
+ gs a32 movq qword [r11d + r11d * 2 + 0x2dd7b069],xmm1
+movq qword [r11d + r11d * 2 + 0x2dd7b069],xmm14
+gs  a32 movq qword [r11d + r11d * 2 + 0x2dd7b069],xmm8
+ gs movq qword [rbx + 8 * rdx],xmm13
+gs  movq qword [rbx + 8 * rdx],xmm14
+movq qword [rbx + 8 * rdx],xmm4
+movq qword [r12],xmm13
+movq qword [r12],xmm14
+ gs movq qword [r12],xmm4
+movq qword [r13],xmm13
+gs  movq qword [r13],xmm14
+ gs movq qword [r13],xmm4
+gs movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm12
+gs movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm14
+ a32 movq qword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
+ a32 movq qword [esp + 1 * ebp],xmm12
+gs a32 movq qword [esp + 1 * ebp],xmm14
+gs movq qword [esp + 1 * ebp],xmm0
+a32 movq qword [r12d],xmm12
+gs  a32 movq qword [r12d],xmm14
+ gs a32 movq qword [r12d],xmm0
+o16 gs movq mm4,qword [rsp]
 o16 movq mm4,qword [rsp + 1 * rbp]
-gs o16 movq mm0,qword [r13]
-gs o16 movq mm0,qword [rsp]
-gs o16 movq mm0,qword [rsp + 1 * rbp]
-gs a32 movq mm0,qword [r13d]
-gs o16 a32 movq mm0,qword [edx - 0x80000000]
-gs o16 a32 movq mm0,qword [esp + 1 * ebp]
-gs movq mm4,qword [r13d]
-a32 movq mm4,qword [edx - 0x80000000]
-o16 a32 gs movq mm4,qword [esp + 1 * ebp]
-o16 gs a32 movq mm2,qword [r13d]
-a32 o16 gs movq mm2,qword [edx - 0x80000000]
-gs a32 o16 movq mm2,qword [esp + 1 * ebp]
-o16 a32 gs movq mm6,mm4
-a32 gs movq mm6,mm3
-gs movq mm6,mm0
-gs a32 movq mm2,mm4
-o16 gs a32 movq mm2,mm3
-a32 o16 movq mm2,mm0
-gs a32 movq mm0,mm4
-a32 o16 gs movq mm0,mm3
-o16 gs a32 movq mm0,mm0
-a32 o16 movq mm2,mm7
-a32 o16 gs movq mm2,mm4
-o16 a32 gs movq mm2,mm1
-o16 a32 movq mm3,mm7
-o16 gs a32 movq mm3,mm4
-gs movq mm3,mm1
-o16 gs a32 movq mm5,mm7
-a32 gs movq mm5,mm4
-o16 a32 gs movq mm5,mm1
-gs movq mm5,rdi
-o16 movq mm5,rsi
-a32 o16 gs movq mm5,r10
-gs movq mm1,rdi
-gs movq mm1,rsi
-o16 gs movq mm1,r10
-o16 gs movq mm3,rdi
-a32 gs o16 movq mm3,rsi
-a32 o16 movq mm3,r10
- o16 movq xmm6,qword [rsp + 1 * rbp]
-o16 gs  movq xmm6,qword [r13]
-gs  o16 movq xmm6,qword [r15 + 2 * rdi + 0x72]
-o16 movq xmm2,qword [rsp + 1 * rbp]
-gs o16 movq xmm2,qword [r13]
-o16  gs movq xmm2,qword [r15 + 2 * rdi + 0x72]
-o16  movq xmm13,qword [rsp + 1 * rbp]
-o16  gs movq xmm13,qword [r13]
-gs  o16 movq xmm13,qword [r15 + 2 * rdi + 0x72]
-a32  gs o16 movq xmm3,qword [r12d]
-o16 gs a32  movq xmm3,qword [edx - 0x80000000]
-a32 gs o16  movq xmm3,qword [r13d]
- a32 gs movq xmm12,qword [r12d]
-a32 gs  movq xmm12,qword [edx - 0x80000000]
- a32 gs o16 movq xmm12,qword [r13d]
-o16 gs a32  movq xmm9,qword [r12d]
-gs o16 a32 movq xmm9,qword [edx - 0x80000000]
-o16  gs movq xmm9,qword [r13d]
-o16  gs movq xmm2,qword [r15 + 2 * rdi + 0x72]
- o16 movq xmm2,qword [r12]
- gs o16 movq xmm2,qword [r13]
-gs o16  movq xmm4,qword [r15 + 2 * rdi + 0x72]
- o16 gs movq xmm4,qword [r12]
-movq xmm4,qword [r13]
-o16  movq xmm13,qword [r15 + 2 * rdi + 0x72]
- gs o16 movq xmm13,qword [r12]
- o16 gs movq xmm13,qword [r13]
-gs  a32 movq xmm10,qword [ebx + 8 * edx]
-o16  gs a32 movq xmm10,qword [r15d + 2 * edi + 0x72]
-gs o16 a32  movq xmm10,qword [r12d]
-a32 gs movq xmm15,qword [ebx + 8 * edx]
-gs  a32 movq xmm15,qword [r15d + 2 * edi + 0x72]
- gs a32 o16 movq xmm15,qword [r12d]
-a32  o16 movq xmm8,qword [ebx + 8 * edx]
-o16 gs  a32 movq xmm8,qword [r15d + 2 * edi + 0x72]
-a32 gs  movq xmm8,qword [r12d]
-a32  gs movq xmm6,rbp
-a32  movq xmm6,r15
-gs a32 movq xmm6,r8
-gs  movq xmm14,rbp
-movq xmm14,r15
-gs a32 movq xmm14,r8
- gs a32 movq xmm15,rbp
- gs a32 movq xmm15,r15
-gs a32  movq xmm15,r8
-a32 o16 movq xmm13,xmm9
-a32 o16  gs movq xmm13,xmm14
- o16 gs movq xmm13,xmm6
-a32 o16 movq xmm12,xmm9
-gs a32 movq xmm12,xmm14
-a32 o16 movq xmm12,xmm6
- o16 a32 gs movq xmm5,xmm9
-o16  a32 movq xmm5,xmm14
-gs a32  o16 movq xmm5,xmm6
- gs movq xmm6,xmm0
-gs  a32 o16 movq xmm6,xmm15
-gs  o16 a32 movq xmm6,xmm5
- o16 a32 gs movq xmm5,xmm0
-gs  o16 movq xmm5,xmm15
-o16 gs  a32 movq xmm5,xmm5
-gs  o16 movq xmm9,xmm0
- a32 o16 gs movq xmm9,xmm15
-gs  a32 movq xmm9,xmm5
-gs movq qword [rax],mm2
-o16 movq qword [rax],mm6
-gs movq qword [rax],mm0
-gs o16 movq qword [r13],mm2
-o16 movq qword [r13],mm6
-gs o16 movq qword [r13],mm0
-gs movq qword [rsp],mm2
-o16 gs movq qword [rsp],mm6
-gs o16 movq qword [rsp],mm0
-a32 gs movq qword [ebx + 8 * edx],mm0
-a32 gs o16 movq qword [ebx + 8 * edx],mm3
-a32 movq qword [ebx + 8 * edx],mm1
-gs o16 a32 movq qword [r15d + 2 * edi + 0x72],mm0
-o16 gs movq qword [r15d + 2 * edi + 0x72],mm3
-a32 o16 gs movq qword [r15d + 2 * edi + 0x72],mm1
-a32 movq qword [r13d],mm0
-a32 o16 movq qword [r13d],mm3
-gs a32 movq qword [r13d],mm1
-movq qword [rsp + 1 * rbp],mm5
-o16 movq qword [rsp + 1 * rbp],mm4
-gs o16 movq qword [rsp + 1 * rbp],mm3
-gs movq qword [r13],mm5
-gs o16 movq qword [r13],mm4
-gs o16 movq qword [r13],mm3
-o16 movq qword [rbp],mm5
-gs movq qword [rbp],mm4
-movq qword [rbp],mm3
-gs a32 o16 movq qword [ebx + 8 * edx],mm3
-o16 a32 gs movq qword [ebx + 8 * edx],mm1
-movq qword [ebx + 8 * edx],mm7
-o16 a32 gs movq qword [eax],mm3
-gs o16 movq qword [eax],mm1
-a32 gs o16 movq qword [eax],mm7
-gs a32 movq qword [r15d + 2 * edi + 0x72],mm3
-o16 gs movq qword [r15d + 2 * edi + 0x72],mm1
-a32 movq qword [r15d + 2 * edi + 0x72],mm7
-gs o16 a32 movq mm2,mm3
-a32 o16 gs movq mm2,mm2
-o16 gs movq mm2,mm4
-a32 o16 gs movq mm4,mm3
-o16 gs a32 movq mm4,mm2
-movq mm4,mm4
-a32 o16 gs movq mm3,mm3
-a32 o16 movq mm3,mm2
-a32 movq mm3,mm4
-a32 gs o16 movq mm0,mm0
-a32 movq mm0,mm3
-gs o16 a32 movq mm0,mm5
-gs a32 movq mm3,mm0
-gs a32 movq mm3,mm3
-gs a32 o16 movq mm3,mm5
-o16 gs a32 movq mm7,mm0
-a32 o16 gs movq mm7,mm3
-a32 movq mm7,mm5
-o16 gs movq qword [r15 + 2 * rdi + 0x72],mm7
-o16 gs movq qword [r15 + 2 * rdi + 0x72],mm0
-movq qword [r15 + 2 * rdi + 0x72],mm2
-o16 movq qword [rax],mm7
-o16 movq qword [rax],mm0
-movq qword [rax],mm2
-gs o16 movq qword [rsp + 1 * rbp],mm7
+gs movq mm4,qword [r13]
+o16 movq mm3,qword [rsp]
+gs o16 movq mm3,qword [rsp + 1 * rbp]
+gs o16 movq mm3,qword [r13]
+gs o16 movq mm1,qword [rsp]
+movq mm1,qword [rsp + 1 * rbp]
+gs movq mm1,qword [r13]
+a32 o16 movq mm6,qword [edx - 0x80000000]
+o16 gs movq mm6,qword [r13d]
+movq mm6,qword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 movq mm0,qword [edx - 0x80000000]
+o16 a32 gs movq mm0,qword [r13d]
+gs a32 movq mm0,qword [r14d + 1 * edx + 0x7FFFFFFF]
+movq mm3,qword [edx - 0x80000000]
+a32 o16 gs movq mm3,qword [r13d]
+gs a32 movq mm3,qword [r14d + 1 * edx + 0x7FFFFFFF]
+movq mm2,qword [r13]
+gs movq mm2,qword [rsp]
+gs o16 movq mm2,qword [rbp]
+gs o16 movq mm7,qword [r13]
+o16 movq mm7,qword [rsp]
+o16 movq mm7,qword [rbp]
+gs o16 movq mm3,qword [r13]
+movq mm3,qword [rsp]
+gs movq mm3,qword [rbp]
+gs movq mm0,qword [eax]
+a32 gs o16 movq mm0,qword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 movq mm0,qword [r11d + r11d * 2 + 0x4d4ac4b9]
+gs a32 o16 movq mm2,qword [eax]
+a32 gs movq mm2,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs movq mm2,qword [r11d + r11d * 2 + 0x4d4ac4b9]
+gs a32 o16 movq mm7,qword [eax]
+gs a32 o16 movq mm7,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 movq mm7,qword [r11d + r11d * 2 + 0x4d4ac4b9]
+o16 a32 gs movq mm7,mm0
+a32 gs o16 movq mm7,mm5
+a32 movq mm7,mm7
+gs a32 o16 movq mm5,mm0
+o16 gs a32 movq mm5,mm5
+gs o16 a32 movq mm5,mm7
+gs a32 o16 movq mm6,mm0
+o16 a32 gs movq mm6,mm5
+a32 o16 movq mm6,mm7
+o16 gs movq mm3,mm2
+a32 o16 movq mm3,mm5
+gs a32 o16 movq mm3,mm1
+o16 gs movq mm1,mm2
+movq mm1,mm5
+o16 movq mm1,mm1
+a32 o16 movq mm5,mm2
+a32 gs movq mm5,mm5
+a32 movq mm5,mm1
+a32 o16 movq mm7,r8
+gs o16 a32 movq mm7,r12
+gs o16 a32 movq mm7,r9
+gs movq mm2,r8
+o16 gs movq mm2,r12
+gs movq mm2,r9
+a32 gs o16 movq mm4,r8
+o16 a32 movq mm4,r12
+gs movq mm4,r9
+gs  movq xmm12,qword [rbp]
+movq xmm12,qword [rdx - 0x80000000]
+gs o16 movq xmm12,qword [rbx + 8 * rdx]
+o16 gs movq xmm4,qword [rbp]
+movq xmm4,qword [rdx - 0x80000000]
+gs  o16 movq xmm4,qword [rbx + 8 * rdx]
+movq xmm14,qword [rbp]
+ o16 gs movq xmm14,qword [rdx - 0x80000000]
+gs o16 movq xmm14,qword [rbx + 8 * rdx]
+a32 gs  movq xmm0,qword [r12d]
+o16 a32  movq xmm0,qword [esp + 1 * ebp]
+ gs a32 movq xmm0,qword [eax]
+o16 a32  gs movq xmm13,qword [r12d]
+ o16 gs a32 movq xmm13,qword [esp + 1 * ebp]
+o16 gs a32  movq xmm13,qword [eax]
+o16 gs a32  movq xmm7,qword [r12d]
+a32  o16 movq xmm7,qword [esp + 1 * ebp]
+a32 o16  gs movq xmm7,qword [eax]
+o16 gs  movq xmm15,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+o16  movq xmm15,qword [rbp]
+o16 gs  movq xmm15,qword [r11 + r11 * 2 + 0x71cc87f3]
+o16  movq xmm5,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 movq xmm5,qword [rbp]
+movq xmm5,qword [r11 + r11 * 2 + 0x71cc87f3]
+o16 movq xmm3,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+movq xmm3,qword [rbp]
+gs o16  movq xmm3,qword [r11 + r11 * 2 + 0x71cc87f3]
+o16 a32 gs movq xmm11,qword [esp]
+ o16 movq xmm11,qword [r11d + r11d * 2 + 0x71cc87f3]
+gs a32  movq xmm11,qword [ebp]
+a32 o16 gs  movq xmm5,qword [esp]
+gs movq xmm5,qword [r11d + r11d * 2 + 0x71cc87f3]
+o16 a32  gs movq xmm5,qword [ebp]
+gs a32 movq xmm4,qword [esp]
+ gs a32 o16 movq xmm4,qword [r11d + r11d * 2 + 0x71cc87f3]
+o16 a32  gs movq xmm4,qword [ebp]
+gs  movq xmm8,rdx
+gs  movq xmm8,rsp
+gs movq xmm8,r15
+movq xmm0,rdx
+a32 gs movq xmm0,rsp
+a32  gs movq xmm0,r15
+gs a32  movq xmm15,rdx
+a32  gs movq xmm15,rsp
+a32 gs  movq xmm15,r15
+o16 a32 gs  movq xmm9,xmm14
+a32  o16 movq xmm9,xmm7
+o16  gs a32 movq xmm9,xmm4
+o16 movq xmm7,xmm14
+o16  gs a32 movq xmm7,xmm7
+o16  a32 movq xmm7,xmm4
+o16  movq xmm3,xmm14
+gs o16 a32 movq xmm3,xmm7
+ o16 a32 movq xmm3,xmm4
+gs movq xmm5,xmm15
+gs  o16 a32 movq xmm5,xmm5
+ a32 gs o16 movq xmm5,xmm2
+a32 o16 gs movq xmm0,xmm15
+o16 a32 gs  movq xmm0,xmm5
+o16  a32 gs movq xmm0,xmm2
+a32  movq xmm3,xmm15
+a32  gs o16 movq xmm3,xmm5
+gs o16  a32 movq xmm3,xmm2
+gs o16 movq qword [rbp],mm5
+gs o16 movq qword [rbp],mm3
+gs o16 movq qword [rbp],mm0
+o16 movq qword [r12],mm5
+movq qword [r12],mm3
+o16 movq qword [r12],mm0
+gs movq qword [rsp + 1 * rbp],mm5
+o16 gs movq qword [rsp + 1 * rbp],mm3
+o16 movq qword [rsp + 1 * rbp],mm0
+o16 movq qword [eax],mm6
+gs o16 a32 movq qword [eax],mm1
+o16 a32 gs movq qword [eax],mm5
+o16 a32 gs movq qword [r14d + 1 * edx + 0x7FFFFFFF],mm6
+o16 movq qword [r14d + 1 * edx + 0x7FFFFFFF],mm1
+gs a32 movq qword [r14d + 1 * edx + 0x7FFFFFFF],mm5
+o16 a32 movq qword [edx - 0x80000000],mm6
+a32 gs movq qword [edx - 0x80000000],mm1
+a32 movq qword [edx - 0x80000000],mm5
+gs o16 movq qword [rsp + 1 * rbp],mm6
 movq qword [rsp + 1 * rbp],mm0
-o16 movq qword [rsp + 1 * rbp],mm2
-gs o16 a32 movq qword [esp],mm0
-gs movq qword [esp],mm3
-o16 movq qword [esp],mm4
-a32 gs o16 movq qword [ebx + 8 * edx],mm0
-a32 gs o16 movq qword [ebx + 8 * edx],mm3
-o16 gs movq qword [ebx + 8 * edx],mm4
-gs a32 movq qword [ebp],mm0
-gs o16 a32 movq qword [ebp],mm3
-o16 gs movq qword [ebp],mm4
-gs o16 movq r13,mm6
-gs movq r13,mm1
-gs a32 o16 movq r13,mm5
-gs o16 a32 movq r10,mm6
-o16 movq r10,mm1
-o16 a32 gs movq r10,mm5
-gs a32 movq r15,mm6
-gs movq r15,mm1
-o16 movq r15,mm5
-movq qword [rsp + 1 * rbp],xmm8
-gs  movq qword [rsp + 1 * rbp],xmm10
-gs movq qword [rsp + 1 * rbp],xmm15
-gs movq qword [r12],xmm8
- gs movq qword [r12],xmm10
-gs movq qword [r12],xmm15
- gs movq qword [r11 + r11 * 2 + 0x7cde14bd],xmm8
- gs movq qword [r11 + r11 * 2 + 0x7cde14bd],xmm10
-movq qword [r11 + r11 * 2 + 0x7cde14bd],xmm15
-gs  movq qword [eax],xmm1
-a32 movq qword [eax],xmm15
- a32 gs movq qword [eax],xmm11
-gs a32  movq qword [ebx + 8 * edx],xmm1
- a32 gs movq qword [ebx + 8 * edx],xmm15
- a32 movq qword [ebx + 8 * edx],xmm11
-gs  a32 movq qword [esp + 1 * ebp],xmm1
-a32  movq qword [esp + 1 * ebp],xmm15
- gs a32 movq qword [esp + 1 * ebp],xmm11
-a32 movq r13,xmm15
-a32 movq r13,xmm4
-a32 gs  movq r13,xmm6
-gs  a32 movq rdi,xmm15
-a32 gs  movq rdi,xmm4
-gs a32  movq rdi,xmm6
- a32 movq r14,xmm15
-gs movq r14,xmm4
-movq r14,xmm6
+o16 gs movq qword [rsp + 1 * rbp],mm7
+o16 movq qword [rax],mm6
+movq qword [rax],mm0
+gs o16 movq qword [rax],mm7
+movq qword [r15 + 2 * rdi + 0x72],mm6
+o16 movq qword [r15 + 2 * rdi + 0x72],mm0
+gs o16 movq qword [r15 + 2 * rdi + 0x72],mm7
+gs a32 movq qword [r15d + 2 * edi + 0x72],mm5
+gs movq qword [r15d + 2 * edi + 0x72],mm1
+o16 a32 gs movq qword [r15d + 2 * edi + 0x72],mm3
+a32 o16 movq qword [r11d + r11d * 2 + 0x66959c12],mm5
+movq qword [r11d + r11d * 2 + 0x66959c12],mm1
+a32 movq qword [r11d + r11d * 2 + 0x66959c12],mm3
+o16 a32 gs movq qword [r13d],mm5
+movq qword [r13d],mm1
+gs a32 movq qword [r13d],mm3
+o16 a32 movq mm3,mm7
+a32 gs movq mm3,mm5
+movq mm3,mm6
+gs o16 a32 movq mm2,mm7
+gs o16 a32 movq mm2,mm5
+a32 o16 gs movq mm2,mm6
+movq mm5,mm7
+gs movq mm5,mm5
+movq mm5,mm6
+gs movq mm6,mm4
+a32 movq mm6,mm7
+a32 o16 gs movq mm6,mm6
+movq mm2,mm4
+a32 gs movq mm2,mm7
+gs a32 movq mm2,mm6
+o16 gs a32 movq mm4,mm4
+o16 a32 gs movq mm4,mm7
+o16 a32 gs movq mm4,mm6
+gs o16 movq qword [rsp + 1 * rbp],mm3
+o16 gs movq qword [rsp + 1 * rbp],mm2
+o16 movq qword [rsp + 1 * rbp],mm6
+gs movq qword [r11 + r11 * 2 + 0x534e0697],mm3
+o16 gs movq qword [r11 + r11 * 2 + 0x534e0697],mm2
+o16 movq qword [r11 + r11 * 2 + 0x534e0697],mm6
+gs o16 movq qword [rbx + 8 * rdx],mm3
+gs o16 movq qword [rbx + 8 * rdx],mm2
+o16 movq qword [rbx + 8 * rdx],mm6
+a32 gs movq qword [esp + 1 * ebp],mm4
+gs a32 o16 movq qword [esp + 1 * ebp],mm7
+a32 o16 movq qword [esp + 1 * ebp],mm3
+gs a32 movq qword [ebp],mm4
+o16 a32 movq qword [ebp],mm7
+o16 a32 gs movq qword [ebp],mm3
+gs a32 movq qword [eax],mm4
+o16 gs movq qword [eax],mm7
+o16 gs a32 movq qword [eax],mm3
+gs a32 movq r9,mm5
+o16 movq r9,mm6
+a32 o16 gs movq r9,mm7
+o16 gs a32 movq rdi,mm5
+o16 gs movq rdi,mm6
+o16 a32 movq rdi,mm7
+a32 o16 movq rcx,mm5
+a32 gs movq rcx,mm6
+gs o16 a32 movq rcx,mm7
+ gs movq qword [rax],xmm5
+movq qword [rax],xmm7
+gs movq qword [rax],xmm8
+movq qword [rsp],xmm5
+gs  movq qword [rsp],xmm7
+gs movq qword [rsp],xmm8
+movq qword [r14 + 1 * rdx + 0x7FFFFFFF],xmm5
+gs  movq qword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+movq qword [r14 + 1 * rdx + 0x7FFFFFFF],xmm8
+movq qword [r11d + r11d * 2 + 0x27849441],xmm7
+movq qword [r11d + r11d * 2 + 0x27849441],xmm13
+gs  movq qword [r11d + r11d * 2 + 0x27849441],xmm9
+ a32 gs movq qword [r13d],xmm7
+gs a32  movq qword [r13d],xmm13
+a32 gs  movq qword [r13d],xmm9
+gs a32 movq qword [r12d],xmm7
+a32  movq qword [r12d],xmm13
+a32 gs  movq qword [r12d],xmm9
+a32 movq r12,xmm10
+ a32 movq r12,xmm15
+ a32 gs movq r12,xmm4
+movq r13,xmm10
+ a32 gs movq r13,xmm15
+gs a32  movq r13,xmm4
+gs  movq rcx,xmm10
+a32 movq rcx,xmm15
+gs a32 movq rcx,xmm4

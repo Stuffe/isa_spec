@@ -1,243 +1,243 @@
-vpcomuw xmm4,xmm6,oword [rbp],-89
-gs vpcomuw xmm4,xmm6,oword [rbp],49
-vpcomuw xmm4,xmm6,oword [rbp],0
-vpcomuw xmm4,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-vpcomuw xmm4,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-gs vpcomuw xmm4,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs vpcomuw xmm4,xmm6,oword [rdx - 0x80000000],-89
-vpcomuw xmm4,xmm6,oword [rdx - 0x80000000],49
-gs vpcomuw xmm4,xmm6,oword [rdx - 0x80000000],0
-gs vpcomuw xmm4,xmm0,oword [rbp],-89
-vpcomuw xmm4,xmm0,oword [rbp],49
-gs vpcomuw xmm4,xmm0,oword [rbp],0
-gs vpcomuw xmm4,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-gs vpcomuw xmm4,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-gs vpcomuw xmm4,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs vpcomuw xmm4,xmm0,oword [rdx - 0x80000000],-89
-vpcomuw xmm4,xmm0,oword [rdx - 0x80000000],49
-gs vpcomuw xmm4,xmm0,oword [rdx - 0x80000000],0
-vpcomuw xmm4,xmm2,oword [rbp],-89
-vpcomuw xmm4,xmm2,oword [rbp],49
-gs vpcomuw xmm4,xmm2,oword [rbp],0
-vpcomuw xmm4,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-gs vpcomuw xmm4,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-vpcomuw xmm4,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-vpcomuw xmm4,xmm2,oword [rdx - 0x80000000],-89
-vpcomuw xmm4,xmm2,oword [rdx - 0x80000000],49
-gs vpcomuw xmm4,xmm2,oword [rdx - 0x80000000],0
-vpcomuw xmm12,xmm6,oword [rbp],-89
-vpcomuw xmm12,xmm6,oword [rbp],49
-gs vpcomuw xmm12,xmm6,oword [rbp],0
-gs vpcomuw xmm12,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-gs vpcomuw xmm12,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-vpcomuw xmm12,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-vpcomuw xmm12,xmm6,oword [rdx - 0x80000000],-89
-vpcomuw xmm12,xmm6,oword [rdx - 0x80000000],49
-vpcomuw xmm12,xmm6,oword [rdx - 0x80000000],0
-gs vpcomuw xmm12,xmm0,oword [rbp],-89
-vpcomuw xmm12,xmm0,oword [rbp],49
-gs vpcomuw xmm12,xmm0,oword [rbp],0
-vpcomuw xmm12,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-vpcomuw xmm12,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-gs vpcomuw xmm12,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs vpcomuw xmm12,xmm0,oword [rdx - 0x80000000],-89
-gs vpcomuw xmm12,xmm0,oword [rdx - 0x80000000],49
-vpcomuw xmm12,xmm0,oword [rdx - 0x80000000],0
-vpcomuw xmm12,xmm2,oword [rbp],-89
-gs vpcomuw xmm12,xmm2,oword [rbp],49
-gs vpcomuw xmm12,xmm2,oword [rbp],0
-gs vpcomuw xmm12,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-gs vpcomuw xmm12,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-vpcomuw xmm12,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs vpcomuw xmm12,xmm2,oword [rdx - 0x80000000],-89
-gs vpcomuw xmm12,xmm2,oword [rdx - 0x80000000],49
-gs vpcomuw xmm12,xmm2,oword [rdx - 0x80000000],0
-vpcomuw xmm1,xmm6,oword [rbp],-89
-vpcomuw xmm1,xmm6,oword [rbp],49
-vpcomuw xmm1,xmm6,oword [rbp],0
-vpcomuw xmm1,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-gs vpcomuw xmm1,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-vpcomuw xmm1,xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs vpcomuw xmm1,xmm6,oword [rdx - 0x80000000],-89
-gs vpcomuw xmm1,xmm6,oword [rdx - 0x80000000],49
-vpcomuw xmm1,xmm6,oword [rdx - 0x80000000],0
-vpcomuw xmm1,xmm0,oword [rbp],-89
-vpcomuw xmm1,xmm0,oword [rbp],49
-vpcomuw xmm1,xmm0,oword [rbp],0
-vpcomuw xmm1,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-gs vpcomuw xmm1,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-vpcomuw xmm1,xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-vpcomuw xmm1,xmm0,oword [rdx - 0x80000000],-89
-gs vpcomuw xmm1,xmm0,oword [rdx - 0x80000000],49
-gs vpcomuw xmm1,xmm0,oword [rdx - 0x80000000],0
-vpcomuw xmm1,xmm2,oword [rbp],-89
-vpcomuw xmm1,xmm2,oword [rbp],49
-gs vpcomuw xmm1,xmm2,oword [rbp],0
-vpcomuw xmm1,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],-89
-vpcomuw xmm1,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],49
-gs vpcomuw xmm1,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-gs vpcomuw xmm1,xmm2,oword [rdx - 0x80000000],-89
-gs vpcomuw xmm1,xmm2,oword [rdx - 0x80000000],49
-gs vpcomuw xmm1,xmm2,oword [rdx - 0x80000000],0
-a32 vpcomuw xmm2,xmm3,oword [r13d],0
-gs a32 vpcomuw xmm2,xmm3,oword [r13d],37
-a32 vpcomuw xmm2,xmm3,oword [r13d],127
-gs a32 vpcomuw xmm2,xmm3,oword [esp + 1 * ebp],0
-a32 gs vpcomuw xmm2,xmm3,oword [esp + 1 * ebp],37
-vpcomuw xmm2,xmm3,oword [esp + 1 * ebp],127
-a32 vpcomuw xmm2,xmm3,oword [r15d + 2 * edi + 0x72],0
-gs a32 vpcomuw xmm2,xmm3,oword [r15d + 2 * edi + 0x72],37
-a32 gs vpcomuw xmm2,xmm3,oword [r15d + 2 * edi + 0x72],127
-gs vpcomuw xmm2,xmm15,oword [r13d],0
-vpcomuw xmm2,xmm15,oword [r13d],37
-vpcomuw xmm2,xmm15,oword [r13d],127
-gs vpcomuw xmm2,xmm15,oword [esp + 1 * ebp],0
-a32 gs vpcomuw xmm2,xmm15,oword [esp + 1 * ebp],37
-vpcomuw xmm2,xmm15,oword [esp + 1 * ebp],127
-a32 vpcomuw xmm2,xmm15,oword [r15d + 2 * edi + 0x72],0
-gs a32 vpcomuw xmm2,xmm15,oword [r15d + 2 * edi + 0x72],37
-a32 gs vpcomuw xmm2,xmm15,oword [r15d + 2 * edi + 0x72],127
-vpcomuw xmm2,xmm0,oword [r13d],0
-vpcomuw xmm2,xmm0,oword [r13d],37
-a32 gs vpcomuw xmm2,xmm0,oword [r13d],127
-gs vpcomuw xmm2,xmm0,oword [esp + 1 * ebp],0
-gs vpcomuw xmm2,xmm0,oword [esp + 1 * ebp],37
-gs vpcomuw xmm2,xmm0,oword [esp + 1 * ebp],127
-a32 gs vpcomuw xmm2,xmm0,oword [r15d + 2 * edi + 0x72],0
-vpcomuw xmm2,xmm0,oword [r15d + 2 * edi + 0x72],37
-a32 vpcomuw xmm2,xmm0,oword [r15d + 2 * edi + 0x72],127
-vpcomuw xmm14,xmm3,oword [r13d],0
-a32 gs vpcomuw xmm14,xmm3,oword [r13d],37
-gs vpcomuw xmm14,xmm3,oword [r13d],127
-vpcomuw xmm14,xmm3,oword [esp + 1 * ebp],0
-vpcomuw xmm14,xmm3,oword [esp + 1 * ebp],37
-a32 gs vpcomuw xmm14,xmm3,oword [esp + 1 * ebp],127
-gs vpcomuw xmm14,xmm3,oword [r15d + 2 * edi + 0x72],0
-a32 vpcomuw xmm14,xmm3,oword [r15d + 2 * edi + 0x72],37
-gs a32 vpcomuw xmm14,xmm3,oword [r15d + 2 * edi + 0x72],127
-gs vpcomuw xmm14,xmm15,oword [r13d],0
-a32 gs vpcomuw xmm14,xmm15,oword [r13d],37
-a32 vpcomuw xmm14,xmm15,oword [r13d],127
-a32 gs vpcomuw xmm14,xmm15,oword [esp + 1 * ebp],0
-gs vpcomuw xmm14,xmm15,oword [esp + 1 * ebp],37
-a32 gs vpcomuw xmm14,xmm15,oword [esp + 1 * ebp],127
-a32 gs vpcomuw xmm14,xmm15,oword [r15d + 2 * edi + 0x72],0
-gs vpcomuw xmm14,xmm15,oword [r15d + 2 * edi + 0x72],37
-a32 gs vpcomuw xmm14,xmm15,oword [r15d + 2 * edi + 0x72],127
-gs vpcomuw xmm14,xmm0,oword [r13d],0
-a32 vpcomuw xmm14,xmm0,oword [r13d],37
-gs a32 vpcomuw xmm14,xmm0,oword [r13d],127
-gs vpcomuw xmm14,xmm0,oword [esp + 1 * ebp],0
-a32 gs vpcomuw xmm14,xmm0,oword [esp + 1 * ebp],37
-gs a32 vpcomuw xmm14,xmm0,oword [esp + 1 * ebp],127
-gs vpcomuw xmm14,xmm0,oword [r15d + 2 * edi + 0x72],0
-a32 vpcomuw xmm14,xmm0,oword [r15d + 2 * edi + 0x72],37
-gs vpcomuw xmm14,xmm0,oword [r15d + 2 * edi + 0x72],127
-a32 vpcomuw xmm13,xmm3,oword [r13d],0
-a32 gs vpcomuw xmm13,xmm3,oword [r13d],37
-a32 vpcomuw xmm13,xmm3,oword [r13d],127
-vpcomuw xmm13,xmm3,oword [esp + 1 * ebp],0
-a32 vpcomuw xmm13,xmm3,oword [esp + 1 * ebp],37
-vpcomuw xmm13,xmm3,oword [esp + 1 * ebp],127
-a32 gs vpcomuw xmm13,xmm3,oword [r15d + 2 * edi + 0x72],0
-gs vpcomuw xmm13,xmm3,oword [r15d + 2 * edi + 0x72],37
-vpcomuw xmm13,xmm3,oword [r15d + 2 * edi + 0x72],127
-a32 vpcomuw xmm13,xmm15,oword [r13d],0
-gs vpcomuw xmm13,xmm15,oword [r13d],37
-a32 vpcomuw xmm13,xmm15,oword [r13d],127
-gs a32 vpcomuw xmm13,xmm15,oword [esp + 1 * ebp],0
-gs vpcomuw xmm13,xmm15,oword [esp + 1 * ebp],37
-a32 gs vpcomuw xmm13,xmm15,oword [esp + 1 * ebp],127
-gs a32 vpcomuw xmm13,xmm15,oword [r15d + 2 * edi + 0x72],0
-gs a32 vpcomuw xmm13,xmm15,oword [r15d + 2 * edi + 0x72],37
-vpcomuw xmm13,xmm15,oword [r15d + 2 * edi + 0x72],127
-vpcomuw xmm13,xmm0,oword [r13d],0
-vpcomuw xmm13,xmm0,oword [r13d],37
-a32 gs vpcomuw xmm13,xmm0,oword [r13d],127
-gs vpcomuw xmm13,xmm0,oword [esp + 1 * ebp],0
-a32 gs vpcomuw xmm13,xmm0,oword [esp + 1 * ebp],37
-a32 vpcomuw xmm13,xmm0,oword [esp + 1 * ebp],127
-gs vpcomuw xmm13,xmm0,oword [r15d + 2 * edi + 0x72],0
-a32 gs vpcomuw xmm13,xmm0,oword [r15d + 2 * edi + 0x72],37
-a32 vpcomuw xmm13,xmm0,oword [r15d + 2 * edi + 0x72],127
-a32 vpcomuw xmm5,xmm8,xmm4,-128
-a32 gs vpcomuw xmm5,xmm8,xmm4,127
-vpcomuw xmm5,xmm8,xmm4,0
-a32 vpcomuw xmm5,xmm8,xmm0,-128
-a32 gs vpcomuw xmm5,xmm8,xmm0,127
-gs a32 vpcomuw xmm5,xmm8,xmm0,0
-a32 gs vpcomuw xmm5,xmm8,xmm15,-128
-gs a32 vpcomuw xmm5,xmm8,xmm15,127
-gs a32 vpcomuw xmm5,xmm8,xmm15,0
-a32 gs vpcomuw xmm5,xmm1,xmm4,-128
-gs vpcomuw xmm5,xmm1,xmm4,127
-vpcomuw xmm5,xmm1,xmm4,0
-a32 gs vpcomuw xmm5,xmm1,xmm0,-128
-a32 vpcomuw xmm5,xmm1,xmm0,127
-vpcomuw xmm5,xmm1,xmm0,0
-vpcomuw xmm5,xmm1,xmm15,-128
-a32 vpcomuw xmm5,xmm1,xmm15,127
-a32 vpcomuw xmm5,xmm1,xmm15,0
-gs a32 vpcomuw xmm5,xmm3,xmm4,-128
-vpcomuw xmm5,xmm3,xmm4,127
-vpcomuw xmm5,xmm3,xmm4,0
-vpcomuw xmm5,xmm3,xmm0,-128
-vpcomuw xmm5,xmm3,xmm0,127
-a32 gs vpcomuw xmm5,xmm3,xmm0,0
-a32 vpcomuw xmm5,xmm3,xmm15,-128
-a32 gs vpcomuw xmm5,xmm3,xmm15,127
-a32 gs vpcomuw xmm5,xmm3,xmm15,0
-a32 vpcomuw xmm0,xmm8,xmm4,-128
-gs a32 vpcomuw xmm0,xmm8,xmm4,127
-a32 gs vpcomuw xmm0,xmm8,xmm4,0
-gs vpcomuw xmm0,xmm8,xmm0,-128
-a32 gs vpcomuw xmm0,xmm8,xmm0,127
-a32 gs vpcomuw xmm0,xmm8,xmm0,0
-vpcomuw xmm0,xmm8,xmm15,-128
-a32 vpcomuw xmm0,xmm8,xmm15,127
-gs vpcomuw xmm0,xmm8,xmm15,0
-a32 gs vpcomuw xmm0,xmm1,xmm4,-128
-gs vpcomuw xmm0,xmm1,xmm4,127
-a32 gs vpcomuw xmm0,xmm1,xmm4,0
-gs a32 vpcomuw xmm0,xmm1,xmm0,-128
-a32 gs vpcomuw xmm0,xmm1,xmm0,127
-a32 vpcomuw xmm0,xmm1,xmm0,0
-gs vpcomuw xmm0,xmm1,xmm15,-128
-vpcomuw xmm0,xmm1,xmm15,127
-gs a32 vpcomuw xmm0,xmm1,xmm15,0
-gs vpcomuw xmm0,xmm3,xmm4,-128
-gs vpcomuw xmm0,xmm3,xmm4,127
-vpcomuw xmm0,xmm3,xmm4,0
-gs vpcomuw xmm0,xmm3,xmm0,-128
-vpcomuw xmm0,xmm3,xmm0,127
-gs a32 vpcomuw xmm0,xmm3,xmm0,0
-gs a32 vpcomuw xmm0,xmm3,xmm15,-128
-a32 gs vpcomuw xmm0,xmm3,xmm15,127
-gs vpcomuw xmm0,xmm3,xmm15,0
-gs a32 vpcomuw xmm2,xmm8,xmm4,-128
-vpcomuw xmm2,xmm8,xmm4,127
-gs vpcomuw xmm2,xmm8,xmm4,0
-vpcomuw xmm2,xmm8,xmm0,-128
-a32 gs vpcomuw xmm2,xmm8,xmm0,127
-gs a32 vpcomuw xmm2,xmm8,xmm0,0
-vpcomuw xmm2,xmm8,xmm15,-128
-a32 vpcomuw xmm2,xmm8,xmm15,127
-vpcomuw xmm2,xmm8,xmm15,0
-gs a32 vpcomuw xmm2,xmm1,xmm4,-128
-gs vpcomuw xmm2,xmm1,xmm4,127
-gs a32 vpcomuw xmm2,xmm1,xmm4,0
-gs a32 vpcomuw xmm2,xmm1,xmm0,-128
-gs a32 vpcomuw xmm2,xmm1,xmm0,127
-a32 gs vpcomuw xmm2,xmm1,xmm0,0
-vpcomuw xmm2,xmm1,xmm15,-128
-vpcomuw xmm2,xmm1,xmm15,127
-gs vpcomuw xmm2,xmm1,xmm15,0
-a32 gs vpcomuw xmm2,xmm3,xmm4,-128
-gs vpcomuw xmm2,xmm3,xmm4,127
-gs vpcomuw xmm2,xmm3,xmm4,0
-vpcomuw xmm2,xmm3,xmm0,-128
-a32 vpcomuw xmm2,xmm3,xmm0,127
-gs vpcomuw xmm2,xmm3,xmm0,0
-a32 gs vpcomuw xmm2,xmm3,xmm15,-128
-vpcomuw xmm2,xmm3,xmm15,127
-gs a32 vpcomuw xmm2,xmm3,xmm15,0
+gs vpcomuw xmm4,xmm11,oword [rbx + 8 * rdx],-26
+gs vpcomuw xmm4,xmm11,oword [rbx + 8 * rdx],0
+vpcomuw xmm4,xmm11,oword [rbx + 8 * rdx],-56
+vpcomuw xmm4,xmm11,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm4,xmm11,oword [rsp + 1 * rbp],0
+vpcomuw xmm4,xmm11,oword [rsp + 1 * rbp],-56
+vpcomuw xmm4,xmm11,oword [r13],-26
+gs vpcomuw xmm4,xmm11,oword [r13],0
+vpcomuw xmm4,xmm11,oword [r13],-56
+gs vpcomuw xmm4,xmm3,oword [rbx + 8 * rdx],-26
+vpcomuw xmm4,xmm3,oword [rbx + 8 * rdx],0
+gs vpcomuw xmm4,xmm3,oword [rbx + 8 * rdx],-56
+gs vpcomuw xmm4,xmm3,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm4,xmm3,oword [rsp + 1 * rbp],0
+vpcomuw xmm4,xmm3,oword [rsp + 1 * rbp],-56
+gs vpcomuw xmm4,xmm3,oword [r13],-26
+vpcomuw xmm4,xmm3,oword [r13],0
+gs vpcomuw xmm4,xmm3,oword [r13],-56
+gs vpcomuw xmm4,xmm15,oword [rbx + 8 * rdx],-26
+gs vpcomuw xmm4,xmm15,oword [rbx + 8 * rdx],0
+gs vpcomuw xmm4,xmm15,oword [rbx + 8 * rdx],-56
+gs vpcomuw xmm4,xmm15,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm4,xmm15,oword [rsp + 1 * rbp],0
+vpcomuw xmm4,xmm15,oword [rsp + 1 * rbp],-56
+gs vpcomuw xmm4,xmm15,oword [r13],-26
+gs vpcomuw xmm4,xmm15,oword [r13],0
+gs vpcomuw xmm4,xmm15,oword [r13],-56
+gs vpcomuw xmm5,xmm11,oword [rbx + 8 * rdx],-26
+gs vpcomuw xmm5,xmm11,oword [rbx + 8 * rdx],0
+vpcomuw xmm5,xmm11,oword [rbx + 8 * rdx],-56
+gs vpcomuw xmm5,xmm11,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm5,xmm11,oword [rsp + 1 * rbp],0
+vpcomuw xmm5,xmm11,oword [rsp + 1 * rbp],-56
+vpcomuw xmm5,xmm11,oword [r13],-26
+vpcomuw xmm5,xmm11,oword [r13],0
+gs vpcomuw xmm5,xmm11,oword [r13],-56
+vpcomuw xmm5,xmm3,oword [rbx + 8 * rdx],-26
+vpcomuw xmm5,xmm3,oword [rbx + 8 * rdx],0
+gs vpcomuw xmm5,xmm3,oword [rbx + 8 * rdx],-56
+gs vpcomuw xmm5,xmm3,oword [rsp + 1 * rbp],-26
+vpcomuw xmm5,xmm3,oword [rsp + 1 * rbp],0
+gs vpcomuw xmm5,xmm3,oword [rsp + 1 * rbp],-56
+gs vpcomuw xmm5,xmm3,oword [r13],-26
+gs vpcomuw xmm5,xmm3,oword [r13],0
+vpcomuw xmm5,xmm3,oword [r13],-56
+gs vpcomuw xmm5,xmm15,oword [rbx + 8 * rdx],-26
+gs vpcomuw xmm5,xmm15,oword [rbx + 8 * rdx],0
+gs vpcomuw xmm5,xmm15,oword [rbx + 8 * rdx],-56
+vpcomuw xmm5,xmm15,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm5,xmm15,oword [rsp + 1 * rbp],0
+vpcomuw xmm5,xmm15,oword [rsp + 1 * rbp],-56
+vpcomuw xmm5,xmm15,oword [r13],-26
+gs vpcomuw xmm5,xmm15,oword [r13],0
+vpcomuw xmm5,xmm15,oword [r13],-56
+vpcomuw xmm3,xmm11,oword [rbx + 8 * rdx],-26
+vpcomuw xmm3,xmm11,oword [rbx + 8 * rdx],0
+vpcomuw xmm3,xmm11,oword [rbx + 8 * rdx],-56
+gs vpcomuw xmm3,xmm11,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm3,xmm11,oword [rsp + 1 * rbp],0
+gs vpcomuw xmm3,xmm11,oword [rsp + 1 * rbp],-56
+vpcomuw xmm3,xmm11,oword [r13],-26
+gs vpcomuw xmm3,xmm11,oword [r13],0
+gs vpcomuw xmm3,xmm11,oword [r13],-56
+vpcomuw xmm3,xmm3,oword [rbx + 8 * rdx],-26
+vpcomuw xmm3,xmm3,oword [rbx + 8 * rdx],0
+vpcomuw xmm3,xmm3,oword [rbx + 8 * rdx],-56
+vpcomuw xmm3,xmm3,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm3,xmm3,oword [rsp + 1 * rbp],0
+vpcomuw xmm3,xmm3,oword [rsp + 1 * rbp],-56
+vpcomuw xmm3,xmm3,oword [r13],-26
+vpcomuw xmm3,xmm3,oword [r13],0
+gs vpcomuw xmm3,xmm3,oword [r13],-56
+vpcomuw xmm3,xmm15,oword [rbx + 8 * rdx],-26
+gs vpcomuw xmm3,xmm15,oword [rbx + 8 * rdx],0
+gs vpcomuw xmm3,xmm15,oword [rbx + 8 * rdx],-56
+gs vpcomuw xmm3,xmm15,oword [rsp + 1 * rbp],-26
+gs vpcomuw xmm3,xmm15,oword [rsp + 1 * rbp],0
+gs vpcomuw xmm3,xmm15,oword [rsp + 1 * rbp],-56
+vpcomuw xmm3,xmm15,oword [r13],-26
+gs vpcomuw xmm3,xmm15,oword [r13],0
+vpcomuw xmm3,xmm15,oword [r13],-56
+gs a32 vpcomuw xmm14,xmm4,oword [ebp],127
+a32 vpcomuw xmm14,xmm4,oword [ebp],-56
+gs vpcomuw xmm14,xmm4,oword [ebp],-128
+a32 vpcomuw xmm14,xmm4,oword [eax],127
+gs vpcomuw xmm14,xmm4,oword [eax],-56
+a32 gs vpcomuw xmm14,xmm4,oword [eax],-128
+a32 vpcomuw xmm14,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 vpcomuw xmm14,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+a32 gs vpcomuw xmm14,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+a32 vpcomuw xmm14,xmm8,oword [ebp],127
+vpcomuw xmm14,xmm8,oword [ebp],-56
+a32 vpcomuw xmm14,xmm8,oword [ebp],-128
+gs vpcomuw xmm14,xmm8,oword [eax],127
+a32 gs vpcomuw xmm14,xmm8,oword [eax],-56
+a32 gs vpcomuw xmm14,xmm8,oword [eax],-128
+vpcomuw xmm14,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 vpcomuw xmm14,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+gs vpcomuw xmm14,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+gs vpcomuw xmm14,xmm2,oword [ebp],127
+a32 gs vpcomuw xmm14,xmm2,oword [ebp],-56
+a32 gs vpcomuw xmm14,xmm2,oword [ebp],-128
+a32 vpcomuw xmm14,xmm2,oword [eax],127
+gs vpcomuw xmm14,xmm2,oword [eax],-56
+gs vpcomuw xmm14,xmm2,oword [eax],-128
+gs vpcomuw xmm14,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 vpcomuw xmm14,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+a32 gs vpcomuw xmm14,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+gs vpcomuw xmm4,xmm4,oword [ebp],127
+a32 vpcomuw xmm4,xmm4,oword [ebp],-56
+a32 gs vpcomuw xmm4,xmm4,oword [ebp],-128
+a32 gs vpcomuw xmm4,xmm4,oword [eax],127
+gs vpcomuw xmm4,xmm4,oword [eax],-56
+a32 gs vpcomuw xmm4,xmm4,oword [eax],-128
+gs a32 vpcomuw xmm4,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+gs vpcomuw xmm4,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+gs vpcomuw xmm4,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+vpcomuw xmm4,xmm8,oword [ebp],127
+gs a32 vpcomuw xmm4,xmm8,oword [ebp],-56
+a32 gs vpcomuw xmm4,xmm8,oword [ebp],-128
+vpcomuw xmm4,xmm8,oword [eax],127
+vpcomuw xmm4,xmm8,oword [eax],-56
+a32 vpcomuw xmm4,xmm8,oword [eax],-128
+a32 vpcomuw xmm4,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+vpcomuw xmm4,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+a32 vpcomuw xmm4,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+vpcomuw xmm4,xmm2,oword [ebp],127
+a32 gs vpcomuw xmm4,xmm2,oword [ebp],-56
+a32 vpcomuw xmm4,xmm2,oword [ebp],-128
+a32 gs vpcomuw xmm4,xmm2,oword [eax],127
+a32 gs vpcomuw xmm4,xmm2,oword [eax],-56
+a32 gs vpcomuw xmm4,xmm2,oword [eax],-128
+gs a32 vpcomuw xmm4,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 vpcomuw xmm4,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+gs vpcomuw xmm4,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+vpcomuw xmm12,xmm4,oword [ebp],127
+gs vpcomuw xmm12,xmm4,oword [ebp],-56
+gs a32 vpcomuw xmm12,xmm4,oword [ebp],-128
+a32 vpcomuw xmm12,xmm4,oword [eax],127
+gs vpcomuw xmm12,xmm4,oword [eax],-56
+a32 vpcomuw xmm12,xmm4,oword [eax],-128
+a32 vpcomuw xmm12,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+gs a32 vpcomuw xmm12,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+a32 gs vpcomuw xmm12,xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+gs vpcomuw xmm12,xmm8,oword [ebp],127
+a32 gs vpcomuw xmm12,xmm8,oword [ebp],-56
+a32 gs vpcomuw xmm12,xmm8,oword [ebp],-128
+a32 gs vpcomuw xmm12,xmm8,oword [eax],127
+vpcomuw xmm12,xmm8,oword [eax],-56
+gs a32 vpcomuw xmm12,xmm8,oword [eax],-128
+gs a32 vpcomuw xmm12,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 gs vpcomuw xmm12,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+a32 vpcomuw xmm12,xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+gs a32 vpcomuw xmm12,xmm2,oword [ebp],127
+a32 gs vpcomuw xmm12,xmm2,oword [ebp],-56
+a32 vpcomuw xmm12,xmm2,oword [ebp],-128
+a32 vpcomuw xmm12,xmm2,oword [eax],127
+gs vpcomuw xmm12,xmm2,oword [eax],-56
+gs vpcomuw xmm12,xmm2,oword [eax],-128
+a32 gs vpcomuw xmm12,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 vpcomuw xmm12,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-56
+vpcomuw xmm12,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+a32 gs vpcomuw xmm11,xmm10,xmm15,127
+vpcomuw xmm11,xmm10,xmm15,71
+gs a32 vpcomuw xmm11,xmm10,xmm15,-128
+gs vpcomuw xmm11,xmm10,xmm7,127
+gs a32 vpcomuw xmm11,xmm10,xmm7,71
+gs vpcomuw xmm11,xmm10,xmm7,-128
+gs vpcomuw xmm11,xmm10,xmm11,127
+a32 gs vpcomuw xmm11,xmm10,xmm11,71
+a32 gs vpcomuw xmm11,xmm10,xmm11,-128
+gs vpcomuw xmm11,xmm11,xmm15,127
+a32 vpcomuw xmm11,xmm11,xmm15,71
+a32 gs vpcomuw xmm11,xmm11,xmm15,-128
+a32 vpcomuw xmm11,xmm11,xmm7,127
+vpcomuw xmm11,xmm11,xmm7,71
+a32 vpcomuw xmm11,xmm11,xmm7,-128
+a32 vpcomuw xmm11,xmm11,xmm11,127
+gs a32 vpcomuw xmm11,xmm11,xmm11,71
+a32 gs vpcomuw xmm11,xmm11,xmm11,-128
+vpcomuw xmm11,xmm15,xmm15,127
+vpcomuw xmm11,xmm15,xmm15,71
+gs vpcomuw xmm11,xmm15,xmm15,-128
+a32 vpcomuw xmm11,xmm15,xmm7,127
+gs a32 vpcomuw xmm11,xmm15,xmm7,71
+a32 vpcomuw xmm11,xmm15,xmm7,-128
+gs a32 vpcomuw xmm11,xmm15,xmm11,127
+a32 gs vpcomuw xmm11,xmm15,xmm11,71
+vpcomuw xmm11,xmm15,xmm11,-128
+vpcomuw xmm12,xmm10,xmm15,127
+gs a32 vpcomuw xmm12,xmm10,xmm15,71
+vpcomuw xmm12,xmm10,xmm15,-128
+vpcomuw xmm12,xmm10,xmm7,127
+gs a32 vpcomuw xmm12,xmm10,xmm7,71
+a32 vpcomuw xmm12,xmm10,xmm7,-128
+gs a32 vpcomuw xmm12,xmm10,xmm11,127
+gs vpcomuw xmm12,xmm10,xmm11,71
+a32 gs vpcomuw xmm12,xmm10,xmm11,-128
+gs vpcomuw xmm12,xmm11,xmm15,127
+a32 gs vpcomuw xmm12,xmm11,xmm15,71
+vpcomuw xmm12,xmm11,xmm15,-128
+a32 gs vpcomuw xmm12,xmm11,xmm7,127
+vpcomuw xmm12,xmm11,xmm7,71
+a32 gs vpcomuw xmm12,xmm11,xmm7,-128
+gs a32 vpcomuw xmm12,xmm11,xmm11,127
+a32 vpcomuw xmm12,xmm11,xmm11,71
+gs vpcomuw xmm12,xmm11,xmm11,-128
+a32 vpcomuw xmm12,xmm15,xmm15,127
+a32 vpcomuw xmm12,xmm15,xmm15,71
+gs vpcomuw xmm12,xmm15,xmm15,-128
+a32 gs vpcomuw xmm12,xmm15,xmm7,127
+gs vpcomuw xmm12,xmm15,xmm7,71
+a32 vpcomuw xmm12,xmm15,xmm7,-128
+a32 vpcomuw xmm12,xmm15,xmm11,127
+a32 gs vpcomuw xmm12,xmm15,xmm11,71
+gs vpcomuw xmm12,xmm15,xmm11,-128
+a32 vpcomuw xmm8,xmm10,xmm15,127
+vpcomuw xmm8,xmm10,xmm15,71
+vpcomuw xmm8,xmm10,xmm15,-128
+a32 gs vpcomuw xmm8,xmm10,xmm7,127
+vpcomuw xmm8,xmm10,xmm7,71
+a32 vpcomuw xmm8,xmm10,xmm7,-128
+vpcomuw xmm8,xmm10,xmm11,127
+gs a32 vpcomuw xmm8,xmm10,xmm11,71
+gs vpcomuw xmm8,xmm10,xmm11,-128
+vpcomuw xmm8,xmm11,xmm15,127
+gs a32 vpcomuw xmm8,xmm11,xmm15,71
+vpcomuw xmm8,xmm11,xmm15,-128
+gs vpcomuw xmm8,xmm11,xmm7,127
+a32 gs vpcomuw xmm8,xmm11,xmm7,71
+gs vpcomuw xmm8,xmm11,xmm7,-128
+a32 gs vpcomuw xmm8,xmm11,xmm11,127
+a32 vpcomuw xmm8,xmm11,xmm11,71
+vpcomuw xmm8,xmm11,xmm11,-128
+gs a32 vpcomuw xmm8,xmm15,xmm15,127
+gs a32 vpcomuw xmm8,xmm15,xmm15,71
+vpcomuw xmm8,xmm15,xmm15,-128
+a32 gs vpcomuw xmm8,xmm15,xmm7,127
+a32 gs vpcomuw xmm8,xmm15,xmm7,71
+gs a32 vpcomuw xmm8,xmm15,xmm7,-128
+a32 gs vpcomuw xmm8,xmm15,xmm11,127
+gs a32 vpcomuw xmm8,xmm15,xmm11,71
+gs vpcomuw xmm8,xmm15,xmm11,-128

@@ -1,2 +1,2 @@
-o16 a32 vmload 
-gs a32 vmload 
+gs o16 vmload 
+o16 vmload 

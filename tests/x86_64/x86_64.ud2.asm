@@ -1,2 +1,2 @@
-o16 a32 ud2 
-gs ud2 
+gs a32 o16 ud2 
+o16 gs a32 ud2 

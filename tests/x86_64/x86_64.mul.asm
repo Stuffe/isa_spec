@@ -1,63 +1,63 @@
-o16 gs mul byte [rbx + 8 * rdx]
-gs o16 mul byte [r15 + 2 * rdi + 0x72]
-gs o16 mul byte [r14 + 1 * rdx + 0x7FFFFFFF]
-o16 mul byte [r12d]
-a32 o16 mul byte [ebp]
-o16 gs a32 mul byte [esp + 1 * ebp]
-gs mul byte [r14 + 1 * rdx + 0x7FFFFFFF]
-o16 gs mul byte [r13]
-gs o16 mul byte [rax]
+gs o16 mul byte [r11 + r11 * 2 + 0x7f76f6c1]
+gs mul byte [rbx + 8 * rdx]
+gs mul byte [rdx - 0x80000000]
+a32 gs o16 mul byte [r13d]
+gs mul byte [r15d + 2 * edi + 0x72]
 a32 mul byte [ebx + 8 * edx]
-gs a32 mul byte [r14d + 1 * edx + 0x7FFFFFFF]
-o16 a32 gs mul byte [eax]
-a32 gs o16 mul cl
-o16 a32 mul r10b
-o16 a32 gs mul bpl
-mul dl
-a32 gs mul r13b
-o16 mul r14b
-gs mul qword [rbp]
-mul qword [r15 + 2 * rdi + 0x72]
-mul qword [r11 + r11 * 2 + 0x15449e95]
-a32 gs mul qword [esp]
-a32 gs mul qword [r15d + 2 * edi + 0x72]
-gs mul qword [r11d + r11d * 2 + 0x15449e95]
-gs mul rdi
+mul byte [rax]
+o16 gs mul byte [rdx - 0x80000000]
+gs o16 mul byte [rsp + 1 * rbp]
+o16 gs a32 mul byte [r12d]
+mul byte [r14d + 1 * edx + 0x7FFFFFFF]
+gs mul byte [r11d + r11d * 2 + 0x7f76f6c1]
+mul dil
+o16 gs a32 mul al
+a32 o16 mul r9b
+a32 gs mul al
+gs a32 o16 mul r9b
+gs o16 mul r12b
+gs mul qword [r11 + r11 * 2 + 0x56c48194]
+gs mul qword [rsp + 1 * rbp]
+gs mul qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs mul qword [esp + 1 * ebp]
+mul qword [edx - 0x80000000]
+mul qword [esp]
 gs mul rbx
-gs mul r9
-gs mul dword [rsp + 1 * rbp]
-gs mul dword [rbx + 8 * rdx]
-mul dword [r13]
-mul dword [r13d]
-gs a32 mul dword [r11d + r11d * 2 + 0x21771664]
-mul dword [ebx + 8 * edx]
-mul dword [r12]
-mul dword [r13]
-gs mul dword [rbx + 8 * rdx]
-mul dword [r12d]
-a32 gs mul dword [ebp]
-mul dword [eax]
-mul esp
-a32 mul r15d
-gs mul ebx
-a32 gs mul r12d
-gs mul edx
-mul r13d
-gs mul word [rdx - 0x80000000]
+gs mul r15
+a32 mul r13
+mul dword [rsp + 1 * rbp]
+gs mul dword [rbp]
+mul dword [rax]
+gs mul dword [r13d]
+a32 mul dword [r11d + r11d * 2 + 0x750e6fea]
+gs a32 mul dword [ebp]
+gs mul dword [r11 + r11 * 2 + 0x750e6fea]
+gs mul dword [r14 + 1 * rdx + 0x7FFFFFFF]
+mul dword [rbp]
+mul dword [esp]
+a32 gs mul dword [ebx + 8 * edx]
+gs a32 mul dword [r12d]
+a32 mul r10d
+a32 mul r11d
+gs mul r9d
+a32 mul esi
+gs a32 mul ebp
+gs mul r15d
+gs o16 mul word [r11 + r11 * 2 + 0x162d8851]
+o16 gs mul word [rbx + 8 * rdx]
 gs o16 mul word [rsp]
-o16 gs mul word [rbp]
-o16 gs mul word [ebx + 8 * edx]
-gs o16 a32 mul word [esp]
-a32 gs o16 mul word [esp + 1 * ebp]
-o16 gs mul word [r13]
-mul word [r12]
-o16 mul word [rsp]
-a32 o16 gs mul word [r11d + r11d * 2 + 0x10b6ff76]
-a32 gs o16 mul word [esp]
-o16 gs a32 mul word [esp + 1 * ebp]
-gs a32 o16 mul r8w
-o16 a32 mul r11w
-a32 gs mul di
+o16 a32 mul word [r15d + 2 * edi + 0x72]
+o16 a32 gs mul word [edx - 0x80000000]
+gs o16 mul word [eax]
+mul word [rbp]
+o16 mul word [rdx - 0x80000000]
+o16 mul word [rbx + 8 * rdx]
+gs mul word [r11d + r11d * 2 + 0x162d8851]
+o16 gs a32 mul word [r14d + 1 * edx + 0x7FFFFFFF]
+mul word [r12d]
+gs o16 mul r11w
+o16 gs a32 mul r9w
 a32 mul ax
-o16 a32 gs mul bp
-a32 gs o16 mul r9w
+o16 a32 gs mul r15w
+a32 mul r12w
+o16 mul sp

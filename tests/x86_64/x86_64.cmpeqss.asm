@@ -1,54 +1,54 @@
-o16 gs  cmpeqss xmm10,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16  cmpeqss xmm10,dword [rbx + 8 * rdx]
-o16  cmpeqss xmm10,dword [r13]
- gs o16 cmpeqss xmm15,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-cmpeqss xmm15,dword [rbx + 8 * rdx]
-cmpeqss xmm15,dword [r13]
-o16 gs  cmpeqss xmm9,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-cmpeqss xmm9,dword [rbx + 8 * rdx]
- o16 cmpeqss xmm9,dword [r13]
-o16 gs  a32 cmpeqss xmm1,dword [esp]
-a32 gs  cmpeqss xmm1,dword [ebx + 8 * edx]
- gs a32 o16 cmpeqss xmm1,dword [esp + 1 * ebp]
-gs cmpeqss xmm6,dword [esp]
- a32 cmpeqss xmm6,dword [ebx + 8 * edx]
-gs o16 a32 cmpeqss xmm6,dword [esp + 1 * ebp]
-gs  a32 o16 cmpeqss xmm9,dword [esp]
-o16 a32 gs  cmpeqss xmm9,dword [ebx + 8 * edx]
- a32 o16 cmpeqss xmm9,dword [esp + 1 * ebp]
-o16 cmpeqss xmm4,dword [rax]
-gs  o16 cmpeqss xmm4,dword [rdx - 0x80000000]
- gs o16 cmpeqss xmm4,dword [rbx + 8 * rdx]
-o16 cmpeqss xmm2,dword [rax]
- gs o16 cmpeqss xmm2,dword [rdx - 0x80000000]
- o16 cmpeqss xmm2,dword [rbx + 8 * rdx]
-gs  o16 cmpeqss xmm0,dword [rax]
-o16 gs  cmpeqss xmm0,dword [rdx - 0x80000000]
- o16 cmpeqss xmm0,dword [rbx + 8 * rdx]
-gs a32  o16 cmpeqss xmm6,dword [r13d]
- gs o16 cmpeqss xmm6,dword [r14d + 1 * edx + 0x7FFFFFFF]
-o16  a32 gs cmpeqss xmm6,dword [esp]
-o16 gs a32 cmpeqss xmm1,dword [r13d]
-o16  gs cmpeqss xmm1,dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs  o16 cmpeqss xmm1,dword [esp]
-a32  o16 gs cmpeqss xmm13,dword [r13d]
-gs  a32 cmpeqss xmm13,dword [r14d + 1 * edx + 0x7FFFFFFF]
-o16  gs cmpeqss xmm13,dword [esp]
- a32 cmpeqss xmm10,xmm0
-gs  o16 a32 cmpeqss xmm10,xmm1
-o16  a32 cmpeqss xmm10,xmm14
-a32  o16 cmpeqss xmm2,xmm0
- o16 gs a32 cmpeqss xmm2,xmm1
-o16 gs a32 cmpeqss xmm2,xmm14
-cmpeqss xmm6,xmm0
- a32 gs cmpeqss xmm6,xmm1
-a32 gs  o16 cmpeqss xmm6,xmm14
- o16 gs cmpeqss xmm3,xmm5
-o16  gs cmpeqss xmm3,xmm6
-o16 gs a32 cmpeqss xmm3,xmm13
- a32 gs cmpeqss xmm12,xmm5
- o16 gs cmpeqss xmm12,xmm6
-a32 gs o16 cmpeqss xmm12,xmm13
-a32 o16  gs cmpeqss xmm1,xmm5
-gs o16  cmpeqss xmm1,xmm6
-gs a32 o16  cmpeqss xmm1,xmm13
+o16  gs cmpeqss xmm13,dword [r11 + r11 * 2 + 0x29c0068]
+o16 gs cmpeqss xmm13,dword [rdx - 0x80000000]
+ gs o16 cmpeqss xmm13,dword [rsp + 1 * rbp]
+ o16 cmpeqss xmm14,dword [r11 + r11 * 2 + 0x29c0068]
+gs  o16 cmpeqss xmm14,dword [rdx - 0x80000000]
+gs cmpeqss xmm14,dword [rsp + 1 * rbp]
+gs o16 cmpeqss xmm15,dword [r11 + r11 * 2 + 0x29c0068]
+ gs cmpeqss xmm15,dword [rdx - 0x80000000]
+ o16 cmpeqss xmm15,dword [rsp + 1 * rbp]
+gs o16 a32  cmpeqss xmm6,dword [ebx + 8 * edx]
+a32  cmpeqss xmm6,dword [r15d + 2 * edi + 0x72]
+ gs o16 cmpeqss xmm6,dword [esp + 1 * ebp]
+gs  o16 cmpeqss xmm5,dword [ebx + 8 * edx]
+gs  o16 cmpeqss xmm5,dword [r15d + 2 * edi + 0x72]
+o16  cmpeqss xmm5,dword [esp + 1 * ebp]
+gs o16 a32 cmpeqss xmm9,dword [ebx + 8 * edx]
+o16 gs  a32 cmpeqss xmm9,dword [r15d + 2 * edi + 0x72]
+o16  a32 cmpeqss xmm9,dword [esp + 1 * ebp]
+gs o16 cmpeqss xmm2,dword [r15 + 2 * rdi + 0x72]
+o16  cmpeqss xmm2,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs o16 cmpeqss xmm2,dword [rsp + 1 * rbp]
+gs o16  cmpeqss xmm10,dword [r15 + 2 * rdi + 0x72]
+o16  gs cmpeqss xmm10,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16  cmpeqss xmm10,dword [rsp + 1 * rbp]
+cmpeqss xmm15,dword [r15 + 2 * rdi + 0x72]
+o16 gs  cmpeqss xmm15,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmpeqss xmm15,dword [rsp + 1 * rbp]
+o16 gs cmpeqss xmm2,dword [r11d + r11d * 2 + 0x29c0068]
+o16 a32  gs cmpeqss xmm2,dword [eax]
+gs a32 o16  cmpeqss xmm2,dword [esp + 1 * ebp]
+cmpeqss xmm5,dword [r11d + r11d * 2 + 0x29c0068]
+a32  o16 cmpeqss xmm5,dword [eax]
+a32 o16 gs cmpeqss xmm5,dword [esp + 1 * ebp]
+o16 gs  cmpeqss xmm9,dword [r11d + r11d * 2 + 0x29c0068]
+gs o16  cmpeqss xmm9,dword [eax]
+cmpeqss xmm9,dword [esp + 1 * ebp]
+ gs a32 o16 cmpeqss xmm0,xmm14
+gs a32 cmpeqss xmm0,xmm1
+a32  gs o16 cmpeqss xmm0,xmm9
+a32 gs  cmpeqss xmm4,xmm14
+gs cmpeqss xmm4,xmm1
+a32 gs  o16 cmpeqss xmm4,xmm9
+o16  a32 gs cmpeqss xmm8,xmm14
+ a32 o16 gs cmpeqss xmm8,xmm1
+ a32 o16 gs cmpeqss xmm8,xmm9
+a32 o16  cmpeqss xmm8,xmm0
+gs  cmpeqss xmm8,xmm9
+a32 gs o16  cmpeqss xmm8,xmm6
+ a32 cmpeqss xmm4,xmm0
+ gs o16 cmpeqss xmm4,xmm9
+gs  a32 o16 cmpeqss xmm4,xmm6
+ a32 cmpeqss xmm2,xmm0
+gs  o16 a32 cmpeqss xmm2,xmm9
+gs  a32 cmpeqss xmm2,xmm6

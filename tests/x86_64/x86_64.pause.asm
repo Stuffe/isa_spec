@@ -1,2 +1,2 @@
-a32 pause 
- gs o16 a32 pause 
+a32  o16 gs pause 
+o16 a32  pause 

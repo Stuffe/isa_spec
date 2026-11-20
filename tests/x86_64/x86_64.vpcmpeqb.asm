@@ -1,324 +1,324 @@
-gs vpcmpeqb xmm13,xmm13,oword [rdx - 0x80000000]
-gs vpcmpeqb xmm13,xmm13,oword [r13]
-vpcmpeqb xmm13,xmm13,oword [rsp]
-gs vpcmpeqb xmm13,xmm7,oword [rdx - 0x80000000]
-vpcmpeqb xmm13,xmm7,oword [r13]
-gs vpcmpeqb xmm13,xmm7,oword [rsp]
-gs vpcmpeqb xmm13,xmm10,oword [rdx - 0x80000000]
-vpcmpeqb xmm13,xmm10,oword [r13]
-vpcmpeqb xmm13,xmm10,oword [rsp]
-gs vpcmpeqb xmm5,xmm13,oword [rdx - 0x80000000]
-gs vpcmpeqb xmm5,xmm13,oword [r13]
-vpcmpeqb xmm5,xmm13,oword [rsp]
-gs vpcmpeqb xmm5,xmm7,oword [rdx - 0x80000000]
-gs vpcmpeqb xmm5,xmm7,oword [r13]
-gs vpcmpeqb xmm5,xmm7,oword [rsp]
-vpcmpeqb xmm5,xmm10,oword [rdx - 0x80000000]
-gs vpcmpeqb xmm5,xmm10,oword [r13]
-vpcmpeqb xmm5,xmm10,oword [rsp]
-vpcmpeqb xmm9,xmm13,oword [rdx - 0x80000000]
-gs vpcmpeqb xmm9,xmm13,oword [r13]
-vpcmpeqb xmm9,xmm13,oword [rsp]
-vpcmpeqb xmm9,xmm7,oword [rdx - 0x80000000]
-gs vpcmpeqb xmm9,xmm7,oword [r13]
-vpcmpeqb xmm9,xmm7,oword [rsp]
-gs vpcmpeqb xmm9,xmm10,oword [rdx - 0x80000000]
-vpcmpeqb xmm9,xmm10,oword [r13]
-vpcmpeqb xmm9,xmm10,oword [rsp]
-a32 gs vpcmpeqb xmm13,xmm11,oword [eax]
-gs vpcmpeqb xmm13,xmm11,oword [ebx + 8 * edx]
-gs a32 vpcmpeqb xmm13,xmm11,oword [esp + 1 * ebp]
-a32 vpcmpeqb xmm13,xmm5,oword [eax]
-vpcmpeqb xmm13,xmm5,oword [ebx + 8 * edx]
-a32 vpcmpeqb xmm13,xmm5,oword [esp + 1 * ebp]
-vpcmpeqb xmm13,xmm8,oword [eax]
-a32 vpcmpeqb xmm13,xmm8,oword [ebx + 8 * edx]
-vpcmpeqb xmm13,xmm8,oword [esp + 1 * ebp]
-gs vpcmpeqb xmm8,xmm11,oword [eax]
-a32 gs vpcmpeqb xmm8,xmm11,oword [ebx + 8 * edx]
-a32 vpcmpeqb xmm8,xmm11,oword [esp + 1 * ebp]
-a32 vpcmpeqb xmm8,xmm5,oword [eax]
-a32 gs vpcmpeqb xmm8,xmm5,oword [ebx + 8 * edx]
-gs vpcmpeqb xmm8,xmm5,oword [esp + 1 * ebp]
-vpcmpeqb xmm8,xmm8,oword [eax]
-a32 vpcmpeqb xmm8,xmm8,oword [ebx + 8 * edx]
-gs vpcmpeqb xmm8,xmm8,oword [esp + 1 * ebp]
-a32 vpcmpeqb xmm15,xmm11,oword [eax]
-vpcmpeqb xmm15,xmm11,oword [ebx + 8 * edx]
-a32 vpcmpeqb xmm15,xmm11,oword [esp + 1 * ebp]
-a32 vpcmpeqb xmm15,xmm5,oword [eax]
-a32 vpcmpeqb xmm15,xmm5,oword [ebx + 8 * edx]
-vpcmpeqb xmm15,xmm5,oword [esp + 1 * ebp]
-a32 gs vpcmpeqb xmm15,xmm8,oword [eax]
-a32 gs vpcmpeqb xmm15,xmm8,oword [ebx + 8 * edx]
-gs vpcmpeqb xmm15,xmm8,oword [esp + 1 * ebp]
-gs vpcmpeqb xmm9,xmm5,oword [r13]
-vpcmpeqb xmm9,xmm5,oword [rbp]
-vpcmpeqb xmm9,xmm5,oword [rsp + 1 * rbp]
-vpcmpeqb xmm9,xmm9,oword [r13]
-gs vpcmpeqb xmm9,xmm9,oword [rbp]
-gs vpcmpeqb xmm9,xmm9,oword [rsp + 1 * rbp]
-gs vpcmpeqb xmm9,xmm12,oword [r13]
-vpcmpeqb xmm9,xmm12,oword [rbp]
-vpcmpeqb xmm9,xmm12,oword [rsp + 1 * rbp]
-vpcmpeqb xmm7,xmm5,oword [r13]
-vpcmpeqb xmm7,xmm5,oword [rbp]
-vpcmpeqb xmm7,xmm5,oword [rsp + 1 * rbp]
-gs vpcmpeqb xmm7,xmm9,oword [r13]
-vpcmpeqb xmm7,xmm9,oword [rbp]
-vpcmpeqb xmm7,xmm9,oword [rsp + 1 * rbp]
-vpcmpeqb xmm7,xmm12,oword [r13]
-gs vpcmpeqb xmm7,xmm12,oword [rbp]
-vpcmpeqb xmm7,xmm12,oword [rsp + 1 * rbp]
-vpcmpeqb xmm12,xmm5,oword [r13]
-vpcmpeqb xmm12,xmm5,oword [rbp]
-gs vpcmpeqb xmm12,xmm5,oword [rsp + 1 * rbp]
-vpcmpeqb xmm12,xmm9,oword [r13]
-vpcmpeqb xmm12,xmm9,oword [rbp]
-vpcmpeqb xmm12,xmm9,oword [rsp + 1 * rbp]
-vpcmpeqb xmm12,xmm12,oword [r13]
-vpcmpeqb xmm12,xmm12,oword [rbp]
-gs vpcmpeqb xmm12,xmm12,oword [rsp + 1 * rbp]
-gs a32 vpcmpeqb xmm14,xmm14,oword [edx - 0x80000000]
-gs vpcmpeqb xmm14,xmm14,oword [r11d + r11d * 2 + 0x56c8df2b]
-gs vpcmpeqb xmm14,xmm14,oword [r13d]
-gs a32 vpcmpeqb xmm14,xmm11,oword [edx - 0x80000000]
-gs vpcmpeqb xmm14,xmm11,oword [r11d + r11d * 2 + 0x56c8df2b]
-a32 vpcmpeqb xmm14,xmm11,oword [r13d]
-a32 vpcmpeqb xmm14,xmm5,oword [edx - 0x80000000]
-gs vpcmpeqb xmm14,xmm5,oword [r11d + r11d * 2 + 0x56c8df2b]
-gs vpcmpeqb xmm14,xmm5,oword [r13d]
-a32 vpcmpeqb xmm9,xmm14,oword [edx - 0x80000000]
-gs a32 vpcmpeqb xmm9,xmm14,oword [r11d + r11d * 2 + 0x56c8df2b]
-a32 vpcmpeqb xmm9,xmm14,oword [r13d]
-a32 vpcmpeqb xmm9,xmm11,oword [edx - 0x80000000]
-a32 gs vpcmpeqb xmm9,xmm11,oword [r11d + r11d * 2 + 0x56c8df2b]
-a32 vpcmpeqb xmm9,xmm11,oword [r13d]
-vpcmpeqb xmm9,xmm5,oword [edx - 0x80000000]
-gs a32 vpcmpeqb xmm9,xmm5,oword [r11d + r11d * 2 + 0x56c8df2b]
-vpcmpeqb xmm9,xmm5,oword [r13d]
-a32 vpcmpeqb xmm13,xmm14,oword [edx - 0x80000000]
-vpcmpeqb xmm13,xmm14,oword [r11d + r11d * 2 + 0x56c8df2b]
-vpcmpeqb xmm13,xmm14,oword [r13d]
-gs a32 vpcmpeqb xmm13,xmm11,oword [edx - 0x80000000]
-vpcmpeqb xmm13,xmm11,oword [r11d + r11d * 2 + 0x56c8df2b]
-a32 vpcmpeqb xmm13,xmm11,oword [r13d]
-gs a32 vpcmpeqb xmm13,xmm5,oword [edx - 0x80000000]
-a32 vpcmpeqb xmm13,xmm5,oword [r11d + r11d * 2 + 0x56c8df2b]
-gs vpcmpeqb xmm13,xmm5,oword [r13d]
-a32 vpcmpeqb xmm13,xmm9,xmm14
-a32 vpcmpeqb xmm13,xmm9,xmm5
-gs a32 vpcmpeqb xmm13,xmm9,xmm9
-gs vpcmpeqb xmm13,xmm11,xmm14
-gs a32 vpcmpeqb xmm13,xmm11,xmm5
-gs vpcmpeqb xmm13,xmm11,xmm9
-a32 gs vpcmpeqb xmm13,xmm6,xmm14
-gs vpcmpeqb xmm13,xmm6,xmm5
-a32 vpcmpeqb xmm13,xmm6,xmm9
-a32 gs vpcmpeqb xmm2,xmm9,xmm14
-gs vpcmpeqb xmm2,xmm9,xmm5
-vpcmpeqb xmm2,xmm9,xmm9
-a32 vpcmpeqb xmm2,xmm11,xmm14
-gs vpcmpeqb xmm2,xmm11,xmm5
-gs a32 vpcmpeqb xmm2,xmm11,xmm9
-gs vpcmpeqb xmm2,xmm6,xmm14
-a32 gs vpcmpeqb xmm2,xmm6,xmm5
-a32 gs vpcmpeqb xmm2,xmm6,xmm9
-vpcmpeqb xmm10,xmm9,xmm14
-vpcmpeqb xmm10,xmm9,xmm5
-a32 vpcmpeqb xmm10,xmm9,xmm9
-vpcmpeqb xmm10,xmm11,xmm14
-gs a32 vpcmpeqb xmm10,xmm11,xmm5
-gs vpcmpeqb xmm10,xmm11,xmm9
-a32 vpcmpeqb xmm10,xmm6,xmm14
-a32 gs vpcmpeqb xmm10,xmm6,xmm5
-gs vpcmpeqb xmm10,xmm6,xmm9
-gs a32 vpcmpeqb xmm8,xmm11,xmm9
-vpcmpeqb xmm8,xmm11,xmm4
-vpcmpeqb xmm8,xmm11,xmm12
-gs a32 vpcmpeqb xmm8,xmm8,xmm9
-gs a32 vpcmpeqb xmm8,xmm8,xmm4
-a32 gs vpcmpeqb xmm8,xmm8,xmm12
-a32 vpcmpeqb xmm8,xmm1,xmm9
-gs a32 vpcmpeqb xmm8,xmm1,xmm4
+vpcmpeqb xmm5,xmm11,oword [rbp]
+gs vpcmpeqb xmm5,xmm11,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm5,xmm11,oword [r13]
+gs vpcmpeqb xmm5,xmm5,oword [rbp]
+vpcmpeqb xmm5,xmm5,oword [rsp + 1 * rbp]
+vpcmpeqb xmm5,xmm5,oword [r13]
+vpcmpeqb xmm5,xmm2,oword [rbp]
+vpcmpeqb xmm5,xmm2,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm5,xmm2,oword [r13]
+gs vpcmpeqb xmm6,xmm11,oword [rbp]
+vpcmpeqb xmm6,xmm11,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm6,xmm11,oword [r13]
+vpcmpeqb xmm6,xmm5,oword [rbp]
+vpcmpeqb xmm6,xmm5,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm6,xmm5,oword [r13]
+vpcmpeqb xmm6,xmm2,oword [rbp]
+gs vpcmpeqb xmm6,xmm2,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm6,xmm2,oword [r13]
+vpcmpeqb xmm15,xmm11,oword [rbp]
+vpcmpeqb xmm15,xmm11,oword [rsp + 1 * rbp]
+vpcmpeqb xmm15,xmm11,oword [r13]
+gs vpcmpeqb xmm15,xmm5,oword [rbp]
+gs vpcmpeqb xmm15,xmm5,oword [rsp + 1 * rbp]
+vpcmpeqb xmm15,xmm5,oword [r13]
+gs vpcmpeqb xmm15,xmm2,oword [rbp]
+gs vpcmpeqb xmm15,xmm2,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm15,xmm2,oword [r13]
+a32 gs vpcmpeqb xmm14,xmm8,oword [edx - 0x80000000]
+vpcmpeqb xmm14,xmm8,oword [r15d + 2 * edi + 0x72]
+a32 gs vpcmpeqb xmm14,xmm8,oword [esp + 1 * ebp]
+a32 vpcmpeqb xmm14,xmm12,oword [edx - 0x80000000]
+a32 gs vpcmpeqb xmm14,xmm12,oword [r15d + 2 * edi + 0x72]
+a32 vpcmpeqb xmm14,xmm12,oword [esp + 1 * ebp]
+a32 vpcmpeqb xmm14,xmm0,oword [edx - 0x80000000]
+vpcmpeqb xmm14,xmm0,oword [r15d + 2 * edi + 0x72]
+gs vpcmpeqb xmm14,xmm0,oword [esp + 1 * ebp]
+a32 gs vpcmpeqb xmm1,xmm8,oword [edx - 0x80000000]
+a32 vpcmpeqb xmm1,xmm8,oword [r15d + 2 * edi + 0x72]
+gs a32 vpcmpeqb xmm1,xmm8,oword [esp + 1 * ebp]
+gs vpcmpeqb xmm1,xmm12,oword [edx - 0x80000000]
+a32 vpcmpeqb xmm1,xmm12,oword [r15d + 2 * edi + 0x72]
+a32 gs vpcmpeqb xmm1,xmm12,oword [esp + 1 * ebp]
+gs a32 vpcmpeqb xmm1,xmm0,oword [edx - 0x80000000]
+vpcmpeqb xmm1,xmm0,oword [r15d + 2 * edi + 0x72]
+gs vpcmpeqb xmm1,xmm0,oword [esp + 1 * ebp]
+a32 gs vpcmpeqb xmm4,xmm8,oword [edx - 0x80000000]
+a32 gs vpcmpeqb xmm4,xmm8,oword [r15d + 2 * edi + 0x72]
+gs a32 vpcmpeqb xmm4,xmm8,oword [esp + 1 * ebp]
+gs a32 vpcmpeqb xmm4,xmm12,oword [edx - 0x80000000]
+gs a32 vpcmpeqb xmm4,xmm12,oword [r15d + 2 * edi + 0x72]
+gs a32 vpcmpeqb xmm4,xmm12,oword [esp + 1 * ebp]
+vpcmpeqb xmm4,xmm0,oword [edx - 0x80000000]
+a32 vpcmpeqb xmm4,xmm0,oword [r15d + 2 * edi + 0x72]
+a32 gs vpcmpeqb xmm4,xmm0,oword [esp + 1 * ebp]
+vpcmpeqb xmm15,xmm15,oword [r13]
+vpcmpeqb xmm15,xmm15,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm15,xmm15,oword [r11 + r11 * 2 + 0x1065e2cf]
+vpcmpeqb xmm15,xmm0,oword [r13]
+vpcmpeqb xmm15,xmm0,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm15,xmm0,oword [r11 + r11 * 2 + 0x1065e2cf]
+gs vpcmpeqb xmm15,xmm13,oword [r13]
+gs vpcmpeqb xmm15,xmm13,oword [rsp + 1 * rbp]
+vpcmpeqb xmm15,xmm13,oword [r11 + r11 * 2 + 0x1065e2cf]
+gs vpcmpeqb xmm6,xmm15,oword [r13]
+gs vpcmpeqb xmm6,xmm15,oword [rsp + 1 * rbp]
+vpcmpeqb xmm6,xmm15,oword [r11 + r11 * 2 + 0x1065e2cf]
+vpcmpeqb xmm6,xmm0,oword [r13]
+gs vpcmpeqb xmm6,xmm0,oword [rsp + 1 * rbp]
+vpcmpeqb xmm6,xmm0,oword [r11 + r11 * 2 + 0x1065e2cf]
+vpcmpeqb xmm6,xmm13,oword [r13]
+gs vpcmpeqb xmm6,xmm13,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm6,xmm13,oword [r11 + r11 * 2 + 0x1065e2cf]
+vpcmpeqb xmm1,xmm15,oword [r13]
+vpcmpeqb xmm1,xmm15,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm1,xmm15,oword [r11 + r11 * 2 + 0x1065e2cf]
+vpcmpeqb xmm1,xmm0,oword [r13]
+gs vpcmpeqb xmm1,xmm0,oword [rsp + 1 * rbp]
+vpcmpeqb xmm1,xmm0,oword [r11 + r11 * 2 + 0x1065e2cf]
+gs vpcmpeqb xmm1,xmm13,oword [r13]
+gs vpcmpeqb xmm1,xmm13,oword [rsp + 1 * rbp]
+gs vpcmpeqb xmm1,xmm13,oword [r11 + r11 * 2 + 0x1065e2cf]
+a32 gs vpcmpeqb xmm5,xmm12,oword [ebp]
+vpcmpeqb xmm5,xmm12,oword [ebx + 8 * edx]
+gs a32 vpcmpeqb xmm5,xmm12,oword [eax]
+gs a32 vpcmpeqb xmm5,xmm5,oword [ebp]
+a32 gs vpcmpeqb xmm5,xmm5,oword [ebx + 8 * edx]
+a32 gs vpcmpeqb xmm5,xmm5,oword [eax]
+vpcmpeqb xmm5,xmm0,oword [ebp]
+a32 gs vpcmpeqb xmm5,xmm0,oword [ebx + 8 * edx]
+a32 vpcmpeqb xmm5,xmm0,oword [eax]
+gs a32 vpcmpeqb xmm1,xmm12,oword [ebp]
+a32 gs vpcmpeqb xmm1,xmm12,oword [ebx + 8 * edx]
+gs vpcmpeqb xmm1,xmm12,oword [eax]
+gs a32 vpcmpeqb xmm1,xmm5,oword [ebp]
+gs vpcmpeqb xmm1,xmm5,oword [ebx + 8 * edx]
+gs vpcmpeqb xmm1,xmm5,oword [eax]
+vpcmpeqb xmm1,xmm0,oword [ebp]
+a32 gs vpcmpeqb xmm1,xmm0,oword [ebx + 8 * edx]
+a32 vpcmpeqb xmm1,xmm0,oword [eax]
+a32 gs vpcmpeqb xmm4,xmm12,oword [ebp]
+gs a32 vpcmpeqb xmm4,xmm12,oword [ebx + 8 * edx]
+gs a32 vpcmpeqb xmm4,xmm12,oword [eax]
+a32 gs vpcmpeqb xmm4,xmm5,oword [ebp]
+vpcmpeqb xmm4,xmm5,oword [ebx + 8 * edx]
+a32 gs vpcmpeqb xmm4,xmm5,oword [eax]
+gs vpcmpeqb xmm4,xmm0,oword [ebp]
+gs a32 vpcmpeqb xmm4,xmm0,oword [ebx + 8 * edx]
+a32 vpcmpeqb xmm4,xmm0,oword [eax]
+a32 gs vpcmpeqb xmm14,xmm8,xmm6
+gs a32 vpcmpeqb xmm14,xmm8,xmm3
+a32 vpcmpeqb xmm14,xmm8,xmm5
+a32 vpcmpeqb xmm14,xmm13,xmm6
+a32 gs vpcmpeqb xmm14,xmm13,xmm3
+vpcmpeqb xmm14,xmm13,xmm5
+a32 vpcmpeqb xmm14,xmm12,xmm6
+gs a32 vpcmpeqb xmm14,xmm12,xmm3
+gs vpcmpeqb xmm14,xmm12,xmm5
+vpcmpeqb xmm1,xmm8,xmm6
+gs vpcmpeqb xmm1,xmm8,xmm3
+gs a32 vpcmpeqb xmm1,xmm8,xmm5
+a32 gs vpcmpeqb xmm1,xmm13,xmm6
+vpcmpeqb xmm1,xmm13,xmm3
+a32 gs vpcmpeqb xmm1,xmm13,xmm5
+a32 gs vpcmpeqb xmm1,xmm12,xmm6
+gs a32 vpcmpeqb xmm1,xmm12,xmm3
+gs a32 vpcmpeqb xmm1,xmm12,xmm5
+a32 gs vpcmpeqb xmm0,xmm8,xmm6
+gs a32 vpcmpeqb xmm0,xmm8,xmm3
+vpcmpeqb xmm0,xmm8,xmm5
+a32 gs vpcmpeqb xmm0,xmm13,xmm6
+gs a32 vpcmpeqb xmm0,xmm13,xmm3
+gs a32 vpcmpeqb xmm0,xmm13,xmm5
+vpcmpeqb xmm0,xmm12,xmm6
+gs vpcmpeqb xmm0,xmm12,xmm3
+vpcmpeqb xmm0,xmm12,xmm5
+vpcmpeqb xmm14,xmm5,xmm8
+a32 gs vpcmpeqb xmm14,xmm5,xmm12
+gs a32 vpcmpeqb xmm14,xmm5,xmm2
+a32 vpcmpeqb xmm14,xmm1,xmm8
+a32 gs vpcmpeqb xmm14,xmm1,xmm12
+gs a32 vpcmpeqb xmm14,xmm1,xmm2
+gs a32 vpcmpeqb xmm14,xmm3,xmm8
+a32 gs vpcmpeqb xmm14,xmm3,xmm12
+gs vpcmpeqb xmm14,xmm3,xmm2
+gs a32 vpcmpeqb xmm8,xmm5,xmm8
+gs vpcmpeqb xmm8,xmm5,xmm12
+vpcmpeqb xmm8,xmm5,xmm2
+a32 gs vpcmpeqb xmm8,xmm1,xmm8
 a32 gs vpcmpeqb xmm8,xmm1,xmm12
-gs a32 vpcmpeqb xmm7,xmm11,xmm9
-gs a32 vpcmpeqb xmm7,xmm11,xmm4
-a32 gs vpcmpeqb xmm7,xmm11,xmm12
-a32 gs vpcmpeqb xmm7,xmm8,xmm9
-a32 vpcmpeqb xmm7,xmm8,xmm4
-gs a32 vpcmpeqb xmm7,xmm8,xmm12
-gs a32 vpcmpeqb xmm7,xmm1,xmm9
-a32 gs vpcmpeqb xmm7,xmm1,xmm4
-vpcmpeqb xmm7,xmm1,xmm12
-gs a32 vpcmpeqb xmm1,xmm11,xmm9
-gs a32 vpcmpeqb xmm1,xmm11,xmm4
-gs a32 vpcmpeqb xmm1,xmm11,xmm12
-vpcmpeqb xmm1,xmm8,xmm9
-a32 vpcmpeqb xmm1,xmm8,xmm4
-a32 vpcmpeqb xmm1,xmm8,xmm12
-a32 vpcmpeqb xmm1,xmm1,xmm9
-a32 gs vpcmpeqb xmm1,xmm1,xmm4
-gs a32 vpcmpeqb xmm1,xmm1,xmm12
-gs vpcmpeqb ymm8,ymm1,yword [r11 + r11 * 2 + 0x61dcd522]
-vpcmpeqb ymm8,ymm1,yword [r12]
-gs vpcmpeqb ymm8,ymm1,yword [rax]
-vpcmpeqb ymm8,ymm3,yword [r11 + r11 * 2 + 0x61dcd522]
-gs vpcmpeqb ymm8,ymm3,yword [r12]
-vpcmpeqb ymm8,ymm3,yword [rax]
-gs vpcmpeqb ymm8,ymm14,yword [r11 + r11 * 2 + 0x61dcd522]
-gs vpcmpeqb ymm8,ymm14,yword [r12]
-vpcmpeqb ymm8,ymm14,yword [rax]
-vpcmpeqb ymm15,ymm1,yword [r11 + r11 * 2 + 0x61dcd522]
-vpcmpeqb ymm15,ymm1,yword [r12]
-gs vpcmpeqb ymm15,ymm1,yword [rax]
-gs vpcmpeqb ymm15,ymm3,yword [r11 + r11 * 2 + 0x61dcd522]
-vpcmpeqb ymm15,ymm3,yword [r12]
-gs vpcmpeqb ymm15,ymm3,yword [rax]
-gs vpcmpeqb ymm15,ymm14,yword [r11 + r11 * 2 + 0x61dcd522]
-gs vpcmpeqb ymm15,ymm14,yword [r12]
-gs vpcmpeqb ymm15,ymm14,yword [rax]
-gs vpcmpeqb ymm11,ymm1,yword [r11 + r11 * 2 + 0x61dcd522]
-vpcmpeqb ymm11,ymm1,yword [r12]
-gs vpcmpeqb ymm11,ymm1,yword [rax]
-gs vpcmpeqb ymm11,ymm3,yword [r11 + r11 * 2 + 0x61dcd522]
-gs vpcmpeqb ymm11,ymm3,yword [r12]
-gs vpcmpeqb ymm11,ymm3,yword [rax]
-gs vpcmpeqb ymm11,ymm14,yword [r11 + r11 * 2 + 0x61dcd522]
-vpcmpeqb ymm11,ymm14,yword [r12]
-gs vpcmpeqb ymm11,ymm14,yword [rax]
-a32 vpcmpeqb ymm6,ymm8,yword [ebx + 8 * edx]
-gs a32 vpcmpeqb ymm6,ymm8,yword [esp]
-vpcmpeqb ymm6,ymm8,yword [ebp]
-a32 vpcmpeqb ymm6,ymm15,yword [ebx + 8 * edx]
-vpcmpeqb ymm6,ymm15,yword [esp]
-vpcmpeqb ymm6,ymm15,yword [ebp]
-a32 vpcmpeqb ymm6,ymm7,yword [ebx + 8 * edx]
-gs a32 vpcmpeqb ymm6,ymm7,yword [esp]
-gs a32 vpcmpeqb ymm6,ymm7,yword [ebp]
-a32 vpcmpeqb ymm15,ymm8,yword [ebx + 8 * edx]
-a32 gs vpcmpeqb ymm15,ymm8,yword [esp]
-a32 vpcmpeqb ymm15,ymm8,yword [ebp]
-a32 gs vpcmpeqb ymm15,ymm15,yword [ebx + 8 * edx]
-vpcmpeqb ymm15,ymm15,yword [esp]
-gs vpcmpeqb ymm15,ymm15,yword [ebp]
-gs a32 vpcmpeqb ymm15,ymm7,yword [ebx + 8 * edx]
-vpcmpeqb ymm15,ymm7,yword [esp]
-gs vpcmpeqb ymm15,ymm7,yword [ebp]
-vpcmpeqb ymm14,ymm8,yword [ebx + 8 * edx]
-gs vpcmpeqb ymm14,ymm8,yword [esp]
-a32 gs vpcmpeqb ymm14,ymm8,yword [ebp]
-a32 gs vpcmpeqb ymm14,ymm15,yword [ebx + 8 * edx]
-gs a32 vpcmpeqb ymm14,ymm15,yword [esp]
-a32 gs vpcmpeqb ymm14,ymm15,yword [ebp]
-gs vpcmpeqb ymm14,ymm7,yword [ebx + 8 * edx]
-gs vpcmpeqb ymm14,ymm7,yword [esp]
-vpcmpeqb ymm14,ymm7,yword [ebp]
-vpcmpeqb ymm11,ymm2,yword [rbp]
-gs vpcmpeqb ymm11,ymm2,yword [r12]
-gs vpcmpeqb ymm11,ymm2,yword [r15 + 2 * rdi + 0x72]
-gs vpcmpeqb ymm11,ymm5,yword [rbp]
-gs vpcmpeqb ymm11,ymm5,yword [r12]
-vpcmpeqb ymm11,ymm5,yword [r15 + 2 * rdi + 0x72]
-vpcmpeqb ymm11,ymm6,yword [rbp]
-vpcmpeqb ymm11,ymm6,yword [r12]
-gs vpcmpeqb ymm11,ymm6,yword [r15 + 2 * rdi + 0x72]
-vpcmpeqb ymm6,ymm2,yword [rbp]
-vpcmpeqb ymm6,ymm2,yword [r12]
-gs vpcmpeqb ymm6,ymm2,yword [r15 + 2 * rdi + 0x72]
-gs vpcmpeqb ymm6,ymm5,yword [rbp]
-gs vpcmpeqb ymm6,ymm5,yword [r12]
-gs vpcmpeqb ymm6,ymm5,yword [r15 + 2 * rdi + 0x72]
-vpcmpeqb ymm6,ymm6,yword [rbp]
-gs vpcmpeqb ymm6,ymm6,yword [r12]
-gs vpcmpeqb ymm6,ymm6,yword [r15 + 2 * rdi + 0x72]
-gs vpcmpeqb ymm10,ymm2,yword [rbp]
-gs vpcmpeqb ymm10,ymm2,yword [r12]
-gs vpcmpeqb ymm10,ymm2,yword [r15 + 2 * rdi + 0x72]
-vpcmpeqb ymm10,ymm5,yword [rbp]
-gs vpcmpeqb ymm10,ymm5,yword [r12]
-gs vpcmpeqb ymm10,ymm5,yword [r15 + 2 * rdi + 0x72]
-gs vpcmpeqb ymm10,ymm6,yword [rbp]
-vpcmpeqb ymm10,ymm6,yword [r12]
-vpcmpeqb ymm10,ymm6,yword [r15 + 2 * rdi + 0x72]
-gs a32 vpcmpeqb ymm5,ymm4,yword [eax]
-a32 gs vpcmpeqb ymm5,ymm4,yword [edx - 0x80000000]
-gs vpcmpeqb ymm5,ymm4,yword [r12d]
-vpcmpeqb ymm5,ymm0,yword [eax]
-a32 vpcmpeqb ymm5,ymm0,yword [edx - 0x80000000]
-gs a32 vpcmpeqb ymm5,ymm0,yword [r12d]
-a32 gs vpcmpeqb ymm5,ymm3,yword [eax]
-gs a32 vpcmpeqb ymm5,ymm3,yword [edx - 0x80000000]
-gs vpcmpeqb ymm5,ymm3,yword [r12d]
-a32 vpcmpeqb ymm9,ymm4,yword [eax]
-gs vpcmpeqb ymm9,ymm4,yword [edx - 0x80000000]
-gs a32 vpcmpeqb ymm9,ymm4,yword [r12d]
-gs a32 vpcmpeqb ymm9,ymm0,yword [eax]
-gs vpcmpeqb ymm9,ymm0,yword [edx - 0x80000000]
-gs vpcmpeqb ymm9,ymm0,yword [r12d]
-vpcmpeqb ymm9,ymm3,yword [eax]
-a32 vpcmpeqb ymm9,ymm3,yword [edx - 0x80000000]
-a32 vpcmpeqb ymm9,ymm3,yword [r12d]
-gs a32 vpcmpeqb ymm15,ymm4,yword [eax]
-vpcmpeqb ymm15,ymm4,yword [edx - 0x80000000]
-a32 vpcmpeqb ymm15,ymm4,yword [r12d]
-vpcmpeqb ymm15,ymm0,yword [eax]
-a32 gs vpcmpeqb ymm15,ymm0,yword [edx - 0x80000000]
-gs vpcmpeqb ymm15,ymm0,yword [r12d]
-gs vpcmpeqb ymm15,ymm3,yword [eax]
-gs vpcmpeqb ymm15,ymm3,yword [edx - 0x80000000]
-a32 gs vpcmpeqb ymm15,ymm3,yword [r12d]
-a32 gs vpcmpeqb ymm0,ymm6,ymm13
-vpcmpeqb ymm0,ymm6,ymm3
-gs a32 vpcmpeqb ymm0,ymm6,ymm15
-gs a32 vpcmpeqb ymm0,ymm5,ymm13
-a32 gs vpcmpeqb ymm0,ymm5,ymm3
-vpcmpeqb ymm0,ymm5,ymm15
-a32 vpcmpeqb ymm0,ymm10,ymm13
-vpcmpeqb ymm0,ymm10,ymm3
-gs a32 vpcmpeqb ymm0,ymm10,ymm15
-a32 vpcmpeqb ymm8,ymm6,ymm13
-vpcmpeqb ymm8,ymm6,ymm3
-a32 gs vpcmpeqb ymm8,ymm6,ymm15
-gs a32 vpcmpeqb ymm8,ymm5,ymm13
-gs vpcmpeqb ymm8,ymm5,ymm3
-vpcmpeqb ymm8,ymm5,ymm15
-gs vpcmpeqb ymm8,ymm10,ymm13
-a32 vpcmpeqb ymm8,ymm10,ymm3
-gs a32 vpcmpeqb ymm8,ymm10,ymm15
-a32 gs vpcmpeqb ymm10,ymm6,ymm13
-gs vpcmpeqb ymm10,ymm6,ymm3
-gs a32 vpcmpeqb ymm10,ymm6,ymm15
-gs a32 vpcmpeqb ymm10,ymm5,ymm13
-a32 gs vpcmpeqb ymm10,ymm5,ymm3
-a32 vpcmpeqb ymm10,ymm5,ymm15
-gs vpcmpeqb ymm10,ymm10,ymm13
-vpcmpeqb ymm10,ymm10,ymm3
-a32 gs vpcmpeqb ymm10,ymm10,ymm15
-a32 gs vpcmpeqb ymm0,ymm10,ymm10
-vpcmpeqb ymm0,ymm10,ymm9
-a32 gs vpcmpeqb ymm0,ymm10,ymm8
-a32 vpcmpeqb ymm0,ymm8,ymm10
-a32 gs vpcmpeqb ymm0,ymm8,ymm9
-vpcmpeqb ymm0,ymm8,ymm8
-gs vpcmpeqb ymm0,ymm3,ymm10
-vpcmpeqb ymm0,ymm3,ymm9
-a32 gs vpcmpeqb ymm0,ymm3,ymm8
-gs vpcmpeqb ymm9,ymm10,ymm10
-vpcmpeqb ymm9,ymm10,ymm9
-gs a32 vpcmpeqb ymm9,ymm10,ymm8
-gs a32 vpcmpeqb ymm9,ymm8,ymm10
-gs vpcmpeqb ymm9,ymm8,ymm9
-vpcmpeqb ymm9,ymm8,ymm8
-gs vpcmpeqb ymm9,ymm3,ymm10
-gs a32 vpcmpeqb ymm9,ymm3,ymm9
-vpcmpeqb ymm9,ymm3,ymm8
-a32 vpcmpeqb ymm1,ymm10,ymm10
-gs a32 vpcmpeqb ymm1,ymm10,ymm9
-a32 gs vpcmpeqb ymm1,ymm10,ymm8
-a32 vpcmpeqb ymm1,ymm8,ymm10
-vpcmpeqb ymm1,ymm8,ymm9
-gs vpcmpeqb ymm1,ymm8,ymm8
-a32 gs vpcmpeqb ymm1,ymm3,ymm10
-vpcmpeqb ymm1,ymm3,ymm9
-vpcmpeqb ymm1,ymm3,ymm8
+a32 gs vpcmpeqb xmm8,xmm1,xmm2
+gs a32 vpcmpeqb xmm8,xmm3,xmm8
+gs a32 vpcmpeqb xmm8,xmm3,xmm12
+vpcmpeqb xmm8,xmm3,xmm2
+a32 vpcmpeqb xmm13,xmm5,xmm8
+vpcmpeqb xmm13,xmm5,xmm12
+a32 gs vpcmpeqb xmm13,xmm5,xmm2
+gs vpcmpeqb xmm13,xmm1,xmm8
+a32 gs vpcmpeqb xmm13,xmm1,xmm12
+a32 vpcmpeqb xmm13,xmm1,xmm2
+a32 gs vpcmpeqb xmm13,xmm3,xmm8
+gs a32 vpcmpeqb xmm13,xmm3,xmm12
+vpcmpeqb xmm13,xmm3,xmm2
+vpcmpeqb ymm4,ymm12,yword [r15 + 2 * rdi + 0x72]
+gs vpcmpeqb ymm4,ymm12,yword [r13]
+gs vpcmpeqb ymm4,ymm12,yword [rbx + 8 * rdx]
+gs vpcmpeqb ymm4,ymm5,yword [r15 + 2 * rdi + 0x72]
+vpcmpeqb ymm4,ymm5,yword [r13]
+gs vpcmpeqb ymm4,ymm5,yword [rbx + 8 * rdx]
+vpcmpeqb ymm4,ymm0,yword [r15 + 2 * rdi + 0x72]
+vpcmpeqb ymm4,ymm0,yword [r13]
+gs vpcmpeqb ymm4,ymm0,yword [rbx + 8 * rdx]
+gs vpcmpeqb ymm8,ymm12,yword [r15 + 2 * rdi + 0x72]
+vpcmpeqb ymm8,ymm12,yword [r13]
+vpcmpeqb ymm8,ymm12,yword [rbx + 8 * rdx]
+vpcmpeqb ymm8,ymm5,yword [r15 + 2 * rdi + 0x72]
+vpcmpeqb ymm8,ymm5,yword [r13]
+vpcmpeqb ymm8,ymm5,yword [rbx + 8 * rdx]
+gs vpcmpeqb ymm8,ymm0,yword [r15 + 2 * rdi + 0x72]
+gs vpcmpeqb ymm8,ymm0,yword [r13]
+gs vpcmpeqb ymm8,ymm0,yword [rbx + 8 * rdx]
+vpcmpeqb ymm6,ymm12,yword [r15 + 2 * rdi + 0x72]
+gs vpcmpeqb ymm6,ymm12,yword [r13]
+vpcmpeqb ymm6,ymm12,yword [rbx + 8 * rdx]
+vpcmpeqb ymm6,ymm5,yword [r15 + 2 * rdi + 0x72]
+vpcmpeqb ymm6,ymm5,yword [r13]
+vpcmpeqb ymm6,ymm5,yword [rbx + 8 * rdx]
+gs vpcmpeqb ymm6,ymm0,yword [r15 + 2 * rdi + 0x72]
+vpcmpeqb ymm6,ymm0,yword [r13]
+gs vpcmpeqb ymm6,ymm0,yword [rbx + 8 * rdx]
+a32 vpcmpeqb ymm11,ymm1,yword [r13d]
+a32 vpcmpeqb ymm11,ymm1,yword [esp]
+vpcmpeqb ymm11,ymm1,yword [ebp]
+vpcmpeqb ymm11,ymm11,yword [r13d]
+a32 gs vpcmpeqb ymm11,ymm11,yword [esp]
+vpcmpeqb ymm11,ymm11,yword [ebp]
+a32 gs vpcmpeqb ymm11,ymm2,yword [r13d]
+a32 vpcmpeqb ymm11,ymm2,yword [esp]
+gs a32 vpcmpeqb ymm11,ymm2,yword [ebp]
+a32 vpcmpeqb ymm6,ymm1,yword [r13d]
+gs a32 vpcmpeqb ymm6,ymm1,yword [esp]
+a32 gs vpcmpeqb ymm6,ymm1,yword [ebp]
+a32 gs vpcmpeqb ymm6,ymm11,yword [r13d]
+gs a32 vpcmpeqb ymm6,ymm11,yword [esp]
+a32 vpcmpeqb ymm6,ymm11,yword [ebp]
+gs vpcmpeqb ymm6,ymm2,yword [r13d]
+a32 vpcmpeqb ymm6,ymm2,yword [esp]
+a32 gs vpcmpeqb ymm6,ymm2,yword [ebp]
+gs vpcmpeqb ymm9,ymm1,yword [r13d]
+a32 vpcmpeqb ymm9,ymm1,yword [esp]
+a32 vpcmpeqb ymm9,ymm1,yword [ebp]
+gs a32 vpcmpeqb ymm9,ymm11,yword [r13d]
+a32 vpcmpeqb ymm9,ymm11,yword [esp]
+vpcmpeqb ymm9,ymm11,yword [ebp]
+a32 vpcmpeqb ymm9,ymm2,yword [r13d]
+a32 vpcmpeqb ymm9,ymm2,yword [esp]
+vpcmpeqb ymm9,ymm2,yword [ebp]
+vpcmpeqb ymm8,ymm10,yword [rax]
+vpcmpeqb ymm8,ymm10,yword [rsp]
+vpcmpeqb ymm8,ymm10,yword [rbx + 8 * rdx]
+gs vpcmpeqb ymm8,ymm7,yword [rax]
+vpcmpeqb ymm8,ymm7,yword [rsp]
+gs vpcmpeqb ymm8,ymm7,yword [rbx + 8 * rdx]
+vpcmpeqb ymm8,ymm15,yword [rax]
+vpcmpeqb ymm8,ymm15,yword [rsp]
+vpcmpeqb ymm8,ymm15,yword [rbx + 8 * rdx]
+vpcmpeqb ymm10,ymm10,yword [rax]
+gs vpcmpeqb ymm10,ymm10,yword [rsp]
+gs vpcmpeqb ymm10,ymm10,yword [rbx + 8 * rdx]
+vpcmpeqb ymm10,ymm7,yword [rax]
+gs vpcmpeqb ymm10,ymm7,yword [rsp]
+vpcmpeqb ymm10,ymm7,yword [rbx + 8 * rdx]
+vpcmpeqb ymm10,ymm15,yword [rax]
+vpcmpeqb ymm10,ymm15,yword [rsp]
+vpcmpeqb ymm10,ymm15,yword [rbx + 8 * rdx]
+vpcmpeqb ymm2,ymm10,yword [rax]
+gs vpcmpeqb ymm2,ymm10,yword [rsp]
+gs vpcmpeqb ymm2,ymm10,yword [rbx + 8 * rdx]
+gs vpcmpeqb ymm2,ymm7,yword [rax]
+gs vpcmpeqb ymm2,ymm7,yword [rsp]
+gs vpcmpeqb ymm2,ymm7,yword [rbx + 8 * rdx]
+vpcmpeqb ymm2,ymm15,yword [rax]
+gs vpcmpeqb ymm2,ymm15,yword [rsp]
+vpcmpeqb ymm2,ymm15,yword [rbx + 8 * rdx]
+a32 vpcmpeqb ymm1,ymm7,yword [ebx + 8 * edx]
+a32 vpcmpeqb ymm1,ymm7,yword [eax]
+a32 vpcmpeqb ymm1,ymm7,yword [r14d + 1 * edx + 0x7FFFFFFF]
+vpcmpeqb ymm1,ymm0,yword [ebx + 8 * edx]
+a32 gs vpcmpeqb ymm1,ymm0,yword [eax]
+vpcmpeqb ymm1,ymm0,yword [r14d + 1 * edx + 0x7FFFFFFF]
+vpcmpeqb ymm1,ymm3,yword [ebx + 8 * edx]
+a32 gs vpcmpeqb ymm1,ymm3,yword [eax]
+a32 vpcmpeqb ymm1,ymm3,yword [r14d + 1 * edx + 0x7FFFFFFF]
+vpcmpeqb ymm12,ymm7,yword [ebx + 8 * edx]
+a32 gs vpcmpeqb ymm12,ymm7,yword [eax]
+a32 gs vpcmpeqb ymm12,ymm7,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vpcmpeqb ymm12,ymm0,yword [ebx + 8 * edx]
+a32 gs vpcmpeqb ymm12,ymm0,yword [eax]
+a32 gs vpcmpeqb ymm12,ymm0,yword [r14d + 1 * edx + 0x7FFFFFFF]
+vpcmpeqb ymm12,ymm3,yword [ebx + 8 * edx]
+vpcmpeqb ymm12,ymm3,yword [eax]
+gs vpcmpeqb ymm12,ymm3,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vpcmpeqb ymm11,ymm7,yword [ebx + 8 * edx]
+gs a32 vpcmpeqb ymm11,ymm7,yword [eax]
+a32 gs vpcmpeqb ymm11,ymm7,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vpcmpeqb ymm11,ymm0,yword [ebx + 8 * edx]
+a32 vpcmpeqb ymm11,ymm0,yword [eax]
+a32 gs vpcmpeqb ymm11,ymm0,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vpcmpeqb ymm11,ymm3,yword [ebx + 8 * edx]
+a32 vpcmpeqb ymm11,ymm3,yword [eax]
+gs vpcmpeqb ymm11,ymm3,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs vpcmpeqb ymm12,ymm10,ymm4
+gs a32 vpcmpeqb ymm12,ymm10,ymm7
+gs vpcmpeqb ymm12,ymm10,ymm5
+gs a32 vpcmpeqb ymm12,ymm13,ymm4
+a32 gs vpcmpeqb ymm12,ymm13,ymm7
+a32 gs vpcmpeqb ymm12,ymm13,ymm5
+a32 vpcmpeqb ymm12,ymm8,ymm4
+a32 vpcmpeqb ymm12,ymm8,ymm7
+gs vpcmpeqb ymm12,ymm8,ymm5
+gs a32 vpcmpeqb ymm9,ymm10,ymm4
+vpcmpeqb ymm9,ymm10,ymm7
+a32 vpcmpeqb ymm9,ymm10,ymm5
+gs vpcmpeqb ymm9,ymm13,ymm4
+gs vpcmpeqb ymm9,ymm13,ymm7
+gs vpcmpeqb ymm9,ymm13,ymm5
+gs a32 vpcmpeqb ymm9,ymm8,ymm4
+a32 vpcmpeqb ymm9,ymm8,ymm7
+gs a32 vpcmpeqb ymm9,ymm8,ymm5
+vpcmpeqb ymm4,ymm10,ymm4
+vpcmpeqb ymm4,ymm10,ymm7
+gs vpcmpeqb ymm4,ymm10,ymm5
+gs a32 vpcmpeqb ymm4,ymm13,ymm4
+gs vpcmpeqb ymm4,ymm13,ymm7
+vpcmpeqb ymm4,ymm13,ymm5
+gs vpcmpeqb ymm4,ymm8,ymm4
+vpcmpeqb ymm4,ymm8,ymm7
+vpcmpeqb ymm4,ymm8,ymm5
+gs a32 vpcmpeqb ymm4,ymm5,ymm6
+a32 vpcmpeqb ymm4,ymm5,ymm12
+a32 vpcmpeqb ymm4,ymm5,ymm14
+gs vpcmpeqb ymm4,ymm0,ymm6
+gs vpcmpeqb ymm4,ymm0,ymm12
+gs a32 vpcmpeqb ymm4,ymm0,ymm14
+gs a32 vpcmpeqb ymm4,ymm15,ymm6
+a32 vpcmpeqb ymm4,ymm15,ymm12
+a32 vpcmpeqb ymm4,ymm15,ymm14
+gs vpcmpeqb ymm7,ymm5,ymm6
+vpcmpeqb ymm7,ymm5,ymm12
+gs vpcmpeqb ymm7,ymm5,ymm14
+gs vpcmpeqb ymm7,ymm0,ymm6
+gs a32 vpcmpeqb ymm7,ymm0,ymm12
+vpcmpeqb ymm7,ymm0,ymm14
+gs a32 vpcmpeqb ymm7,ymm15,ymm6
+gs a32 vpcmpeqb ymm7,ymm15,ymm12
+a32 vpcmpeqb ymm7,ymm15,ymm14
+gs vpcmpeqb ymm0,ymm5,ymm6
+gs a32 vpcmpeqb ymm0,ymm5,ymm12
+a32 gs vpcmpeqb ymm0,ymm5,ymm14
+a32 gs vpcmpeqb ymm0,ymm0,ymm6
+a32 gs vpcmpeqb ymm0,ymm0,ymm12
+gs vpcmpeqb ymm0,ymm0,ymm14
+gs vpcmpeqb ymm0,ymm15,ymm6
+a32 vpcmpeqb ymm0,ymm15,ymm12
+gs a32 vpcmpeqb ymm0,ymm15,ymm14

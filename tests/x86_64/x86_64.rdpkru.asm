@@ -1,2 +1,2 @@
-a32 o16 rdpkru 
-o16 rdpkru 
+o16 a32 gs rdpkru 
+a32 gs o16 rdpkru 

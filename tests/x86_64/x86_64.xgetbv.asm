@@ -1,2 +1,2 @@
-o16 gs xgetbv 
-gs a32 xgetbv 
+a32 xgetbv 
+a32 gs xgetbv 

@@ -1,2 +1,2 @@
-vzeroupper 
-a32 gs vzeroupper 
+gs vzeroupper 
+a32 vzeroupper 

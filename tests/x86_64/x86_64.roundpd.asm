@@ -1,162 +1,162 @@
-roundpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],103
-gs  roundpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],16
-gs  roundpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],32
-gs roundpd xmm2,oword [rsp + 1 * rbp],103
- gs roundpd xmm2,oword [rsp + 1 * rbp],16
-roundpd xmm2,oword [rsp + 1 * rbp],32
-roundpd xmm2,oword [rbx + 8 * rdx],103
-roundpd xmm2,oword [rbx + 8 * rdx],16
-gs  roundpd xmm2,oword [rbx + 8 * rdx],32
-roundpd xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],103
-gs  roundpd xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],16
- gs roundpd xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],32
-roundpd xmm4,oword [rsp + 1 * rbp],103
-gs  roundpd xmm4,oword [rsp + 1 * rbp],16
-roundpd xmm4,oword [rsp + 1 * rbp],32
-gs  roundpd xmm4,oword [rbx + 8 * rdx],103
- gs roundpd xmm4,oword [rbx + 8 * rdx],16
-gs roundpd xmm4,oword [rbx + 8 * rdx],32
-roundpd xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF],103
-roundpd xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF],16
-roundpd xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF],32
-roundpd xmm3,oword [rsp + 1 * rbp],103
-gs  roundpd xmm3,oword [rsp + 1 * rbp],16
-roundpd xmm3,oword [rsp + 1 * rbp],32
-roundpd xmm3,oword [rbx + 8 * rdx],103
-roundpd xmm3,oword [rbx + 8 * rdx],16
- gs roundpd xmm3,oword [rbx + 8 * rdx],32
- gs a32 roundpd xmm6,oword [r11d + r11d * 2 + 0x5fc0dff8],127
-a32  roundpd xmm6,oword [r11d + r11d * 2 + 0x5fc0dff8],16
-roundpd xmm6,oword [r11d + r11d * 2 + 0x5fc0dff8],-128
-gs  a32 roundpd xmm6,oword [ebx + 8 * edx],127
- a32 gs roundpd xmm6,oword [ebx + 8 * edx],16
- gs roundpd xmm6,oword [ebx + 8 * edx],-128
-gs a32  roundpd xmm6,oword [esp + 1 * ebp],127
-roundpd xmm6,oword [esp + 1 * ebp],16
-gs roundpd xmm6,oword [esp + 1 * ebp],-128
-a32 gs  roundpd xmm11,oword [r11d + r11d * 2 + 0x5fc0dff8],127
-a32 roundpd xmm11,oword [r11d + r11d * 2 + 0x5fc0dff8],16
-gs  roundpd xmm11,oword [r11d + r11d * 2 + 0x5fc0dff8],-128
-a32 roundpd xmm11,oword [ebx + 8 * edx],127
- a32 roundpd xmm11,oword [ebx + 8 * edx],16
-a32 gs  roundpd xmm11,oword [ebx + 8 * edx],-128
-roundpd xmm11,oword [esp + 1 * ebp],127
- a32 roundpd xmm11,oword [esp + 1 * ebp],16
- a32 gs roundpd xmm11,oword [esp + 1 * ebp],-128
-gs  roundpd xmm13,oword [r11d + r11d * 2 + 0x5fc0dff8],127
-a32 gs roundpd xmm13,oword [r11d + r11d * 2 + 0x5fc0dff8],16
-roundpd xmm13,oword [r11d + r11d * 2 + 0x5fc0dff8],-128
-a32  gs roundpd xmm13,oword [ebx + 8 * edx],127
-a32 gs roundpd xmm13,oword [ebx + 8 * edx],16
-a32  gs roundpd xmm13,oword [ebx + 8 * edx],-128
+roundpd xmm15,oword [rbp],-1
+roundpd xmm15,oword [rbp],0
+gs roundpd xmm15,oword [rbp],61
+ gs roundpd xmm15,oword [rax],-1
+gs  roundpd xmm15,oword [rax],0
+gs  roundpd xmm15,oword [rax],61
+ gs roundpd xmm15,oword [rdx - 0x80000000],-1
+gs  roundpd xmm15,oword [rdx - 0x80000000],0
+roundpd xmm15,oword [rdx - 0x80000000],61
+gs roundpd xmm6,oword [rbp],-1
+roundpd xmm6,oword [rbp],0
+ gs roundpd xmm6,oword [rbp],61
+ gs roundpd xmm6,oword [rax],-1
+roundpd xmm6,oword [rax],0
+roundpd xmm6,oword [rax],61
+gs roundpd xmm6,oword [rdx - 0x80000000],-1
+gs roundpd xmm6,oword [rdx - 0x80000000],0
+gs roundpd xmm6,oword [rdx - 0x80000000],61
+roundpd xmm0,oword [rbp],-1
+roundpd xmm0,oword [rbp],0
+gs roundpd xmm0,oword [rbp],61
+gs roundpd xmm0,oword [rax],-1
+gs roundpd xmm0,oword [rax],0
+roundpd xmm0,oword [rax],61
+roundpd xmm0,oword [rdx - 0x80000000],-1
+gs roundpd xmm0,oword [rdx - 0x80000000],0
+roundpd xmm0,oword [rdx - 0x80000000],61
+roundpd xmm12,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+ gs a32 roundpd xmm12,oword [r14d + 1 * edx + 0x7FFFFFFF],-1
+ gs a32 roundpd xmm12,oword [r14d + 1 * edx + 0x7FFFFFFF],0
+a32  gs roundpd xmm12,oword [r13d],127
+gs a32 roundpd xmm12,oword [r13d],-1
+roundpd xmm12,oword [r13d],0
+roundpd xmm12,oword [esp + 1 * ebp],127
+gs a32 roundpd xmm12,oword [esp + 1 * ebp],-1
+a32  roundpd xmm12,oword [esp + 1 * ebp],0
+ gs roundpd xmm14,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+roundpd xmm14,oword [r14d + 1 * edx + 0x7FFFFFFF],-1
+ gs a32 roundpd xmm14,oword [r14d + 1 * edx + 0x7FFFFFFF],0
+roundpd xmm14,oword [r13d],127
+a32 roundpd xmm14,oword [r13d],-1
+gs roundpd xmm14,oword [r13d],0
+gs a32  roundpd xmm14,oword [esp + 1 * ebp],127
+a32 roundpd xmm14,oword [esp + 1 * ebp],-1
+a32  gs roundpd xmm14,oword [esp + 1 * ebp],0
+a32 gs roundpd xmm13,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+gs  roundpd xmm13,oword [r14d + 1 * edx + 0x7FFFFFFF],-1
+gs a32 roundpd xmm13,oword [r14d + 1 * edx + 0x7FFFFFFF],0
+gs a32 roundpd xmm13,oword [r13d],127
+ gs roundpd xmm13,oword [r13d],-1
+a32  gs roundpd xmm13,oword [r13d],0
 a32 gs  roundpd xmm13,oword [esp + 1 * ebp],127
-gs a32 roundpd xmm13,oword [esp + 1 * ebp],16
-gs roundpd xmm13,oword [esp + 1 * ebp],-128
- gs roundpd xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-roundpd xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF],127
-gs roundpd xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF],-128
- gs roundpd xmm12,oword [rsp],0
- gs roundpd xmm12,oword [rsp],127
-roundpd xmm12,oword [rsp],-128
-roundpd xmm12,oword [rax],0
-gs  roundpd xmm12,oword [rax],127
-gs roundpd xmm12,oword [rax],-128
-roundpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-roundpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],127
- gs roundpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-roundpd xmm2,oword [rsp],0
-roundpd xmm2,oword [rsp],127
-gs roundpd xmm2,oword [rsp],-128
- gs roundpd xmm2,oword [rax],0
-roundpd xmm2,oword [rax],127
- gs roundpd xmm2,oword [rax],-128
-roundpd xmm1,oword [r14 + 1 * rdx + 0x7FFFFFFF],0
-roundpd xmm1,oword [r14 + 1 * rdx + 0x7FFFFFFF],127
-gs roundpd xmm1,oword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-roundpd xmm1,oword [rsp],0
-gs  roundpd xmm1,oword [rsp],127
-gs  roundpd xmm1,oword [rsp],-128
-gs roundpd xmm1,oword [rax],0
-gs  roundpd xmm1,oword [rax],127
-roundpd xmm1,oword [rax],-128
-gs roundpd xmm6,oword [r12d],32
- a32 gs roundpd xmm6,oword [r12d],16
-a32 roundpd xmm6,oword [r12d],127
- gs a32 roundpd xmm6,oword [ebp],32
- a32 gs roundpd xmm6,oword [ebp],16
-gs roundpd xmm6,oword [ebp],127
-gs a32  roundpd xmm6,oword [edx - 0x80000000],32
-a32  roundpd xmm6,oword [edx - 0x80000000],16
- a32 gs roundpd xmm6,oword [edx - 0x80000000],127
-gs roundpd xmm5,oword [r12d],32
- a32 roundpd xmm5,oword [r12d],16
-gs a32 roundpd xmm5,oword [r12d],127
- gs roundpd xmm5,oword [ebp],32
-a32 roundpd xmm5,oword [ebp],16
-gs a32  roundpd xmm5,oword [ebp],127
- gs roundpd xmm5,oword [edx - 0x80000000],32
- gs roundpd xmm5,oword [edx - 0x80000000],16
- gs a32 roundpd xmm5,oword [edx - 0x80000000],127
-a32  gs roundpd xmm10,oword [r12d],32
-roundpd xmm10,oword [r12d],16
- gs a32 roundpd xmm10,oword [r12d],127
- a32 gs roundpd xmm10,oword [ebp],32
-roundpd xmm10,oword [ebp],16
- gs roundpd xmm10,oword [ebp],127
-gs a32 roundpd xmm10,oword [edx - 0x80000000],32
- gs roundpd xmm10,oword [edx - 0x80000000],16
- a32 roundpd xmm10,oword [edx - 0x80000000],127
-a32 gs  roundpd xmm4,xmm15,-128
-gs  a32 roundpd xmm4,xmm15,0
- gs roundpd xmm4,xmm15,103
-a32 roundpd xmm4,xmm14,-128
- gs a32 roundpd xmm4,xmm14,0
-a32 gs  roundpd xmm4,xmm14,103
-a32 gs  roundpd xmm4,xmm6,-128
-gs a32  roundpd xmm4,xmm6,0
-a32  gs roundpd xmm4,xmm6,103
-a32 gs  roundpd xmm6,xmm15,-128
-a32 roundpd xmm6,xmm15,0
-a32  gs roundpd xmm6,xmm15,103
-a32 gs roundpd xmm6,xmm14,-128
-a32  gs roundpd xmm6,xmm14,0
-a32  gs roundpd xmm6,xmm14,103
-a32 roundpd xmm6,xmm6,-128
-a32 gs  roundpd xmm6,xmm6,0
-gs  roundpd xmm6,xmm6,103
-roundpd xmm12,xmm15,-128
-roundpd xmm12,xmm15,0
- a32 gs roundpd xmm12,xmm15,103
- a32 roundpd xmm12,xmm14,-128
-a32 roundpd xmm12,xmm14,0
-gs a32 roundpd xmm12,xmm14,103
-gs a32 roundpd xmm12,xmm6,-128
-roundpd xmm12,xmm6,0
-roundpd xmm12,xmm6,103
- gs a32 roundpd xmm5,xmm14,0
- a32 gs roundpd xmm5,xmm14,32
-a32 gs  roundpd xmm5,xmm14,-128
-gs  a32 roundpd xmm5,xmm1,0
- gs a32 roundpd xmm5,xmm1,32
-gs roundpd xmm5,xmm1,-128
- gs a32 roundpd xmm5,xmm11,0
-gs roundpd xmm5,xmm11,32
- a32 roundpd xmm5,xmm11,-128
-gs  a32 roundpd xmm2,xmm14,0
- a32 roundpd xmm2,xmm14,32
-gs roundpd xmm2,xmm14,-128
-a32  roundpd xmm2,xmm1,0
-a32  roundpd xmm2,xmm1,32
-gs a32 roundpd xmm2,xmm1,-128
-a32  gs roundpd xmm2,xmm11,0
-roundpd xmm2,xmm11,32
-gs roundpd xmm2,xmm11,-128
-a32 gs roundpd xmm1,xmm14,0
-a32  roundpd xmm1,xmm14,32
- a32 roundpd xmm1,xmm14,-128
-a32  roundpd xmm1,xmm1,0
- a32 roundpd xmm1,xmm1,32
-gs a32 roundpd xmm1,xmm1,-128
-roundpd xmm1,xmm11,0
- gs a32 roundpd xmm1,xmm11,32
-gs  a32 roundpd xmm1,xmm11,-128
+a32  roundpd xmm13,oword [esp + 1 * ebp],-1
+gs a32 roundpd xmm13,oword [esp + 1 * ebp],0
+gs  roundpd xmm15,oword [r15 + 2 * rdi + 0x72],-1
+ gs roundpd xmm15,oword [r15 + 2 * rdi + 0x72],-128
+ gs roundpd xmm15,oword [r15 + 2 * rdi + 0x72],127
+gs roundpd xmm15,oword [rbx + 8 * rdx],-1
+ gs roundpd xmm15,oword [rbx + 8 * rdx],-128
+roundpd xmm15,oword [rbx + 8 * rdx],127
+roundpd xmm15,oword [rsp],-1
+roundpd xmm15,oword [rsp],-128
+roundpd xmm15,oword [rsp],127
+gs roundpd xmm10,oword [r15 + 2 * rdi + 0x72],-1
+roundpd xmm10,oword [r15 + 2 * rdi + 0x72],-128
+gs  roundpd xmm10,oword [r15 + 2 * rdi + 0x72],127
+ gs roundpd xmm10,oword [rbx + 8 * rdx],-1
+gs roundpd xmm10,oword [rbx + 8 * rdx],-128
+roundpd xmm10,oword [rbx + 8 * rdx],127
+gs  roundpd xmm10,oword [rsp],-1
+roundpd xmm10,oword [rsp],-128
+roundpd xmm10,oword [rsp],127
+gs  roundpd xmm8,oword [r15 + 2 * rdi + 0x72],-1
+ gs roundpd xmm8,oword [r15 + 2 * rdi + 0x72],-128
+ gs roundpd xmm8,oword [r15 + 2 * rdi + 0x72],127
+gs  roundpd xmm8,oword [rbx + 8 * rdx],-1
+ gs roundpd xmm8,oword [rbx + 8 * rdx],-128
+gs  roundpd xmm8,oword [rbx + 8 * rdx],127
+ gs roundpd xmm8,oword [rsp],-1
+roundpd xmm8,oword [rsp],-128
+gs  roundpd xmm8,oword [rsp],127
+ a32 gs roundpd xmm4,oword [r11d + r11d * 2 + 0x1c396727],-128
+a32 gs  roundpd xmm4,oword [r11d + r11d * 2 + 0x1c396727],127
+ a32 roundpd xmm4,oword [r11d + r11d * 2 + 0x1c396727],61
+gs  roundpd xmm4,oword [eax],-128
+a32  roundpd xmm4,oword [eax],127
+ gs roundpd xmm4,oword [eax],61
+gs  roundpd xmm4,oword [esp + 1 * ebp],-128
+a32 gs  roundpd xmm4,oword [esp + 1 * ebp],127
+gs  roundpd xmm4,oword [esp + 1 * ebp],61
+a32 roundpd xmm3,oword [r11d + r11d * 2 + 0x1c396727],-128
+gs  roundpd xmm3,oword [r11d + r11d * 2 + 0x1c396727],127
+ gs roundpd xmm3,oword [r11d + r11d * 2 + 0x1c396727],61
+a32  roundpd xmm3,oword [eax],-128
+a32 gs  roundpd xmm3,oword [eax],127
+a32 gs roundpd xmm3,oword [eax],61
+gs a32 roundpd xmm3,oword [esp + 1 * ebp],-128
+a32 gs roundpd xmm3,oword [esp + 1 * ebp],127
+a32 roundpd xmm3,oword [esp + 1 * ebp],61
+ gs a32 roundpd xmm9,oword [r11d + r11d * 2 + 0x1c396727],-128
+a32  gs roundpd xmm9,oword [r11d + r11d * 2 + 0x1c396727],127
+ a32 roundpd xmm9,oword [r11d + r11d * 2 + 0x1c396727],61
+ gs a32 roundpd xmm9,oword [eax],-128
+gs roundpd xmm9,oword [eax],127
+roundpd xmm9,oword [eax],61
+gs a32 roundpd xmm9,oword [esp + 1 * ebp],-128
+gs roundpd xmm9,oword [esp + 1 * ebp],127
+a32  gs roundpd xmm9,oword [esp + 1 * ebp],61
+roundpd xmm5,xmm9,-1
+gs  roundpd xmm5,xmm9,61
+a32 roundpd xmm5,xmm9,-90
+gs a32 roundpd xmm5,xmm8,-1
+ gs a32 roundpd xmm5,xmm8,61
+ gs roundpd xmm5,xmm8,-90
+ gs roundpd xmm5,xmm1,-1
+a32  roundpd xmm5,xmm1,61
+ gs roundpd xmm5,xmm1,-90
+ gs a32 roundpd xmm2,xmm9,-1
+gs roundpd xmm2,xmm9,61
+roundpd xmm2,xmm9,-90
+gs a32  roundpd xmm2,xmm8,-1
+gs  a32 roundpd xmm2,xmm8,61
+gs roundpd xmm2,xmm8,-90
+a32  gs roundpd xmm2,xmm1,-1
+roundpd xmm2,xmm1,61
+a32  gs roundpd xmm2,xmm1,-90
+gs a32 roundpd xmm4,xmm9,-1
+a32  roundpd xmm4,xmm9,61
+roundpd xmm4,xmm9,-90
+gs  roundpd xmm4,xmm8,-1
+gs a32 roundpd xmm4,xmm8,61
+gs a32 roundpd xmm4,xmm8,-90
+ gs a32 roundpd xmm4,xmm1,-1
+gs roundpd xmm4,xmm1,61
+ a32 roundpd xmm4,xmm1,-90
+gs a32 roundpd xmm13,xmm11,-1
+a32 gs  roundpd xmm13,xmm11,61
+a32 gs roundpd xmm13,xmm11,-128
+gs a32  roundpd xmm13,xmm4,-1
+a32 gs roundpd xmm13,xmm4,61
+gs roundpd xmm13,xmm4,-128
+gs  a32 roundpd xmm13,xmm5,-1
+gs a32 roundpd xmm13,xmm5,61
+ gs roundpd xmm13,xmm5,-128
+a32 roundpd xmm11,xmm11,-1
+a32 gs roundpd xmm11,xmm11,61
+a32 gs roundpd xmm11,xmm11,-128
+ a32 roundpd xmm11,xmm4,-1
+a32 gs roundpd xmm11,xmm4,61
+a32  gs roundpd xmm11,xmm4,-128
+a32  gs roundpd xmm11,xmm5,-1
+a32 roundpd xmm11,xmm5,61
+ gs roundpd xmm11,xmm5,-128
+gs a32  roundpd xmm8,xmm11,-1
+gs a32  roundpd xmm8,xmm11,61
+gs roundpd xmm8,xmm11,-128
+ a32 gs roundpd xmm8,xmm4,-1
+gs roundpd xmm8,xmm4,61
+a32 roundpd xmm8,xmm4,-128
+a32 gs  roundpd xmm8,xmm5,-1
+roundpd xmm8,xmm5,61
+gs  a32 roundpd xmm8,xmm5,-128

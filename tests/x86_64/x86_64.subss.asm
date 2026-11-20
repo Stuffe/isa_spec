@@ -1,54 +1,54 @@
- o16 gs subss xmm14,dword [rbx + 8 * rdx]
- o16 subss xmm14,dword [rsp]
-gs  o16 subss xmm14,dword [r11 + r11 * 2 + 0x7ecd7ce]
-gs o16 subss xmm11,dword [rbx + 8 * rdx]
- o16 subss xmm11,dword [rsp]
-o16 gs subss xmm11,dword [r11 + r11 * 2 + 0x7ecd7ce]
-subss xmm4,dword [rbx + 8 * rdx]
-o16  subss xmm4,dword [rsp]
-gs  subss xmm4,dword [r11 + r11 * 2 + 0x7ecd7ce]
-o16 gs a32  subss xmm6,dword [eax]
- gs a32 subss xmm6,dword [r15d + 2 * edi + 0x72]
-gs  o16 a32 subss xmm6,dword [r13d]
-a32 o16 subss xmm7,dword [eax]
-gs  o16 a32 subss xmm7,dword [r15d + 2 * edi + 0x72]
-gs a32 o16 subss xmm7,dword [r13d]
-a32 gs subss xmm1,dword [eax]
-a32  subss xmm1,dword [r15d + 2 * edi + 0x72]
-o16 a32  subss xmm1,dword [r13d]
- gs o16 subss xmm2,dword [rax]
- gs o16 subss xmm2,dword [r15 + 2 * rdi + 0x72]
- o16 gs subss xmm2,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-o16 subss xmm6,dword [rax]
-gs o16 subss xmm6,dword [r15 + 2 * rdi + 0x72]
-o16 subss xmm6,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16  subss xmm14,dword [rax]
-o16 gs  subss xmm14,dword [r15 + 2 * rdi + 0x72]
-gs o16  subss xmm14,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-o16 a32  gs subss xmm11,dword [r11d + r11d * 2 + 0x7ecd7ce]
-o16  subss xmm11,dword [esp + 1 * ebp]
-gs a32  subss xmm11,dword [eax]
-a32 gs subss xmm0,dword [r11d + r11d * 2 + 0x7ecd7ce]
-gs o16  subss xmm0,dword [esp + 1 * ebp]
-a32 o16  gs subss xmm0,dword [eax]
-gs o16  subss xmm8,dword [r11d + r11d * 2 + 0x7ecd7ce]
- a32 o16 gs subss xmm8,dword [esp + 1 * ebp]
-a32  gs o16 subss xmm8,dword [eax]
-a32 gs  subss xmm4,xmm13
-o16  subss xmm4,xmm10
-gs a32 o16 subss xmm4,xmm4
-a32  o16 gs subss xmm7,xmm13
-o16  subss xmm7,xmm10
-o16 subss xmm7,xmm4
-gs o16  a32 subss xmm8,xmm13
-o16 a32  gs subss xmm8,xmm10
-a32 o16  gs subss xmm8,xmm4
-o16  subss xmm15,xmm5
-o16 a32  gs subss xmm15,xmm10
- o16 gs subss xmm15,xmm14
-a32 gs  subss xmm6,xmm5
-gs a32 subss xmm6,xmm10
-a32 o16  gs subss xmm6,xmm14
-gs  o16 subss xmm4,xmm5
-o16 gs subss xmm4,xmm10
- o16 a32 gs subss xmm4,xmm14
+subss xmm13,dword [rax]
+gs  o16 subss xmm13,dword [rdx - 0x80000000]
+ o16 gs subss xmm13,dword [rbx + 8 * rdx]
+o16 gs  subss xmm4,dword [rax]
+ o16 gs subss xmm4,dword [rdx - 0x80000000]
+ o16 gs subss xmm4,dword [rbx + 8 * rdx]
+ gs subss xmm10,dword [rax]
+o16 subss xmm10,dword [rdx - 0x80000000]
+o16  gs subss xmm10,dword [rbx + 8 * rdx]
+gs a32  subss xmm13,dword [r12d]
+ gs o16 subss xmm13,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 subss xmm13,dword [edx - 0x80000000]
+o16 gs subss xmm14,dword [r12d]
+ o16 gs subss xmm14,dword [r14d + 1 * edx + 0x7FFFFFFF]
+ a32 gs subss xmm14,dword [edx - 0x80000000]
+o16 gs  a32 subss xmm10,dword [r12d]
+a32  subss xmm10,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32  gs subss xmm10,dword [edx - 0x80000000]
+gs o16  subss xmm8,dword [rax]
+ o16 gs subss xmm8,dword [r13]
+o16 gs subss xmm8,dword [rsp]
+ gs subss xmm0,dword [rax]
+o16 gs subss xmm0,dword [r13]
+ o16 subss xmm0,dword [rsp]
+o16 gs subss xmm12,dword [rax]
+gs subss xmm12,dword [r13]
+subss xmm12,dword [rsp]
+a32 o16  gs subss xmm3,dword [esp + 1 * ebp]
+gs a32 o16  subss xmm3,dword [r15d + 2 * edi + 0x72]
+o16  subss xmm3,dword [ebp]
+a32  subss xmm9,dword [esp + 1 * ebp]
+a32 o16 gs subss xmm9,dword [r15d + 2 * edi + 0x72]
+o16  gs a32 subss xmm9,dword [ebp]
+ gs o16 a32 subss xmm4,dword [esp + 1 * ebp]
+ o16 a32 subss xmm4,dword [r15d + 2 * edi + 0x72]
+ a32 subss xmm4,dword [ebp]
+a32  o16 subss xmm2,xmm11
+gs o16  a32 subss xmm2,xmm4
+o16 gs  subss xmm2,xmm7
+o16 a32 gs subss xmm3,xmm11
+subss xmm3,xmm4
+o16 a32 gs  subss xmm3,xmm7
+gs o16 a32  subss xmm8,xmm11
+ gs a32 subss xmm8,xmm4
+gs  a32 subss xmm8,xmm7
+o16  gs subss xmm13,xmm3
+a32 gs o16 subss xmm13,xmm1
+a32 gs  subss xmm13,xmm11
+gs  subss xmm11,xmm3
+a32 o16 gs  subss xmm11,xmm1
+a32  subss xmm11,xmm11
+ a32 subss xmm6,xmm3
+gs a32  subss xmm6,xmm1
+gs  o16 a32 subss xmm6,xmm11

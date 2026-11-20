@@ -1,54 +1,54 @@
-gs packusdw xmm5,oword [r12]
-gs packusdw xmm5,oword [rbp]
-packusdw xmm5,oword [r13]
-gs  packusdw xmm2,oword [r12]
-packusdw xmm2,oword [rbp]
-gs packusdw xmm2,oword [r13]
- gs packusdw xmm9,oword [r12]
-gs packusdw xmm9,oword [rbp]
- gs packusdw xmm9,oword [r13]
-a32 packusdw xmm3,oword [edx - 0x80000000]
-gs a32 packusdw xmm3,oword [ebx + 8 * edx]
-packusdw xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF]
- gs a32 packusdw xmm9,oword [edx - 0x80000000]
- gs a32 packusdw xmm9,oword [ebx + 8 * edx]
-packusdw xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF]
- a32 gs packusdw xmm12,oword [edx - 0x80000000]
-gs a32  packusdw xmm12,oword [ebx + 8 * edx]
- gs packusdw xmm12,oword [r14d + 1 * edx + 0x7FFFFFFF]
-packusdw xmm8,oword [r15 + 2 * rdi + 0x72]
-packusdw xmm8,oword [rbp]
-packusdw xmm8,oword [r13]
-packusdw xmm13,oword [r15 + 2 * rdi + 0x72]
- gs packusdw xmm13,oword [rbp]
- gs packusdw xmm13,oword [r13]
- gs packusdw xmm14,oword [r15 + 2 * rdi + 0x72]
- gs packusdw xmm14,oword [rbp]
- gs packusdw xmm14,oword [r13]
-a32 gs packusdw xmm14,oword [ebx + 8 * edx]
-gs a32 packusdw xmm14,oword [eax]
-packusdw xmm14,oword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs packusdw xmm4,oword [ebx + 8 * edx]
- gs a32 packusdw xmm4,oword [eax]
-gs a32 packusdw xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32  packusdw xmm6,oword [ebx + 8 * edx]
-packusdw xmm6,oword [eax]
-a32 packusdw xmm6,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs packusdw xmm1,xmm10
-gs a32 packusdw xmm1,xmm0
-gs a32  packusdw xmm1,xmm11
- gs packusdw xmm12,xmm10
-gs a32 packusdw xmm12,xmm0
-gs a32 packusdw xmm12,xmm11
-packusdw xmm10,xmm10
-gs packusdw xmm10,xmm0
-a32  gs packusdw xmm10,xmm11
-a32  gs packusdw xmm10,xmm2
-packusdw xmm10,xmm7
-a32 gs packusdw xmm10,xmm6
-a32  gs packusdw xmm6,xmm2
-gs a32 packusdw xmm6,xmm7
-gs  packusdw xmm6,xmm6
-a32  packusdw xmm14,xmm2
-gs a32 packusdw xmm14,xmm7
-packusdw xmm14,xmm6
+ gs packusdw xmm13,oword [r15 + 2 * rdi + 0x72]
+packusdw xmm13,oword [rax]
+gs  packusdw xmm13,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+packusdw xmm1,oword [r15 + 2 * rdi + 0x72]
+ gs packusdw xmm1,oword [rax]
+ gs packusdw xmm1,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs packusdw xmm7,oword [r15 + 2 * rdi + 0x72]
+ gs packusdw xmm7,oword [rax]
+gs  packusdw xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+a32 gs packusdw xmm14,oword [eax]
+ a32 gs packusdw xmm14,oword [ebp]
+ gs packusdw xmm14,oword [esp]
+ gs a32 packusdw xmm10,oword [eax]
+ a32 packusdw xmm10,oword [ebp]
+gs  a32 packusdw xmm10,oword [esp]
+gs  packusdw xmm11,oword [eax]
+ a32 gs packusdw xmm11,oword [ebp]
+gs packusdw xmm11,oword [esp]
+packusdw xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs packusdw xmm12,oword [rsp]
+gs  packusdw xmm12,oword [rax]
+ gs packusdw xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs packusdw xmm8,oword [rsp]
+gs  packusdw xmm8,oword [rax]
+gs packusdw xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+packusdw xmm15,oword [rsp]
+gs  packusdw xmm15,oword [rax]
+ gs packusdw xmm6,oword [r15d + 2 * edi + 0x72]
+packusdw xmm6,oword [ebx + 8 * edx]
+a32  packusdw xmm6,oword [esp + 1 * ebp]
+ gs a32 packusdw xmm2,oword [r15d + 2 * edi + 0x72]
+packusdw xmm2,oword [ebx + 8 * edx]
+gs  a32 packusdw xmm2,oword [esp + 1 * ebp]
+ gs packusdw xmm3,oword [r15d + 2 * edi + 0x72]
+packusdw xmm3,oword [ebx + 8 * edx]
+packusdw xmm3,oword [esp + 1 * ebp]
+gs packusdw xmm10,xmm9
+a32  gs packusdw xmm10,xmm4
+a32  packusdw xmm10,xmm2
+gs packusdw xmm3,xmm9
+packusdw xmm3,xmm4
+a32 packusdw xmm3,xmm2
+ gs packusdw xmm7,xmm9
+a32 gs  packusdw xmm7,xmm4
+packusdw xmm7,xmm2
+ a32 gs packusdw xmm11,xmm10
+packusdw xmm11,xmm9
+a32  packusdw xmm11,xmm13
+packusdw xmm14,xmm10
+gs a32 packusdw xmm14,xmm9
+a32 gs  packusdw xmm14,xmm13
+gs a32  packusdw xmm4,xmm10
+a32 packusdw xmm4,xmm9
+packusdw xmm4,xmm13

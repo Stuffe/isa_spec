@@ -1,81 +1,81 @@
-gs vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm2,121
-gs vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm2,40
-vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm2,127
-gs vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm0,121
-gs vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm0,40
-gs vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm0,127
-gs vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm6,121
-vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm6,40
-vpextrd dword [r11 + r11 * 2 + 0x7bbe197b],xmm6,127
-gs vpextrd dword [rbx + 8 * rdx],xmm2,121
-gs vpextrd dword [rbx + 8 * rdx],xmm2,40
-vpextrd dword [rbx + 8 * rdx],xmm2,127
-vpextrd dword [rbx + 8 * rdx],xmm0,121
-vpextrd dword [rbx + 8 * rdx],xmm0,40
-vpextrd dword [rbx + 8 * rdx],xmm0,127
-gs vpextrd dword [rbx + 8 * rdx],xmm6,121
-gs vpextrd dword [rbx + 8 * rdx],xmm6,40
+gs vpextrd dword [r15 + 2 * rdi + 0x72],xmm2,1
+vpextrd dword [r15 + 2 * rdi + 0x72],xmm2,127
+vpextrd dword [r15 + 2 * rdi + 0x72],xmm2,-128
+gs vpextrd dword [r15 + 2 * rdi + 0x72],xmm6,1
+gs vpextrd dword [r15 + 2 * rdi + 0x72],xmm6,127
+gs vpextrd dword [r15 + 2 * rdi + 0x72],xmm6,-128
+vpextrd dword [r15 + 2 * rdi + 0x72],xmm1,1
+vpextrd dword [r15 + 2 * rdi + 0x72],xmm1,127
+vpextrd dword [r15 + 2 * rdi + 0x72],xmm1,-128
+gs vpextrd dword [rsp],xmm2,1
+vpextrd dword [rsp],xmm2,127
+gs vpextrd dword [rsp],xmm2,-128
+vpextrd dword [rsp],xmm6,1
+gs vpextrd dword [rsp],xmm6,127
+vpextrd dword [rsp],xmm6,-128
+gs vpextrd dword [rsp],xmm1,1
+vpextrd dword [rsp],xmm1,127
+vpextrd dword [rsp],xmm1,-128
+vpextrd dword [rbx + 8 * rdx],xmm2,1
+gs vpextrd dword [rbx + 8 * rdx],xmm2,127
+vpextrd dword [rbx + 8 * rdx],xmm2,-128
+gs vpextrd dword [rbx + 8 * rdx],xmm6,1
 vpextrd dword [rbx + 8 * rdx],xmm6,127
-vpextrd dword [rdx - 0x80000000],xmm2,121
-gs vpextrd dword [rdx - 0x80000000],xmm2,40
-gs vpextrd dword [rdx - 0x80000000],xmm2,127
-vpextrd dword [rdx - 0x80000000],xmm0,121
-vpextrd dword [rdx - 0x80000000],xmm0,40
-vpextrd dword [rdx - 0x80000000],xmm0,127
-gs vpextrd dword [rdx - 0x80000000],xmm6,121
-gs vpextrd dword [rdx - 0x80000000],xmm6,40
-vpextrd dword [rdx - 0x80000000],xmm6,127
-vpextrd dword [eax],xmm5,121
-gs a32 vpextrd dword [eax],xmm5,40
-a32 vpextrd dword [eax],xmm5,38
-vpextrd dword [eax],xmm3,121
-vpextrd dword [eax],xmm3,40
-gs vpextrd dword [eax],xmm3,38
-a32 vpextrd dword [eax],xmm7,121
-gs vpextrd dword [eax],xmm7,40
-a32 gs vpextrd dword [eax],xmm7,38
-a32 vpextrd dword [ebx + 8 * edx],xmm5,121
-gs a32 vpextrd dword [ebx + 8 * edx],xmm5,40
-a32 gs vpextrd dword [ebx + 8 * edx],xmm5,38
-gs a32 vpextrd dword [ebx + 8 * edx],xmm3,121
-gs a32 vpextrd dword [ebx + 8 * edx],xmm3,40
-gs a32 vpextrd dword [ebx + 8 * edx],xmm3,38
-gs a32 vpextrd dword [ebx + 8 * edx],xmm7,121
-gs a32 vpextrd dword [ebx + 8 * edx],xmm7,40
-a32 vpextrd dword [ebx + 8 * edx],xmm7,38
-a32 vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm5,121
-gs vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm5,40
-gs a32 vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm5,38
-gs a32 vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm3,121
-a32 gs vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm3,40
-a32 gs vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm3,38
-vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm7,121
-a32 gs vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm7,40
-a32 gs vpextrd dword [r14d + 1 * edx + 0x7FFFFFFF],xmm7,38
-vpextrd r12d,xmm9,127
-a32 gs vpextrd r12d,xmm9,0
-a32 vpextrd r12d,xmm9,-128
-a32 gs vpextrd r12d,xmm13,127
-gs vpextrd r12d,xmm13,0
-a32 vpextrd r12d,xmm13,-128
-vpextrd r12d,xmm2,127
-a32 vpextrd r12d,xmm2,0
-gs a32 vpextrd r12d,xmm2,-128
-a32 vpextrd eax,xmm9,127
-gs vpextrd eax,xmm9,0
-gs vpextrd eax,xmm9,-128
-gs vpextrd eax,xmm13,127
-a32 gs vpextrd eax,xmm13,0
-a32 vpextrd eax,xmm13,-128
-a32 gs vpextrd eax,xmm2,127
-a32 vpextrd eax,xmm2,0
-a32 gs vpextrd eax,xmm2,-128
-a32 vpextrd esi,xmm9,127
-a32 gs vpextrd esi,xmm9,0
-a32 gs vpextrd esi,xmm9,-128
-vpextrd esi,xmm13,127
-a32 gs vpextrd esi,xmm13,0
-gs vpextrd esi,xmm13,-128
-gs vpextrd esi,xmm2,127
-a32 gs vpextrd esi,xmm2,0
-vpextrd esi,xmm2,-128
+gs vpextrd dword [rbx + 8 * rdx],xmm6,-128
+gs vpextrd dword [rbx + 8 * rdx],xmm1,1
+gs vpextrd dword [rbx + 8 * rdx],xmm1,127
+vpextrd dword [rbx + 8 * rdx],xmm1,-128
+gs a32 vpextrd dword [edx - 0x80000000],xmm11,127
+vpextrd dword [edx - 0x80000000],xmm11,18
+gs vpextrd dword [edx - 0x80000000],xmm11,1
+gs vpextrd dword [edx - 0x80000000],xmm7,127
+gs vpextrd dword [edx - 0x80000000],xmm7,18
+a32 vpextrd dword [edx - 0x80000000],xmm7,1
+vpextrd dword [edx - 0x80000000],xmm12,127
+vpextrd dword [edx - 0x80000000],xmm12,18
+gs vpextrd dword [edx - 0x80000000],xmm12,1
+vpextrd dword [esp + 1 * ebp],xmm11,127
+a32 gs vpextrd dword [esp + 1 * ebp],xmm11,18
+vpextrd dword [esp + 1 * ebp],xmm11,1
+a32 vpextrd dword [esp + 1 * ebp],xmm7,127
+gs a32 vpextrd dword [esp + 1 * ebp],xmm7,18
+gs vpextrd dword [esp + 1 * ebp],xmm7,1
+gs vpextrd dword [esp + 1 * ebp],xmm12,127
+vpextrd dword [esp + 1 * ebp],xmm12,18
+gs vpextrd dword [esp + 1 * ebp],xmm12,1
+vpextrd dword [eax],xmm11,127
+vpextrd dword [eax],xmm11,18
+gs vpextrd dword [eax],xmm11,1
+vpextrd dword [eax],xmm7,127
+gs vpextrd dword [eax],xmm7,18
+gs a32 vpextrd dword [eax],xmm7,1
+a32 gs vpextrd dword [eax],xmm12,127
+a32 gs vpextrd dword [eax],xmm12,18
+a32 vpextrd dword [eax],xmm12,1
+vpextrd ebx,xmm7,18
+a32 vpextrd ebx,xmm7,127
+gs vpextrd ebx,xmm7,1
+gs a32 vpextrd ebx,xmm8,18
+a32 gs vpextrd ebx,xmm8,127
+a32 vpextrd ebx,xmm8,1
+a32 vpextrd ebx,xmm1,18
+gs a32 vpextrd ebx,xmm1,127
+vpextrd ebx,xmm1,1
+a32 vpextrd esi,xmm7,18
+gs vpextrd esi,xmm7,127
+gs vpextrd esi,xmm7,1
+gs a32 vpextrd esi,xmm8,18
+gs vpextrd esi,xmm8,127
+gs vpextrd esi,xmm8,1
+a32 gs vpextrd esi,xmm1,18
+a32 vpextrd esi,xmm1,127
+a32 gs vpextrd esi,xmm1,1
+vpextrd ebp,xmm7,18
+gs vpextrd ebp,xmm7,127
+gs vpextrd ebp,xmm7,1
+a32 gs vpextrd ebp,xmm8,18
+vpextrd ebp,xmm8,127
+a32 vpextrd ebp,xmm8,1
+a32 gs vpextrd ebp,xmm1,18
+vpextrd ebp,xmm1,127
+a32 vpextrd ebp,xmm1,1

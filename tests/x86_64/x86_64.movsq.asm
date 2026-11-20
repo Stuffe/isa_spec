@@ -1,2 +1,2 @@
-repne a32 o16 gs movsq 
-o16 a32 gs movsq 
+gs o16 a32 repne movsq 
+o16 a32 repne gs movsq 

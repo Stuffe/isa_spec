@@ -1,2 +1,2 @@
-a32 gs o16 fscale 
-a32 gs fscale 
+o16 fscale 
+gs o16 fscale 

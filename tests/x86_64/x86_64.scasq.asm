@@ -1,2 +1,2 @@
-a32 gs o16 scasq 
-rep o16 a32 scasq 
+rep gs a32 scasq 
+a32 gs o16 rep scasq 

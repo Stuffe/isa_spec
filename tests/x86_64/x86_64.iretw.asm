@@ -1,2 +1,2 @@
 a32 gs o16 iretw 
-a32 iretw 
+gs a32 o16 iretw 

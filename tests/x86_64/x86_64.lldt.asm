@@ -1,18 +1,18 @@
-gs lldt word [r11 + r11 * 2 + 0x706e82c3]
+gs lldt word [r12]
 o16 lldt word [r13]
-lldt word [r12]
-a32 lldt word [edx - 0x80000000]
-gs o16 lldt word [r15d + 2 * edi + 0x72]
-a32 gs o16 lldt word [r14d + 1 * edx + 0x7FFFFFFF]
-lldt word [rbp]
-gs lldt word [rsp + 1 * rbp]
 o16 gs lldt word [rax]
-a32 gs o16 lldt word [ebp]
-lldt word [eax]
-gs o16 a32 lldt word [esp + 1 * ebp]
-o16 a32 lldt r8w
-a32 gs o16 lldt dx
-a32 lldt r11w
-gs a32 lldt ax
-a32 gs lldt r9w
-gs lldt r12w
+gs a32 o16 lldt word [r13d]
+gs lldt word [ebx + 8 * edx]
+a32 gs o16 lldt word [r12d]
+o16 lldt word [r15 + 2 * rdi + 0x72]
+o16 lldt word [r14 + 1 * rdx + 0x7FFFFFFF]
+lldt word [rbx + 8 * rdx]
+gs lldt word [r11d + r11d * 2 + 0x3c9e76e7]
+a32 lldt word [r14d + 1 * edx + 0x7FFFFFFF]
+a32 o16 lldt word [esp + 1 * ebp]
+a32 o16 gs lldt r9w
+gs a32 o16 lldt r13w
+o16 a32 lldt ax
+o16 a32 lldt si
+a32 o16 lldt r15w
+a32 o16 gs lldt sp

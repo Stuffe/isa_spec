@@ -1,81 +1,81 @@
-gs vextractps dword [rax],xmm3,-8
-gs vextractps dword [rax],xmm3,-128
-vextractps dword [rax],xmm3,0
-gs vextractps dword [rax],xmm9,-8
-vextractps dword [rax],xmm9,-128
-vextractps dword [rax],xmm9,0
-gs vextractps dword [rax],xmm7,-8
-vextractps dword [rax],xmm7,-128
-gs vextractps dword [rax],xmm7,0
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm3,-8
-vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm3,-128
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm3,0
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm9,-8
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm9,-128
-vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm9,0
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm7,-8
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm7,-128
-gs vextractps dword [r11 + r11 * 2 + 0x33b4bed1],xmm7,0
-gs vextractps dword [rsp],xmm3,-8
-gs vextractps dword [rsp],xmm3,-128
 vextractps dword [rsp],xmm3,0
-gs vextractps dword [rsp],xmm9,-8
-vextractps dword [rsp],xmm9,-128
+gs vextractps dword [rsp],xmm3,96
+vextractps dword [rsp],xmm3,11
+gs vextractps dword [rsp],xmm10,0
+vextractps dword [rsp],xmm10,96
+gs vextractps dword [rsp],xmm10,11
 gs vextractps dword [rsp],xmm9,0
-vextractps dword [rsp],xmm7,-8
-vextractps dword [rsp],xmm7,-128
-vextractps dword [rsp],xmm7,0
-a32 vextractps dword [ebx + 8 * edx],xmm5,-8
-a32 gs vextractps dword [ebx + 8 * edx],xmm5,50
-gs vextractps dword [ebx + 8 * edx],xmm5,-128
-a32 gs vextractps dword [ebx + 8 * edx],xmm13,-8
-gs vextractps dword [ebx + 8 * edx],xmm13,50
-gs a32 vextractps dword [ebx + 8 * edx],xmm13,-128
-a32 gs vextractps dword [ebx + 8 * edx],xmm10,-8
-gs vextractps dword [ebx + 8 * edx],xmm10,50
-gs a32 vextractps dword [ebx + 8 * edx],xmm10,-128
-gs a32 vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm5,-8
-a32 gs vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm5,50
-gs a32 vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm5,-128
-a32 vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm13,-8
-a32 gs vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm13,50
-vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm13,-128
-a32 vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm10,-8
-gs vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm10,50
-gs a32 vextractps dword [r11d + r11d * 2 + 0x33b4bed1],xmm10,-128
-vextractps dword [esp],xmm5,-8
-a32 vextractps dword [esp],xmm5,50
-vextractps dword [esp],xmm5,-128
-gs a32 vextractps dword [esp],xmm13,-8
-gs a32 vextractps dword [esp],xmm13,50
-gs vextractps dword [esp],xmm13,-128
-gs a32 vextractps dword [esp],xmm10,-8
-gs vextractps dword [esp],xmm10,50
-a32 gs vextractps dword [esp],xmm10,-128
-a32 vextractps r14d,xmm13,-128
-a32 vextractps r14d,xmm13,99
-a32 gs vextractps r14d,xmm13,50
-gs vextractps r14d,xmm15,-128
-a32 gs vextractps r14d,xmm15,99
-vextractps r14d,xmm15,50
-vextractps r14d,xmm5,-128
-vextractps r14d,xmm5,99
-vextractps r14d,xmm5,50
-gs a32 vextractps r9d,xmm13,-128
-gs a32 vextractps r9d,xmm13,99
-gs a32 vextractps r9d,xmm13,50
-a32 vextractps r9d,xmm15,-128
-vextractps r9d,xmm15,99
-a32 gs vextractps r9d,xmm15,50
-gs vextractps r9d,xmm5,-128
-a32 vextractps r9d,xmm5,99
-gs a32 vextractps r9d,xmm5,50
-gs vextractps r8d,xmm13,-128
-a32 gs vextractps r8d,xmm13,99
-gs a32 vextractps r8d,xmm13,50
-vextractps r8d,xmm15,-128
-a32 vextractps r8d,xmm15,99
-vextractps r8d,xmm15,50
-a32 vextractps r8d,xmm5,-128
-a32 gs vextractps r8d,xmm5,99
-a32 gs vextractps r8d,xmm5,50
+gs vextractps dword [rsp],xmm9,96
+vextractps dword [rsp],xmm9,11
+vextractps dword [r15 + 2 * rdi + 0x72],xmm3,0
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm3,96
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm3,11
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm10,0
+vextractps dword [r15 + 2 * rdi + 0x72],xmm10,96
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm10,11
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm9,0
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm9,96
+gs vextractps dword [r15 + 2 * rdi + 0x72],xmm9,11
+vextractps dword [r12],xmm3,0
+vextractps dword [r12],xmm3,96
+gs vextractps dword [r12],xmm3,11
+vextractps dword [r12],xmm10,0
+gs vextractps dword [r12],xmm10,96
+gs vextractps dword [r12],xmm10,11
+vextractps dword [r12],xmm9,0
+vextractps dword [r12],xmm9,96
+gs vextractps dword [r12],xmm9,11
+gs a32 vextractps dword [r12d],xmm0,96
+a32 gs vextractps dword [r12d],xmm0,127
+gs a32 vextractps dword [r12d],xmm0,11
+a32 gs vextractps dword [r12d],xmm3,96
+gs a32 vextractps dword [r12d],xmm3,127
+gs a32 vextractps dword [r12d],xmm3,11
+gs a32 vextractps dword [r12d],xmm6,96
+a32 gs vextractps dword [r12d],xmm6,127
+gs vextractps dword [r12d],xmm6,11
+gs vextractps dword [esp],xmm0,96
+a32 vextractps dword [esp],xmm0,127
+vextractps dword [esp],xmm0,11
+vextractps dword [esp],xmm3,96
+a32 vextractps dword [esp],xmm3,127
+gs a32 vextractps dword [esp],xmm3,11
+a32 vextractps dword [esp],xmm6,96
+a32 gs vextractps dword [esp],xmm6,127
+a32 vextractps dword [esp],xmm6,11
+vextractps dword [ebx + 8 * edx],xmm0,96
+gs vextractps dword [ebx + 8 * edx],xmm0,127
+gs vextractps dword [ebx + 8 * edx],xmm0,11
+a32 gs vextractps dword [ebx + 8 * edx],xmm3,96
+gs a32 vextractps dword [ebx + 8 * edx],xmm3,127
+vextractps dword [ebx + 8 * edx],xmm3,11
+vextractps dword [ebx + 8 * edx],xmm6,96
+gs a32 vextractps dword [ebx + 8 * edx],xmm6,127
+gs a32 vextractps dword [ebx + 8 * edx],xmm6,11
+gs a32 vextractps r15d,xmm9,96
+a32 vextractps r15d,xmm9,0
+vextractps r15d,xmm9,127
+vextractps r15d,xmm6,96
+gs a32 vextractps r15d,xmm6,0
+vextractps r15d,xmm6,127
+gs vextractps r15d,xmm8,96
+vextractps r15d,xmm8,0
+vextractps r15d,xmm8,127
+a32 vextractps esp,xmm9,96
+a32 vextractps esp,xmm9,0
+a32 gs vextractps esp,xmm9,127
+gs a32 vextractps esp,xmm6,96
+a32 vextractps esp,xmm6,0
+a32 vextractps esp,xmm6,127
+a32 gs vextractps esp,xmm8,96
+vextractps esp,xmm8,0
+gs a32 vextractps esp,xmm8,127
+vextractps r13d,xmm9,96
+gs vextractps r13d,xmm9,0
+a32 gs vextractps r13d,xmm9,127
+a32 vextractps r13d,xmm6,96
+gs a32 vextractps r13d,xmm6,0
+gs a32 vextractps r13d,xmm6,127
+a32 gs vextractps r13d,xmm8,96
+gs a32 vextractps r13d,xmm8,0
+a32 vextractps r13d,xmm8,127

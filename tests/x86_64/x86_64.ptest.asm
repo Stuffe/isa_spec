@@ -1,54 +1,54 @@
-ptest xmm1,oword [r12]
-ptest xmm1,oword [r13]
-gs  ptest xmm1,oword [rax]
-ptest xmm10,oword [r12]
-ptest xmm10,oword [r13]
-ptest xmm10,oword [rax]
- gs ptest xmm3,oword [r12]
- gs ptest xmm3,oword [r13]
-ptest xmm3,oword [rax]
-a32 gs ptest xmm7,oword [edx - 0x80000000]
-a32 gs  ptest xmm7,oword [r13d]
-a32 gs ptest xmm7,oword [r12d]
-ptest xmm5,oword [edx - 0x80000000]
- gs a32 ptest xmm5,oword [r13d]
-gs a32  ptest xmm5,oword [r12d]
-gs ptest xmm0,oword [edx - 0x80000000]
-gs ptest xmm0,oword [r13d]
-a32 ptest xmm0,oword [r12d]
-ptest xmm13,oword [r13]
-gs  ptest xmm13,oword [rdx - 0x80000000]
-ptest xmm13,oword [rsp]
- gs ptest xmm5,oword [r13]
-gs ptest xmm5,oword [rdx - 0x80000000]
-gs  ptest xmm5,oword [rsp]
-ptest xmm8,oword [r13]
- gs ptest xmm8,oword [rdx - 0x80000000]
-ptest xmm8,oword [rsp]
- a32 ptest xmm7,oword [ebx + 8 * edx]
-gs a32  ptest xmm7,oword [r15d + 2 * edi + 0x72]
-ptest xmm7,oword [esp]
- gs a32 ptest xmm2,oword [ebx + 8 * edx]
- gs a32 ptest xmm2,oword [r15d + 2 * edi + 0x72]
- a32 ptest xmm2,oword [esp]
-ptest xmm8,oword [ebx + 8 * edx]
- gs a32 ptest xmm8,oword [r15d + 2 * edi + 0x72]
-a32  ptest xmm8,oword [esp]
-gs  a32 ptest xmm7,xmm11
- a32 gs ptest xmm7,xmm6
-a32 gs  ptest xmm7,xmm0
- a32 ptest xmm11,xmm11
-gs a32 ptest xmm11,xmm6
-gs ptest xmm11,xmm0
-gs  ptest xmm0,xmm11
-a32 gs ptest xmm0,xmm6
- gs ptest xmm0,xmm0
-gs a32 ptest xmm2,xmm12
-a32 gs ptest xmm2,xmm6
-gs  a32 ptest xmm2,xmm5
-gs ptest xmm13,xmm12
-gs a32  ptest xmm13,xmm6
-a32 gs ptest xmm13,xmm5
-ptest xmm14,xmm12
-gs a32 ptest xmm14,xmm6
-a32  ptest xmm14,xmm5
+ gs ptest xmm9,oword [rax]
+ptest xmm9,oword [r15 + 2 * rdi + 0x72]
+ptest xmm9,oword [r11 + r11 * 2 + 0x6bcab19d]
+gs ptest xmm12,oword [rax]
+gs ptest xmm12,oword [r15 + 2 * rdi + 0x72]
+ptest xmm12,oword [r11 + r11 * 2 + 0x6bcab19d]
+ptest xmm4,oword [rax]
+gs  ptest xmm4,oword [r15 + 2 * rdi + 0x72]
+gs  ptest xmm4,oword [r11 + r11 * 2 + 0x6bcab19d]
+gs a32  ptest xmm2,oword [esp]
+ptest xmm2,oword [r15d + 2 * edi + 0x72]
+gs a32  ptest xmm2,oword [eax]
+gs ptest xmm8,oword [esp]
+ a32 gs ptest xmm8,oword [r15d + 2 * edi + 0x72]
+gs a32  ptest xmm8,oword [eax]
+a32 gs ptest xmm6,oword [esp]
+a32 gs ptest xmm6,oword [r15d + 2 * edi + 0x72]
+a32 gs  ptest xmm6,oword [eax]
+ptest xmm12,oword [rsp]
+ptest xmm12,oword [r13]
+ptest xmm12,oword [r12]
+gs ptest xmm11,oword [rsp]
+ gs ptest xmm11,oword [r13]
+ gs ptest xmm11,oword [r12]
+gs ptest xmm7,oword [rsp]
+ gs ptest xmm7,oword [r13]
+ptest xmm7,oword [r12]
+a32  gs ptest xmm3,oword [r12d]
+a32  gs ptest xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs ptest xmm3,oword [r13d]
+gs  ptest xmm1,oword [r12d]
+ptest xmm1,oword [r14d + 1 * edx + 0x7FFFFFFF]
+a32  ptest xmm1,oword [r13d]
+a32  ptest xmm15,oword [r12d]
+ptest xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs ptest xmm15,oword [r13d]
+ gs a32 ptest xmm8,xmm1
+gs  a32 ptest xmm8,xmm13
+a32  ptest xmm8,xmm5
+ a32 ptest xmm0,xmm1
+ a32 ptest xmm0,xmm13
+a32  ptest xmm0,xmm5
+ gs a32 ptest xmm15,xmm1
+ptest xmm15,xmm13
+ptest xmm15,xmm5
+ptest xmm11,xmm8
+a32  ptest xmm11,xmm7
+gs a32  ptest xmm11,xmm6
+ptest xmm3,xmm8
+a32  ptest xmm3,xmm7
+ gs a32 ptest xmm3,xmm6
+a32 gs  ptest xmm12,xmm8
+ptest xmm12,xmm7
+ gs a32 ptest xmm12,xmm6

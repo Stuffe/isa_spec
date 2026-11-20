@@ -1,18 +1,18 @@
-setno byte [rbp]
-gs setno byte [r12]
-gs o16 setno byte [r11 + r11 * 2 + 0x784dae02]
-a32 o16 gs setno byte [ebx + 8 * edx]
-gs setno byte [eax]
-gs o16 a32 setno byte [esp + 1 * ebp]
-o16 gs setno byte [rsp + 1 * rbp]
-o16 gs setno byte [rbx + 8 * rdx]
-setno byte [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16 setno byte [r14d + 1 * edx + 0x7FFFFFFF]
-o16 gs a32 setno byte [r15d + 2 * edi + 0x72]
-gs o16 setno byte [r11d + r11d * 2 + 0x784dae02]
-gs a32 setno bl
-o16 a32 gs setno r12b
-gs setno r13b
-gs a32 setno al
-o16 setno r9b
-a32 gs o16 setno bpl
+setno byte [rsp + 1 * rbp]
+gs setno byte [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 setno byte [rbp]
+o16 a32 setno byte [esp]
+o16 setno byte [eax]
+a32 setno byte [ebx + 8 * edx]
+gs setno byte [rdx - 0x80000000]
+o16 setno byte [rbp]
+setno byte [r11 + r11 * 2 + 0xd3a25de]
+a32 gs o16 setno byte [r15d + 2 * edi + 0x72]
+gs a32 o16 setno byte [esp]
+gs a32 setno byte [esp + 1 * ebp]
+o16 a32 setno bl
+gs a32 o16 setno dil
+a32 o16 gs setno r14b
+a32 gs setno dil
+o16 setno r11b
+o16 setno sil

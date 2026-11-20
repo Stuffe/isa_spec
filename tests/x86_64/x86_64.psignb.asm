@@ -1,108 +1,108 @@
-o16 gs psignb mm0,qword [rbx + 8 * rdx]
-o16 psignb mm0,qword [r11 + r11 * 2 + 0x47b4f22c]
-psignb mm0,qword [r12]
-gs psignb mm6,qword [rbx + 8 * rdx]
-gs psignb mm6,qword [r11 + r11 * 2 + 0x47b4f22c]
-gs o16 psignb mm6,qword [r12]
-o16 psignb mm1,qword [rbx + 8 * rdx]
-gs o16 psignb mm1,qword [r11 + r11 * 2 + 0x47b4f22c]
-psignb mm1,qword [r12]
-o16 gs psignb mm4,qword [edx - 0x80000000]
-gs a32 o16 psignb mm4,qword [eax]
-o16 a32 gs psignb mm4,qword [esp]
-a32 psignb mm3,qword [edx - 0x80000000]
-gs o16 a32 psignb mm3,qword [eax]
-a32 o16 gs psignb mm3,qword [esp]
-o16 psignb mm1,qword [edx - 0x80000000]
-gs a32 psignb mm1,qword [eax]
-gs o16 psignb mm1,qword [esp]
-gs o16 psignb mm7,qword [r11 + r11 * 2 + 0x47b4f22c]
-gs o16 psignb mm7,qword [r12]
-o16 psignb mm7,qword [rax]
-o16 psignb mm2,qword [r11 + r11 * 2 + 0x47b4f22c]
-o16 gs psignb mm2,qword [r12]
-o16 gs psignb mm2,qword [rax]
-psignb mm5,qword [r11 + r11 * 2 + 0x47b4f22c]
-gs o16 psignb mm5,qword [r12]
-gs psignb mm5,qword [rax]
-a32 psignb mm0,qword [r15d + 2 * edi + 0x72]
-a32 o16 gs psignb mm0,qword [r13d]
-a32 psignb mm0,qword [r12d]
-o16 gs psignb mm6,qword [r15d + 2 * edi + 0x72]
-psignb mm6,qword [r13d]
-a32 gs psignb mm6,qword [r12d]
-o16 a32 gs psignb mm2,qword [r15d + 2 * edi + 0x72]
-a32 psignb mm2,qword [r13d]
-a32 o16 gs psignb mm2,qword [r12d]
-gs o16 a32 psignb mm0,mm0
-o16 gs psignb mm0,mm2
-o16 gs a32 psignb mm0,mm6
-gs o16 a32 psignb mm4,mm0
-gs o16 psignb mm4,mm2
-o16 gs psignb mm4,mm6
-o16 psignb mm2,mm0
-a32 o16 psignb mm2,mm2
-psignb mm2,mm6
-o16 gs psignb mm0,mm1
-gs a32 o16 psignb mm0,mm7
-o16 gs psignb mm0,mm0
-o16 a32 gs psignb mm7,mm1
-o16 a32 psignb mm7,mm7
-gs o16 a32 psignb mm7,mm0
-o16 a32 psignb mm5,mm1
-gs a32 psignb mm5,mm7
-gs o16 psignb mm5,mm0
-psignb xmm0,oword [rsp + 1 * rbp]
-gs psignb xmm0,oword [r12]
-gs psignb xmm0,oword [r15 + 2 * rdi + 0x72]
-psignb xmm8,oword [rsp + 1 * rbp]
-gs psignb xmm8,oword [r12]
- gs psignb xmm8,oword [r15 + 2 * rdi + 0x72]
-psignb xmm13,oword [rsp + 1 * rbp]
-gs  psignb xmm13,oword [r12]
- gs psignb xmm13,oword [r15 + 2 * rdi + 0x72]
-gs  a32 psignb xmm0,oword [r11d + r11d * 2 + 0x49374087]
- gs a32 psignb xmm0,oword [r15d + 2 * edi + 0x72]
-gs  a32 psignb xmm0,oword [edx - 0x80000000]
-gs psignb xmm15,oword [r11d + r11d * 2 + 0x49374087]
-a32 psignb xmm15,oword [r15d + 2 * edi + 0x72]
-gs  a32 psignb xmm15,oword [edx - 0x80000000]
- a32 psignb xmm2,oword [r11d + r11d * 2 + 0x49374087]
-a32  psignb xmm2,oword [r15d + 2 * edi + 0x72]
-psignb xmm2,oword [edx - 0x80000000]
-psignb xmm10,oword [r13]
-psignb xmm10,oword [rsp]
-gs  psignb xmm10,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs  psignb xmm13,oword [r13]
-gs psignb xmm13,oword [rsp]
-psignb xmm13,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs psignb xmm8,oword [r13]
-gs  psignb xmm8,oword [rsp]
-gs  psignb xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs  a32 psignb xmm12,oword [esp + 1 * ebp]
-a32 gs psignb xmm12,oword [ebp]
-gs  psignb xmm12,oword [r12d]
- gs a32 psignb xmm6,oword [esp + 1 * ebp]
-a32 gs  psignb xmm6,oword [ebp]
-gs a32  psignb xmm6,oword [r12d]
- gs psignb xmm0,oword [esp + 1 * ebp]
-psignb xmm0,oword [ebp]
-a32  psignb xmm0,oword [r12d]
-gs a32  psignb xmm4,xmm10
-gs  a32 psignb xmm4,xmm5
-psignb xmm4,xmm8
- a32 psignb xmm10,xmm10
-a32  gs psignb xmm10,xmm5
-psignb xmm10,xmm8
-a32 psignb xmm9,xmm10
-gs a32  psignb xmm9,xmm5
-gs  a32 psignb xmm9,xmm8
- gs a32 psignb xmm10,xmm13
- a32 gs psignb xmm10,xmm5
-psignb xmm10,xmm0
-psignb xmm6,xmm13
-a32 gs  psignb xmm6,xmm5
-gs a32 psignb xmm6,xmm0
- a32 gs psignb xmm13,xmm13
- a32 gs psignb xmm13,xmm5
-a32  psignb xmm13,xmm0
+gs o16 psignb mm1,qword [rbx + 8 * rdx]
+gs psignb mm1,qword [rsp]
+psignb mm1,qword [r13]
+o16 psignb mm6,qword [rbx + 8 * rdx]
+psignb mm6,qword [rsp]
+o16 psignb mm6,qword [r13]
+gs o16 psignb mm3,qword [rbx + 8 * rdx]
+psignb mm3,qword [rsp]
+psignb mm3,qword [r13]
+o16 a32 psignb mm3,qword [esp + 1 * ebp]
+psignb mm3,qword [esp]
+gs a32 psignb mm3,qword [edx - 0x80000000]
+a32 gs psignb mm1,qword [esp + 1 * ebp]
+o16 a32 psignb mm1,qword [esp]
+gs o16 a32 psignb mm1,qword [edx - 0x80000000]
+a32 psignb mm7,qword [esp + 1 * ebp]
+o16 a32 psignb mm7,qword [esp]
+o16 a32 gs psignb mm7,qword [edx - 0x80000000]
+gs psignb mm1,qword [r12]
+gs o16 psignb mm1,qword [r13]
+psignb mm1,qword [r11 + r11 * 2 + 0x1bcf074]
+o16 psignb mm5,qword [r12]
+gs psignb mm5,qword [r13]
+gs o16 psignb mm5,qword [r11 + r11 * 2 + 0x1bcf074]
+o16 psignb mm7,qword [r12]
+gs psignb mm7,qword [r13]
+o16 psignb mm7,qword [r11 + r11 * 2 + 0x1bcf074]
+gs psignb mm0,qword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 psignb mm0,qword [r11d + r11d * 2 + 0x1bcf074]
+a32 psignb mm0,qword [eax]
+gs o16 psignb mm1,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs psignb mm1,qword [r11d + r11d * 2 + 0x1bcf074]
+gs psignb mm1,qword [eax]
+o16 gs a32 psignb mm7,qword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs o16 psignb mm7,qword [r11d + r11d * 2 + 0x1bcf074]
+a32 o16 psignb mm7,qword [eax]
+psignb mm7,mm5
+a32 gs o16 psignb mm7,mm2
+gs a32 o16 psignb mm7,mm6
+gs o16 psignb mm0,mm5
+a32 o16 psignb mm0,mm2
+a32 gs psignb mm0,mm6
+o16 psignb mm5,mm5
+psignb mm5,mm2
+a32 o16 psignb mm5,mm6
+gs a32 o16 psignb mm4,mm0
+gs psignb mm4,mm3
+gs o16 a32 psignb mm4,mm5
+gs a32 psignb mm6,mm0
+o16 psignb mm6,mm3
+gs a32 o16 psignb mm6,mm5
+psignb mm7,mm0
+o16 gs a32 psignb mm7,mm3
+o16 psignb mm7,mm5
+gs  psignb xmm8,oword [rsp + 1 * rbp]
+gs  psignb xmm8,oword [r15 + 2 * rdi + 0x72]
+ gs psignb xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+psignb xmm2,oword [rsp + 1 * rbp]
+gs  psignb xmm2,oword [r15 + 2 * rdi + 0x72]
+psignb xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs psignb xmm3,oword [rsp + 1 * rbp]
+gs psignb xmm3,oword [r15 + 2 * rdi + 0x72]
+ gs psignb xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+a32 psignb xmm6,oword [ebx + 8 * edx]
+a32 psignb xmm6,oword [r13d]
+ a32 psignb xmm6,oword [ebp]
+a32 gs  psignb xmm14,oword [ebx + 8 * edx]
+gs a32 psignb xmm14,oword [r13d]
+gs  psignb xmm14,oword [ebp]
+psignb xmm4,oword [ebx + 8 * edx]
+ gs psignb xmm4,oword [r13d]
+gs a32 psignb xmm4,oword [ebp]
+ gs psignb xmm4,oword [rsp + 1 * rbp]
+gs psignb xmm4,oword [rbx + 8 * rdx]
+ gs psignb xmm4,oword [rbp]
+psignb xmm14,oword [rsp + 1 * rbp]
+gs psignb xmm14,oword [rbx + 8 * rdx]
+gs psignb xmm14,oword [rbp]
+ gs psignb xmm13,oword [rsp + 1 * rbp]
+psignb xmm13,oword [rbx + 8 * rdx]
+psignb xmm13,oword [rbp]
+a32  gs psignb xmm14,oword [r13d]
+a32 gs  psignb xmm14,oword [ebx + 8 * edx]
+a32  psignb xmm14,oword [esp]
+psignb xmm13,oword [r13d]
+psignb xmm13,oword [ebx + 8 * edx]
+gs  a32 psignb xmm13,oword [esp]
+ gs psignb xmm3,oword [r13d]
+ gs a32 psignb xmm3,oword [ebx + 8 * edx]
+psignb xmm3,oword [esp]
+a32  gs psignb xmm12,xmm14
+ gs psignb xmm12,xmm3
+ gs a32 psignb xmm12,xmm0
+ gs psignb xmm7,xmm14
+ gs psignb xmm7,xmm3
+psignb xmm7,xmm0
+ a32 gs psignb xmm5,xmm14
+gs  psignb xmm5,xmm3
+a32  gs psignb xmm5,xmm0
+ gs psignb xmm1,xmm12
+psignb xmm1,xmm14
+a32 psignb xmm1,xmm6
+gs  a32 psignb xmm5,xmm12
+ gs a32 psignb xmm5,xmm14
+a32 gs  psignb xmm5,xmm6
+gs a32 psignb xmm2,xmm12
+ gs a32 psignb xmm2,xmm14
+ a32 gs psignb xmm2,xmm6

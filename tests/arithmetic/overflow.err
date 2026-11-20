@@ -1,2 +1,2 @@
-arithmetic/overflow.asm:8,Int literal too big
+arithmetic/overflow.asm:8,Value 0xAAAAAAAAAAAAAAAB outside of range for signed 64-bit immediate
 arithmetic/overflow.asm:17,Value -6148914691236517205 outside of range for unsigned 64-bit immediate

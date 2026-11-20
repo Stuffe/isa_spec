@@ -1,54 +1,54 @@
-gs  cmpnltpd xmm2,oword [rsp]
- gs cmpnltpd xmm2,oword [r13]
-gs cmpnltpd xmm2,oword [rdx - 0x80000000]
-cmpnltpd xmm15,oword [rsp]
-gs cmpnltpd xmm15,oword [r13]
-gs  cmpnltpd xmm15,oword [rdx - 0x80000000]
-gs cmpnltpd xmm3,oword [rsp]
-gs cmpnltpd xmm3,oword [r13]
-gs  cmpnltpd xmm3,oword [rdx - 0x80000000]
-gs a32  cmpnltpd xmm3,oword [esp]
-a32 gs cmpnltpd xmm3,oword [r13d]
-a32  cmpnltpd xmm3,oword [r15d + 2 * edi + 0x72]
- a32 cmpnltpd xmm14,oword [esp]
-cmpnltpd xmm14,oword [r13d]
-cmpnltpd xmm14,oword [r15d + 2 * edi + 0x72]
- a32 gs cmpnltpd xmm9,oword [esp]
- gs a32 cmpnltpd xmm9,oword [r13d]
-a32  gs cmpnltpd xmm9,oword [r15d + 2 * edi + 0x72]
-cmpnltpd xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-cmpnltpd xmm0,oword [r15 + 2 * rdi + 0x72]
-cmpnltpd xmm0,oword [rdx - 0x80000000]
- gs cmpnltpd xmm13,oword [r14 + 1 * rdx + 0x7FFFFFFF]
- gs cmpnltpd xmm13,oword [r15 + 2 * rdi + 0x72]
-gs cmpnltpd xmm13,oword [rdx - 0x80000000]
-cmpnltpd xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-cmpnltpd xmm4,oword [r15 + 2 * rdi + 0x72]
-gs cmpnltpd xmm4,oword [rdx - 0x80000000]
-a32 gs  cmpnltpd xmm7,oword [eax]
-a32 gs cmpnltpd xmm7,oword [r15d + 2 * edi + 0x72]
-gs  a32 cmpnltpd xmm7,oword [ebx + 8 * edx]
-a32 gs  cmpnltpd xmm0,oword [eax]
-gs cmpnltpd xmm0,oword [r15d + 2 * edi + 0x72]
-gs  cmpnltpd xmm0,oword [ebx + 8 * edx]
-gs cmpnltpd xmm8,oword [eax]
- gs a32 cmpnltpd xmm8,oword [r15d + 2 * edi + 0x72]
- a32 cmpnltpd xmm8,oword [ebx + 8 * edx]
-a32 gs cmpnltpd xmm10,xmm7
- a32 cmpnltpd xmm10,xmm8
- a32 gs cmpnltpd xmm10,xmm4
-gs cmpnltpd xmm2,xmm7
-a32 gs  cmpnltpd xmm2,xmm8
-gs a32  cmpnltpd xmm2,xmm4
- a32 cmpnltpd xmm4,xmm7
-a32  cmpnltpd xmm4,xmm8
- gs a32 cmpnltpd xmm4,xmm4
-cmpnltpd xmm1,xmm4
-a32 cmpnltpd xmm1,xmm11
- a32 cmpnltpd xmm1,xmm8
-gs  cmpnltpd xmm0,xmm4
- gs cmpnltpd xmm0,xmm11
-cmpnltpd xmm0,xmm8
-a32 cmpnltpd xmm8,xmm4
-a32 gs cmpnltpd xmm8,xmm11
-gs a32  cmpnltpd xmm8,xmm8
+gs cmpnltpd xmm3,oword [r12]
+gs  cmpnltpd xmm3,oword [rsp]
+gs cmpnltpd xmm3,oword [rsp + 1 * rbp]
+cmpnltpd xmm8,oword [r12]
+gs  cmpnltpd xmm8,oword [rsp]
+cmpnltpd xmm8,oword [rsp + 1 * rbp]
+cmpnltpd xmm4,oword [r12]
+gs  cmpnltpd xmm4,oword [rsp]
+cmpnltpd xmm4,oword [rsp + 1 * rbp]
+a32  cmpnltpd xmm4,oword [r13d]
+ a32 cmpnltpd xmm4,oword [esp + 1 * ebp]
+gs  a32 cmpnltpd xmm4,oword [r15d + 2 * edi + 0x72]
+gs  cmpnltpd xmm5,oword [r13d]
+a32 cmpnltpd xmm5,oword [esp + 1 * ebp]
+a32 gs cmpnltpd xmm5,oword [r15d + 2 * edi + 0x72]
+ gs a32 cmpnltpd xmm14,oword [r13d]
+a32  gs cmpnltpd xmm14,oword [esp + 1 * ebp]
+a32  cmpnltpd xmm14,oword [r15d + 2 * edi + 0x72]
+ gs cmpnltpd xmm1,oword [rax]
+gs  cmpnltpd xmm1,oword [r11 + r11 * 2 + 0xe905dac]
+gs cmpnltpd xmm1,oword [rsp]
+cmpnltpd xmm3,oword [rax]
+cmpnltpd xmm3,oword [r11 + r11 * 2 + 0xe905dac]
+gs  cmpnltpd xmm3,oword [rsp]
+cmpnltpd xmm4,oword [rax]
+gs cmpnltpd xmm4,oword [r11 + r11 * 2 + 0xe905dac]
+gs cmpnltpd xmm4,oword [rsp]
+gs a32  cmpnltpd xmm0,oword [esp]
+ a32 cmpnltpd xmm0,oword [r11d + r11d * 2 + 0xe905dac]
+gs a32  cmpnltpd xmm0,oword [edx - 0x80000000]
+gs  cmpnltpd xmm5,oword [esp]
+gs a32 cmpnltpd xmm5,oword [r11d + r11d * 2 + 0xe905dac]
+a32 gs  cmpnltpd xmm5,oword [edx - 0x80000000]
+a32  cmpnltpd xmm12,oword [esp]
+a32 gs cmpnltpd xmm12,oword [r11d + r11d * 2 + 0xe905dac]
+cmpnltpd xmm12,oword [edx - 0x80000000]
+gs  a32 cmpnltpd xmm4,xmm1
+ a32 gs cmpnltpd xmm4,xmm6
+ gs a32 cmpnltpd xmm4,xmm11
+gs  a32 cmpnltpd xmm6,xmm1
+a32  cmpnltpd xmm6,xmm6
+ a32 gs cmpnltpd xmm6,xmm11
+gs  a32 cmpnltpd xmm12,xmm1
+cmpnltpd xmm12,xmm6
+ a32 gs cmpnltpd xmm12,xmm11
+gs  cmpnltpd xmm10,xmm15
+a32  gs cmpnltpd xmm10,xmm5
+gs  a32 cmpnltpd xmm10,xmm4
+gs a32  cmpnltpd xmm12,xmm15
+ gs a32 cmpnltpd xmm12,xmm5
+a32  cmpnltpd xmm12,xmm4
+gs cmpnltpd xmm1,xmm15
+a32 gs  cmpnltpd xmm1,xmm5
+ gs a32 cmpnltpd xmm1,xmm4

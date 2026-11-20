@@ -1,2 +1,2 @@
-repne a32 gs insd 
-gs repne a32 insd 
+a32 gs insd 
+a32 repne gs insd 

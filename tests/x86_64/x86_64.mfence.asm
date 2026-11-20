@@ -1,2 +1,2 @@
-a32 gs mfence 
-a32 mfence 
+gs a32 mfence 
+o16 mfence 

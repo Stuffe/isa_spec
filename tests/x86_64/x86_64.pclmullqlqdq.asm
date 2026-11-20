@@ -1,54 +1,54 @@
-pclmullqlqdq xmm4,oword [r12]
-gs  pclmullqlqdq xmm4,oword [rbp]
-gs  pclmullqlqdq xmm4,oword [rdx - 0x80000000]
- gs pclmullqlqdq xmm6,oword [r12]
-pclmullqlqdq xmm6,oword [rbp]
- gs pclmullqlqdq xmm6,oword [rdx - 0x80000000]
-gs  pclmullqlqdq xmm3,oword [r12]
-pclmullqlqdq xmm3,oword [rbp]
-pclmullqlqdq xmm3,oword [rdx - 0x80000000]
-pclmullqlqdq xmm4,oword [esp]
-a32  pclmullqlqdq xmm4,oword [r11d + r11d * 2 + 0x6cbfd1c7]
-gs pclmullqlqdq xmm4,oword [r14d + 1 * edx + 0x7FFFFFFF]
-pclmullqlqdq xmm0,oword [esp]
-a32  gs pclmullqlqdq xmm0,oword [r11d + r11d * 2 + 0x6cbfd1c7]
-gs pclmullqlqdq xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF]
-a32  pclmullqlqdq xmm2,oword [esp]
-a32 gs  pclmullqlqdq xmm2,oword [r11d + r11d * 2 + 0x6cbfd1c7]
-pclmullqlqdq xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs  pclmullqlqdq xmm8,oword [rbp]
-gs  pclmullqlqdq xmm8,oword [r15 + 2 * rdi + 0x72]
-pclmullqlqdq xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
- gs pclmullqlqdq xmm14,oword [rbp]
-gs pclmullqlqdq xmm14,oword [r15 + 2 * rdi + 0x72]
-gs pclmullqlqdq xmm14,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-pclmullqlqdq xmm12,oword [rbp]
-pclmullqlqdq xmm12,oword [r15 + 2 * rdi + 0x72]
-pclmullqlqdq xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF]
- a32 gs pclmullqlqdq xmm4,oword [ebx + 8 * edx]
-gs  a32 pclmullqlqdq xmm4,oword [ebp]
-a32 pclmullqlqdq xmm4,oword [r12d]
-gs  pclmullqlqdq xmm10,oword [ebx + 8 * edx]
-gs a32 pclmullqlqdq xmm10,oword [ebp]
- gs a32 pclmullqlqdq xmm10,oword [r12d]
-a32  gs pclmullqlqdq xmm7,oword [ebx + 8 * edx]
- a32 pclmullqlqdq xmm7,oword [ebp]
-a32 pclmullqlqdq xmm7,oword [r12d]
-a32  pclmullqlqdq xmm13,xmm12
-gs pclmullqlqdq xmm13,xmm4
-a32 gs  pclmullqlqdq xmm13,xmm9
- gs pclmullqlqdq xmm15,xmm12
- a32 pclmullqlqdq xmm15,xmm4
- gs pclmullqlqdq xmm15,xmm9
- gs a32 pclmullqlqdq xmm4,xmm12
- a32 pclmullqlqdq xmm4,xmm4
+ gs pclmullqlqdq xmm1,oword [rax]
+pclmullqlqdq xmm1,oword [r12]
+pclmullqlqdq xmm1,oword [r11 + r11 * 2 + 0xc2d3722]
+pclmullqlqdq xmm0,oword [rax]
+pclmullqlqdq xmm0,oword [r12]
+gs pclmullqlqdq xmm0,oword [r11 + r11 * 2 + 0xc2d3722]
+ gs pclmullqlqdq xmm13,oword [rax]
+pclmullqlqdq xmm13,oword [r12]
+ gs pclmullqlqdq xmm13,oword [r11 + r11 * 2 + 0xc2d3722]
+ a32 gs pclmullqlqdq xmm10,oword [r11d + r11d * 2 + 0xc2d3722]
+ gs a32 pclmullqlqdq xmm10,oword [eax]
+a32 gs pclmullqlqdq xmm10,oword [r13d]
+pclmullqlqdq xmm5,oword [r11d + r11d * 2 + 0xc2d3722]
+ a32 gs pclmullqlqdq xmm5,oword [eax]
+ gs pclmullqlqdq xmm5,oword [r13d]
+gs a32  pclmullqlqdq xmm1,oword [r11d + r11d * 2 + 0xc2d3722]
+a32 pclmullqlqdq xmm1,oword [eax]
+gs pclmullqlqdq xmm1,oword [r13d]
+gs pclmullqlqdq xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+pclmullqlqdq xmm8,oword [rbp]
+pclmullqlqdq xmm8,oword [r12]
+gs  pclmullqlqdq xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs pclmullqlqdq xmm15,oword [rbp]
+pclmullqlqdq xmm15,oword [r12]
+gs  pclmullqlqdq xmm1,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs pclmullqlqdq xmm1,oword [rbp]
+pclmullqlqdq xmm1,oword [r12]
+gs  pclmullqlqdq xmm4,oword [r12d]
+a32  pclmullqlqdq xmm4,oword [esp]
+a32 pclmullqlqdq xmm4,oword [r13d]
+gs  a32 pclmullqlqdq xmm0,oword [r12d]
+a32 gs pclmullqlqdq xmm0,oword [esp]
+gs pclmullqlqdq xmm0,oword [r13d]
+ gs pclmullqlqdq xmm8,oword [r12d]
+pclmullqlqdq xmm8,oword [esp]
+gs a32  pclmullqlqdq xmm8,oword [r13d]
+gs a32 pclmullqlqdq xmm13,xmm5
+gs  pclmullqlqdq xmm13,xmm4
+gs a32  pclmullqlqdq xmm13,xmm15
+gs  pclmullqlqdq xmm2,xmm5
+ gs pclmullqlqdq xmm2,xmm4
+gs pclmullqlqdq xmm2,xmm15
+gs a32 pclmullqlqdq xmm11,xmm5
+gs a32 pclmullqlqdq xmm11,xmm4
+gs a32 pclmullqlqdq xmm11,xmm15
+gs a32 pclmullqlqdq xmm0,xmm8
+a32 gs  pclmullqlqdq xmm0,xmm9
+a32 gs pclmullqlqdq xmm0,xmm11
+ a32 pclmullqlqdq xmm4,xmm8
 gs a32  pclmullqlqdq xmm4,xmm9
-a32 gs pclmullqlqdq xmm15,xmm10
-a32 gs  pclmullqlqdq xmm15,xmm6
- a32 pclmullqlqdq xmm15,xmm7
- gs a32 pclmullqlqdq xmm11,xmm10
- gs a32 pclmullqlqdq xmm11,xmm6
- gs a32 pclmullqlqdq xmm11,xmm7
-gs a32  pclmullqlqdq xmm1,xmm10
-a32 gs pclmullqlqdq xmm1,xmm6
-gs pclmullqlqdq xmm1,xmm7
+gs  a32 pclmullqlqdq xmm4,xmm11
+pclmullqlqdq xmm11,xmm8
+ gs pclmullqlqdq xmm11,xmm9
+a32 gs pclmullqlqdq xmm11,xmm11

@@ -1,2 +1,2 @@
-a32 xlatb 
-o16 gs xlatb 
+o16 a32 xlatb 
+o16 xlatb 

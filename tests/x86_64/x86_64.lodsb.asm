@@ -1,2 +1,2 @@
-repne o16 a32 gs lodsb 
-o16 lodsb 
+gs lodsb 
+repne o16 lodsb 

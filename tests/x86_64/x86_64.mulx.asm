@@ -1,162 +1,162 @@
-mulx rsi,r8,qword [r15 + 2 * rdi + 0x72]
-mulx rsi,r8,qword [rdx - 0x80000000]
-mulx rsi,r8,qword [rax]
-mulx rsi,r12,qword [r15 + 2 * rdi + 0x72]
-gs mulx rsi,r12,qword [rdx - 0x80000000]
-mulx rsi,r12,qword [rax]
-gs mulx rsi,rsp,qword [r15 + 2 * rdi + 0x72]
-gs mulx rsi,rsp,qword [rdx - 0x80000000]
-gs mulx rsi,rsp,qword [rax]
-mulx rcx,r8,qword [r15 + 2 * rdi + 0x72]
-mulx rcx,r8,qword [rdx - 0x80000000]
-mulx rcx,r8,qword [rax]
-mulx rcx,r12,qword [r15 + 2 * rdi + 0x72]
-mulx rcx,r12,qword [rdx - 0x80000000]
-gs mulx rcx,r12,qword [rax]
-mulx rcx,rsp,qword [r15 + 2 * rdi + 0x72]
-gs mulx rcx,rsp,qword [rdx - 0x80000000]
-gs mulx rcx,rsp,qword [rax]
-gs mulx rbp,r8,qword [r15 + 2 * rdi + 0x72]
-gs mulx rbp,r8,qword [rdx - 0x80000000]
-gs mulx rbp,r8,qword [rax]
-mulx rbp,r12,qword [r15 + 2 * rdi + 0x72]
-mulx rbp,r12,qword [rdx - 0x80000000]
-mulx rbp,r12,qword [rax]
-mulx rbp,rsp,qword [r15 + 2 * rdi + 0x72]
-mulx rbp,rsp,qword [rdx - 0x80000000]
-gs mulx rbp,rsp,qword [rax]
-mulx rsi,r12,qword [r13d]
-a32 gs mulx rsi,r12,qword [r15d + 2 * edi + 0x72]
-a32 mulx rsi,r12,qword [r11d + r11d * 2 + 0x5e8f5266]
-gs a32 mulx rsi,r8,qword [r13d]
-mulx rsi,r8,qword [r15d + 2 * edi + 0x72]
-gs a32 mulx rsi,r8,qword [r11d + r11d * 2 + 0x5e8f5266]
-a32 gs mulx rsi,rdx,qword [r13d]
-gs a32 mulx rsi,rdx,qword [r15d + 2 * edi + 0x72]
-mulx rsi,rdx,qword [r11d + r11d * 2 + 0x5e8f5266]
-gs mulx r10,r12,qword [r13d]
-gs a32 mulx r10,r12,qword [r15d + 2 * edi + 0x72]
-mulx r10,r12,qword [r11d + r11d * 2 + 0x5e8f5266]
-gs mulx r10,r8,qword [r13d]
-mulx r10,r8,qword [r15d + 2 * edi + 0x72]
-a32 gs mulx r10,r8,qword [r11d + r11d * 2 + 0x5e8f5266]
-gs a32 mulx r10,rdx,qword [r13d]
-mulx r10,rdx,qword [r15d + 2 * edi + 0x72]
-gs mulx r10,rdx,qword [r11d + r11d * 2 + 0x5e8f5266]
-a32 gs mulx rsp,r12,qword [r13d]
-a32 gs mulx rsp,r12,qword [r15d + 2 * edi + 0x72]
-a32 gs mulx rsp,r12,qword [r11d + r11d * 2 + 0x5e8f5266]
-mulx rsp,r8,qword [r13d]
-gs a32 mulx rsp,r8,qword [r15d + 2 * edi + 0x72]
-a32 mulx rsp,r8,qword [r11d + r11d * 2 + 0x5e8f5266]
-gs a32 mulx rsp,rdx,qword [r13d]
-gs a32 mulx rsp,rdx,qword [r15d + 2 * edi + 0x72]
-gs a32 mulx rsp,rdx,qword [r11d + r11d * 2 + 0x5e8f5266]
-a32 gs mulx rdx,r9,r12
-mulx rdx,r9,r8
-gs a32 mulx rdx,r9,r15
-mulx rdx,r10,r12
-a32 gs mulx rdx,r10,r8
-gs a32 mulx rdx,r10,r15
-a32 gs mulx rdx,rsi,r12
-mulx rdx,rsi,r8
-a32 gs mulx rdx,rsi,r15
-mulx r13,r9,r12
-mulx r13,r9,r8
-mulx r13,r9,r15
-mulx r13,r10,r12
-gs mulx r13,r10,r8
-gs mulx r13,r10,r15
-a32 gs mulx r13,rsi,r12
-a32 gs mulx r13,rsi,r8
-a32 gs mulx r13,rsi,r15
-a32 gs mulx rbp,r9,r12
-gs a32 mulx rbp,r9,r8
-gs a32 mulx rbp,r9,r15
-gs mulx rbp,r10,r12
-gs a32 mulx rbp,r10,r8
-gs a32 mulx rbp,r10,r15
-gs mulx rbp,rsi,r12
-mulx rbp,rsi,r8
-a32 mulx rbp,rsi,r15
-gs mulx esp,r10d,dword [r15 + 2 * rdi + 0x72]
-gs mulx esp,r10d,dword [r13]
-gs mulx esp,r10d,dword [rdx - 0x80000000]
-mulx esp,edx,dword [r15 + 2 * rdi + 0x72]
-gs mulx esp,edx,dword [r13]
-gs mulx esp,edx,dword [rdx - 0x80000000]
-mulx esp,ecx,dword [r15 + 2 * rdi + 0x72]
-gs mulx esp,ecx,dword [r13]
-mulx esp,ecx,dword [rdx - 0x80000000]
-mulx r14d,r10d,dword [r15 + 2 * rdi + 0x72]
-mulx r14d,r10d,dword [r13]
-gs mulx r14d,r10d,dword [rdx - 0x80000000]
-mulx r14d,edx,dword [r15 + 2 * rdi + 0x72]
-mulx r14d,edx,dword [r13]
-mulx r14d,edx,dword [rdx - 0x80000000]
-mulx r14d,ecx,dword [r15 + 2 * rdi + 0x72]
-mulx r14d,ecx,dword [r13]
-gs mulx r14d,ecx,dword [rdx - 0x80000000]
-mulx r9d,r10d,dword [r15 + 2 * rdi + 0x72]
-gs mulx r9d,r10d,dword [r13]
-gs mulx r9d,r10d,dword [rdx - 0x80000000]
-gs mulx r9d,edx,dword [r15 + 2 * rdi + 0x72]
-gs mulx r9d,edx,dword [r13]
-mulx r9d,edx,dword [rdx - 0x80000000]
-mulx r9d,ecx,dword [r15 + 2 * rdi + 0x72]
-gs mulx r9d,ecx,dword [r13]
-mulx r9d,ecx,dword [rdx - 0x80000000]
-a32 mulx edi,r13d,dword [esp]
-a32 mulx edi,r13d,dword [ebx + 8 * edx]
-a32 gs mulx edi,r13d,dword [eax]
-gs a32 mulx edi,r8d,dword [esp]
-a32 gs mulx edi,r8d,dword [ebx + 8 * edx]
-gs a32 mulx edi,r8d,dword [eax]
-gs mulx edi,r11d,dword [esp]
-mulx edi,r11d,dword [ebx + 8 * edx]
-gs mulx edi,r11d,dword [eax]
-gs a32 mulx r12d,r13d,dword [esp]
-a32 gs mulx r12d,r13d,dword [ebx + 8 * edx]
-mulx r12d,r13d,dword [eax]
-gs a32 mulx r12d,r8d,dword [esp]
-gs mulx r12d,r8d,dword [ebx + 8 * edx]
-a32 gs mulx r12d,r8d,dword [eax]
-a32 gs mulx r12d,r11d,dword [esp]
-a32 mulx r12d,r11d,dword [ebx + 8 * edx]
-mulx r12d,r11d,dword [eax]
-gs mulx r9d,r13d,dword [esp]
-gs a32 mulx r9d,r13d,dword [ebx + 8 * edx]
-mulx r9d,r13d,dword [eax]
-a32 gs mulx r9d,r8d,dword [esp]
-gs mulx r9d,r8d,dword [ebx + 8 * edx]
-a32 gs mulx r9d,r8d,dword [eax]
-a32 gs mulx r9d,r11d,dword [esp]
-mulx r9d,r11d,dword [ebx + 8 * edx]
-gs mulx r9d,r11d,dword [eax]
-a32 mulx r10d,r8d,edx
-gs a32 mulx r10d,r8d,r9d
-mulx r10d,r8d,ebp
-mulx r10d,esp,edx
-gs mulx r10d,esp,r9d
-mulx r10d,esp,ebp
-a32 gs mulx r10d,r13d,edx
-a32 gs mulx r10d,r13d,r9d
-a32 mulx r10d,r13d,ebp
-a32 gs mulx eax,r8d,edx
-a32 mulx eax,r8d,r9d
-mulx eax,r8d,ebp
-gs a32 mulx eax,esp,edx
-gs a32 mulx eax,esp,r9d
-a32 gs mulx eax,esp,ebp
-gs a32 mulx eax,r13d,edx
-a32 gs mulx eax,r13d,r9d
-gs mulx eax,r13d,ebp
-a32 gs mulx r14d,r8d,edx
-a32 mulx r14d,r8d,r9d
-mulx r14d,r8d,ebp
-gs mulx r14d,esp,edx
-a32 mulx r14d,esp,r9d
-gs mulx r14d,esp,ebp
-mulx r14d,r13d,edx
-a32 mulx r14d,r13d,r9d
-a32 mulx r14d,r13d,ebp
+gs mulx r14,r15,qword [rbx + 8 * rdx]
+gs mulx r14,r15,qword [r12]
+mulx r14,r15,qword [rsp]
+mulx r14,r10,qword [rbx + 8 * rdx]
+gs mulx r14,r10,qword [r12]
+gs mulx r14,r10,qword [rsp]
+gs mulx r14,r9,qword [rbx + 8 * rdx]
+mulx r14,r9,qword [r12]
+mulx r14,r9,qword [rsp]
+gs mulx r13,r15,qword [rbx + 8 * rdx]
+gs mulx r13,r15,qword [r12]
+gs mulx r13,r15,qword [rsp]
+gs mulx r13,r10,qword [rbx + 8 * rdx]
+gs mulx r13,r10,qword [r12]
+gs mulx r13,r10,qword [rsp]
+gs mulx r13,r9,qword [rbx + 8 * rdx]
+gs mulx r13,r9,qword [r12]
+mulx r13,r9,qword [rsp]
+gs mulx rsp,r15,qword [rbx + 8 * rdx]
+gs mulx rsp,r15,qword [r12]
+mulx rsp,r15,qword [rsp]
+mulx rsp,r10,qword [rbx + 8 * rdx]
+gs mulx rsp,r10,qword [r12]
+mulx rsp,r10,qword [rsp]
+gs mulx rsp,r9,qword [rbx + 8 * rdx]
+gs mulx rsp,r9,qword [r12]
+gs mulx rsp,r9,qword [rsp]
+gs a32 mulx rbx,rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+mulx rbx,rbp,qword [edx - 0x80000000]
+a32 mulx rbx,rbp,qword [ebp]
+a32 mulx rbx,r14,qword [r14d + 1 * edx + 0x7FFFFFFF]
+mulx rbx,r14,qword [edx - 0x80000000]
+mulx rbx,r14,qword [ebp]
+mulx rbx,rax,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs mulx rbx,rax,qword [edx - 0x80000000]
+a32 mulx rbx,rax,qword [ebp]
+gs mulx r12,rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 mulx r12,rbp,qword [edx - 0x80000000]
+gs mulx r12,rbp,qword [ebp]
+gs mulx r12,r14,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs mulx r12,r14,qword [edx - 0x80000000]
+a32 mulx r12,r14,qword [ebp]
+mulx r12,rax,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 mulx r12,rax,qword [edx - 0x80000000]
+a32 mulx r12,rax,qword [ebp]
+gs mulx r11,rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+mulx r11,rbp,qword [edx - 0x80000000]
+gs mulx r11,rbp,qword [ebp]
+a32 mulx r11,r14,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs mulx r11,r14,qword [edx - 0x80000000]
+mulx r11,r14,qword [ebp]
+a32 gs mulx r11,rax,qword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs mulx r11,rax,qword [edx - 0x80000000]
+mulx r11,rax,qword [ebp]
+gs a32 mulx rax,rax,rax
+a32 mulx rax,rax,rdx
+mulx rax,rax,rbx
+a32 gs mulx rax,rbx,rax
+a32 mulx rax,rbx,rdx
+mulx rax,rbx,rbx
+a32 mulx rax,r15,rax
+mulx rax,r15,rdx
+mulx rax,r15,rbx
+gs a32 mulx r14,rax,rax
+gs mulx r14,rax,rdx
+mulx r14,rax,rbx
+gs a32 mulx r14,rbx,rax
+gs a32 mulx r14,rbx,rdx
+a32 mulx r14,rbx,rbx
+gs a32 mulx r14,r15,rax
+gs mulx r14,r15,rdx
+gs mulx r14,r15,rbx
+gs mulx r9,rax,rax
+mulx r9,rax,rdx
+gs a32 mulx r9,rax,rbx
+gs mulx r9,rbx,rax
+gs mulx r9,rbx,rdx
+gs a32 mulx r9,rbx,rbx
+gs mulx r9,r15,rax
+mulx r9,r15,rdx
+mulx r9,r15,rbx
+mulx eax,esp,dword [rax]
+mulx eax,esp,dword [rbx + 8 * rdx]
+gs mulx eax,esp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs mulx eax,ebp,dword [rax]
+mulx eax,ebp,dword [rbx + 8 * rdx]
+mulx eax,ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+mulx eax,r15d,dword [rax]
+gs mulx eax,r15d,dword [rbx + 8 * rdx]
+mulx eax,r15d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs mulx r15d,esp,dword [rax]
+gs mulx r15d,esp,dword [rbx + 8 * rdx]
+gs mulx r15d,esp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+mulx r15d,ebp,dword [rax]
+gs mulx r15d,ebp,dword [rbx + 8 * rdx]
+gs mulx r15d,ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs mulx r15d,r15d,dword [rax]
+gs mulx r15d,r15d,dword [rbx + 8 * rdx]
+mulx r15d,r15d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+mulx esp,esp,dword [rax]
+mulx esp,esp,dword [rbx + 8 * rdx]
+mulx esp,esp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs mulx esp,ebp,dword [rax]
+gs mulx esp,ebp,dword [rbx + 8 * rdx]
+gs mulx esp,ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+mulx esp,r15d,dword [rax]
+gs mulx esp,r15d,dword [rbx + 8 * rdx]
+mulx esp,r15d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs a32 mulx r14d,ebp,dword [r11d + r11d * 2 + 0x63c3e4a4]
+a32 gs mulx r14d,ebp,dword [esp]
+gs a32 mulx r14d,ebp,dword [esp + 1 * ebp]
+a32 gs mulx r14d,edx,dword [r11d + r11d * 2 + 0x63c3e4a4]
+mulx r14d,edx,dword [esp]
+gs mulx r14d,edx,dword [esp + 1 * ebp]
+a32 mulx r14d,r13d,dword [r11d + r11d * 2 + 0x63c3e4a4]
+a32 gs mulx r14d,r13d,dword [esp]
+gs mulx r14d,r13d,dword [esp + 1 * ebp]
+mulx r15d,ebp,dword [r11d + r11d * 2 + 0x63c3e4a4]
+gs mulx r15d,ebp,dword [esp]
+mulx r15d,ebp,dword [esp + 1 * ebp]
+gs mulx r15d,edx,dword [r11d + r11d * 2 + 0x63c3e4a4]
+a32 gs mulx r15d,edx,dword [esp]
+gs mulx r15d,edx,dword [esp + 1 * ebp]
+gs a32 mulx r15d,r13d,dword [r11d + r11d * 2 + 0x63c3e4a4]
+gs a32 mulx r15d,r13d,dword [esp]
+a32 mulx r15d,r13d,dword [esp + 1 * ebp]
+a32 mulx r11d,ebp,dword [r11d + r11d * 2 + 0x63c3e4a4]
+mulx r11d,ebp,dword [esp]
+a32 gs mulx r11d,ebp,dword [esp + 1 * ebp]
+mulx r11d,edx,dword [r11d + r11d * 2 + 0x63c3e4a4]
+a32 mulx r11d,edx,dword [esp]
+a32 mulx r11d,edx,dword [esp + 1 * ebp]
+a32 gs mulx r11d,r13d,dword [r11d + r11d * 2 + 0x63c3e4a4]
+mulx r11d,r13d,dword [esp]
+mulx r11d,r13d,dword [esp + 1 * ebp]
+a32 mulx esp,r13d,eax
+mulx esp,r13d,r12d
+a32 gs mulx esp,r13d,r15d
+gs mulx esp,ebp,eax
+gs mulx esp,ebp,r12d
+gs mulx esp,ebp,r15d
+gs a32 mulx esp,esp,eax
+a32 gs mulx esp,esp,r12d
+a32 mulx esp,esp,r15d
+gs a32 mulx ebp,r13d,eax
+a32 gs mulx ebp,r13d,r12d
+a32 gs mulx ebp,r13d,r15d
+a32 gs mulx ebp,ebp,eax
+mulx ebp,ebp,r12d
+mulx ebp,ebp,r15d
+a32 gs mulx ebp,esp,eax
+gs a32 mulx ebp,esp,r12d
+a32 mulx ebp,esp,r15d
+a32 mulx r13d,r13d,eax
+mulx r13d,r13d,r12d
+a32 mulx r13d,r13d,r15d
+mulx r13d,ebp,eax
+gs mulx r13d,ebp,r12d
+a32 gs mulx r13d,ebp,r15d
+a32 mulx r13d,esp,eax
+gs mulx r13d,esp,r12d
+mulx r13d,esp,r15d

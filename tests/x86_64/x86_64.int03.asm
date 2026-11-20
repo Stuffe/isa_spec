@@ -1,2 +1,2 @@
-int03 
-gs a32 int03 
+o16 a32 int03 
+a32 o16 int03 

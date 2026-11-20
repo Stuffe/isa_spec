@@ -1,2 +1,2 @@
-a32 repne lodsd 
-repne gs a32 lodsd 
+a32 gs lodsd 
+repne gs lodsd 

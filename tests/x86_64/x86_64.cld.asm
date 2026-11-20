@@ -1,2 +1,2 @@
-a32 o16 gs cld 
-a32 o16 cld 
+gs o16 a32 cld 
+gs a32 cld 

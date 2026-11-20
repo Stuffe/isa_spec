@@ -1,6 +1,0 @@
-[settings]
-endianness = little
-
-[instructions]
-mov  r%r:U4(immediate) , %v:S16(immediate)
-0001 rrrr vvvvvvvv

@@ -1,2 +1,2 @@
-gs swapgs 
-gs a32 o16 swapgs 
+o16 swapgs 
+o16 gs a32 swapgs 

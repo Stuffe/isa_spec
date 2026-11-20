@@ -1,2 +1,2 @@
-gs iretd 
-gs a32 iretd 
+a32 iretd 
+iretd 

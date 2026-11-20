@@ -1,2 +1,2 @@
-a32 gs xlat 
-o16 xlat 
+gs o16 xlat 
+a32 o16 gs xlat 

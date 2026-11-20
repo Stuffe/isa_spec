@@ -1,162 +1,162 @@
-gs pdep rax,r13,qword [rdx - 0x80000000]
-pdep rax,r13,qword [r11 + r11 * 2 + 0x112fb58c]
-gs pdep rax,r13,qword [rsp]
-pdep rax,rcx,qword [rdx - 0x80000000]
-pdep rax,rcx,qword [r11 + r11 * 2 + 0x112fb58c]
-gs pdep rax,rcx,qword [rsp]
-pdep rax,r8,qword [rdx - 0x80000000]
-pdep rax,r8,qword [r11 + r11 * 2 + 0x112fb58c]
-gs pdep rax,r8,qword [rsp]
-pdep rdx,r13,qword [rdx - 0x80000000]
-gs pdep rdx,r13,qword [r11 + r11 * 2 + 0x112fb58c]
-pdep rdx,r13,qword [rsp]
-gs pdep rdx,rcx,qword [rdx - 0x80000000]
-pdep rdx,rcx,qword [r11 + r11 * 2 + 0x112fb58c]
-gs pdep rdx,rcx,qword [rsp]
-pdep rdx,r8,qword [rdx - 0x80000000]
-pdep rdx,r8,qword [r11 + r11 * 2 + 0x112fb58c]
-pdep rdx,r8,qword [rsp]
-gs pdep rcx,r13,qword [rdx - 0x80000000]
-gs pdep rcx,r13,qword [r11 + r11 * 2 + 0x112fb58c]
-gs pdep rcx,r13,qword [rsp]
-gs pdep rcx,rcx,qword [rdx - 0x80000000]
-gs pdep rcx,rcx,qword [r11 + r11 * 2 + 0x112fb58c]
-pdep rcx,rcx,qword [rsp]
-pdep rcx,r8,qword [rdx - 0x80000000]
-pdep rcx,r8,qword [r11 + r11 * 2 + 0x112fb58c]
-gs pdep rcx,r8,qword [rsp]
-a32 gs pdep rcx,r14,qword [r12d]
-pdep rcx,r14,qword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs pdep rcx,r14,qword [r11d + r11d * 2 + 0x112fb58c]
-gs a32 pdep rcx,r11,qword [r12d]
-a32 pdep rcx,r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs pdep rcx,r11,qword [r11d + r11d * 2 + 0x112fb58c]
-a32 gs pdep rcx,rsp,qword [r12d]
-gs pdep rcx,rsp,qword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 pdep rcx,rsp,qword [r11d + r11d * 2 + 0x112fb58c]
-gs a32 pdep rsi,r14,qword [r12d]
-pdep rsi,r14,qword [r14d + 1 * edx + 0x7FFFFFFF]
-pdep rsi,r14,qword [r11d + r11d * 2 + 0x112fb58c]
-pdep rsi,r11,qword [r12d]
-gs pdep rsi,r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 pdep rsi,r11,qword [r11d + r11d * 2 + 0x112fb58c]
-pdep rsi,rsp,qword [r12d]
-a32 pdep rsi,rsp,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 pdep rsi,rsp,qword [r11d + r11d * 2 + 0x112fb58c]
-gs pdep r14,r14,qword [r12d]
-gs pdep r14,r14,qword [r14d + 1 * edx + 0x7FFFFFFF]
-pdep r14,r14,qword [r11d + r11d * 2 + 0x112fb58c]
-a32 gs pdep r14,r11,qword [r12d]
-a32 gs pdep r14,r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs pdep r14,r11,qword [r11d + r11d * 2 + 0x112fb58c]
-pdep r14,rsp,qword [r12d]
-pdep r14,rsp,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 pdep r14,rsp,qword [r11d + r11d * 2 + 0x112fb58c]
-pdep r13,rcx,rbp
-pdep r13,rcx,rax
-gs a32 pdep r13,rcx,r11
-pdep r13,rbp,rbp
-a32 pdep r13,rbp,rax
-gs a32 pdep r13,rbp,r11
-a32 gs pdep r13,r9,rbp
-gs a32 pdep r13,r9,rax
-gs pdep r13,r9,r11
-a32 pdep r10,rcx,rbp
-a32 pdep r10,rcx,rax
-a32 pdep r10,rcx,r11
-a32 gs pdep r10,rbp,rbp
-gs a32 pdep r10,rbp,rax
-gs pdep r10,rbp,r11
-gs pdep r10,r9,rbp
-gs pdep r10,r9,rax
-a32 pdep r10,r9,r11
-gs pdep r15,rcx,rbp
-a32 gs pdep r15,rcx,rax
-gs pdep r15,rcx,r11
-gs pdep r15,rbp,rbp
-gs pdep r15,rbp,rax
-gs pdep r15,rbp,r11
-pdep r15,r9,rbp
-gs a32 pdep r15,r9,rax
-a32 gs pdep r15,r9,r11
-gs pdep r11d,r10d,dword [rsp]
-gs pdep r11d,r10d,dword [r13]
-pdep r11d,r10d,dword [rbx + 8 * rdx]
-pdep r11d,r12d,dword [rsp]
-pdep r11d,r12d,dword [r13]
-gs pdep r11d,r12d,dword [rbx + 8 * rdx]
-gs pdep r11d,ebx,dword [rsp]
-pdep r11d,ebx,dword [r13]
-gs pdep r11d,ebx,dword [rbx + 8 * rdx]
-gs pdep r14d,r10d,dword [rsp]
-pdep r14d,r10d,dword [r13]
-pdep r14d,r10d,dword [rbx + 8 * rdx]
-gs pdep r14d,r12d,dword [rsp]
-pdep r14d,r12d,dword [r13]
-gs pdep r14d,r12d,dword [rbx + 8 * rdx]
-gs pdep r14d,ebx,dword [rsp]
-pdep r14d,ebx,dword [r13]
-pdep r14d,ebx,dword [rbx + 8 * rdx]
-pdep r12d,r10d,dword [rsp]
-pdep r12d,r10d,dword [r13]
-gs pdep r12d,r10d,dword [rbx + 8 * rdx]
-gs pdep r12d,r12d,dword [rsp]
-gs pdep r12d,r12d,dword [r13]
-pdep r12d,r12d,dword [rbx + 8 * rdx]
-pdep r12d,ebx,dword [rsp]
-gs pdep r12d,ebx,dword [r13]
-pdep r12d,ebx,dword [rbx + 8 * rdx]
-a32 pdep r8d,esi,dword [r13d]
-a32 gs pdep r8d,esi,dword [edx - 0x80000000]
-pdep r8d,esi,dword [esp]
-a32 gs pdep r8d,r15d,dword [r13d]
-gs a32 pdep r8d,r15d,dword [edx - 0x80000000]
-a32 pdep r8d,r15d,dword [esp]
-a32 pdep r8d,r10d,dword [r13d]
-pdep r8d,r10d,dword [edx - 0x80000000]
-gs pdep r8d,r10d,dword [esp]
-pdep r15d,esi,dword [r13d]
-pdep r15d,esi,dword [edx - 0x80000000]
-a32 gs pdep r15d,esi,dword [esp]
-gs pdep r15d,r15d,dword [r13d]
-gs pdep r15d,r15d,dword [edx - 0x80000000]
-pdep r15d,r15d,dword [esp]
-pdep r15d,r10d,dword [r13d]
-a32 gs pdep r15d,r10d,dword [edx - 0x80000000]
-a32 pdep r15d,r10d,dword [esp]
-pdep r10d,esi,dword [r13d]
-a32 gs pdep r10d,esi,dword [edx - 0x80000000]
-pdep r10d,esi,dword [esp]
-gs a32 pdep r10d,r15d,dword [r13d]
-a32 pdep r10d,r15d,dword [edx - 0x80000000]
-pdep r10d,r15d,dword [esp]
-gs pdep r10d,r10d,dword [r13d]
-a32 pdep r10d,r10d,dword [edx - 0x80000000]
-a32 gs pdep r10d,r10d,dword [esp]
-pdep ebp,ecx,ebp
-a32 gs pdep ebp,ecx,edi
-a32 gs pdep ebp,ecx,r11d
-a32 gs pdep ebp,r8d,ebp
-a32 gs pdep ebp,r8d,edi
-gs pdep ebp,r8d,r11d
-pdep ebp,eax,ebp
-gs a32 pdep ebp,eax,edi
-a32 gs pdep ebp,eax,r11d
-pdep esi,ecx,ebp
-a32 gs pdep esi,ecx,edi
-gs a32 pdep esi,ecx,r11d
-gs a32 pdep esi,r8d,ebp
-gs pdep esi,r8d,edi
-a32 gs pdep esi,r8d,r11d
-gs pdep esi,eax,ebp
-pdep esi,eax,edi
-pdep esi,eax,r11d
-pdep ecx,ecx,ebp
-gs a32 pdep ecx,ecx,edi
-a32 pdep ecx,ecx,r11d
-gs pdep ecx,r8d,ebp
-gs a32 pdep ecx,r8d,edi
-a32 pdep ecx,r8d,r11d
-a32 gs pdep ecx,eax,ebp
-gs pdep ecx,eax,edi
-gs pdep ecx,eax,r11d
+gs pdep r8,rcx,qword [rsp + 1 * rbp]
+pdep r8,rcx,qword [rdx - 0x80000000]
+gs pdep r8,rcx,qword [rsp]
+gs pdep r8,r8,qword [rsp + 1 * rbp]
+pdep r8,r8,qword [rdx - 0x80000000]
+gs pdep r8,r8,qword [rsp]
+gs pdep r8,r12,qword [rsp + 1 * rbp]
+pdep r8,r12,qword [rdx - 0x80000000]
+pdep r8,r12,qword [rsp]
+pdep rsi,rcx,qword [rsp + 1 * rbp]
+pdep rsi,rcx,qword [rdx - 0x80000000]
+gs pdep rsi,rcx,qword [rsp]
+gs pdep rsi,r8,qword [rsp + 1 * rbp]
+pdep rsi,r8,qword [rdx - 0x80000000]
+gs pdep rsi,r8,qword [rsp]
+gs pdep rsi,r12,qword [rsp + 1 * rbp]
+gs pdep rsi,r12,qword [rdx - 0x80000000]
+gs pdep rsi,r12,qword [rsp]
+gs pdep r15,rcx,qword [rsp + 1 * rbp]
+gs pdep r15,rcx,qword [rdx - 0x80000000]
+pdep r15,rcx,qword [rsp]
+pdep r15,r8,qword [rsp + 1 * rbp]
+gs pdep r15,r8,qword [rdx - 0x80000000]
+pdep r15,r8,qword [rsp]
+gs pdep r15,r12,qword [rsp + 1 * rbp]
+gs pdep r15,r12,qword [rdx - 0x80000000]
+pdep r15,r12,qword [rsp]
+pdep rbp,rcx,qword [esp + 1 * ebp]
+a32 gs pdep rbp,rcx,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 pdep rbp,rcx,qword [edx - 0x80000000]
+a32 pdep rbp,rbp,qword [esp + 1 * ebp]
+a32 pdep rbp,rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs pdep rbp,rbp,qword [edx - 0x80000000]
+pdep rbp,r11,qword [esp + 1 * ebp]
+a32 gs pdep rbp,r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
+pdep rbp,r11,qword [edx - 0x80000000]
+a32 pdep rsi,rcx,qword [esp + 1 * ebp]
+gs a32 pdep rsi,rcx,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 pdep rsi,rcx,qword [edx - 0x80000000]
+gs pdep rsi,rbp,qword [esp + 1 * ebp]
+a32 gs pdep rsi,rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+pdep rsi,rbp,qword [edx - 0x80000000]
+gs a32 pdep rsi,r11,qword [esp + 1 * ebp]
+a32 pdep rsi,r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs pdep rsi,r11,qword [edx - 0x80000000]
+pdep rbx,rcx,qword [esp + 1 * ebp]
+gs a32 pdep rbx,rcx,qword [r14d + 1 * edx + 0x7FFFFFFF]
+pdep rbx,rcx,qword [edx - 0x80000000]
+a32 gs pdep rbx,rbp,qword [esp + 1 * ebp]
+gs a32 pdep rbx,rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs pdep rbx,rbp,qword [edx - 0x80000000]
+gs a32 pdep rbx,r11,qword [esp + 1 * ebp]
+pdep rbx,r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 pdep rbx,r11,qword [edx - 0x80000000]
+pdep r11,r9,r15
+pdep r11,r9,rcx
+gs a32 pdep r11,r9,rbx
+a32 gs pdep r11,r13,r15
+a32 pdep r11,r13,rcx
+gs a32 pdep r11,r13,rbx
+pdep r11,r11,r15
+gs a32 pdep r11,r11,rcx
+a32 pdep r11,r11,rbx
+pdep r15,r9,r15
+pdep r15,r9,rcx
+gs a32 pdep r15,r9,rbx
+pdep r15,r13,r15
+gs a32 pdep r15,r13,rcx
+a32 gs pdep r15,r13,rbx
+a32 gs pdep r15,r11,r15
+a32 gs pdep r15,r11,rcx
+gs a32 pdep r15,r11,rbx
+gs pdep r14,r9,r15
+gs pdep r14,r9,rcx
+gs a32 pdep r14,r9,rbx
+gs a32 pdep r14,r13,r15
+a32 pdep r14,r13,rcx
+pdep r14,r13,rbx
+gs a32 pdep r14,r11,r15
+pdep r14,r11,rcx
+gs a32 pdep r14,r11,rbx
+gs pdep ebp,r14d,dword [r12]
+pdep ebp,r14d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs pdep ebp,r14d,dword [r15 + 2 * rdi + 0x72]
+gs pdep ebp,esi,dword [r12]
+gs pdep ebp,esi,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs pdep ebp,esi,dword [r15 + 2 * rdi + 0x72]
+pdep ebp,r13d,dword [r12]
+pdep ebp,r13d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+pdep ebp,r13d,dword [r15 + 2 * rdi + 0x72]
+gs pdep r13d,r14d,dword [r12]
+pdep r13d,r14d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+pdep r13d,r14d,dword [r15 + 2 * rdi + 0x72]
+pdep r13d,esi,dword [r12]
+gs pdep r13d,esi,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+pdep r13d,esi,dword [r15 + 2 * rdi + 0x72]
+gs pdep r13d,r13d,dword [r12]
+gs pdep r13d,r13d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+pdep r13d,r13d,dword [r15 + 2 * rdi + 0x72]
+gs pdep r11d,r14d,dword [r12]
+pdep r11d,r14d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+pdep r11d,r14d,dword [r15 + 2 * rdi + 0x72]
+pdep r11d,esi,dword [r12]
+pdep r11d,esi,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs pdep r11d,esi,dword [r15 + 2 * rdi + 0x72]
+pdep r11d,r13d,dword [r12]
+pdep r11d,r13d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+pdep r11d,r13d,dword [r15 + 2 * rdi + 0x72]
+gs a32 pdep ebp,ecx,dword [ebx + 8 * edx]
+gs a32 pdep ebp,ecx,dword [r11d + r11d * 2 + 0x10c67faf]
+gs a32 pdep ebp,ecx,dword [esp]
+gs pdep ebp,ebx,dword [ebx + 8 * edx]
+a32 gs pdep ebp,ebx,dword [r11d + r11d * 2 + 0x10c67faf]
+a32 pdep ebp,ebx,dword [esp]
+pdep ebp,r10d,dword [ebx + 8 * edx]
+gs a32 pdep ebp,r10d,dword [r11d + r11d * 2 + 0x10c67faf]
+gs pdep ebp,r10d,dword [esp]
+gs pdep ecx,ecx,dword [ebx + 8 * edx]
+gs pdep ecx,ecx,dword [r11d + r11d * 2 + 0x10c67faf]
+a32 pdep ecx,ecx,dword [esp]
+a32 gs pdep ecx,ebx,dword [ebx + 8 * edx]
+a32 pdep ecx,ebx,dword [r11d + r11d * 2 + 0x10c67faf]
+gs a32 pdep ecx,ebx,dword [esp]
+a32 gs pdep ecx,r10d,dword [ebx + 8 * edx]
+gs pdep ecx,r10d,dword [r11d + r11d * 2 + 0x10c67faf]
+a32 pdep ecx,r10d,dword [esp]
+gs a32 pdep r12d,ecx,dword [ebx + 8 * edx]
+gs a32 pdep r12d,ecx,dword [r11d + r11d * 2 + 0x10c67faf]
+gs a32 pdep r12d,ecx,dword [esp]
+a32 pdep r12d,ebx,dword [ebx + 8 * edx]
+pdep r12d,ebx,dword [r11d + r11d * 2 + 0x10c67faf]
+a32 gs pdep r12d,ebx,dword [esp]
+gs a32 pdep r12d,r10d,dword [ebx + 8 * edx]
+a32 gs pdep r12d,r10d,dword [r11d + r11d * 2 + 0x10c67faf]
+gs pdep r12d,r10d,dword [esp]
+gs pdep ebp,r13d,r8d
+a32 gs pdep ebp,r13d,edi
+a32 pdep ebp,r13d,r12d
+gs pdep ebp,ebx,r8d
+gs pdep ebp,ebx,edi
+a32 gs pdep ebp,ebx,r12d
+gs pdep ebp,ebp,r8d
+gs pdep ebp,ebp,edi
+a32 gs pdep ebp,ebp,r12d
+gs pdep r13d,r13d,r8d
+pdep r13d,r13d,edi
+pdep r13d,r13d,r12d
+gs a32 pdep r13d,ebx,r8d
+gs pdep r13d,ebx,edi
+pdep r13d,ebx,r12d
+a32 pdep r13d,ebp,r8d
+a32 pdep r13d,ebp,edi
+gs pdep r13d,ebp,r12d
+gs a32 pdep r14d,r13d,r8d
+a32 gs pdep r14d,r13d,edi
+a32 pdep r14d,r13d,r12d
+gs a32 pdep r14d,ebx,r8d
+gs a32 pdep r14d,ebx,edi
+gs pdep r14d,ebx,r12d
+pdep r14d,ebp,r8d
+gs a32 pdep r14d,ebp,edi
+a32 gs pdep r14d,ebp,r12d

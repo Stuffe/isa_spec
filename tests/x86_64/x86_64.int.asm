@@ -1,3 +1,3 @@
-o16 a32 gs int -128
-a32 o16 int 0
-a32 gs int -4
+gs int 127
+gs o16 a32 int -38
+gs o16 int -124

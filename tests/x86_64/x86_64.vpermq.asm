@@ -1,81 +1,81 @@
-gs vpermq ymm7,yword [r13],-24
+gs vpermq ymm7,yword [r15 + 2 * rdi + 0x72],0
+vpermq ymm7,yword [r15 + 2 * rdi + 0x72],127
+vpermq ymm7,yword [r15 + 2 * rdi + 0x72],99
+gs vpermq ymm7,yword [r14 + 1 * rdx + 0x7FFFFFFF],0
+gs vpermq ymm7,yword [r14 + 1 * rdx + 0x7FFFFFFF],127
+vpermq ymm7,yword [r14 + 1 * rdx + 0x7FFFFFFF],99
+gs vpermq ymm7,yword [r13],0
 gs vpermq ymm7,yword [r13],127
-gs vpermq ymm7,yword [r13],123
-gs vpermq ymm7,yword [rbx + 8 * rdx],-24
-vpermq ymm7,yword [rbx + 8 * rdx],127
-vpermq ymm7,yword [rbx + 8 * rdx],123
-gs vpermq ymm7,yword [rsp + 1 * rbp],-24
-vpermq ymm7,yword [rsp + 1 * rbp],127
-gs vpermq ymm7,yword [rsp + 1 * rbp],123
-gs vpermq ymm4,yword [r13],-24
-gs vpermq ymm4,yword [r13],127
-gs vpermq ymm4,yword [r13],123
-gs vpermq ymm4,yword [rbx + 8 * rdx],-24
-gs vpermq ymm4,yword [rbx + 8 * rdx],127
-vpermq ymm4,yword [rbx + 8 * rdx],123
-gs vpermq ymm4,yword [rsp + 1 * rbp],-24
-gs vpermq ymm4,yword [rsp + 1 * rbp],127
-vpermq ymm4,yword [rsp + 1 * rbp],123
-gs vpermq ymm2,yword [r13],-24
-gs vpermq ymm2,yword [r13],127
-vpermq ymm2,yword [r13],123
-gs vpermq ymm2,yword [rbx + 8 * rdx],-24
-gs vpermq ymm2,yword [rbx + 8 * rdx],127
-vpermq ymm2,yword [rbx + 8 * rdx],123
-vpermq ymm2,yword [rsp + 1 * rbp],-24
-gs vpermq ymm2,yword [rsp + 1 * rbp],127
-gs vpermq ymm2,yword [rsp + 1 * rbp],123
-gs vpermq ymm11,yword [ebp],42
-gs a32 vpermq ymm11,yword [ebp],-128
-a32 vpermq ymm11,yword [ebp],123
-gs vpermq ymm11,yword [r14d + 1 * edx + 0x7FFFFFFF],42
-gs a32 vpermq ymm11,yword [r14d + 1 * edx + 0x7FFFFFFF],-128
-gs a32 vpermq ymm11,yword [r14d + 1 * edx + 0x7FFFFFFF],123
-a32 vpermq ymm11,yword [edx - 0x80000000],42
-gs a32 vpermq ymm11,yword [edx - 0x80000000],-128
-vpermq ymm11,yword [edx - 0x80000000],123
-a32 vpermq ymm2,yword [ebp],42
-gs a32 vpermq ymm2,yword [ebp],-128
-gs vpermq ymm2,yword [ebp],123
-vpermq ymm2,yword [r14d + 1 * edx + 0x7FFFFFFF],42
-a32 vpermq ymm2,yword [r14d + 1 * edx + 0x7FFFFFFF],-128
-a32 gs vpermq ymm2,yword [r14d + 1 * edx + 0x7FFFFFFF],123
-gs a32 vpermq ymm2,yword [edx - 0x80000000],42
-vpermq ymm2,yword [edx - 0x80000000],-128
-a32 vpermq ymm2,yword [edx - 0x80000000],123
-gs a32 vpermq ymm6,yword [ebp],42
-vpermq ymm6,yword [ebp],-128
-a32 vpermq ymm6,yword [ebp],123
-a32 gs vpermq ymm6,yword [r14d + 1 * edx + 0x7FFFFFFF],42
-vpermq ymm6,yword [r14d + 1 * edx + 0x7FFFFFFF],-128
-a32 gs vpermq ymm6,yword [r14d + 1 * edx + 0x7FFFFFFF],123
-gs vpermq ymm6,yword [edx - 0x80000000],42
-gs a32 vpermq ymm6,yword [edx - 0x80000000],-128
-gs a32 vpermq ymm6,yword [edx - 0x80000000],123
-gs vpermq ymm14,ymm12,0
-a32 gs vpermq ymm14,ymm12,127
-gs vpermq ymm14,ymm12,42
-vpermq ymm14,ymm3,0
-a32 gs vpermq ymm14,ymm3,127
-gs a32 vpermq ymm14,ymm3,42
-a32 gs vpermq ymm14,ymm9,0
-a32 vpermq ymm14,ymm9,127
-gs vpermq ymm14,ymm9,42
-gs a32 vpermq ymm10,ymm12,0
-vpermq ymm10,ymm12,127
-vpermq ymm10,ymm12,42
-gs vpermq ymm10,ymm3,0
-vpermq ymm10,ymm3,127
-a32 gs vpermq ymm10,ymm3,42
-a32 gs vpermq ymm10,ymm9,0
-a32 gs vpermq ymm10,ymm9,127
-gs a32 vpermq ymm10,ymm9,42
-a32 gs vpermq ymm13,ymm12,0
-vpermq ymm13,ymm12,127
-gs vpermq ymm13,ymm12,42
-a32 vpermq ymm13,ymm3,0
-gs vpermq ymm13,ymm3,127
-a32 gs vpermq ymm13,ymm3,42
-gs vpermq ymm13,ymm9,0
-vpermq ymm13,ymm9,127
-gs vpermq ymm13,ymm9,42
+gs vpermq ymm7,yword [r13],99
+gs vpermq ymm10,yword [r15 + 2 * rdi + 0x72],0
+vpermq ymm10,yword [r15 + 2 * rdi + 0x72],127
+vpermq ymm10,yword [r15 + 2 * rdi + 0x72],99
+vpermq ymm10,yword [r14 + 1 * rdx + 0x7FFFFFFF],0
+gs vpermq ymm10,yword [r14 + 1 * rdx + 0x7FFFFFFF],127
+vpermq ymm10,yword [r14 + 1 * rdx + 0x7FFFFFFF],99
+vpermq ymm10,yword [r13],0
+vpermq ymm10,yword [r13],127
+vpermq ymm10,yword [r13],99
+vpermq ymm3,yword [r15 + 2 * rdi + 0x72],0
+gs vpermq ymm3,yword [r15 + 2 * rdi + 0x72],127
+gs vpermq ymm3,yword [r15 + 2 * rdi + 0x72],99
+gs vpermq ymm3,yword [r14 + 1 * rdx + 0x7FFFFFFF],0
+gs vpermq ymm3,yword [r14 + 1 * rdx + 0x7FFFFFFF],127
+vpermq ymm3,yword [r14 + 1 * rdx + 0x7FFFFFFF],99
+vpermq ymm3,yword [r13],0
+vpermq ymm3,yword [r13],127
+gs vpermq ymm3,yword [r13],99
+a32 vpermq ymm13,yword [r12d],51
+a32 vpermq ymm13,yword [r12d],99
+gs a32 vpermq ymm13,yword [r12d],-128
+gs vpermq ymm13,yword [edx - 0x80000000],51
+a32 vpermq ymm13,yword [edx - 0x80000000],99
+a32 vpermq ymm13,yword [edx - 0x80000000],-128
+vpermq ymm13,yword [eax],51
+a32 vpermq ymm13,yword [eax],99
+a32 vpermq ymm13,yword [eax],-128
+vpermq ymm5,yword [r12d],51
+vpermq ymm5,yword [r12d],99
+gs a32 vpermq ymm5,yword [r12d],-128
+a32 vpermq ymm5,yword [edx - 0x80000000],51
+gs a32 vpermq ymm5,yword [edx - 0x80000000],99
+a32 gs vpermq ymm5,yword [edx - 0x80000000],-128
+gs vpermq ymm5,yword [eax],51
+gs vpermq ymm5,yword [eax],99
+a32 vpermq ymm5,yword [eax],-128
+a32 gs vpermq ymm10,yword [r12d],51
+a32 vpermq ymm10,yword [r12d],99
+a32 gs vpermq ymm10,yword [r12d],-128
+a32 vpermq ymm10,yword [edx - 0x80000000],51
+vpermq ymm10,yword [edx - 0x80000000],99
+vpermq ymm10,yword [edx - 0x80000000],-128
+gs a32 vpermq ymm10,yword [eax],51
+a32 gs vpermq ymm10,yword [eax],99
+a32 gs vpermq ymm10,yword [eax],-128
+a32 vpermq ymm4,ymm13,51
+a32 gs vpermq ymm4,ymm13,115
+a32 vpermq ymm4,ymm13,127
+a32 vpermq ymm4,ymm7,51
+gs a32 vpermq ymm4,ymm7,115
+gs a32 vpermq ymm4,ymm7,127
+a32 vpermq ymm4,ymm8,51
+a32 gs vpermq ymm4,ymm8,115
+a32 vpermq ymm4,ymm8,127
+vpermq ymm11,ymm13,51
+a32 gs vpermq ymm11,ymm13,115
+gs a32 vpermq ymm11,ymm13,127
+a32 gs vpermq ymm11,ymm7,51
+gs vpermq ymm11,ymm7,115
+a32 gs vpermq ymm11,ymm7,127
+a32 vpermq ymm11,ymm8,51
+a32 gs vpermq ymm11,ymm8,115
+vpermq ymm11,ymm8,127
+vpermq ymm5,ymm13,51
+a32 vpermq ymm5,ymm13,115
+a32 gs vpermq ymm5,ymm13,127
+gs vpermq ymm5,ymm7,51
+a32 vpermq ymm5,ymm7,115
+vpermq ymm5,ymm7,127
+a32 gs vpermq ymm5,ymm8,51
+a32 vpermq ymm5,ymm8,115
+gs vpermq ymm5,ymm8,127

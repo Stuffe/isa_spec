@@ -1,9 +1,9 @@
-a32 bswap rsi
-gs a32 bswap rbp
-a32 bswap rdi
-gs bswap edi
-bswap esp
-gs a32 bswap r14d
-a32 gs bswap r10d
-bswap edi
-bswap eax
+a32 bswap r12
+a32 gs bswap r15
+a32 gs bswap rbp
+a32 gs bswap r13d
+gs bswap r11d
+a32 bswap edx
+a32 bswap eax
+gs a32 bswap r11d
+gs a32 bswap ebp

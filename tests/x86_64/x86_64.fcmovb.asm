@@ -1,8 +1,8 @@
-o16 gs a32 fcmovb 
-o16 a32 gs fcmovb 
-o16 a32 fcmovb st0,st3
-gs o16 fcmovb st0,st1
-fcmovb st0,st2
-fcmovb st3
-o16 fcmovb st7
-a32 gs o16 fcmovb st5
+o16 fcmovb 
+gs a32 o16 fcmovb 
+o16 gs fcmovb st0,st4
+gs fcmovb st0,st0
+a32 gs o16 fcmovb st0,st2
+o16 fcmovb st3
+a32 gs o16 fcmovb st7
+a32 gs o16 fcmovb st1

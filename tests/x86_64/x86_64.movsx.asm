@@ -1,279 +1,279 @@
-movsx rsp,dword [rdx - 0x80000000]
-gs o16 movsx rsp,dword [rax]
-o16 gs movsx rsp,dword [r12]
-gs o16 movsx r15,dword [rdx - 0x80000000]
-movsx r15,dword [rax]
-o16 gs movsx r15,dword [r12]
-gs movsx r12,dword [rdx - 0x80000000]
-gs o16 movsx r12,dword [rax]
-movsx r12,dword [r12]
-gs o16 movsx r14,dword [eax]
-a32 gs o16 movsx r14,dword [r13d]
-a32 o16 movsx r14,dword [ebx + 8 * edx]
-o16 gs movsx r10,dword [eax]
-o16 gs movsx r10,dword [r13d]
-o16 gs movsx r10,dword [ebx + 8 * edx]
-o16 a32 gs movsx rax,dword [eax]
-gs movsx rax,dword [r13d]
-gs a32 movsx rax,dword [ebx + 8 * edx]
-gs movsx rdi,esp
-o16 gs movsx rdi,r14d
-a32 o16 movsx rdi,r13d
-o16 a32 gs movsx r14,esp
-movsx r14,r14d
-a32 movsx r14,r13d
-movsx rbp,esp
-o16 a32 gs movsx rbp,r14d
-gs o16 movsx rbp,r13d
-gs o16 movsx r11w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16 movsx r11w,byte [rsp]
-o16 gs movsx r11w,byte [rbx + 8 * rdx]
-movsx r10w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-gs movsx r10w,byte [rsp]
-o16 gs movsx r10w,byte [rbx + 8 * rdx]
-movsx r15w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16 movsx r15w,byte [rsp]
-gs movsx r15w,byte [rbx + 8 * rdx]
-o16 a32 gs movsx bp,byte [esp]
-a32 o16 gs movsx bp,byte [r15d + 2 * edi + 0x72]
-a32 gs o16 movsx bp,byte [r13d]
-gs o16 a32 movsx dx,byte [esp]
-a32 gs o16 movsx dx,byte [r15d + 2 * edi + 0x72]
-gs a32 o16 movsx dx,byte [r13d]
-o16 gs a32 movsx ax,byte [esp]
-a32 o16 gs movsx ax,byte [r15d + 2 * edi + 0x72]
-a32 o16 gs movsx ax,byte [r13d]
-o16 movsx bx,byte [rbp]
-gs movsx bx,byte [rsp]
-o16 gs movsx bx,byte [r13]
-o16 gs movsx r11w,byte [rbp]
-movsx r11w,byte [rsp]
-movsx r11w,byte [r13]
-gs o16 movsx sp,byte [rbp]
-movsx sp,byte [rsp]
-movsx sp,byte [r13]
-movsx sp,byte [r14d + 1 * edx + 0x7FFFFFFF]
-o16 gs a32 movsx sp,byte [eax]
-gs a32 o16 movsx sp,byte [esp + 1 * ebp]
-a32 o16 movsx ax,byte [r14d + 1 * edx + 0x7FFFFFFF]
-o16 gs a32 movsx ax,byte [eax]
-a32 o16 gs movsx ax,byte [esp + 1 * ebp]
-o16 movsx r14w,byte [r14d + 1 * edx + 0x7FFFFFFF]
-gs movsx r14w,byte [eax]
-o16 a32 gs movsx r14w,byte [esp + 1 * ebp]
-gs movsx rsi,byte [rax]
-movsx rsi,byte [rbp]
-movsx rsi,byte [r12]
-gs movsx rax,byte [rax]
-movsx rax,byte [rbp]
-gs movsx rax,byte [r12]
-gs movsx r14,byte [rax]
-gs movsx r14,byte [rbp]
-gs movsx r14,byte [r12]
-a32 gs movsx r10,byte [esp]
-gs a32 movsx r10,byte [r15d + 2 * edi + 0x72]
-gs movsx r10,byte [r12d]
-gs a32 movsx rbp,byte [esp]
-movsx rbp,byte [r15d + 2 * edi + 0x72]
-gs movsx rbp,byte [r12d]
-gs movsx r12,byte [esp]
-a32 movsx r12,byte [r15d + 2 * edi + 0x72]
-movsx r12,byte [r12d]
-gs movsx rsi,r12b
-gs a32 movsx rsi,r11b
-movsx rsi,dl
-movsx rbx,r12b
-movsx rbx,r11b
-a32 gs movsx rbx,dl
-gs a32 movsx rcx,r12b
-gs movsx rcx,r11b
-a32 movsx rcx,dl
-gs movsx eax,byte [rsp + 1 * rbp]
-movsx eax,byte [r15 + 2 * rdi + 0x72]
-gs movsx eax,byte [rdx - 0x80000000]
-gs movsx r13d,byte [rsp + 1 * rbp]
-movsx r13d,byte [r15 + 2 * rdi + 0x72]
-gs movsx r13d,byte [rdx - 0x80000000]
-gs movsx r11d,byte [rsp + 1 * rbp]
-movsx r11d,byte [r15 + 2 * rdi + 0x72]
-movsx r11d,byte [rdx - 0x80000000]
-gs a32 movsx eax,byte [edx - 0x80000000]
-a32 gs movsx eax,byte [r11d + r11d * 2 + 0x2d17e5c1]
-gs a32 movsx eax,byte [eax]
-a32 gs movsx esi,byte [edx - 0x80000000]
-gs a32 movsx esi,byte [r11d + r11d * 2 + 0x2d17e5c1]
-a32 movsx esi,byte [eax]
-gs movsx r8d,byte [edx - 0x80000000]
-a32 movsx r8d,byte [r11d + r11d * 2 + 0x2d17e5c1]
-gs a32 movsx r8d,byte [eax]
-movsx edi,byte [r15 + 2 * rdi + 0x72]
-gs movsx edi,byte [rbx + 8 * rdx]
-movsx edi,byte [rsp]
-movsx eax,byte [r15 + 2 * rdi + 0x72]
-gs movsx eax,byte [rbx + 8 * rdx]
-movsx eax,byte [rsp]
-movsx r14d,byte [r15 + 2 * rdi + 0x72]
-movsx r14d,byte [rbx + 8 * rdx]
-movsx r14d,byte [rsp]
-a32 movsx edx,byte [ebx + 8 * edx]
-a32 movsx edx,byte [ebp]
-a32 movsx edx,byte [r13d]
-gs a32 movsx r8d,byte [ebx + 8 * edx]
-a32 gs movsx r8d,byte [ebp]
-movsx r8d,byte [r13d]
-gs a32 movsx ebx,byte [ebx + 8 * edx]
-a32 movsx ebx,byte [ebp]
-movsx ebx,byte [r13d]
-gs movsx edx,r11b
-a32 gs movsx edx,r9b
-a32 movsx edx,bl
-gs a32 movsx r15d,r11b
-a32 movsx r15d,r9b
-a32 movsx r15d,bl
-a32 gs movsx esp,r11b
-a32 gs movsx esp,r9b
-gs a32 movsx esp,bl
-gs movsx edx,dl
-a32 movsx edx,r8b
-a32 movsx edx,r9b
-a32 movsx eax,dl
-gs a32 movsx eax,r8b
-a32 movsx eax,r9b
-a32 movsx r9d,dl
-gs a32 movsx r9d,r8b
-gs movsx r9d,r9b
+gs movsx rsi,dword [r13]
+movsx rsi,dword [r11 + r11 * 2 + 0x64b36eb3]
+movsx rsi,dword [r15 + 2 * rdi + 0x72]
+o16 gs movsx rdi,dword [r13]
+movsx rdi,dword [r11 + r11 * 2 + 0x64b36eb3]
+gs movsx rdi,dword [r15 + 2 * rdi + 0x72]
+gs movsx rdx,dword [r13]
+gs movsx rdx,dword [r11 + r11 * 2 + 0x64b36eb3]
+gs o16 movsx rdx,dword [r15 + 2 * rdi + 0x72]
+o16 a32 gs movsx r10,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs o16 a32 movsx r10,dword [ebp]
+movsx r10,dword [r12d]
+movsx r13,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs o16 a32 movsx r13,dword [ebp]
+a32 movsx r13,dword [r12d]
+gs a32 o16 movsx r8,dword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 a32 gs movsx r8,dword [ebp]
+a32 o16 gs movsx r8,dword [r12d]
+gs movsx rbx,r11d
+o16 a32 movsx rbx,r9d
+gs a32 o16 movsx rbx,r12d
+gs o16 movsx r14,r11d
+a32 gs o16 movsx r14,r9d
+o16 a32 movsx r14,r12d
+o16 a32 gs movsx rbp,r11d
+o16 movsx rbp,r9d
+a32 gs movsx rbp,r12d
+movsx r8w,byte [rsp + 1 * rbp]
+o16 gs movsx r8w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
 o16 gs movsx r8w,byte [r12]
-gs movsx r8w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx dx,byte [rsp + 1 * rbp]
+gs movsx dx,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx dx,byte [r12]
+gs movsx si,byte [rsp + 1 * rbp]
+gs o16 movsx si,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx si,byte [r12]
+gs a32 o16 movsx bx,byte [r13d]
+o16 gs movsx bx,byte [r14d + 1 * edx + 0x7FFFFFFF]
+a32 o16 gs movsx bx,byte [r12d]
+gs a32 movsx r8w,byte [r13d]
+movsx r8w,byte [r14d + 1 * edx + 0x7FFFFFFF]
+o16 a32 movsx r8w,byte [r12d]
+gs movsx di,byte [r13d]
+a32 gs movsx di,byte [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 movsx di,byte [r12d]
+o16 gs movsx bp,byte [r13]
+gs movsx bp,byte [r15 + 2 * rdi + 0x72]
+gs o16 movsx bp,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+gs movsx r8w,byte [r13]
 gs movsx r8w,byte [r15 + 2 * rdi + 0x72]
-o16 gs movsx di,byte [r12]
-o16 gs movsx di,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-gs movsx di,byte [r15 + 2 * rdi + 0x72]
-movsx r9w,byte [r12]
-o16 movsx r9w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-movsx r9w,byte [r15 + 2 * rdi + 0x72]
-movsx cx,byte [ebx + 8 * edx]
-a32 movsx cx,byte [eax]
-a32 gs movsx cx,byte [edx - 0x80000000]
-movsx bx,byte [ebx + 8 * edx]
-gs movsx bx,byte [eax]
-a32 o16 gs movsx bx,byte [edx - 0x80000000]
-o16 gs a32 movsx ax,byte [ebx + 8 * edx]
-a32 o16 movsx ax,byte [eax]
-o16 movsx ax,byte [edx - 0x80000000]
-gs o16 movsx bx,byte [r11 + r11 * 2 + 0x17a46b74]
-gs movsx bx,byte [rax]
-gs o16 movsx bx,byte [r12]
-gs o16 movsx di,byte [r11 + r11 * 2 + 0x17a46b74]
-o16 movsx di,byte [rax]
-o16 movsx di,byte [r12]
-movsx sp,byte [r11 + r11 * 2 + 0x17a46b74]
-movsx sp,byte [rax]
-o16 movsx sp,byte [r12]
-gs o16 movsx r9w,byte [r15d + 2 * edi + 0x72]
-gs o16 movsx r9w,byte [r11d + r11d * 2 + 0x17a46b74]
-a32 movsx r9w,byte [r14d + 1 * edx + 0x7FFFFFFF]
-a32 movsx r11w,byte [r15d + 2 * edi + 0x72]
-a32 o16 movsx r11w,byte [r11d + r11d * 2 + 0x17a46b74]
-gs o16 movsx r11w,byte [r14d + 1 * edx + 0x7FFFFFFF]
-gs o16 movsx r10w,byte [r15d + 2 * edi + 0x72]
-o16 gs movsx r10w,byte [r11d + r11d * 2 + 0x17a46b74]
-gs movsx r10w,byte [r14d + 1 * edx + 0x7FFFFFFF]
-gs o16 a32 movsx bx,r9b
-o16 movsx bx,sil
-movsx bx,r8b
-o16 movsx r9w,r9b
-a32 gs movsx r9w,sil
-gs a32 movsx r9w,r8b
-o16 gs a32 movsx r15w,r9b
-o16 movsx r15w,sil
-a32 movsx r15w,r8b
-a32 o16 gs movsx r13w,r14b
-gs a32 o16 movsx r13w,bl
-a32 movsx r13w,r8b
-a32 gs movsx di,r14b
-movsx di,bl
-o16 movsx di,r8b
-o16 movsx r10w,r14b
-a32 gs movsx r10w,bl
-a32 o16 gs movsx r10w,r8b
-gs movsx r14,word [rbx + 8 * rdx]
-gs movsx r14,word [r13]
-movsx r14,word [r14 + 1 * rdx + 0x7FFFFFFF]
-movsx rcx,word [rbx + 8 * rdx]
-gs movsx rcx,word [r13]
-movsx rcx,word [r14 + 1 * rdx + 0x7FFFFFFF]
-movsx rbp,word [rbx + 8 * rdx]
-movsx rbp,word [r13]
-gs movsx rbp,word [r14 + 1 * rdx + 0x7FFFFFFF]
-movsx r15,word [r15d + 2 * edi + 0x72]
-a32 movsx r15,word [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs movsx r15,word [ebx + 8 * edx]
-a32 movsx r12,word [r15d + 2 * edi + 0x72]
-movsx r12,word [r14d + 1 * edx + 0x7FFFFFFF]
-a32 movsx r12,word [ebx + 8 * edx]
-a32 movsx r10,word [r15d + 2 * edi + 0x72]
-gs a32 movsx r10,word [r14d + 1 * edx + 0x7FFFFFFF]
-gs movsx r10,word [ebx + 8 * edx]
-a32 movsx r8,r12w
-a32 movsx r8,sp
-movsx r8,bp
-movsx rsi,r12w
-a32 gs movsx rsi,sp
-a32 movsx rsi,bp
-a32 gs movsx rbp,r12w
-movsx rbp,sp
-a32 movsx rbp,bp
-movsx r13d,word [r15 + 2 * rdi + 0x72]
-movsx r13d,word [rsp]
-movsx r13d,word [r12]
-movsx esp,word [r15 + 2 * rdi + 0x72]
-movsx esp,word [rsp]
+gs movsx r8w,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs movsx bx,byte [r13]
+movsx bx,byte [r15 + 2 * rdi + 0x72]
+o16 movsx bx,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs a32 movsx bx,byte [r12d]
+a32 movsx bx,byte [r15d + 2 * edi + 0x72]
+a32 movsx bx,byte [r11d + r11d * 2 + 0xb19f306]
+gs o16 movsx r14w,byte [r12d]
+a32 gs o16 movsx r14w,byte [r15d + 2 * edi + 0x72]
+gs o16 a32 movsx r14w,byte [r11d + r11d * 2 + 0xb19f306]
+gs o16 a32 movsx si,byte [r12d]
+a32 movsx si,byte [r15d + 2 * edi + 0x72]
+gs o16 movsx si,byte [r11d + r11d * 2 + 0xb19f306]
+movsx rsp,byte [rax]
+movsx rsp,byte [r12]
+movsx rsp,byte [r13]
+movsx rdi,byte [rax]
+movsx rdi,byte [r12]
+movsx rdi,byte [r13]
+gs movsx r15,byte [rax]
+movsx r15,byte [r12]
+movsx r15,byte [r13]
+a32 movsx r12,byte [ebp]
+a32 gs movsx r12,byte [esp + 1 * ebp]
+gs movsx r12,byte [r14d + 1 * edx + 0x7FFFFFFF]
+gs movsx rbp,byte [ebp]
+gs movsx rbp,byte [esp + 1 * ebp]
+gs movsx rbp,byte [r14d + 1 * edx + 0x7FFFFFFF]
+movsx rsp,byte [ebp]
+movsx rsp,byte [esp + 1 * ebp]
+movsx rsp,byte [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs movsx rbx,bl
+a32 movsx rbx,r9b
+gs movsx rbx,al
+gs a32 movsx rsi,bl
+movsx rsi,r9b
+a32 gs movsx rsi,al
+movsx r13,bl
+gs a32 movsx r13,r9b
+a32 movsx r13,al
+gs movsx ecx,byte [r11 + r11 * 2 + 0x2029119e]
+movsx ecx,byte [rax]
+gs movsx ecx,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+gs movsx r9d,byte [r11 + r11 * 2 + 0x2029119e]
+movsx r9d,byte [rax]
+movsx r9d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx r12d,byte [r11 + r11 * 2 + 0x2029119e]
+movsx r12d,byte [rax]
+movsx r12d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx r10d,byte [esp]
+gs movsx r10d,byte [ebp]
+gs a32 movsx r10d,byte [edx - 0x80000000]
+movsx r11d,byte [esp]
+gs a32 movsx r11d,byte [ebp]
+gs a32 movsx r11d,byte [edx - 0x80000000]
+movsx ecx,byte [esp]
+gs a32 movsx ecx,byte [ebp]
+a32 gs movsx ecx,byte [edx - 0x80000000]
+gs movsx edi,byte [rsp + 1 * rbp]
+gs movsx edi,byte [rdx - 0x80000000]
+gs movsx edi,byte [rsp]
+movsx r13d,byte [rsp + 1 * rbp]
+movsx r13d,byte [rdx - 0x80000000]
+movsx r13d,byte [rsp]
+gs movsx esp,byte [rsp + 1 * rbp]
+movsx esp,byte [rdx - 0x80000000]
+movsx esp,byte [rsp]
+a32 gs movsx r12d,byte [esp + 1 * ebp]
+a32 gs movsx r12d,byte [r15d + 2 * edi + 0x72]
+movsx r12d,byte [edx - 0x80000000]
+a32 gs movsx ecx,byte [esp + 1 * ebp]
+a32 gs movsx ecx,byte [r15d + 2 * edi + 0x72]
+movsx ecx,byte [edx - 0x80000000]
+a32 gs movsx edx,byte [esp + 1 * ebp]
+movsx edx,byte [r15d + 2 * edi + 0x72]
+a32 movsx edx,byte [edx - 0x80000000]
+a32 gs movsx edi,r9b
+movsx edi,r8b
+a32 gs movsx edi,r14b
+gs movsx esp,r9b
+gs a32 movsx esp,r8b
+a32 gs movsx esp,r14b
+a32 gs movsx r11d,r9b
+movsx r11d,r8b
+gs movsx r11d,r14b
+a32 gs movsx edx,bl
+gs movsx edx,r15b
+movsx edx,sil
+a32 gs movsx r12d,bl
+gs a32 movsx r12d,r15b
+a32 movsx r12d,sil
+movsx r13d,bl
+gs a32 movsx r13d,r15b
+a32 movsx r13d,sil
+gs movsx dx,byte [rbp]
+o16 movsx dx,byte [r11 + r11 * 2 + 0x2b2dc81e]
+movsx dx,byte [r12]
+o16 gs movsx r11w,byte [rbp]
+o16 movsx r11w,byte [r11 + r11 * 2 + 0x2b2dc81e]
+o16 gs movsx r11w,byte [r12]
+gs movsx r10w,byte [rbp]
+gs movsx r10w,byte [r11 + r11 * 2 + 0x2b2dc81e]
+o16 movsx r10w,byte [r12]
+o16 movsx r12w,byte [ebp]
+gs o16 a32 movsx r12w,byte [r11d + r11d * 2 + 0x2b2dc81e]
+a32 movsx r12w,byte [eax]
+movsx r15w,byte [ebp]
+gs a32 o16 movsx r15w,byte [r11d + r11d * 2 + 0x2b2dc81e]
+a32 o16 movsx r15w,byte [eax]
+o16 gs a32 movsx di,byte [ebp]
+a32 o16 gs movsx di,byte [r11d + r11d * 2 + 0x2b2dc81e]
+o16 movsx di,byte [eax]
+gs movsx r14w,byte [rbx + 8 * rdx]
+o16 movsx r14w,byte [r11 + r11 * 2 + 0x2b2dc81e]
+movsx r14w,byte [rax]
+o16 gs movsx si,byte [rbx + 8 * rdx]
+movsx si,byte [r11 + r11 * 2 + 0x2b2dc81e]
+o16 movsx si,byte [rax]
+gs o16 movsx dx,byte [rbx + 8 * rdx]
+o16 movsx dx,byte [r11 + r11 * 2 + 0x2b2dc81e]
+o16 gs movsx dx,byte [rax]
+o16 a32 movsx r10w,byte [esp]
+gs o16 movsx r10w,byte [esp + 1 * ebp]
+a32 gs o16 movsx r10w,byte [r15d + 2 * edi + 0x72]
+o16 gs movsx r9w,byte [esp]
+a32 gs movsx r9w,byte [esp + 1 * ebp]
+a32 gs movsx r9w,byte [r15d + 2 * edi + 0x72]
+o16 a32 movsx dx,byte [esp]
+gs o16 movsx dx,byte [esp + 1 * ebp]
+movsx dx,byte [r15d + 2 * edi + 0x72]
+a32 gs o16 movsx di,r10b
+a32 movsx di,r11b
+gs o16 movsx di,r9b
+movsx r14w,r10b
+gs o16 a32 movsx r14w,r11b
+o16 a32 gs movsx r14w,r9b
+gs a32 movsx sp,r10b
+gs a32 o16 movsx sp,r11b
+gs a32 o16 movsx sp,r9b
+a32 o16 gs movsx r13w,r8b
+a32 gs movsx r13w,bpl
+a32 movsx r13w,r9b
+a32 gs movsx r14w,r8b
+o16 gs a32 movsx r14w,bpl
+gs a32 movsx r14w,r9b
+gs a32 movsx cx,r8b
+gs a32 movsx cx,bpl
+a32 movsx cx,r9b
+movsx rbx,word [r12]
+movsx rbx,word [rax]
+gs movsx rbx,word [r11 + r11 * 2 + 0x6f1f27f6]
+movsx rdi,word [r12]
+movsx rdi,word [rax]
+movsx rdi,word [r11 + r11 * 2 + 0x6f1f27f6]
+gs movsx rsp,word [r12]
+gs movsx rsp,word [rax]
+gs movsx rsp,word [r11 + r11 * 2 + 0x6f1f27f6]
+a32 gs movsx rdx,word [edx - 0x80000000]
+gs movsx rdx,word [r14d + 1 * edx + 0x7FFFFFFF]
+gs movsx rdx,word [ebx + 8 * edx]
+a32 gs movsx r10,word [edx - 0x80000000]
+a32 gs movsx r10,word [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 movsx r10,word [ebx + 8 * edx]
+a32 movsx rsi,word [edx - 0x80000000]
+gs movsx rsi,word [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs movsx rsi,word [ebx + 8 * edx]
+gs a32 movsx r11,bx
+movsx r11,r11w
+gs a32 movsx r11,r8w
+a32 movsx rax,bx
+a32 gs movsx rax,r11w
+a32 gs movsx rax,r8w
+a32 movsx rdi,bx
+a32 movsx rdi,r11w
+gs movsx rdi,r8w
 gs movsx esp,word [r12]
-movsx r9d,word [r15 + 2 * rdi + 0x72]
-movsx r9d,word [rsp]
-movsx r9d,word [r12]
-movsx r10d,word [ebp]
-gs a32 movsx r10d,word [r15d + 2 * edi + 0x72]
-movsx r10d,word [r13d]
-a32 gs movsx r12d,word [ebp]
-gs a32 movsx r12d,word [r15d + 2 * edi + 0x72]
-a32 movsx r12d,word [r13d]
-a32 movsx eax,word [ebp]
-movsx eax,word [r15d + 2 * edi + 0x72]
-gs a32 movsx eax,word [r13d]
-gs movsx edx,word [rdx - 0x80000000]
-gs movsx edx,word [r13]
-movsx edx,word [r14 + 1 * rdx + 0x7FFFFFFF]
-movsx eax,word [rdx - 0x80000000]
-movsx eax,word [r13]
-gs movsx eax,word [r14 + 1 * rdx + 0x7FFFFFFF]
-gs movsx r15d,word [rdx - 0x80000000]
+gs movsx esp,word [r11 + r11 * 2 + 0x44630707]
+movsx esp,word [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx edi,word [r12]
+gs movsx edi,word [r11 + r11 * 2 + 0x44630707]
+gs movsx edi,word [r14 + 1 * rdx + 0x7FFFFFFF]
+movsx r8d,word [r12]
+gs movsx r8d,word [r11 + r11 * 2 + 0x44630707]
+movsx r8d,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs a32 movsx r11d,word [ebp]
+gs a32 movsx r11d,word [r13d]
+gs a32 movsx r11d,word [r11d + r11d * 2 + 0x44630707]
+a32 gs movsx edx,word [ebp]
+a32 movsx edx,word [r13d]
+gs a32 movsx edx,word [r11d + r11d * 2 + 0x44630707]
+a32 gs movsx esp,word [ebp]
+a32 gs movsx esp,word [r13d]
+a32 movsx esp,word [r11d + r11d * 2 + 0x44630707]
+movsx r10d,word [rsp]
+gs movsx r10d,word [r12]
+movsx r10d,word [r13]
+gs movsx r15d,word [rsp]
+gs movsx r15d,word [r12]
 gs movsx r15d,word [r13]
-movsx r15d,word [r14 + 1 * rdx + 0x7FFFFFFF]
-a32 gs movsx edi,word [esp + 1 * ebp]
-a32 gs movsx edi,word [edx - 0x80000000]
-gs movsx edi,word [esp]
-a32 gs movsx r11d,word [esp + 1 * ebp]
-a32 movsx r11d,word [edx - 0x80000000]
-gs a32 movsx r11d,word [esp]
-gs a32 movsx r8d,word [esp + 1 * ebp]
-movsx r8d,word [edx - 0x80000000]
-gs movsx r8d,word [esp]
-movsx r15d,di
-gs a32 movsx r15d,r12w
-gs movsx r15d,r13w
-gs a32 movsx ecx,di
-a32 gs movsx ecx,r12w
-gs movsx ecx,r13w
-a32 gs movsx ebp,di
-a32 movsx ebp,r12w
-a32 movsx ebp,r13w
-a32 movsx eax,r8w
-a32 gs movsx eax,cx
-movsx eax,dx
-gs a32 movsx ebp,r8w
-gs movsx ebp,cx
-gs movsx ebp,dx
-a32 gs movsx r11d,r8w
-a32 gs movsx r11d,cx
-movsx r11d,dx
+gs movsx r13d,word [rsp]
+movsx r13d,word [r12]
+gs movsx r13d,word [r13]
+gs a32 movsx eax,word [esp]
+movsx eax,word [eax]
+gs movsx eax,word [r13d]
+gs a32 movsx edi,word [esp]
+gs a32 movsx edi,word [eax]
+a32 movsx edi,word [r13d]
+movsx esi,word [esp]
+a32 movsx esi,word [eax]
+a32 movsx esi,word [r13d]
+a32 movsx edx,dx
+a32 movsx edx,di
+a32 gs movsx edx,r10w
+gs movsx ebx,dx
+a32 gs movsx ebx,di
+gs movsx ebx,r10w
+a32 gs movsx esi,dx
+gs movsx esi,di
+movsx esi,r10w
+a32 movsx ebp,r8w
+gs movsx ebp,r14w
+gs movsx ebp,r12w
+gs movsx r12d,r8w
+a32 gs movsx r12d,r14w
+a32 gs movsx r12d,r12w
+gs a32 movsx ecx,r8w
+a32 gs movsx ecx,r14w
+gs a32 movsx ecx,r12w

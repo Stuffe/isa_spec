@@ -1,2 +1,2 @@
 a32 fptan 
-gs fptan 
+a32 fptan 

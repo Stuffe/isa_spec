@@ -1,162 +1,162 @@
-vcmpnltsd xmm14,xmm8,qword [rdx - 0x80000000]
-vcmpnltsd xmm14,xmm8,qword [rbp]
-vcmpnltsd xmm14,xmm8,qword [r13]
-gs vcmpnltsd xmm14,xmm9,qword [rdx - 0x80000000]
-gs vcmpnltsd xmm14,xmm9,qword [rbp]
-vcmpnltsd xmm14,xmm9,qword [r13]
-gs vcmpnltsd xmm14,xmm14,qword [rdx - 0x80000000]
-gs vcmpnltsd xmm14,xmm14,qword [rbp]
-vcmpnltsd xmm14,xmm14,qword [r13]
-gs vcmpnltsd xmm10,xmm8,qword [rdx - 0x80000000]
-vcmpnltsd xmm10,xmm8,qword [rbp]
-vcmpnltsd xmm10,xmm8,qword [r13]
-gs vcmpnltsd xmm10,xmm9,qword [rdx - 0x80000000]
-vcmpnltsd xmm10,xmm9,qword [rbp]
-vcmpnltsd xmm10,xmm9,qword [r13]
-gs vcmpnltsd xmm10,xmm14,qword [rdx - 0x80000000]
-vcmpnltsd xmm10,xmm14,qword [rbp]
-gs vcmpnltsd xmm10,xmm14,qword [r13]
-gs vcmpnltsd xmm11,xmm8,qword [rdx - 0x80000000]
-gs vcmpnltsd xmm11,xmm8,qword [rbp]
-gs vcmpnltsd xmm11,xmm8,qword [r13]
-vcmpnltsd xmm11,xmm9,qword [rdx - 0x80000000]
-gs vcmpnltsd xmm11,xmm9,qword [rbp]
-vcmpnltsd xmm11,xmm9,qword [r13]
-gs vcmpnltsd xmm11,xmm14,qword [rdx - 0x80000000]
-gs vcmpnltsd xmm11,xmm14,qword [rbp]
-gs vcmpnltsd xmm11,xmm14,qword [r13]
-a32 gs vcmpnltsd xmm8,xmm15,qword [r12d]
-vcmpnltsd xmm8,xmm15,qword [esp]
-vcmpnltsd xmm8,xmm15,qword [r13d]
-vcmpnltsd xmm8,xmm4,qword [r12d]
-vcmpnltsd xmm8,xmm4,qword [esp]
-a32 gs vcmpnltsd xmm8,xmm4,qword [r13d]
-a32 gs vcmpnltsd xmm8,xmm13,qword [r12d]
-a32 gs vcmpnltsd xmm8,xmm13,qword [esp]
-a32 gs vcmpnltsd xmm8,xmm13,qword [r13d]
-a32 vcmpnltsd xmm2,xmm15,qword [r12d]
-gs a32 vcmpnltsd xmm2,xmm15,qword [esp]
-vcmpnltsd xmm2,xmm15,qword [r13d]
-gs vcmpnltsd xmm2,xmm4,qword [r12d]
-a32 gs vcmpnltsd xmm2,xmm4,qword [esp]
-gs vcmpnltsd xmm2,xmm4,qword [r13d]
-a32 gs vcmpnltsd xmm2,xmm13,qword [r12d]
-gs a32 vcmpnltsd xmm2,xmm13,qword [esp]
-gs a32 vcmpnltsd xmm2,xmm13,qword [r13d]
-vcmpnltsd xmm5,xmm15,qword [r12d]
-a32 gs vcmpnltsd xmm5,xmm15,qword [esp]
-gs a32 vcmpnltsd xmm5,xmm15,qword [r13d]
-vcmpnltsd xmm5,xmm4,qword [r12d]
-gs a32 vcmpnltsd xmm5,xmm4,qword [esp]
-gs a32 vcmpnltsd xmm5,xmm4,qword [r13d]
-vcmpnltsd xmm5,xmm13,qword [r12d]
-vcmpnltsd xmm5,xmm13,qword [esp]
-gs vcmpnltsd xmm5,xmm13,qword [r13d]
-vcmpnltsd xmm7,xmm1,qword [rbp]
-gs vcmpnltsd xmm7,xmm1,qword [rsp]
-vcmpnltsd xmm7,xmm1,qword [rax]
-gs vcmpnltsd xmm7,xmm13,qword [rbp]
-gs vcmpnltsd xmm7,xmm13,qword [rsp]
-gs vcmpnltsd xmm7,xmm13,qword [rax]
-gs vcmpnltsd xmm7,xmm7,qword [rbp]
-gs vcmpnltsd xmm7,xmm7,qword [rsp]
-gs vcmpnltsd xmm7,xmm7,qword [rax]
-gs vcmpnltsd xmm14,xmm1,qword [rbp]
-vcmpnltsd xmm14,xmm1,qword [rsp]
-gs vcmpnltsd xmm14,xmm1,qword [rax]
-vcmpnltsd xmm14,xmm13,qword [rbp]
-vcmpnltsd xmm14,xmm13,qword [rsp]
-gs vcmpnltsd xmm14,xmm13,qword [rax]
-gs vcmpnltsd xmm14,xmm7,qword [rbp]
-vcmpnltsd xmm14,xmm7,qword [rsp]
-vcmpnltsd xmm14,xmm7,qword [rax]
-gs vcmpnltsd xmm5,xmm1,qword [rbp]
-gs vcmpnltsd xmm5,xmm1,qword [rsp]
-vcmpnltsd xmm5,xmm1,qword [rax]
-gs vcmpnltsd xmm5,xmm13,qword [rbp]
-vcmpnltsd xmm5,xmm13,qword [rsp]
-vcmpnltsd xmm5,xmm13,qword [rax]
-gs vcmpnltsd xmm5,xmm7,qword [rbp]
-vcmpnltsd xmm5,xmm7,qword [rsp]
-gs vcmpnltsd xmm5,xmm7,qword [rax]
-a32 vcmpnltsd xmm10,xmm3,qword [esp + 1 * ebp]
-gs vcmpnltsd xmm10,xmm3,qword [ebx + 8 * edx]
-a32 gs vcmpnltsd xmm10,xmm3,qword [r12d]
+vcmpnltsd xmm13,xmm15,qword [rax]
+gs vcmpnltsd xmm13,xmm15,qword [rsp + 1 * rbp]
+vcmpnltsd xmm13,xmm15,qword [r15 + 2 * rdi + 0x72]
+vcmpnltsd xmm13,xmm7,qword [rax]
+vcmpnltsd xmm13,xmm7,qword [rsp + 1 * rbp]
+vcmpnltsd xmm13,xmm7,qword [r15 + 2 * rdi + 0x72]
+gs vcmpnltsd xmm13,xmm3,qword [rax]
+vcmpnltsd xmm13,xmm3,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm13,xmm3,qword [r15 + 2 * rdi + 0x72]
+vcmpnltsd xmm12,xmm15,qword [rax]
+vcmpnltsd xmm12,xmm15,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm12,xmm15,qword [r15 + 2 * rdi + 0x72]
+vcmpnltsd xmm12,xmm7,qword [rax]
+vcmpnltsd xmm12,xmm7,qword [rsp + 1 * rbp]
+vcmpnltsd xmm12,xmm7,qword [r15 + 2 * rdi + 0x72]
+vcmpnltsd xmm12,xmm3,qword [rax]
+vcmpnltsd xmm12,xmm3,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm12,xmm3,qword [r15 + 2 * rdi + 0x72]
+gs vcmpnltsd xmm3,xmm15,qword [rax]
+vcmpnltsd xmm3,xmm15,qword [rsp + 1 * rbp]
+vcmpnltsd xmm3,xmm15,qword [r15 + 2 * rdi + 0x72]
+vcmpnltsd xmm3,xmm7,qword [rax]
+vcmpnltsd xmm3,xmm7,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm3,xmm7,qword [r15 + 2 * rdi + 0x72]
+gs vcmpnltsd xmm3,xmm3,qword [rax]
+gs vcmpnltsd xmm3,xmm3,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm3,xmm3,qword [r15 + 2 * rdi + 0x72]
+gs a32 vcmpnltsd xmm5,xmm7,qword [esp]
+vcmpnltsd xmm5,xmm7,qword [r15d + 2 * edi + 0x72]
+gs vcmpnltsd xmm5,xmm7,qword [eax]
+a32 gs vcmpnltsd xmm5,xmm6,qword [esp]
+a32 vcmpnltsd xmm5,xmm6,qword [r15d + 2 * edi + 0x72]
+vcmpnltsd xmm5,xmm6,qword [eax]
+a32 gs vcmpnltsd xmm5,xmm14,qword [esp]
+gs vcmpnltsd xmm5,xmm14,qword [r15d + 2 * edi + 0x72]
+gs a32 vcmpnltsd xmm5,xmm14,qword [eax]
+vcmpnltsd xmm1,xmm7,qword [esp]
+gs a32 vcmpnltsd xmm1,xmm7,qword [r15d + 2 * edi + 0x72]
+vcmpnltsd xmm1,xmm7,qword [eax]
+gs a32 vcmpnltsd xmm1,xmm6,qword [esp]
+a32 gs vcmpnltsd xmm1,xmm6,qword [r15d + 2 * edi + 0x72]
+gs a32 vcmpnltsd xmm1,xmm6,qword [eax]
+a32 gs vcmpnltsd xmm1,xmm14,qword [esp]
+a32 vcmpnltsd xmm1,xmm14,qword [r15d + 2 * edi + 0x72]
+gs a32 vcmpnltsd xmm1,xmm14,qword [eax]
+a32 vcmpnltsd xmm12,xmm7,qword [esp]
+gs a32 vcmpnltsd xmm12,xmm7,qword [r15d + 2 * edi + 0x72]
+gs vcmpnltsd xmm12,xmm7,qword [eax]
+gs a32 vcmpnltsd xmm12,xmm6,qword [esp]
+gs vcmpnltsd xmm12,xmm6,qword [r15d + 2 * edi + 0x72]
+vcmpnltsd xmm12,xmm6,qword [eax]
+a32 gs vcmpnltsd xmm12,xmm14,qword [esp]
+a32 gs vcmpnltsd xmm12,xmm14,qword [r15d + 2 * edi + 0x72]
+vcmpnltsd xmm12,xmm14,qword [eax]
+vcmpnltsd xmm15,xmm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnltsd xmm15,xmm12,qword [r13]
+vcmpnltsd xmm15,xmm12,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm15,xmm2,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnltsd xmm15,xmm2,qword [r13]
+gs vcmpnltsd xmm15,xmm2,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm15,xmm13,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnltsd xmm15,xmm13,qword [r13]
+gs vcmpnltsd xmm15,xmm13,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm9,xmm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnltsd xmm9,xmm12,qword [r13]
+vcmpnltsd xmm9,xmm12,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm9,xmm2,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnltsd xmm9,xmm2,qword [r13]
+vcmpnltsd xmm9,xmm2,qword [rsp + 1 * rbp]
+vcmpnltsd xmm9,xmm13,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnltsd xmm9,xmm13,qword [r13]
+gs vcmpnltsd xmm9,xmm13,qword [rsp + 1 * rbp]
+vcmpnltsd xmm11,xmm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnltsd xmm11,xmm12,qword [r13]
+gs vcmpnltsd xmm11,xmm12,qword [rsp + 1 * rbp]
+vcmpnltsd xmm11,xmm2,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnltsd xmm11,xmm2,qword [r13]
+gs vcmpnltsd xmm11,xmm2,qword [rsp + 1 * rbp]
+gs vcmpnltsd xmm11,xmm13,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnltsd xmm11,xmm13,qword [r13]
+gs vcmpnltsd xmm11,xmm13,qword [rsp + 1 * rbp]
+vcmpnltsd xmm10,xmm14,qword [ebx + 8 * edx]
+a32 vcmpnltsd xmm10,xmm14,qword [r11d + r11d * 2 + 0x3614251a]
+gs vcmpnltsd xmm10,xmm14,qword [esp + 1 * ebp]
+gs a32 vcmpnltsd xmm10,xmm8,qword [ebx + 8 * edx]
+a32 vcmpnltsd xmm10,xmm8,qword [r11d + r11d * 2 + 0x3614251a]
 vcmpnltsd xmm10,xmm8,qword [esp + 1 * ebp]
-a32 gs vcmpnltsd xmm10,xmm8,qword [ebx + 8 * edx]
-vcmpnltsd xmm10,xmm8,qword [r12d]
-a32 vcmpnltsd xmm10,xmm9,qword [esp + 1 * ebp]
-a32 gs vcmpnltsd xmm10,xmm9,qword [ebx + 8 * edx]
-a32 gs vcmpnltsd xmm10,xmm9,qword [r12d]
-vcmpnltsd xmm0,xmm3,qword [esp + 1 * ebp]
-a32 vcmpnltsd xmm0,xmm3,qword [ebx + 8 * edx]
-gs vcmpnltsd xmm0,xmm3,qword [r12d]
-gs a32 vcmpnltsd xmm0,xmm8,qword [esp + 1 * ebp]
-vcmpnltsd xmm0,xmm8,qword [ebx + 8 * edx]
-vcmpnltsd xmm0,xmm8,qword [r12d]
-gs vcmpnltsd xmm0,xmm9,qword [esp + 1 * ebp]
-gs vcmpnltsd xmm0,xmm9,qword [ebx + 8 * edx]
-a32 vcmpnltsd xmm0,xmm9,qword [r12d]
-vcmpnltsd xmm11,xmm3,qword [esp + 1 * ebp]
-gs vcmpnltsd xmm11,xmm3,qword [ebx + 8 * edx]
-a32 gs vcmpnltsd xmm11,xmm3,qword [r12d]
-gs a32 vcmpnltsd xmm11,xmm8,qword [esp + 1 * ebp]
-vcmpnltsd xmm11,xmm8,qword [ebx + 8 * edx]
-gs vcmpnltsd xmm11,xmm8,qword [r12d]
-a32 vcmpnltsd xmm11,xmm9,qword [esp + 1 * ebp]
-gs vcmpnltsd xmm11,xmm9,qword [ebx + 8 * edx]
-vcmpnltsd xmm11,xmm9,qword [r12d]
-gs a32 vcmpnltsd xmm14,xmm13,xmm15
-vcmpnltsd xmm14,xmm13,xmm13
-gs vcmpnltsd xmm14,xmm13,xmm8
-vcmpnltsd xmm14,xmm12,xmm15
-gs a32 vcmpnltsd xmm14,xmm12,xmm13
-a32 vcmpnltsd xmm14,xmm12,xmm8
-vcmpnltsd xmm14,xmm6,xmm15
-gs vcmpnltsd xmm14,xmm6,xmm13
-gs vcmpnltsd xmm14,xmm6,xmm8
-vcmpnltsd xmm10,xmm13,xmm15
-gs a32 vcmpnltsd xmm10,xmm13,xmm13
-gs vcmpnltsd xmm10,xmm13,xmm8
-gs vcmpnltsd xmm10,xmm12,xmm15
-a32 vcmpnltsd xmm10,xmm12,xmm13
-a32 gs vcmpnltsd xmm10,xmm12,xmm8
-a32 vcmpnltsd xmm10,xmm6,xmm15
-a32 gs vcmpnltsd xmm10,xmm6,xmm13
-gs a32 vcmpnltsd xmm10,xmm6,xmm8
-vcmpnltsd xmm4,xmm13,xmm15
-gs a32 vcmpnltsd xmm4,xmm13,xmm13
-a32 gs vcmpnltsd xmm4,xmm13,xmm8
-a32 gs vcmpnltsd xmm4,xmm12,xmm15
-a32 vcmpnltsd xmm4,xmm12,xmm13
-a32 vcmpnltsd xmm4,xmm12,xmm8
-a32 vcmpnltsd xmm4,xmm6,xmm15
-a32 vcmpnltsd xmm4,xmm6,xmm13
-gs vcmpnltsd xmm4,xmm6,xmm8
-gs a32 vcmpnltsd xmm15,xmm15,xmm11
-a32 gs vcmpnltsd xmm15,xmm15,xmm0
-a32 gs vcmpnltsd xmm15,xmm15,xmm3
-a32 gs vcmpnltsd xmm15,xmm11,xmm11
-gs a32 vcmpnltsd xmm15,xmm11,xmm0
-a32 gs vcmpnltsd xmm15,xmm11,xmm3
-a32 vcmpnltsd xmm15,xmm10,xmm11
-gs a32 vcmpnltsd xmm15,xmm10,xmm0
-gs vcmpnltsd xmm15,xmm10,xmm3
-gs a32 vcmpnltsd xmm5,xmm15,xmm11
-vcmpnltsd xmm5,xmm15,xmm0
-gs vcmpnltsd xmm5,xmm15,xmm3
-gs a32 vcmpnltsd xmm5,xmm11,xmm11
-gs a32 vcmpnltsd xmm5,xmm11,xmm0
-a32 vcmpnltsd xmm5,xmm11,xmm3
-gs a32 vcmpnltsd xmm5,xmm10,xmm11
-vcmpnltsd xmm5,xmm10,xmm0
-vcmpnltsd xmm5,xmm10,xmm3
-a32 gs vcmpnltsd xmm4,xmm15,xmm11
-gs a32 vcmpnltsd xmm4,xmm15,xmm0
-a32 vcmpnltsd xmm4,xmm15,xmm3
-a32 vcmpnltsd xmm4,xmm11,xmm11
-gs vcmpnltsd xmm4,xmm11,xmm0
-gs vcmpnltsd xmm4,xmm11,xmm3
-vcmpnltsd xmm4,xmm10,xmm11
-gs vcmpnltsd xmm4,xmm10,xmm0
-a32 vcmpnltsd xmm4,xmm10,xmm3
+a32 vcmpnltsd xmm10,xmm12,qword [ebx + 8 * edx]
+a32 vcmpnltsd xmm10,xmm12,qword [r11d + r11d * 2 + 0x3614251a]
+a32 gs vcmpnltsd xmm10,xmm12,qword [esp + 1 * ebp]
+a32 gs vcmpnltsd xmm13,xmm14,qword [ebx + 8 * edx]
+a32 gs vcmpnltsd xmm13,xmm14,qword [r11d + r11d * 2 + 0x3614251a]
+gs vcmpnltsd xmm13,xmm14,qword [esp + 1 * ebp]
+a32 gs vcmpnltsd xmm13,xmm8,qword [ebx + 8 * edx]
+gs vcmpnltsd xmm13,xmm8,qword [r11d + r11d * 2 + 0x3614251a]
+a32 gs vcmpnltsd xmm13,xmm8,qword [esp + 1 * ebp]
+a32 gs vcmpnltsd xmm13,xmm12,qword [ebx + 8 * edx]
+a32 gs vcmpnltsd xmm13,xmm12,qword [r11d + r11d * 2 + 0x3614251a]
+a32 vcmpnltsd xmm13,xmm12,qword [esp + 1 * ebp]
+a32 gs vcmpnltsd xmm4,xmm14,qword [ebx + 8 * edx]
+gs a32 vcmpnltsd xmm4,xmm14,qword [r11d + r11d * 2 + 0x3614251a]
+gs vcmpnltsd xmm4,xmm14,qword [esp + 1 * ebp]
+vcmpnltsd xmm4,xmm8,qword [ebx + 8 * edx]
+a32 gs vcmpnltsd xmm4,xmm8,qword [r11d + r11d * 2 + 0x3614251a]
+a32 vcmpnltsd xmm4,xmm8,qword [esp + 1 * ebp]
+gs a32 vcmpnltsd xmm4,xmm12,qword [ebx + 8 * edx]
+vcmpnltsd xmm4,xmm12,qword [r11d + r11d * 2 + 0x3614251a]
+a32 gs vcmpnltsd xmm4,xmm12,qword [esp + 1 * ebp]
+gs a32 vcmpnltsd xmm6,xmm6,xmm5
+gs a32 vcmpnltsd xmm6,xmm6,xmm2
+a32 vcmpnltsd xmm6,xmm6,xmm6
+gs vcmpnltsd xmm6,xmm7,xmm5
+a32 gs vcmpnltsd xmm6,xmm7,xmm2
+gs vcmpnltsd xmm6,xmm7,xmm6
+a32 gs vcmpnltsd xmm6,xmm8,xmm5
+gs vcmpnltsd xmm6,xmm8,xmm2
+vcmpnltsd xmm6,xmm8,xmm6
+vcmpnltsd xmm10,xmm6,xmm5
+vcmpnltsd xmm10,xmm6,xmm2
+vcmpnltsd xmm10,xmm6,xmm6
+gs a32 vcmpnltsd xmm10,xmm7,xmm5
+gs a32 vcmpnltsd xmm10,xmm7,xmm2
+a32 vcmpnltsd xmm10,xmm7,xmm6
+a32 vcmpnltsd xmm10,xmm8,xmm5
+vcmpnltsd xmm10,xmm8,xmm2
+vcmpnltsd xmm10,xmm8,xmm6
+a32 vcmpnltsd xmm7,xmm6,xmm5
+vcmpnltsd xmm7,xmm6,xmm2
+gs vcmpnltsd xmm7,xmm6,xmm6
+gs a32 vcmpnltsd xmm7,xmm7,xmm5
+a32 vcmpnltsd xmm7,xmm7,xmm2
+a32 gs vcmpnltsd xmm7,xmm7,xmm6
+a32 gs vcmpnltsd xmm7,xmm8,xmm5
+gs vcmpnltsd xmm7,xmm8,xmm2
+gs vcmpnltsd xmm7,xmm8,xmm6
+a32 vcmpnltsd xmm7,xmm0,xmm10
+a32 gs vcmpnltsd xmm7,xmm0,xmm7
+a32 vcmpnltsd xmm7,xmm0,xmm1
+vcmpnltsd xmm7,xmm4,xmm10
+gs vcmpnltsd xmm7,xmm4,xmm7
+a32 vcmpnltsd xmm7,xmm4,xmm1
+a32 vcmpnltsd xmm7,xmm7,xmm10
+a32 gs vcmpnltsd xmm7,xmm7,xmm7
+gs vcmpnltsd xmm7,xmm7,xmm1
+a32 gs vcmpnltsd xmm1,xmm0,xmm10
+gs vcmpnltsd xmm1,xmm0,xmm7
+a32 vcmpnltsd xmm1,xmm0,xmm1
+gs a32 vcmpnltsd xmm1,xmm4,xmm10
+a32 gs vcmpnltsd xmm1,xmm4,xmm7
+gs vcmpnltsd xmm1,xmm4,xmm1
+gs vcmpnltsd xmm1,xmm7,xmm10
+gs vcmpnltsd xmm1,xmm7,xmm7
+a32 vcmpnltsd xmm1,xmm7,xmm1
+a32 gs vcmpnltsd xmm15,xmm0,xmm10
+gs a32 vcmpnltsd xmm15,xmm0,xmm7
+gs vcmpnltsd xmm15,xmm0,xmm1
+gs a32 vcmpnltsd xmm15,xmm4,xmm10
+a32 vcmpnltsd xmm15,xmm4,xmm7
+gs a32 vcmpnltsd xmm15,xmm4,xmm1
+a32 vcmpnltsd xmm15,xmm7,xmm10
+gs a32 vcmpnltsd xmm15,xmm7,xmm7
+a32 gs vcmpnltsd xmm15,xmm7,xmm1

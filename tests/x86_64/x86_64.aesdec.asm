@@ -1,54 +1,54 @@
-gs aesdec xmm8,oword [rdx - 0x80000000]
- gs aesdec xmm8,oword [r13]
-aesdec xmm8,oword [rbp]
- gs aesdec xmm15,oword [rdx - 0x80000000]
-aesdec xmm15,oword [r13]
-gs  aesdec xmm15,oword [rbp]
-gs  aesdec xmm13,oword [rdx - 0x80000000]
-gs aesdec xmm13,oword [r13]
-gs  aesdec xmm13,oword [rbp]
-a32  aesdec xmm0,oword [ebx + 8 * edx]
-gs aesdec xmm0,oword [esp]
- gs a32 aesdec xmm0,oword [esp + 1 * ebp]
-aesdec xmm12,oword [ebx + 8 * edx]
-gs a32  aesdec xmm12,oword [esp]
-gs a32  aesdec xmm12,oword [esp + 1 * ebp]
- gs a32 aesdec xmm3,oword [ebx + 8 * edx]
-gs a32 aesdec xmm3,oword [esp]
-gs  aesdec xmm3,oword [esp + 1 * ebp]
-gs  aesdec xmm6,oword [rdx - 0x80000000]
-aesdec xmm6,oword [rbx + 8 * rdx]
-gs aesdec xmm6,oword [r15 + 2 * rdi + 0x72]
  gs aesdec xmm10,oword [rdx - 0x80000000]
- gs aesdec xmm10,oword [rbx + 8 * rdx]
- gs aesdec xmm10,oword [r15 + 2 * rdi + 0x72]
- gs aesdec xmm15,oword [rdx - 0x80000000]
-aesdec xmm15,oword [rbx + 8 * rdx]
-gs  aesdec xmm15,oword [r15 + 2 * rdi + 0x72]
-a32  aesdec xmm8,oword [edx - 0x80000000]
-a32 gs aesdec xmm8,oword [r11d + r11d * 2 + 0x3f27d738]
-gs  aesdec xmm8,oword [r12d]
-a32 gs aesdec xmm9,oword [edx - 0x80000000]
-a32 gs  aesdec xmm9,oword [r11d + r11d * 2 + 0x3f27d738]
-a32 gs aesdec xmm9,oword [r12d]
-gs  a32 aesdec xmm7,oword [edx - 0x80000000]
- gs a32 aesdec xmm7,oword [r11d + r11d * 2 + 0x3f27d738]
-a32  aesdec xmm7,oword [r12d]
-aesdec xmm1,xmm2
-a32 gs aesdec xmm1,xmm12
-gs a32  aesdec xmm1,xmm5
-a32  aesdec xmm13,xmm2
-a32 gs aesdec xmm13,xmm12
-gs  aesdec xmm13,xmm5
- gs a32 aesdec xmm0,xmm2
- a32 gs aesdec xmm0,xmm12
-aesdec xmm0,xmm5
-a32 gs  aesdec xmm6,xmm11
- gs aesdec xmm6,xmm4
-gs a32 aesdec xmm6,xmm15
-gs a32  aesdec xmm3,xmm11
-gs  a32 aesdec xmm3,xmm4
-gs aesdec xmm3,xmm15
-gs aesdec xmm15,xmm11
-gs a32  aesdec xmm15,xmm4
-aesdec xmm15,xmm15
+aesdec xmm10,oword [rax]
+ gs aesdec xmm10,oword [rbp]
+gs  aesdec xmm4,oword [rdx - 0x80000000]
+aesdec xmm4,oword [rax]
+gs  aesdec xmm4,oword [rbp]
+gs  aesdec xmm15,oword [rdx - 0x80000000]
+ gs aesdec xmm15,oword [rax]
+gs  aesdec xmm15,oword [rbp]
+a32  gs aesdec xmm10,oword [r11d + r11d * 2 + 0x6a230505]
+a32 aesdec xmm10,oword [r15d + 2 * edi + 0x72]
+a32 gs  aesdec xmm10,oword [esp + 1 * ebp]
+ gs a32 aesdec xmm15,oword [r11d + r11d * 2 + 0x6a230505]
+a32  gs aesdec xmm15,oword [r15d + 2 * edi + 0x72]
+gs  a32 aesdec xmm15,oword [esp + 1 * ebp]
+aesdec xmm11,oword [r11d + r11d * 2 + 0x6a230505]
+a32  aesdec xmm11,oword [r15d + 2 * edi + 0x72]
+a32 gs  aesdec xmm11,oword [esp + 1 * ebp]
+aesdec xmm15,oword [r12]
+aesdec xmm15,oword [rax]
+ gs aesdec xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+aesdec xmm0,oword [r12]
+ gs aesdec xmm0,oword [rax]
+gs  aesdec xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+aesdec xmm10,oword [r12]
+gs  aesdec xmm10,oword [rax]
+ gs aesdec xmm10,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ a32 aesdec xmm11,oword [eax]
+ a32 gs aesdec xmm11,oword [esp]
+ a32 aesdec xmm11,oword [ebx + 8 * edx]
+ a32 aesdec xmm13,oword [eax]
+gs  aesdec xmm13,oword [esp]
+gs aesdec xmm13,oword [ebx + 8 * edx]
+a32  aesdec xmm4,oword [eax]
+gs a32  aesdec xmm4,oword [esp]
+ gs aesdec xmm4,oword [ebx + 8 * edx]
+a32  gs aesdec xmm11,xmm5
+ a32 gs aesdec xmm11,xmm4
+gs a32 aesdec xmm11,xmm9
+gs a32 aesdec xmm10,xmm5
+gs aesdec xmm10,xmm4
+aesdec xmm10,xmm9
+a32 gs  aesdec xmm12,xmm5
+ a32 gs aesdec xmm12,xmm4
+a32 gs  aesdec xmm12,xmm9
+gs a32  aesdec xmm2,xmm8
+aesdec xmm2,xmm3
+a32 gs aesdec xmm2,xmm4
+gs a32 aesdec xmm0,xmm8
+ a32 gs aesdec xmm0,xmm3
+ a32 aesdec xmm0,xmm4
+ a32 aesdec xmm4,xmm8
+ a32 aesdec xmm4,xmm3
+gs  aesdec xmm4,xmm4

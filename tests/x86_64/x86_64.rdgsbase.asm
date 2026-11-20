@@ -1,9 +1,9 @@
-gs a32  rdgsbase ebp
-o16  rdgsbase ebx
-o16  gs rdgsbase r8d
-gs a32 rdgsbase esp
-a32 o16 rdgsbase ecx
-gs o16 a32  rdgsbase ebx
-o16 rdgsbase r11
- a32 rdgsbase r13
-o16 gs a32  rdgsbase r14
+o16 gs a32 rdgsbase edi
+gs  o16 rdgsbase r12d
+ o16 gs rdgsbase esi
+ gs a32 o16 rdgsbase r14d
+a32 rdgsbase esi
+gs  o16 rdgsbase r15d
+a32 rdgsbase rsi
+o16  a32 gs rdgsbase rbp
+gs o16  a32 rdgsbase rsp

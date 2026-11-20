@@ -1,54 +1,54 @@
-gs  xorpd xmm10,oword [rdx - 0x80000000]
-xorpd xmm10,oword [r11 + r11 * 2 + 0x7d8b2d6]
-gs xorpd xmm10,oword [rsp + 1 * rbp]
-xorpd xmm3,oword [rdx - 0x80000000]
-gs  xorpd xmm3,oword [r11 + r11 * 2 + 0x7d8b2d6]
-gs xorpd xmm3,oword [rsp + 1 * rbp]
-gs  xorpd xmm15,oword [rdx - 0x80000000]
-xorpd xmm15,oword [r11 + r11 * 2 + 0x7d8b2d6]
-gs  xorpd xmm15,oword [rsp + 1 * rbp]
-gs a32 xorpd xmm3,oword [esp]
-a32  xorpd xmm3,oword [r12d]
-gs a32  xorpd xmm3,oword [ebp]
-xorpd xmm12,oword [esp]
-xorpd xmm12,oword [r12d]
-a32 xorpd xmm12,oword [ebp]
-gs a32  xorpd xmm11,oword [esp]
- gs a32 xorpd xmm11,oword [r12d]
-gs a32 xorpd xmm11,oword [ebp]
-xorpd xmm14,oword [rbp]
-xorpd xmm14,oword [r11 + r11 * 2 + 0x7d8b2d6]
-xorpd xmm14,oword [rsp]
-gs  xorpd xmm3,oword [rbp]
-xorpd xmm3,oword [r11 + r11 * 2 + 0x7d8b2d6]
-gs xorpd xmm3,oword [rsp]
-xorpd xmm15,oword [rbp]
-xorpd xmm15,oword [r11 + r11 * 2 + 0x7d8b2d6]
-xorpd xmm15,oword [rsp]
-xorpd xmm13,oword [r11d + r11d * 2 + 0x7d8b2d6]
-a32  xorpd xmm13,oword [r12d]
-gs  xorpd xmm13,oword [eax]
-gs a32  xorpd xmm15,oword [r11d + r11d * 2 + 0x7d8b2d6]
-a32 gs xorpd xmm15,oword [r12d]
-xorpd xmm15,oword [eax]
-a32  gs xorpd xmm14,oword [r11d + r11d * 2 + 0x7d8b2d6]
- a32 xorpd xmm14,oword [r12d]
-a32  gs xorpd xmm14,oword [eax]
- a32 xorpd xmm2,xmm2
-xorpd xmm2,xmm5
-xorpd xmm2,xmm15
- gs a32 xorpd xmm8,xmm2
-a32  gs xorpd xmm8,xmm5
-gs  a32 xorpd xmm8,xmm15
-gs  a32 xorpd xmm6,xmm2
-gs  xorpd xmm6,xmm5
- gs xorpd xmm6,xmm15
- a32 gs xorpd xmm6,xmm7
-gs a32  xorpd xmm6,xmm5
- a32 xorpd xmm6,xmm0
-gs  xorpd xmm9,xmm7
-gs a32  xorpd xmm9,xmm5
- a32 gs xorpd xmm9,xmm0
- gs a32 xorpd xmm4,xmm7
-a32 gs xorpd xmm4,xmm5
-a32  gs xorpd xmm4,xmm0
+ gs xorpd xmm11,oword [rbx + 8 * rdx]
+gs xorpd xmm11,oword [r11 + r11 * 2 + 0x28ddf580]
+gs xorpd xmm11,oword [r12]
+xorpd xmm12,oword [rbx + 8 * rdx]
+xorpd xmm12,oword [r11 + r11 * 2 + 0x28ddf580]
+ gs xorpd xmm12,oword [r12]
+xorpd xmm6,oword [rbx + 8 * rdx]
+gs  xorpd xmm6,oword [r11 + r11 * 2 + 0x28ddf580]
+ gs xorpd xmm6,oword [r12]
+ gs xorpd xmm8,oword [r15d + 2 * edi + 0x72]
+a32 gs  xorpd xmm8,oword [edx - 0x80000000]
+gs xorpd xmm8,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 xorpd xmm13,oword [r15d + 2 * edi + 0x72]
+gs  xorpd xmm13,oword [edx - 0x80000000]
+xorpd xmm13,oword [r14d + 1 * edx + 0x7FFFFFFF]
+a32  gs xorpd xmm7,oword [r15d + 2 * edi + 0x72]
+gs  a32 xorpd xmm7,oword [edx - 0x80000000]
+ a32 gs xorpd xmm7,oword [r14d + 1 * edx + 0x7FFFFFFF]
+xorpd xmm9,oword [rbp]
+xorpd xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+xorpd xmm9,oword [rax]
+ gs xorpd xmm5,oword [rbp]
+ gs xorpd xmm5,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs xorpd xmm5,oword [rax]
+gs  xorpd xmm12,oword [rbp]
+gs xorpd xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs xorpd xmm12,oword [rax]
+a32  gs xorpd xmm0,oword [ebx + 8 * edx]
+ gs a32 xorpd xmm0,oword [edx - 0x80000000]
+gs a32 xorpd xmm0,oword [r15d + 2 * edi + 0x72]
+a32  xorpd xmm6,oword [ebx + 8 * edx]
+gs  a32 xorpd xmm6,oword [edx - 0x80000000]
+gs  xorpd xmm6,oword [r15d + 2 * edi + 0x72]
+xorpd xmm14,oword [ebx + 8 * edx]
+a32 gs xorpd xmm14,oword [edx - 0x80000000]
+xorpd xmm14,oword [r15d + 2 * edi + 0x72]
+gs  xorpd xmm9,xmm0
+gs  a32 xorpd xmm9,xmm14
+a32  gs xorpd xmm9,xmm13
+a32  xorpd xmm7,xmm0
+ gs a32 xorpd xmm7,xmm14
+a32 gs xorpd xmm7,xmm13
+gs a32 xorpd xmm11,xmm0
+ gs xorpd xmm11,xmm14
+gs xorpd xmm11,xmm13
+a32  gs xorpd xmm10,xmm3
+gs a32  xorpd xmm10,xmm13
+gs a32  xorpd xmm10,xmm8
+a32  gs xorpd xmm9,xmm3
+gs  xorpd xmm9,xmm13
+ gs xorpd xmm9,xmm8
+a32 gs  xorpd xmm1,xmm3
+a32 gs  xorpd xmm1,xmm13
+a32  xorpd xmm1,xmm8

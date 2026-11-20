@@ -1,270 +1,270 @@
-a32 gs btc r10,-128
-a32 btc r10,1
-a32 gs btc r10,127
-btc rdx,-128
-a32 btc rdx,1
-gs a32 btc rdx,127
-a32 gs btc rsp,-128
-a32 gs btc rsp,1
-gs btc rsp,127
-gs btc r10d,69
-gs a32 btc r10d,-51
-gs btc r10d,-44
-a32 btc r15d,69
-gs btc r15d,-51
-a32 btc r15d,-44
-a32 btc ebp,69
-gs a32 btc ebp,-51
-a32 gs btc ebp,-44
-btc ebp,-51
-gs btc ebp,69
-gs a32 btc ebp,0
-gs btc r8d,-51
-a32 gs btc r8d,69
-btc r8d,0
-gs a32 btc r13d,-51
-btc r13d,69
-gs a32 btc r13d,0
-o16 gs btc r12w,-12
-o16 a32 gs btc r12w,-128
-a32 gs btc r12w,-97
-gs btc ax,-12
-gs a32 btc ax,-128
-gs o16 a32 btc ax,-97
-a32 gs btc si,-12
-a32 o16 btc si,-128
-a32 o16 gs btc si,-97
-a32 gs btc r15w,127
-gs o16 a32 btc r15w,0
-a32 o16 gs btc r15w,-97
-gs a32 o16 btc sp,127
-o16 a32 btc sp,0
-gs a32 o16 btc sp,-97
-o16 gs btc r9w,127
-a32 gs btc r9w,0
-gs a32 o16 btc r9w,-97
-lock gs btc qword [rsp],-42
-lock btc qword [rsp],0
-lock btc qword [rsp],127
-lock gs btc qword [r12],-42
-btc qword [r12],0
-btc qword [r12],127
-btc qword [r13],-42
-lock gs btc qword [r13],0
-btc qword [r13],127
-lock gs a32 btc qword [r12d],-42
-a32 gs lock btc qword [r12d],42
-a32 gs lock btc qword [r12d],127
-lock a32 btc qword [r15d + 2 * edi + 0x72],-42
-a32 btc qword [r15d + 2 * edi + 0x72],42
-lock gs btc qword [r15d + 2 * edi + 0x72],127
-gs lock btc qword [r13d],-42
-lock gs btc qword [r13d],42
-a32 gs btc qword [r13d],127
-lock gs btc dword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-gs btc dword [r14 + 1 * rdx + 0x7FFFFFFF],-12
-gs lock btc dword [r14 + 1 * rdx + 0x7FFFFFFF],127
-gs btc dword [rax],-128
-lock btc dword [rax],-12
-lock btc dword [rax],127
-btc dword [r13],-128
-lock gs btc dword [r13],-12
-gs btc dword [r13],127
-lock a32 btc dword [esp],0
-a32 gs btc dword [esp],127
-gs a32 lock btc dword [esp],-12
-gs a32 lock btc dword [ebx + 8 * edx],0
-lock btc dword [ebx + 8 * edx],127
-lock a32 gs btc dword [ebx + 8 * edx],-12
-lock gs btc dword [r11d + r11d * 2 + 0x62d8f9e4],0
-gs lock a32 btc dword [r11d + r11d * 2 + 0x62d8f9e4],127
-a32 lock gs btc dword [r11d + r11d * 2 + 0x62d8f9e4],-12
-btc dword [rdx - 0x80000000],-12
-lock btc dword [rdx - 0x80000000],61
-gs btc dword [rdx - 0x80000000],0
-gs btc dword [rsp],-12
-gs lock btc dword [rsp],61
-gs btc dword [rsp],0
-btc dword [rbp],-12
-lock gs btc dword [rbp],61
-gs lock btc dword [rbp],0
-a32 gs btc dword [r14d + 1 * edx + 0x7FFFFFFF],-128
-gs a32 lock btc dword [r14d + 1 * edx + 0x7FFFFFFF],0
-a32 gs lock btc dword [r14d + 1 * edx + 0x7FFFFFFF],61
-a32 lock btc dword [r11d + r11d * 2 + 0x62d8f9e4],-128
-gs a32 btc dword [r11d + r11d * 2 + 0x62d8f9e4],0
-gs lock a32 btc dword [r11d + r11d * 2 + 0x62d8f9e4],61
-gs lock btc dword [eax],-128
-a32 lock gs btc dword [eax],0
-a32 lock gs btc dword [eax],61
-lock btc word [rbp],0
-lock gs o16 btc word [rbp],-128
-lock btc word [rbp],127
-btc word [rsp],0
-gs lock btc word [rsp],-128
-gs o16 btc word [rsp],127
-gs btc word [r12],0
-btc word [r12],-128
-o16 lock gs btc word [r12],127
-lock o16 gs btc word [ebx + 8 * edx],0
-o16 lock a32 btc word [ebx + 8 * edx],57
-o16 lock a32 btc word [ebx + 8 * edx],-115
-lock o16 a32 gs btc word [r15d + 2 * edi + 0x72],0
-o16 a32 btc word [r15d + 2 * edi + 0x72],57
-lock a32 o16 gs btc word [r15d + 2 * edi + 0x72],-115
-gs lock a32 o16 btc word [r14d + 1 * edx + 0x7FFFFFFF],0
-gs lock btc word [r14d + 1 * edx + 0x7FFFFFFF],57
-gs lock a32 o16 btc word [r14d + 1 * edx + 0x7FFFFFFF],-115
-o16 lock gs btc word [r15 + 2 * rdi + 0x72],-115
-gs lock o16 btc word [r15 + 2 * rdi + 0x72],127
-o16 lock gs btc word [r15 + 2 * rdi + 0x72],0
-lock o16 gs btc word [rdx - 0x80000000],-115
-o16 lock gs btc word [rdx - 0x80000000],127
-gs o16 lock btc word [rdx - 0x80000000],0
-gs o16 lock btc word [r11 + r11 * 2 + 0x436d0354],-115
-gs lock btc word [r11 + r11 * 2 + 0x436d0354],127
-gs o16 lock btc word [r11 + r11 * 2 + 0x436d0354],0
-a32 lock o16 gs btc word [eax],127
-a32 gs btc word [eax],8
-lock a32 btc word [eax],0
-a32 lock o16 btc word [r13d],127
-gs lock o16 btc word [r13d],8
-a32 lock o16 btc word [r13d],0
-a32 lock btc word [r15d + 2 * edi + 0x72],127
-o16 lock gs btc word [r15d + 2 * edi + 0x72],8
-a32 o16 lock btc word [r15d + 2 * edi + 0x72],0
-btc qword [rsp],rbx
-gs lock btc qword [rsp],rsi
-lock btc qword [rsp],rdx
-gs lock btc qword [r13],rbx
-btc qword [r13],rsi
-lock gs btc qword [r13],rdx
-lock gs btc qword [rbx + 8 * rdx],rbx
-gs btc qword [rbx + 8 * rdx],rsi
-lock gs btc qword [rbx + 8 * rdx],rdx
-lock a32 btc qword [ebp],rsp
-a32 lock gs btc qword [ebp],r13
-lock gs btc qword [ebp],r12
-a32 gs lock btc qword [r12d],rsp
-a32 btc qword [r12d],r13
-a32 gs btc qword [r12d],r12
-lock gs a32 btc qword [esp],rsp
-gs a32 btc qword [esp],r13
-gs a32 lock btc qword [esp],r12
-lock gs btc dword [r13],r8d
-gs btc dword [r13],eax
-btc dword [r13],ebx
-lock btc dword [rax],r8d
-lock gs btc dword [rax],eax
-btc dword [rax],ebx
-gs lock btc dword [r11 + r11 * 2 + 0x5bd46072],r8d
-gs btc dword [r11 + r11 * 2 + 0x5bd46072],eax
-gs lock btc dword [r11 + r11 * 2 + 0x5bd46072],ebx
-a32 lock gs btc dword [eax],esi
-gs btc dword [eax],edx
-lock gs btc dword [eax],r11d
-gs btc dword [r13d],esi
-a32 btc dword [r13d],edx
-a32 gs btc dword [r13d],r11d
-lock gs a32 btc dword [r11d + r11d * 2 + 0x5bd46072],esi
-a32 lock btc dword [r11d + r11d * 2 + 0x5bd46072],edx
-lock gs a32 btc dword [r11d + r11d * 2 + 0x5bd46072],r11d
-gs lock btc dword [rax],r12d
-gs btc dword [rax],ecx
-btc dword [rax],ebp
-btc dword [rbp],r12d
-lock btc dword [rbp],ecx
-btc dword [rbp],ebp
-lock gs btc dword [rsp],r12d
-btc dword [rsp],ecx
-lock btc dword [rsp],ebp
-lock btc dword [ebx + 8 * edx],ebp
-lock btc dword [ebx + 8 * edx],esp
-lock gs a32 btc dword [ebx + 8 * edx],r11d
-a32 gs lock btc dword [r14d + 1 * edx + 0x7FFFFFFF],ebp
-a32 lock btc dword [r14d + 1 * edx + 0x7FFFFFFF],esp
-lock a32 btc dword [r14d + 1 * edx + 0x7FFFFFFF],r11d
-gs lock a32 btc dword [edx - 0x80000000],ebp
-btc dword [edx - 0x80000000],esp
-gs a32 btc dword [edx - 0x80000000],r11d
-o16 btc word [rbx + 8 * rdx],r12w
-lock o16 btc word [rbx + 8 * rdx],r11w
-btc word [rbx + 8 * rdx],r9w
-o16 btc word [r14 + 1 * rdx + 0x7FFFFFFF],r12w
-btc word [r14 + 1 * rdx + 0x7FFFFFFF],r11w
-lock gs o16 btc word [r14 + 1 * rdx + 0x7FFFFFFF],r9w
-o16 btc word [r13],r12w
-gs o16 btc word [r13],r11w
-lock btc word [r13],r9w
-o16 lock a32 gs btc word [eax],dx
-o16 a32 gs lock btc word [eax],r8w
-a32 o16 lock btc word [eax],r14w
-gs o16 lock a32 btc word [r11d + r11d * 2 + 0x43eb0771],dx
-o16 lock btc word [r11d + r11d * 2 + 0x43eb0771],r8w
-o16 gs btc word [r11d + r11d * 2 + 0x43eb0771],r14w
-o16 a32 lock btc word [r13d],dx
-o16 a32 btc word [r13d],r8w
-gs lock o16 btc word [r13d],r14w
-o16 lock gs btc word [r11 + r11 * 2 + 0x43eb0771],r11w
-lock btc word [r11 + r11 * 2 + 0x43eb0771],si
-gs lock btc word [r11 + r11 * 2 + 0x43eb0771],bx
-o16 gs btc word [rdx - 0x80000000],r11w
-o16 btc word [rdx - 0x80000000],si
-gs btc word [rdx - 0x80000000],bx
-o16 btc word [r14 + 1 * rdx + 0x7FFFFFFF],r11w
-lock gs o16 btc word [r14 + 1 * rdx + 0x7FFFFFFF],si
-lock gs o16 btc word [r14 + 1 * rdx + 0x7FFFFFFF],bx
-o16 gs a32 btc word [ebp],r11w
-gs o16 lock btc word [ebp],r14w
-lock a32 o16 gs btc word [ebp],r15w
-lock a32 gs btc word [eax],r11w
-a32 lock o16 gs btc word [eax],r14w
-lock btc word [eax],r15w
-lock o16 a32 btc word [ebx + 8 * edx],r11w
-lock a32 btc word [ebx + 8 * edx],r14w
-lock a32 gs o16 btc word [ebx + 8 * edx],r15w
-a32 gs btc r15,r14
-gs a32 btc r15,r10
-a32 gs btc r15,rdx
-gs a32 btc rbp,r14
-gs a32 btc rbp,r10
-a32 gs btc rbp,rdx
-a32 gs btc rax,r14
-btc rax,r10
-btc rax,rdx
-gs a32 btc eax,esp
-gs a32 btc eax,edi
-gs btc eax,r14d
-gs a32 btc r13d,esp
-gs btc r13d,edi
-a32 gs btc r13d,r14d
-a32 btc r8d,esp
-a32 btc r8d,edi
-gs a32 btc r8d,r14d
-btc esp,esp
-a32 gs btc esp,edx
-btc esp,r13d
-btc edi,esp
-a32 gs btc edi,edx
-gs a32 btc edi,r13d
-gs btc r12d,esp
-gs a32 btc r12d,edx
-btc r12d,r13d
-btc r15w,r8w
-a32 o16 btc r15w,di
-o16 gs a32 btc r15w,ax
-o16 btc r10w,r8w
-a32 o16 gs btc r10w,di
-gs o16 btc r10w,ax
-btc bx,r8w
-gs o16 btc bx,di
-o16 a32 gs btc bx,ax
-a32 o16 gs btc ax,sp
-o16 a32 btc ax,r15w
-gs a32 btc ax,r14w
-a32 gs btc di,sp
-a32 btc di,r15w
-a32 o16 btc di,r14w
-btc r14w,sp
-a32 o16 btc r14w,r15w
-gs a32 o16 btc r14w,r14w
+btc r11,0
+a32 btc r11,127
+a32 gs btc r11,-128
+gs btc rcx,0
+a32 btc rcx,127
+btc rcx,-128
+a32 gs btc rsi,0
+a32 gs btc rsi,127
+a32 gs btc rsi,-128
+gs a32 btc edi,-5
+gs btc edi,-128
+btc edi,-72
+btc r13d,-5
+gs btc r13d,-128
+gs a32 btc r13d,-72
+btc r15d,-5
+a32 gs btc r15d,-128
+a32 gs btc r15d,-72
+a32 gs btc esi,74
+gs btc esi,-5
+gs btc esi,0
+gs a32 btc r12d,74
+a32 btc r12d,-5
+btc r12d,0
+gs btc edi,74
+a32 gs btc edi,-5
+btc edi,0
+a32 gs btc si,50
+gs o16 a32 btc si,127
+o16 gs a32 btc si,-128
+gs a32 btc r10w,50
+btc r10w,127
+gs a32 btc r10w,-128
+o16 btc r8w,50
+gs a32 o16 btc r8w,127
+gs a32 btc r8w,-128
+o16 a32 gs btc r12w,-80
+a32 btc r12w,127
+gs btc r12w,-128
+gs a32 btc r15w,-80
+a32 o16 btc r15w,127
+o16 gs btc r15w,-128
+a32 btc r13w,-80
+gs o16 a32 btc r13w,127
+btc r13w,-128
+btc qword [rdx - 0x80000000],0
+btc qword [rdx - 0x80000000],-111
+lock btc qword [rdx - 0x80000000],-128
+lock gs btc qword [r11 + r11 * 2 + 0x4c5ab743],0
+gs lock btc qword [r11 + r11 * 2 + 0x4c5ab743],-111
+lock btc qword [r11 + r11 * 2 + 0x4c5ab743],-128
+btc qword [r14 + 1 * rdx + 0x7FFFFFFF],0
+lock gs btc qword [r14 + 1 * rdx + 0x7FFFFFFF],-111
+gs lock btc qword [r14 + 1 * rdx + 0x7FFFFFFF],-128
+a32 lock gs btc qword [r13d],-95
+gs a32 lock btc qword [r13d],-128
+a32 gs lock btc qword [r13d],107
+a32 gs btc qword [ebp],-95
+lock gs btc qword [ebp],-128
+lock a32 gs btc qword [ebp],107
+a32 gs lock btc qword [ebx + 8 * edx],-95
+a32 gs btc qword [ebx + 8 * edx],-128
+gs lock a32 btc qword [ebx + 8 * edx],107
+btc dword [rax],94
+btc dword [rax],0
+gs btc dword [rax],127
+gs lock btc dword [r15 + 2 * rdi + 0x72],94
+lock gs btc dword [r15 + 2 * rdi + 0x72],0
+btc dword [r15 + 2 * rdi + 0x72],127
+gs btc dword [r12],94
+btc dword [r12],0
+gs lock btc dword [r12],127
+a32 lock btc dword [edx - 0x80000000],-128
+a32 lock gs btc dword [edx - 0x80000000],-89
+a32 gs btc dword [edx - 0x80000000],94
+a32 lock gs btc dword [ebx + 8 * edx],-128
+a32 lock gs btc dword [ebx + 8 * edx],-89
+a32 gs lock btc dword [ebx + 8 * edx],94
+a32 lock btc dword [r11d + r11d * 2 + 0x50f46c82],-128
+a32 gs lock btc dword [r11d + r11d * 2 + 0x50f46c82],-89
+a32 lock btc dword [r11d + r11d * 2 + 0x50f46c82],94
+gs lock btc dword [r13],0
+btc dword [r13],94
+gs lock btc dword [r13],-89
+lock btc dword [rsp],0
+gs lock btc dword [rsp],94
+gs btc dword [rsp],-89
+btc dword [r11 + r11 * 2 + 0x50f46c82],0
+gs btc dword [r11 + r11 * 2 + 0x50f46c82],94
+lock gs btc dword [r11 + r11 * 2 + 0x50f46c82],-89
+btc dword [r12d],94
+a32 lock gs btc dword [r12d],-128
+a32 gs lock btc dword [r12d],-16
+lock gs a32 btc dword [r13d],94
+lock a32 btc dword [r13d],-128
+lock gs a32 btc dword [r13d],-16
+a32 gs btc dword [eax],94
+lock btc dword [eax],-128
+lock a32 gs btc dword [eax],-16
+gs lock btc word [r13],97
+gs o16 btc word [r13],-128
+lock gs btc word [r13],-52
+o16 lock btc word [r12],97
+gs o16 btc word [r12],-128
+gs lock btc word [r12],-52
+o16 btc word [rax],97
+gs lock btc word [rax],-128
+o16 gs lock btc word [rax],-52
+lock gs a32 btc word [r12d],-52
+o16 a32 lock gs btc word [r12d],-74
+o16 a32 lock gs btc word [r12d],97
+a32 o16 gs btc word [edx - 0x80000000],-52
+o16 lock a32 btc word [edx - 0x80000000],-74
+o16 a32 gs btc word [edx - 0x80000000],97
+gs o16 lock a32 btc word [esp + 1 * ebp],-52
+gs lock o16 btc word [esp + 1 * ebp],-74
+lock o16 gs btc word [esp + 1 * ebp],97
+gs o16 lock btc word [r11 + r11 * 2 + 0x17915c6d],-128
+lock btc word [r11 + r11 * 2 + 0x17915c6d],-74
+lock o16 gs btc word [r11 + r11 * 2 + 0x17915c6d],127
+o16 lock gs btc word [rax],-128
+gs lock o16 btc word [rax],-74
+gs lock o16 btc word [rax],127
+gs o16 btc word [rsp + 1 * rbp],-128
+gs o16 lock btc word [rsp + 1 * rbp],-74
+o16 gs btc word [rsp + 1 * rbp],127
+o16 lock btc word [r13d],0
+a32 gs lock btc word [r13d],-52
+o16 gs a32 lock btc word [r13d],97
+a32 btc word [ebp],0
+gs lock o16 btc word [ebp],-52
+lock gs a32 btc word [ebp],97
+lock gs o16 a32 btc word [edx - 0x80000000],0
+gs a32 o16 btc word [edx - 0x80000000],-52
+lock o16 btc word [edx - 0x80000000],97
+btc qword [rbp],rdx
+gs btc qword [rbp],r11
+gs btc qword [rbp],r12
+gs btc qword [rdx - 0x80000000],rdx
+lock gs btc qword [rdx - 0x80000000],r11
+lock gs btc qword [rdx - 0x80000000],r12
+lock gs btc qword [r12],rdx
+lock gs btc qword [r12],r11
+gs btc qword [r12],r12
+a32 gs btc qword [esp + 1 * ebp],rsi
+btc qword [esp + 1 * ebp],rcx
+lock a32 btc qword [esp + 1 * ebp],r11
+lock a32 gs btc qword [edx - 0x80000000],rsi
+lock a32 btc qword [edx - 0x80000000],rcx
+a32 gs btc qword [edx - 0x80000000],r11
+gs btc qword [eax],rsi
+gs a32 btc qword [eax],rcx
+lock gs btc qword [eax],r11
+btc dword [rdx - 0x80000000],r13d
+btc dword [rdx - 0x80000000],eax
+lock btc dword [rdx - 0x80000000],r15d
+lock gs btc dword [r12],r13d
+btc dword [r12],eax
+lock gs btc dword [r12],r15d
+lock gs btc dword [rbp],r13d
+gs btc dword [rbp],eax
+btc dword [rbp],r15d
+btc dword [r15d + 2 * edi + 0x72],r15d
+lock a32 btc dword [r15d + 2 * edi + 0x72],eax
+lock gs a32 btc dword [r15d + 2 * edi + 0x72],r13d
+lock gs btc dword [ebx + 8 * edx],r15d
+gs a32 btc dword [ebx + 8 * edx],eax
+lock gs btc dword [ebx + 8 * edx],r13d
+lock a32 btc dword [esp],r15d
+gs btc dword [esp],eax
+btc dword [esp],r13d
+btc dword [rsp],edi
+gs btc dword [rsp],r11d
+gs btc dword [rsp],r10d
+lock gs btc dword [rax],edi
+btc dword [rax],r11d
+gs btc dword [rax],r10d
+gs lock btc dword [r13],edi
+btc dword [r13],r11d
+lock gs btc dword [r13],r10d
+lock a32 btc dword [r14d + 1 * edx + 0x7FFFFFFF],ecx
+a32 lock gs btc dword [r14d + 1 * edx + 0x7FFFFFFF],ebp
+lock a32 gs btc dword [r14d + 1 * edx + 0x7FFFFFFF],eax
+a32 gs btc dword [r15d + 2 * edi + 0x72],ecx
+lock a32 gs btc dword [r15d + 2 * edi + 0x72],ebp
+gs a32 lock btc dword [r15d + 2 * edi + 0x72],eax
+gs a32 btc dword [ebp],ecx
+a32 btc dword [ebp],ebp
+a32 btc dword [ebp],eax
+o16 btc word [rsp],ax
+gs btc word [rsp],r8w
+gs o16 lock btc word [rsp],bx
+btc word [rbp],ax
+lock gs o16 btc word [rbp],r8w
+o16 gs btc word [rbp],bx
+o16 gs btc word [r12],ax
+gs lock o16 btc word [r12],r8w
+o16 gs lock btc word [r12],bx
+gs a32 btc word [edx - 0x80000000],bx
+o16 a32 gs lock btc word [edx - 0x80000000],ax
+o16 a32 btc word [edx - 0x80000000],sp
+o16 a32 btc word [esp + 1 * ebp],bx
+lock o16 gs a32 btc word [esp + 1 * ebp],ax
+btc word [esp + 1 * ebp],sp
+gs lock o16 a32 btc word [esp],bx
+gs lock o16 btc word [esp],ax
+o16 a32 gs btc word [esp],sp
+o16 gs btc word [rbx + 8 * rdx],r10w
+gs lock btc word [rbx + 8 * rdx],di
+lock gs btc word [rbx + 8 * rdx],si
+o16 gs btc word [r13],r10w
+btc word [r13],di
+o16 lock gs btc word [r13],si
+o16 gs btc word [rsp],r10w
+gs lock btc word [rsp],di
+gs lock btc word [rsp],si
+a32 lock btc word [edx - 0x80000000],r11w
+o16 lock btc word [edx - 0x80000000],r13w
+a32 btc word [edx - 0x80000000],cx
+gs lock btc word [eax],r11w
+gs btc word [eax],r13w
+o16 lock gs btc word [eax],cx
+lock o16 a32 btc word [esp],r11w
+o16 lock a32 btc word [esp],r13w
+o16 a32 gs lock btc word [esp],cx
+a32 gs btc rcx,rbx
+btc rcx,rdx
+gs btc rcx,r15
+btc rbx,rbx
+a32 btc rbx,rdx
+a32 btc rbx,r15
+gs btc rsp,rbx
+a32 btc rsp,rdx
+gs a32 btc rsp,r15
+a32 gs btc r15d,edx
+btc r15d,esp
+gs a32 btc r15d,ebx
+a32 btc ebx,edx
+a32 btc ebx,esp
+a32 gs btc ebx,ebx
+btc edi,edx
+gs btc edi,esp
+gs btc edi,ebx
+btc ebx,esp
+gs a32 btc ebx,eax
+gs a32 btc ebx,ebp
+a32 gs btc r13d,esp
+gs btc r13d,eax
+btc r13d,ebp
+a32 gs btc ecx,esp
+gs a32 btc ecx,eax
+btc ecx,ebp
+a32 o16 gs btc bx,r13w
+a32 gs o16 btc bx,dx
+gs a32 o16 btc bx,r8w
+o16 gs a32 btc sp,r13w
+gs a32 btc sp,dx
+a32 o16 btc sp,r8w
+a32 btc r13w,r13w
+gs btc r13w,dx
+a32 o16 btc r13w,r8w
+gs a32 o16 btc r15w,bp
+a32 btc r15w,r13w
+gs a32 o16 btc r15w,cx
+o16 a32 gs btc sp,bp
+o16 a32 gs btc sp,r13w
+gs o16 btc sp,cx
+gs a32 btc r8w,bp
+a32 gs o16 btc r8w,r13w
+o16 a32 gs btc r8w,cx

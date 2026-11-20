@@ -1,5 +1,5 @@
-a32 o16 bnd ret 
-gs bnd o16 ret 
-a32 o16 bnd gs ret 19347
-bnd o16 a32 gs ret -2292
-bnd gs ret 0
+a32 gs bnd ret 
+bnd ret 
+bnd a32 gs ret -7375
+bnd ret 0
+gs bnd a32 ret -32768

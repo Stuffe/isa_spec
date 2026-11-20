@@ -1,3 +1,3 @@
-gs a32 mwaitx 
-gs mwaitx 
-gs mwaitx eax,ecx
+gs o16 mwaitx 
+gs o16 a32 mwaitx 
+o16 gs a32 mwaitx eax,ecx

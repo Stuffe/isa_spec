@@ -1,2 +1,2 @@
-gs a32 o16 rdmsr 
-rdmsr 
+o16 rdmsr 
+a32 rdmsr 

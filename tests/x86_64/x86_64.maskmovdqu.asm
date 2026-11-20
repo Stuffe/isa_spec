@@ -1,18 +1,18 @@
-a32 gs  maskmovdqu xmm5,xmm10
-gs  maskmovdqu xmm5,xmm12
-gs maskmovdqu xmm5,xmm14
-gs a32 maskmovdqu xmm2,xmm10
- a32 maskmovdqu xmm2,xmm12
-gs a32 maskmovdqu xmm2,xmm14
-gs  maskmovdqu xmm0,xmm10
-gs  maskmovdqu xmm0,xmm12
-a32 gs maskmovdqu xmm0,xmm14
- gs a32 maskmovdqu xmm5,xmm7
-gs a32  maskmovdqu xmm5,xmm1
-maskmovdqu xmm5,xmm9
-a32 gs  maskmovdqu xmm9,xmm7
- a32 gs maskmovdqu xmm9,xmm1
- a32 maskmovdqu xmm9,xmm9
-gs  maskmovdqu xmm1,xmm7
-a32 maskmovdqu xmm1,xmm1
-gs  a32 maskmovdqu xmm1,xmm9
+maskmovdqu xmm4,xmm12
+a32  gs maskmovdqu xmm4,xmm13
+ a32 gs maskmovdqu xmm4,xmm11
+gs  a32 maskmovdqu xmm13,xmm12
+a32  maskmovdqu xmm13,xmm13
+gs maskmovdqu xmm13,xmm11
+gs  a32 maskmovdqu xmm14,xmm12
+a32 gs maskmovdqu xmm14,xmm13
+maskmovdqu xmm14,xmm11
+gs a32  maskmovdqu xmm6,xmm14
+gs a32  maskmovdqu xmm6,xmm6
+ gs maskmovdqu xmm6,xmm3
+ a32 gs maskmovdqu xmm2,xmm14
+gs  a32 maskmovdqu xmm2,xmm6
+a32 maskmovdqu xmm2,xmm3
+ gs maskmovdqu xmm7,xmm14
+gs  maskmovdqu xmm7,xmm6
+a32 maskmovdqu xmm7,xmm3

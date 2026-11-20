@@ -1,2 +1,2 @@
-a32 o16 gs syscall 
-o16 syscall 
+gs a32 syscall 
+a32 syscall 

@@ -1,2 +1,2 @@
-cli 
-a32 gs cli 
+o16 gs cli 
+gs o16 cli 

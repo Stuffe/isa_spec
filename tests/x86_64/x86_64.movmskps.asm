@@ -1,27 +1,27 @@
-a32 o16 movmskps edi,xmm0
-gs a32 o16 movmskps edi,xmm11
-o16 a32 gs movmskps edi,xmm10
-movmskps ebp,xmm0
-o16 a32 movmskps ebp,xmm11
-a32 gs movmskps ebp,xmm10
-gs a32 o16 movmskps esp,xmm0
-o16 gs movmskps esp,xmm11
-a32 gs movmskps esp,xmm10
-gs a32 movmskps r8d,xmm11
-a32 gs movmskps r8d,xmm7
-a32 gs movmskps r8d,xmm2
-gs o16 movmskps ecx,xmm11
-o16 gs a32 movmskps ecx,xmm7
-gs o16 a32 movmskps ecx,xmm2
-o16 movmskps r15d,xmm11
-gs o16 movmskps r15d,xmm7
-o16 gs movmskps r15d,xmm2
-gs movmskps rcx,xmm14
-gs o16 movmskps rcx,xmm13
-o16 a32 movmskps rcx,xmm4
-o16 a32 gs movmskps r9,xmm14
-gs movmskps r9,xmm13
-gs o16 a32 movmskps r9,xmm4
-o16 a32 movmskps rbp,xmm14
-gs a32 movmskps rbp,xmm13
-gs o16 movmskps rbp,xmm4
+a32 o16 movmskps r9d,xmm15
+o16 a32 movmskps r9d,xmm9
+movmskps r9d,xmm13
+a32 gs movmskps ecx,xmm15
+a32 o16 gs movmskps ecx,xmm9
+o16 movmskps ecx,xmm13
+gs o16 a32 movmskps r13d,xmm15
+o16 gs a32 movmskps r13d,xmm9
+a32 o16 gs movmskps r13d,xmm13
+gs a32 o16 movmskps r9d,xmm6
+o16 gs a32 movmskps r9d,xmm11
+gs a32 movmskps r9d,xmm5
+a32 o16 gs movmskps r10d,xmm6
+gs o16 a32 movmskps r10d,xmm11
+gs a32 o16 movmskps r10d,xmm5
+o16 movmskps r14d,xmm6
+a32 gs o16 movmskps r14d,xmm11
+gs o16 movmskps r14d,xmm5
+gs a32 o16 movmskps rsi,xmm12
+gs movmskps rsi,xmm7
+a32 gs o16 movmskps rsi,xmm11
+gs a32 o16 movmskps rax,xmm12
+gs a32 movmskps rax,xmm7
+a32 o16 gs movmskps rax,xmm11
+gs a32 o16 movmskps r12,xmm12
+o16 a32 movmskps r12,xmm7
+o16 movmskps r12,xmm11

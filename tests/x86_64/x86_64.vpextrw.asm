@@ -1,216 +1,216 @@
-gs vpextrw word [rax],xmm5,-128
-gs vpextrw word [rax],xmm5,127
-gs vpextrw word [rax],xmm5,20
-gs vpextrw word [rax],xmm4,-128
-gs vpextrw word [rax],xmm4,127
-gs vpextrw word [rax],xmm4,20
-vpextrw word [rax],xmm0,-128
-gs vpextrw word [rax],xmm0,127
-vpextrw word [rax],xmm0,20
-gs vpextrw word [rsp + 1 * rbp],xmm5,-128
-vpextrw word [rsp + 1 * rbp],xmm5,127
-gs vpextrw word [rsp + 1 * rbp],xmm5,20
-gs vpextrw word [rsp + 1 * rbp],xmm4,-128
-vpextrw word [rsp + 1 * rbp],xmm4,127
-vpextrw word [rsp + 1 * rbp],xmm4,20
-gs vpextrw word [rsp + 1 * rbp],xmm0,-128
-vpextrw word [rsp + 1 * rbp],xmm0,127
-gs vpextrw word [rsp + 1 * rbp],xmm0,20
-gs vpextrw word [r15 + 2 * rdi + 0x72],xmm5,-128
-vpextrw word [r15 + 2 * rdi + 0x72],xmm5,127
-gs vpextrw word [r15 + 2 * rdi + 0x72],xmm5,20
-vpextrw word [r15 + 2 * rdi + 0x72],xmm4,-128
-vpextrw word [r15 + 2 * rdi + 0x72],xmm4,127
-vpextrw word [r15 + 2 * rdi + 0x72],xmm4,20
-gs vpextrw word [r15 + 2 * rdi + 0x72],xmm0,-128
-gs vpextrw word [r15 + 2 * rdi + 0x72],xmm0,127
-gs vpextrw word [r15 + 2 * rdi + 0x72],xmm0,20
-a32 gs vpextrw word [ebp],xmm1,20
-a32 gs vpextrw word [ebp],xmm1,127
-vpextrw word [ebp],xmm1,-128
-gs vpextrw word [ebp],xmm15,20
-vpextrw word [ebp],xmm15,127
-vpextrw word [ebp],xmm15,-128
-a32 vpextrw word [ebp],xmm7,20
-a32 vpextrw word [ebp],xmm7,127
-a32 gs vpextrw word [ebp],xmm7,-128
-a32 gs vpextrw word [esp + 1 * ebp],xmm1,20
-a32 gs vpextrw word [esp + 1 * ebp],xmm1,127
-a32 vpextrw word [esp + 1 * ebp],xmm1,-128
-a32 gs vpextrw word [esp + 1 * ebp],xmm15,20
-vpextrw word [esp + 1 * ebp],xmm15,127
-a32 vpextrw word [esp + 1 * ebp],xmm15,-128
-gs vpextrw word [esp + 1 * ebp],xmm7,20
-gs vpextrw word [esp + 1 * ebp],xmm7,127
-gs vpextrw word [esp + 1 * ebp],xmm7,-128
-a32 gs vpextrw word [eax],xmm1,20
-a32 vpextrw word [eax],xmm1,127
-gs vpextrw word [eax],xmm1,-128
-a32 gs vpextrw word [eax],xmm15,20
-a32 vpextrw word [eax],xmm15,127
-a32 vpextrw word [eax],xmm15,-128
-a32 gs vpextrw word [eax],xmm7,20
-a32 vpextrw word [eax],xmm7,127
-vpextrw word [eax],xmm7,-128
-a32 vpextrw r15d,xmm9,127
-vpextrw r15d,xmm9,0
-gs vpextrw r15d,xmm9,-128
-a32 gs vpextrw r15d,xmm8,127
-a32 vpextrw r15d,xmm8,0
-gs vpextrw r15d,xmm8,-128
-gs vpextrw r15d,xmm6,127
-a32 vpextrw r15d,xmm6,0
-gs vpextrw r15d,xmm6,-128
-vpextrw ecx,xmm9,127
-gs vpextrw ecx,xmm9,0
-gs a32 vpextrw ecx,xmm9,-128
-vpextrw ecx,xmm8,127
-vpextrw ecx,xmm8,0
-gs vpextrw ecx,xmm8,-128
-gs a32 vpextrw ecx,xmm6,127
-gs vpextrw ecx,xmm6,0
-a32 vpextrw ecx,xmm6,-128
-a32 gs vpextrw esi,xmm9,127
-vpextrw esi,xmm9,0
-vpextrw esi,xmm9,-128
-gs vpextrw esi,xmm8,127
-a32 gs vpextrw esi,xmm8,0
-gs a32 vpextrw esi,xmm8,-128
-gs vpextrw esi,xmm6,127
-gs a32 vpextrw esi,xmm6,0
-gs vpextrw esi,xmm6,-128
-a32 gs vpextrw ecx,xmm9,-87
-a32 vpextrw ecx,xmm9,-128
-gs a32 vpextrw ecx,xmm9,127
-a32 gs vpextrw ecx,xmm11,-87
-gs vpextrw ecx,xmm11,-128
-vpextrw ecx,xmm11,127
-vpextrw ecx,xmm12,-87
-a32 vpextrw ecx,xmm12,-128
-gs vpextrw ecx,xmm12,127
-vpextrw ebx,xmm9,-87
-vpextrw ebx,xmm9,-128
-a32 gs vpextrw ebx,xmm9,127
-a32 vpextrw ebx,xmm11,-87
-a32 gs vpextrw ebx,xmm11,-128
-a32 vpextrw ebx,xmm11,127
-a32 vpextrw ebx,xmm12,-87
-gs vpextrw ebx,xmm12,-128
-a32 vpextrw ebx,xmm12,127
-gs a32 vpextrw eax,xmm9,-87
-a32 vpextrw eax,xmm9,-128
-a32 gs vpextrw eax,xmm9,127
-gs vpextrw eax,xmm11,-87
-vpextrw eax,xmm11,-128
-gs vpextrw eax,xmm11,127
-a32 gs vpextrw eax,xmm12,-87
-a32 vpextrw eax,xmm12,-128
-a32 vpextrw eax,xmm12,127
-vpextrw r10d,xmm8,75
-a32 vpextrw r10d,xmm8,-128
-a32 vpextrw r10d,xmm8,127
-a32 gs vpextrw r10d,xmm7,75
-a32 vpextrw r10d,xmm7,-128
-a32 vpextrw r10d,xmm7,127
-a32 gs vpextrw r10d,xmm0,75
-gs a32 vpextrw r10d,xmm0,-128
-gs a32 vpextrw r10d,xmm0,127
-gs vpextrw edi,xmm8,75
-a32 vpextrw edi,xmm8,-128
-vpextrw edi,xmm8,127
-gs vpextrw edi,xmm7,75
-gs a32 vpextrw edi,xmm7,-128
-gs vpextrw edi,xmm7,127
-a32 vpextrw edi,xmm0,75
-gs a32 vpextrw edi,xmm0,-128
-vpextrw edi,xmm0,127
-gs vpextrw esp,xmm8,75
-gs a32 vpextrw esp,xmm8,-128
-gs a32 vpextrw esp,xmm8,127
-gs a32 vpextrw esp,xmm7,75
-a32 gs vpextrw esp,xmm7,-128
-vpextrw esp,xmm7,127
-a32 vpextrw esp,xmm0,75
-gs a32 vpextrw esp,xmm0,-128
-a32 gs vpextrw esp,xmm0,127
-a32 gs vpextrw r11,xmm8,-8
-a32 vpextrw r11,xmm8,-86
-gs vpextrw r11,xmm8,-128
-gs a32 vpextrw r11,xmm4,-8
-vpextrw r11,xmm4,-86
-vpextrw r11,xmm4,-128
-gs vpextrw r11,xmm9,-8
-a32 vpextrw r11,xmm9,-86
-a32 gs vpextrw r11,xmm9,-128
-a32 gs vpextrw rbx,xmm8,-8
-gs vpextrw rbx,xmm8,-86
-a32 gs vpextrw rbx,xmm8,-128
-a32 vpextrw rbx,xmm4,-8
-vpextrw rbx,xmm4,-86
-gs a32 vpextrw rbx,xmm4,-128
-a32 vpextrw rbx,xmm9,-8
-a32 gs vpextrw rbx,xmm9,-86
-a32 vpextrw rbx,xmm9,-128
-gs a32 vpextrw rbp,xmm8,-8
-vpextrw rbp,xmm8,-86
-gs vpextrw rbp,xmm8,-128
-a32 gs vpextrw rbp,xmm4,-8
-gs vpextrw rbp,xmm4,-86
-gs a32 vpextrw rbp,xmm4,-128
-a32 vpextrw rbp,xmm9,-8
-gs a32 vpextrw rbp,xmm9,-86
-a32 vpextrw rbp,xmm9,-128
-a32 gs vpextrw rax,xmm9,-86
-gs vpextrw rax,xmm9,17
-gs vpextrw rax,xmm9,0
-gs a32 vpextrw rax,xmm4,-86
-gs vpextrw rax,xmm4,17
-a32 gs vpextrw rax,xmm4,0
-vpextrw rax,xmm2,-86
-gs a32 vpextrw rax,xmm2,17
-a32 gs vpextrw rax,xmm2,0
-a32 gs vpextrw r13,xmm9,-86
-a32 vpextrw r13,xmm9,17
-gs a32 vpextrw r13,xmm9,0
-vpextrw r13,xmm4,-86
-vpextrw r13,xmm4,17
-gs a32 vpextrw r13,xmm4,0
-vpextrw r13,xmm2,-86
-a32 vpextrw r13,xmm2,17
-a32 vpextrw r13,xmm2,0
-gs vpextrw rsi,xmm9,-86
-a32 gs vpextrw rsi,xmm9,17
-gs a32 vpextrw rsi,xmm9,0
-vpextrw rsi,xmm4,-86
-a32 gs vpextrw rsi,xmm4,17
-a32 gs vpextrw rsi,xmm4,0
-a32 gs vpextrw rsi,xmm2,-86
-a32 gs vpextrw rsi,xmm2,17
-gs vpextrw rsi,xmm2,0
-a32 vpextrw rdi,xmm3,-5
-vpextrw rdi,xmm3,0
-a32 vpextrw rdi,xmm3,9
-a32 gs vpextrw rdi,xmm6,-5
-gs vpextrw rdi,xmm6,0
-gs a32 vpextrw rdi,xmm6,9
-gs vpextrw rdi,xmm13,-5
-a32 gs vpextrw rdi,xmm13,0
-gs a32 vpextrw rdi,xmm13,9
-a32 vpextrw r14,xmm3,-5
-gs a32 vpextrw r14,xmm3,0
-a32 gs vpextrw r14,xmm3,9
-a32 gs vpextrw r14,xmm6,-5
-gs vpextrw r14,xmm6,0
-a32 gs vpextrw r14,xmm6,9
-a32 gs vpextrw r14,xmm13,-5
-gs vpextrw r14,xmm13,0
-gs a32 vpextrw r14,xmm13,9
-a32 gs vpextrw r15,xmm3,-5
-gs a32 vpextrw r15,xmm3,0
-gs a32 vpextrw r15,xmm3,9
-a32 vpextrw r15,xmm6,-5
-a32 gs vpextrw r15,xmm6,0
-a32 gs vpextrw r15,xmm6,9
-gs vpextrw r15,xmm13,-5
-a32 vpextrw r15,xmm13,0
-gs vpextrw r15,xmm13,9
+gs vpextrw word [r13],xmm9,-128
+gs vpextrw word [r13],xmm9,-122
+vpextrw word [r13],xmm9,113
+gs vpextrw word [r13],xmm13,-128
+vpextrw word [r13],xmm13,-122
+gs vpextrw word [r13],xmm13,113
+vpextrw word [r13],xmm14,-128
+vpextrw word [r13],xmm14,-122
+gs vpextrw word [r13],xmm14,113
+gs vpextrw word [rbp],xmm9,-128
+vpextrw word [rbp],xmm9,-122
+gs vpextrw word [rbp],xmm9,113
+vpextrw word [rbp],xmm13,-128
+vpextrw word [rbp],xmm13,-122
+vpextrw word [rbp],xmm13,113
+gs vpextrw word [rbp],xmm14,-128
+vpextrw word [rbp],xmm14,-122
+gs vpextrw word [rbp],xmm14,113
+gs vpextrw word [rax],xmm9,-128
+vpextrw word [rax],xmm9,-122
+gs vpextrw word [rax],xmm9,113
+gs vpextrw word [rax],xmm13,-128
+gs vpextrw word [rax],xmm13,-122
+gs vpextrw word [rax],xmm13,113
+vpextrw word [rax],xmm14,-128
+gs vpextrw word [rax],xmm14,-122
+vpextrw word [rax],xmm14,113
+gs vpextrw word [ebp],xmm11,127
+a32 gs vpextrw word [ebp],xmm11,-128
+gs vpextrw word [ebp],xmm11,0
+a32 vpextrw word [ebp],xmm10,127
+gs vpextrw word [ebp],xmm10,-128
+a32 vpextrw word [ebp],xmm10,0
+gs a32 vpextrw word [ebp],xmm15,127
+gs vpextrw word [ebp],xmm15,-128
+a32 vpextrw word [ebp],xmm15,0
+a32 vpextrw word [ebx + 8 * edx],xmm11,127
+gs a32 vpextrw word [ebx + 8 * edx],xmm11,-128
+gs a32 vpextrw word [ebx + 8 * edx],xmm11,0
+a32 vpextrw word [ebx + 8 * edx],xmm10,127
+a32 vpextrw word [ebx + 8 * edx],xmm10,-128
+a32 gs vpextrw word [ebx + 8 * edx],xmm10,0
+gs vpextrw word [ebx + 8 * edx],xmm15,127
+vpextrw word [ebx + 8 * edx],xmm15,-128
+a32 vpextrw word [ebx + 8 * edx],xmm15,0
+a32 gs vpextrw word [r15d + 2 * edi + 0x72],xmm11,127
+gs a32 vpextrw word [r15d + 2 * edi + 0x72],xmm11,-128
+gs a32 vpextrw word [r15d + 2 * edi + 0x72],xmm11,0
+a32 gs vpextrw word [r15d + 2 * edi + 0x72],xmm10,127
+a32 vpextrw word [r15d + 2 * edi + 0x72],xmm10,-128
+gs vpextrw word [r15d + 2 * edi + 0x72],xmm10,0
+gs a32 vpextrw word [r15d + 2 * edi + 0x72],xmm15,127
+a32 gs vpextrw word [r15d + 2 * edi + 0x72],xmm15,-128
+a32 gs vpextrw word [r15d + 2 * edi + 0x72],xmm15,0
+a32 vpextrw r13d,xmm14,-128
+a32 vpextrw r13d,xmm14,0
+a32 vpextrw r13d,xmm14,-61
+gs a32 vpextrw r13d,xmm5,-128
+a32 gs vpextrw r13d,xmm5,0
+vpextrw r13d,xmm5,-61
+gs a32 vpextrw r13d,xmm8,-128
+gs a32 vpextrw r13d,xmm8,0
+gs vpextrw r13d,xmm8,-61
+gs vpextrw ebx,xmm14,-128
+gs vpextrw ebx,xmm14,0
+gs vpextrw ebx,xmm14,-61
+gs vpextrw ebx,xmm5,-128
+a32 vpextrw ebx,xmm5,0
+gs vpextrw ebx,xmm5,-61
+a32 gs vpextrw ebx,xmm8,-128
+gs vpextrw ebx,xmm8,0
+a32 vpextrw ebx,xmm8,-61
+gs a32 vpextrw r11d,xmm14,-128
+a32 gs vpextrw r11d,xmm14,0
+a32 vpextrw r11d,xmm14,-61
+a32 gs vpextrw r11d,xmm5,-128
+gs vpextrw r11d,xmm5,0
+a32 vpextrw r11d,xmm5,-61
+a32 gs vpextrw r11d,xmm8,-128
+a32 gs vpextrw r11d,xmm8,0
+gs vpextrw r11d,xmm8,-61
+gs a32 vpextrw r12d,xmm0,-61
+a32 vpextrw r12d,xmm0,0
+gs a32 vpextrw r12d,xmm0,24
+a32 gs vpextrw r12d,xmm9,-61
+gs a32 vpextrw r12d,xmm9,0
+gs a32 vpextrw r12d,xmm9,24
+a32 gs vpextrw r12d,xmm1,-61
+vpextrw r12d,xmm1,0
+a32 vpextrw r12d,xmm1,24
+gs a32 vpextrw r14d,xmm0,-61
+vpextrw r14d,xmm0,0
+a32 vpextrw r14d,xmm0,24
+gs a32 vpextrw r14d,xmm9,-61
+gs vpextrw r14d,xmm9,0
+a32 vpextrw r14d,xmm9,24
+a32 vpextrw r14d,xmm1,-61
+gs vpextrw r14d,xmm1,0
+a32 gs vpextrw r14d,xmm1,24
+vpextrw edx,xmm0,-61
+gs a32 vpextrw edx,xmm0,0
+a32 gs vpextrw edx,xmm0,24
+a32 vpextrw edx,xmm9,-61
+gs vpextrw edx,xmm9,0
+vpextrw edx,xmm9,24
+gs a32 vpextrw edx,xmm1,-61
+gs a32 vpextrw edx,xmm1,0
+vpextrw edx,xmm1,24
+a32 vpextrw ebx,xmm10,-88
+gs vpextrw ebx,xmm10,127
+vpextrw ebx,xmm10,-128
+vpextrw ebx,xmm2,-88
+vpextrw ebx,xmm2,127
+gs vpextrw ebx,xmm2,-128
+a32 vpextrw ebx,xmm5,-88
+vpextrw ebx,xmm5,127
+vpextrw ebx,xmm5,-128
+vpextrw esp,xmm10,-88
+vpextrw esp,xmm10,127
+gs vpextrw esp,xmm10,-128
+vpextrw esp,xmm2,-88
+vpextrw esp,xmm2,127
+gs a32 vpextrw esp,xmm2,-128
+a32 gs vpextrw esp,xmm5,-88
+a32 vpextrw esp,xmm5,127
+gs vpextrw esp,xmm5,-128
+gs a32 vpextrw ebp,xmm10,-88
+a32 vpextrw ebp,xmm10,127
+gs vpextrw ebp,xmm10,-128
+a32 vpextrw ebp,xmm2,-88
+a32 gs vpextrw ebp,xmm2,127
+a32 vpextrw ebp,xmm2,-128
+vpextrw ebp,xmm5,-88
+gs vpextrw ebp,xmm5,127
+gs a32 vpextrw ebp,xmm5,-128
+vpextrw r11,xmm12,-23
+a32 gs vpextrw r11,xmm12,127
+a32 gs vpextrw r11,xmm12,0
+vpextrw r11,xmm4,-23
+a32 vpextrw r11,xmm4,127
+gs vpextrw r11,xmm4,0
+vpextrw r11,xmm3,-23
+vpextrw r11,xmm3,127
+vpextrw r11,xmm3,0
+vpextrw r12,xmm12,-23
+gs a32 vpextrw r12,xmm12,127
+vpextrw r12,xmm12,0
+a32 vpextrw r12,xmm4,-23
+a32 vpextrw r12,xmm4,127
+vpextrw r12,xmm4,0
+gs vpextrw r12,xmm3,-23
+a32 gs vpextrw r12,xmm3,127
+gs vpextrw r12,xmm3,0
+a32 vpextrw rcx,xmm12,-23
+a32 gs vpextrw rcx,xmm12,127
+vpextrw rcx,xmm12,0
+a32 vpextrw rcx,xmm4,-23
+a32 gs vpextrw rcx,xmm4,127
+gs a32 vpextrw rcx,xmm4,0
+gs a32 vpextrw rcx,xmm3,-23
+a32 vpextrw rcx,xmm3,127
+gs vpextrw rcx,xmm3,0
+gs vpextrw rsi,xmm5,18
+gs vpextrw rsi,xmm5,-61
+a32 gs vpextrw rsi,xmm5,127
+a32 gs vpextrw rsi,xmm12,18
+gs a32 vpextrw rsi,xmm12,-61
+a32 gs vpextrw rsi,xmm12,127
+gs a32 vpextrw rsi,xmm4,18
+vpextrw rsi,xmm4,-61
+vpextrw rsi,xmm4,127
+a32 vpextrw r9,xmm5,18
+gs a32 vpextrw r9,xmm5,-61
+gs vpextrw r9,xmm5,127
+a32 gs vpextrw r9,xmm12,18
+vpextrw r9,xmm12,-61
+a32 vpextrw r9,xmm12,127
+gs a32 vpextrw r9,xmm4,18
+gs vpextrw r9,xmm4,-61
+gs a32 vpextrw r9,xmm4,127
+gs a32 vpextrw r14,xmm5,18
+gs a32 vpextrw r14,xmm5,-61
+gs a32 vpextrw r14,xmm5,127
+vpextrw r14,xmm12,18
+a32 vpextrw r14,xmm12,-61
+gs a32 vpextrw r14,xmm12,127
+a32 vpextrw r14,xmm4,18
+vpextrw r14,xmm4,-61
+a32 gs vpextrw r14,xmm4,127
+gs a32 vpextrw rsp,xmm0,20
+a32 gs vpextrw rsp,xmm0,-36
+vpextrw rsp,xmm0,0
+a32 vpextrw rsp,xmm15,20
+a32 gs vpextrw rsp,xmm15,-36
+a32 vpextrw rsp,xmm15,0
+vpextrw rsp,xmm8,20
+vpextrw rsp,xmm8,-36
+vpextrw rsp,xmm8,0
+gs vpextrw r15,xmm0,20
+gs vpextrw r15,xmm0,-36
+a32 gs vpextrw r15,xmm0,0
+a32 gs vpextrw r15,xmm15,20
+vpextrw r15,xmm15,-36
+a32 vpextrw r15,xmm15,0
+gs a32 vpextrw r15,xmm8,20
+a32 vpextrw r15,xmm8,-36
+gs vpextrw r15,xmm8,0
+a32 gs vpextrw r11,xmm0,20
+a32 vpextrw r11,xmm0,-36
+vpextrw r11,xmm0,0
+gs vpextrw r11,xmm15,20
+a32 vpextrw r11,xmm15,-36
+vpextrw r11,xmm15,0
+gs a32 vpextrw r11,xmm8,20
+vpextrw r11,xmm8,-36
+gs a32 vpextrw r11,xmm8,0

@@ -1,8 +1,8 @@
-gs o16 fsubrp 
-gs o16 a32 fsubrp 
-a32 o16 gs fsubrp st7
-fsubrp st0
-o16 fsubrp st3
-o16 fsubrp st7,st0
+gs a32 o16 fsubrp 
+o16 a32 gs fsubrp 
+gs a32 fsubrp st2
+gs o16 fsubrp st4
+o16 gs a32 fsubrp st0
+fsubrp st6,st0
 fsubrp st3,st0
-a32 o16 gs fsubrp st0,st0
+gs fsubrp st5,st0

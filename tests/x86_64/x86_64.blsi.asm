@@ -1,54 +1,54 @@
-gs blsi rdi,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs blsi rdi,qword [r15 + 2 * rdi + 0x72]
-gs blsi rdi,qword [rdx - 0x80000000]
-gs blsi r10,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs blsi r10,qword [r15 + 2 * rdi + 0x72]
-gs blsi r10,qword [rdx - 0x80000000]
-blsi rsp,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs blsi rsp,qword [r15 + 2 * rdi + 0x72]
-blsi rsp,qword [rdx - 0x80000000]
-gs blsi r9,qword [r11d + r11d * 2 + 0x36fe6b7e]
-a32 gs blsi r9,qword [r15d + 2 * edi + 0x72]
-a32 blsi r9,qword [ebx + 8 * edx]
-gs a32 blsi rcx,qword [r11d + r11d * 2 + 0x36fe6b7e]
-gs a32 blsi rcx,qword [r15d + 2 * edi + 0x72]
-gs blsi rcx,qword [ebx + 8 * edx]
-gs blsi r8,qword [r11d + r11d * 2 + 0x36fe6b7e]
-a32 gs blsi r8,qword [r15d + 2 * edi + 0x72]
-a32 gs blsi r8,qword [ebx + 8 * edx]
-gs a32 blsi rbx,r13
-blsi rbx,rdx
-a32 blsi rbx,r10
-blsi r11,r13
-a32 gs blsi r11,rdx
-blsi r11,r10
-gs a32 blsi r12,r13
-a32 gs blsi r12,rdx
-gs a32 blsi r12,r10
-gs blsi r15d,dword [rax]
-blsi r15d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-blsi r15d,dword [r15 + 2 * rdi + 0x72]
-blsi r10d,dword [rax]
-gs blsi r10d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs blsi r10d,dword [r15 + 2 * rdi + 0x72]
-blsi edi,dword [rax]
-blsi edi,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs blsi edi,dword [r15 + 2 * rdi + 0x72]
-a32 gs blsi esi,dword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs blsi esi,dword [r15d + 2 * edi + 0x72]
-blsi esi,dword [r13d]
-a32 gs blsi r8d,dword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 blsi r8d,dword [r15d + 2 * edi + 0x72]
-blsi r8d,dword [r13d]
-a32 blsi ebx,dword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs blsi ebx,dword [r15d + 2 * edi + 0x72]
-a32 blsi ebx,dword [r13d]
-a32 blsi r10d,r13d
-gs a32 blsi r10d,ebx
-gs a32 blsi r10d,r10d
-gs blsi r11d,r13d
-a32 blsi r11d,ebx
-gs blsi r11d,r10d
-blsi esi,r13d
-a32 gs blsi esi,ebx
-blsi esi,r10d
+gs blsi rsi,qword [rsp]
+gs blsi rsi,qword [r15 + 2 * rdi + 0x72]
+gs blsi rsi,qword [r12]
+gs blsi rdx,qword [rsp]
+gs blsi rdx,qword [r15 + 2 * rdi + 0x72]
+gs blsi rdx,qword [r12]
+gs blsi r11,qword [rsp]
+blsi r11,qword [r15 + 2 * rdi + 0x72]
+blsi r11,qword [r12]
+gs a32 blsi r13,qword [r15d + 2 * edi + 0x72]
+a32 gs blsi r13,qword [r12d]
+a32 gs blsi r13,qword [eax]
+a32 gs blsi rdx,qword [r15d + 2 * edi + 0x72]
+gs blsi rdx,qword [r12d]
+a32 gs blsi rdx,qword [eax]
+gs a32 blsi r10,qword [r15d + 2 * edi + 0x72]
+blsi r10,qword [r12d]
+gs a32 blsi r10,qword [eax]
+blsi rsi,rbp
+gs a32 blsi rsi,r11
+a32 gs blsi rsi,r10
+a32 blsi r13,rbp
+gs blsi r13,r11
+gs blsi r13,r10
+a32 gs blsi rsp,rbp
+blsi rsp,r11
+a32 blsi rsp,r10
+blsi eax,dword [rbp]
+blsi eax,dword [rbx + 8 * rdx]
+gs blsi eax,dword [rax]
+blsi r15d,dword [rbp]
+blsi r15d,dword [rbx + 8 * rdx]
+blsi r15d,dword [rax]
+gs blsi r9d,dword [rbp]
+gs blsi r9d,dword [rbx + 8 * rdx]
+gs blsi r9d,dword [rax]
+a32 blsi r12d,dword [esp + 1 * ebp]
+gs a32 blsi r12d,dword [edx - 0x80000000]
+gs a32 blsi r12d,dword [ebx + 8 * edx]
+gs a32 blsi esi,dword [esp + 1 * ebp]
+blsi esi,dword [edx - 0x80000000]
+a32 gs blsi esi,dword [ebx + 8 * edx]
+gs blsi ebp,dword [esp + 1 * ebp]
+a32 blsi ebp,dword [edx - 0x80000000]
+blsi ebp,dword [ebx + 8 * edx]
+gs blsi r15d,edi
+a32 gs blsi r15d,eax
+a32 gs blsi r15d,ecx
+blsi edx,edi
+a32 gs blsi edx,eax
+a32 blsi edx,ecx
+a32 gs blsi ecx,edi
+a32 gs blsi ecx,eax
+gs a32 blsi ecx,ecx

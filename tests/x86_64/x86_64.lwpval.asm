@@ -1,162 +1,162 @@
-gs lwpval r12,dword [r14 + 1 * rdx + 0x7FFFFFFF],-2147483648
-gs lwpval r12,dword [r14 + 1 * rdx + 0x7FFFFFFF],90949
-gs lwpval r12,dword [r14 + 1 * rdx + 0x7FFFFFFF],0
-lwpval r12,dword [r11 + r11 * 2 + 0x18bf99b9],-2147483648
-gs lwpval r12,dword [r11 + r11 * 2 + 0x18bf99b9],90949
-lwpval r12,dword [r11 + r11 * 2 + 0x18bf99b9],0
-lwpval r12,dword [rsp + 1 * rbp],-2147483648
-lwpval r12,dword [rsp + 1 * rbp],90949
-gs lwpval r12,dword [rsp + 1 * rbp],0
-gs lwpval rbx,dword [r14 + 1 * rdx + 0x7FFFFFFF],-2147483648
-lwpval rbx,dword [r14 + 1 * rdx + 0x7FFFFFFF],90949
-lwpval rbx,dword [r14 + 1 * rdx + 0x7FFFFFFF],0
-lwpval rbx,dword [r11 + r11 * 2 + 0x18bf99b9],-2147483648
-lwpval rbx,dword [r11 + r11 * 2 + 0x18bf99b9],90949
-lwpval rbx,dword [r11 + r11 * 2 + 0x18bf99b9],0
-gs lwpval rbx,dword [rsp + 1 * rbp],-2147483648
-lwpval rbx,dword [rsp + 1 * rbp],90949
-lwpval rbx,dword [rsp + 1 * rbp],0
-gs lwpval r13,dword [r14 + 1 * rdx + 0x7FFFFFFF],-2147483648
-lwpval r13,dword [r14 + 1 * rdx + 0x7FFFFFFF],90949
-gs lwpval r13,dword [r14 + 1 * rdx + 0x7FFFFFFF],0
-lwpval r13,dword [r11 + r11 * 2 + 0x18bf99b9],-2147483648
-lwpval r13,dword [r11 + r11 * 2 + 0x18bf99b9],90949
-lwpval r13,dword [r11 + r11 * 2 + 0x18bf99b9],0
-gs lwpval r13,dword [rsp + 1 * rbp],-2147483648
-gs lwpval r13,dword [rsp + 1 * rbp],90949
-gs lwpval r13,dword [rsp + 1 * rbp],0
-gs a32 lwpval rbp,dword [edx - 0x80000000],90949
-a32 gs lwpval rbp,dword [edx - 0x80000000],0
-gs a32 lwpval rbp,dword [edx - 0x80000000],-42923
-a32 gs lwpval rbp,dword [eax],90949
-a32 gs lwpval rbp,dword [eax],0
-a32 gs lwpval rbp,dword [eax],-42923
-a32 lwpval rbp,dword [r12d],90949
-gs a32 lwpval rbp,dword [r12d],0
-gs a32 lwpval rbp,dword [r12d],-42923
-lwpval rsp,dword [edx - 0x80000000],90949
-lwpval rsp,dword [edx - 0x80000000],0
-lwpval rsp,dword [edx - 0x80000000],-42923
-a32 gs lwpval rsp,dword [eax],90949
-a32 gs lwpval rsp,dword [eax],0
-gs lwpval rsp,dword [eax],-42923
-gs a32 lwpval rsp,dword [r12d],90949
-gs lwpval rsp,dword [r12d],0
-gs lwpval rsp,dword [r12d],-42923
-a32 gs lwpval rsi,dword [edx - 0x80000000],90949
-a32 lwpval rsi,dword [edx - 0x80000000],0
-a32 lwpval rsi,dword [edx - 0x80000000],-42923
-gs lwpval rsi,dword [eax],90949
-gs a32 lwpval rsi,dword [eax],0
-gs lwpval rsi,dword [eax],-42923
-gs lwpval rsi,dword [r12d],90949
-gs a32 lwpval rsi,dword [r12d],0
-gs a32 lwpval rsi,dword [r12d],-42923
-a32 lwpval rdx,ebp,-42923
-gs lwpval rdx,ebp,-2147483648
-a32 lwpval rdx,ebp,-77178
-a32 lwpval rdx,r15d,-42923
-lwpval rdx,r15d,-2147483648
-a32 lwpval rdx,r15d,-77178
-lwpval rdx,esi,-42923
-lwpval rdx,esi,-2147483648
-a32 lwpval rdx,esi,-77178
-gs a32 lwpval r9,ebp,-42923
-gs a32 lwpval r9,ebp,-2147483648
-a32 gs lwpval r9,ebp,-77178
-a32 gs lwpval r9,r15d,-42923
-gs lwpval r9,r15d,-2147483648
-lwpval r9,r15d,-77178
-a32 gs lwpval r9,esi,-42923
-gs lwpval r9,esi,-2147483648
-a32 gs lwpval r9,esi,-77178
-a32 lwpval rdi,ebp,-42923
-gs a32 lwpval rdi,ebp,-2147483648
-lwpval rdi,ebp,-77178
-lwpval rdi,r15d,-42923
-a32 gs lwpval rdi,r15d,-2147483648
-gs a32 lwpval rdi,r15d,-77178
-gs lwpval rdi,esi,-42923
-a32 lwpval rdi,esi,-2147483648
-lwpval rdi,esi,-77178
-lwpval ecx,dword [rsp + 1 * rbp],0
-gs lwpval ecx,dword [rsp + 1 * rbp],-28402
-gs lwpval ecx,dword [rsp + 1 * rbp],26250
-lwpval ecx,dword [rbp],0
-gs lwpval ecx,dword [rbp],-28402
-gs lwpval ecx,dword [rbp],26250
-gs lwpval ecx,dword [rax],0
-gs lwpval ecx,dword [rax],-28402
-gs lwpval ecx,dword [rax],26250
-lwpval r9d,dword [rsp + 1 * rbp],0
-lwpval r9d,dword [rsp + 1 * rbp],-28402
-lwpval r9d,dword [rsp + 1 * rbp],26250
-lwpval r9d,dword [rbp],0
-lwpval r9d,dword [rbp],-28402
-lwpval r9d,dword [rbp],26250
-lwpval r9d,dword [rax],0
-lwpval r9d,dword [rax],-28402
-gs lwpval r9d,dword [rax],26250
-lwpval r12d,dword [rsp + 1 * rbp],0
-lwpval r12d,dword [rsp + 1 * rbp],-28402
-lwpval r12d,dword [rsp + 1 * rbp],26250
-lwpval r12d,dword [rbp],0
-lwpval r12d,dword [rbp],-28402
-lwpval r12d,dword [rbp],26250
-gs lwpval r12d,dword [rax],0
-lwpval r12d,dword [rax],-28402
-gs lwpval r12d,dword [rax],26250
-gs lwpval esp,dword [eax],-96070
-gs a32 lwpval esp,dword [eax],-2147483648
-a32 gs lwpval esp,dword [eax],-114080
-a32 lwpval esp,dword [ebx + 8 * edx],-96070
-gs lwpval esp,dword [ebx + 8 * edx],-2147483648
-a32 gs lwpval esp,dword [ebx + 8 * edx],-114080
-a32 lwpval esp,dword [edx - 0x80000000],-96070
-gs a32 lwpval esp,dword [edx - 0x80000000],-2147483648
-a32 gs lwpval esp,dword [edx - 0x80000000],-114080
-gs lwpval r8d,dword [eax],-96070
-a32 gs lwpval r8d,dword [eax],-2147483648
-lwpval r8d,dword [eax],-114080
-a32 gs lwpval r8d,dword [ebx + 8 * edx],-96070
-a32 lwpval r8d,dword [ebx + 8 * edx],-2147483648
-a32 gs lwpval r8d,dword [ebx + 8 * edx],-114080
-a32 lwpval r8d,dword [edx - 0x80000000],-96070
-a32 gs lwpval r8d,dword [edx - 0x80000000],-2147483648
-a32 lwpval r8d,dword [edx - 0x80000000],-114080
-gs lwpval r9d,dword [eax],-96070
-a32 lwpval r9d,dword [eax],-2147483648
-a32 gs lwpval r9d,dword [eax],-114080
-gs lwpval r9d,dword [ebx + 8 * edx],-96070
-a32 gs lwpval r9d,dword [ebx + 8 * edx],-2147483648
-gs lwpval r9d,dword [ebx + 8 * edx],-114080
-a32 gs lwpval r9d,dword [edx - 0x80000000],-96070
-a32 gs lwpval r9d,dword [edx - 0x80000000],-2147483648
-gs lwpval r9d,dword [edx - 0x80000000],-114080
-lwpval r14d,edi,-41086
-gs lwpval r14d,edi,26250
-lwpval r14d,edi,0
-gs lwpval r14d,r8d,-41086
-gs lwpval r14d,r8d,26250
-gs a32 lwpval r14d,r8d,0
-gs a32 lwpval r14d,esi,-41086
-a32 gs lwpval r14d,esi,26250
-a32 gs lwpval r14d,esi,0
-a32 lwpval ebx,edi,-41086
-a32 lwpval ebx,edi,26250
-gs a32 lwpval ebx,edi,0
-a32 lwpval ebx,r8d,-41086
-gs lwpval ebx,r8d,26250
-a32 gs lwpval ebx,r8d,0
-lwpval ebx,esi,-41086
-gs a32 lwpval ebx,esi,26250
-lwpval ebx,esi,0
-lwpval r11d,edi,-41086
-a32 lwpval r11d,edi,26250
-lwpval r11d,edi,0
-gs lwpval r11d,r8d,-41086
-lwpval r11d,r8d,26250
-a32 lwpval r11d,r8d,0
-gs a32 lwpval r11d,esi,-41086
-a32 gs lwpval r11d,esi,26250
-lwpval r11d,esi,0
+gs lwpval rsi,dword [rbp],-104107
+gs lwpval rsi,dword [rbp],128597
+lwpval rsi,dword [rbp],0
+gs lwpval rsi,dword [rsp],-104107
+lwpval rsi,dword [rsp],128597
+gs lwpval rsi,dword [rsp],0
+lwpval rsi,dword [r13],-104107
+gs lwpval rsi,dword [r13],128597
+gs lwpval rsi,dword [r13],0
+gs lwpval rsp,dword [rbp],-104107
+gs lwpval rsp,dword [rbp],128597
+lwpval rsp,dword [rbp],0
+lwpval rsp,dword [rsp],-104107
+gs lwpval rsp,dword [rsp],128597
+lwpval rsp,dword [rsp],0
+gs lwpval rsp,dword [r13],-104107
+lwpval rsp,dword [r13],128597
+gs lwpval rsp,dword [r13],0
+lwpval r12,dword [rbp],-104107
+gs lwpval r12,dword [rbp],128597
+lwpval r12,dword [rbp],0
+lwpval r12,dword [rsp],-104107
+gs lwpval r12,dword [rsp],128597
+lwpval r12,dword [rsp],0
+lwpval r12,dword [r13],-104107
+lwpval r12,dword [r13],128597
+lwpval r12,dword [r13],0
+a32 gs lwpval r13,dword [esp],-13534
+a32 lwpval r13,dword [esp],128597
+gs lwpval r13,dword [esp],-2147483648
+a32 gs lwpval r13,dword [edx - 0x80000000],-13534
+gs a32 lwpval r13,dword [edx - 0x80000000],128597
+a32 lwpval r13,dword [edx - 0x80000000],-2147483648
+a32 lwpval r13,dword [r11d + r11d * 2 + 0x17b84670],-13534
+lwpval r13,dword [r11d + r11d * 2 + 0x17b84670],128597
+a32 lwpval r13,dword [r11d + r11d * 2 + 0x17b84670],-2147483648
+a32 gs lwpval r15,dword [esp],-13534
+gs a32 lwpval r15,dword [esp],128597
+lwpval r15,dword [esp],-2147483648
+a32 lwpval r15,dword [edx - 0x80000000],-13534
+lwpval r15,dword [edx - 0x80000000],128597
+gs a32 lwpval r15,dword [edx - 0x80000000],-2147483648
+a32 lwpval r15,dword [r11d + r11d * 2 + 0x17b84670],-13534
+a32 lwpval r15,dword [r11d + r11d * 2 + 0x17b84670],128597
+gs lwpval r15,dword [r11d + r11d * 2 + 0x17b84670],-2147483648
+a32 lwpval rcx,dword [esp],-13534
+a32 lwpval rcx,dword [esp],128597
+lwpval rcx,dword [esp],-2147483648
+gs lwpval rcx,dword [edx - 0x80000000],-13534
+a32 gs lwpval rcx,dword [edx - 0x80000000],128597
+gs a32 lwpval rcx,dword [edx - 0x80000000],-2147483648
+a32 lwpval rcx,dword [r11d + r11d * 2 + 0x17b84670],-13534
+a32 lwpval rcx,dword [r11d + r11d * 2 + 0x17b84670],128597
+lwpval rcx,dword [r11d + r11d * 2 + 0x17b84670],-2147483648
+a32 gs lwpval r10,r13d,0
+gs a32 lwpval r10,r13d,112465
+gs lwpval r10,r13d,136616
+a32 gs lwpval r10,r8d,0
+a32 lwpval r10,r8d,112465
+gs a32 lwpval r10,r8d,136616
+a32 gs lwpval r10,ebp,0
+a32 lwpval r10,ebp,112465
+a32 lwpval r10,ebp,136616
+lwpval r14,r13d,0
+a32 gs lwpval r14,r13d,112465
+a32 lwpval r14,r13d,136616
+a32 gs lwpval r14,r8d,0
+gs a32 lwpval r14,r8d,112465
+a32 gs lwpval r14,r8d,136616
+lwpval r14,ebp,0
+lwpval r14,ebp,112465
+gs lwpval r14,ebp,136616
+gs lwpval r13,r13d,0
+a32 lwpval r13,r13d,112465
+gs lwpval r13,r13d,136616
+a32 lwpval r13,r8d,0
+gs a32 lwpval r13,r8d,112465
+a32 gs lwpval r13,r8d,136616
+gs a32 lwpval r13,ebp,0
+a32 lwpval r13,ebp,112465
+gs a32 lwpval r13,ebp,136616
+lwpval r9d,dword [rsp + 1 * rbp],-90754
+gs lwpval r9d,dword [rsp + 1 * rbp],61323
+gs lwpval r9d,dword [rsp + 1 * rbp],0
+lwpval r9d,dword [r13],-90754
+lwpval r9d,dword [r13],61323
+gs lwpval r9d,dword [r13],0
+gs lwpval r9d,dword [rsp],-90754
+lwpval r9d,dword [rsp],61323
+gs lwpval r9d,dword [rsp],0
+lwpval esi,dword [rsp + 1 * rbp],-90754
+gs lwpval esi,dword [rsp + 1 * rbp],61323
+gs lwpval esi,dword [rsp + 1 * rbp],0
+gs lwpval esi,dword [r13],-90754
+gs lwpval esi,dword [r13],61323
+lwpval esi,dword [r13],0
+gs lwpval esi,dword [rsp],-90754
+lwpval esi,dword [rsp],61323
+gs lwpval esi,dword [rsp],0
+gs lwpval ebp,dword [rsp + 1 * rbp],-90754
+lwpval ebp,dword [rsp + 1 * rbp],61323
+gs lwpval ebp,dword [rsp + 1 * rbp],0
+gs lwpval ebp,dword [r13],-90754
+lwpval ebp,dword [r13],61323
+lwpval ebp,dword [r13],0
+gs lwpval ebp,dword [rsp],-90754
+gs lwpval ebp,dword [rsp],61323
+lwpval ebp,dword [rsp],0
+gs lwpval r9d,dword [edx - 0x80000000],-40390
+gs lwpval r9d,dword [edx - 0x80000000],-2147483648
+a32 gs lwpval r9d,dword [edx - 0x80000000],-29992
+a32 gs lwpval r9d,dword [r12d],-40390
+a32 gs lwpval r9d,dword [r12d],-2147483648
+a32 lwpval r9d,dword [r12d],-29992
+gs lwpval r9d,dword [esp + 1 * ebp],-40390
+gs a32 lwpval r9d,dword [esp + 1 * ebp],-2147483648
+a32 lwpval r9d,dword [esp + 1 * ebp],-29992
+a32 lwpval r14d,dword [edx - 0x80000000],-40390
+lwpval r14d,dword [edx - 0x80000000],-2147483648
+lwpval r14d,dword [edx - 0x80000000],-29992
+lwpval r14d,dword [r12d],-40390
+a32 lwpval r14d,dword [r12d],-2147483648
+gs lwpval r14d,dword [r12d],-29992
+a32 lwpval r14d,dword [esp + 1 * ebp],-40390
+a32 lwpval r14d,dword [esp + 1 * ebp],-2147483648
+a32 lwpval r14d,dword [esp + 1 * ebp],-29992
+a32 gs lwpval r15d,dword [edx - 0x80000000],-40390
+gs lwpval r15d,dword [edx - 0x80000000],-2147483648
+gs a32 lwpval r15d,dword [edx - 0x80000000],-29992
+lwpval r15d,dword [r12d],-40390
+a32 gs lwpval r15d,dword [r12d],-2147483648
+gs a32 lwpval r15d,dword [r12d],-29992
+gs lwpval r15d,dword [esp + 1 * ebp],-40390
+a32 lwpval r15d,dword [esp + 1 * ebp],-2147483648
+a32 lwpval r15d,dword [esp + 1 * ebp],-29992
+gs lwpval ecx,r9d,-40390
+a32 gs lwpval ecx,r9d,-90754
+gs a32 lwpval ecx,r9d,-2147483648
+gs a32 lwpval ecx,r10d,-40390
+gs a32 lwpval ecx,r10d,-90754
+gs lwpval ecx,r10d,-2147483648
+gs a32 lwpval ecx,ecx,-40390
+gs a32 lwpval ecx,ecx,-90754
+lwpval ecx,ecx,-2147483648
+lwpval r12d,r9d,-40390
+gs a32 lwpval r12d,r9d,-90754
+gs lwpval r12d,r9d,-2147483648
+a32 gs lwpval r12d,r10d,-40390
+gs lwpval r12d,r10d,-90754
+gs lwpval r12d,r10d,-2147483648
+a32 gs lwpval r12d,ecx,-40390
+lwpval r12d,ecx,-90754
+a32 gs lwpval r12d,ecx,-2147483648
+a32 lwpval esi,r9d,-40390
+gs lwpval esi,r9d,-90754
+a32 gs lwpval esi,r9d,-2147483648
+gs lwpval esi,r10d,-40390
+lwpval esi,r10d,-90754
+a32 lwpval esi,r10d,-2147483648
+a32 lwpval esi,ecx,-40390
+lwpval esi,ecx,-90754
+a32 lwpval esi,ecx,-2147483648

@@ -1,2 +1,2 @@
-o16 lfence 
-o16 gs lfence 
+lfence 
+a32 o16 lfence 

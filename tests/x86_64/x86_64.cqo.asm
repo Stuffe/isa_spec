@@ -1,2 +1,2 @@
-o16 gs a32 cqo 
-gs a32 o16 cqo 
+a32 gs cqo 
+a32 o16 gs cqo 

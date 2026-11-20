@@ -1,1 +1,1 @@
-movs %rh0, %rx1
+movs %r h 0, %r x 1

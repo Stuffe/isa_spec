@@ -1,324 +1,324 @@
-gs vaddsubps xmm5,xmm2,oword [rdx - 0x80000000]
-gs vaddsubps xmm5,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm5,xmm2,oword [rsp]
-vaddsubps xmm5,xmm3,oword [rdx - 0x80000000]
-gs vaddsubps xmm5,xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps xmm5,xmm3,oword [rsp]
-vaddsubps xmm5,xmm7,oword [rdx - 0x80000000]
-gs vaddsubps xmm5,xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm5,xmm7,oword [rsp]
-gs vaddsubps xmm12,xmm2,oword [rdx - 0x80000000]
-vaddsubps xmm12,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm12,xmm2,oword [rsp]
-gs vaddsubps xmm12,xmm3,oword [rdx - 0x80000000]
-gs vaddsubps xmm12,xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm12,xmm3,oword [rsp]
-vaddsubps xmm12,xmm7,oword [rdx - 0x80000000]
-gs vaddsubps xmm12,xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm12,xmm7,oword [rsp]
-gs vaddsubps xmm4,xmm2,oword [rdx - 0x80000000]
-vaddsubps xmm4,xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps xmm4,xmm2,oword [rsp]
-vaddsubps xmm4,xmm3,oword [rdx - 0x80000000]
-vaddsubps xmm4,xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm4,xmm3,oword [rsp]
-gs vaddsubps xmm4,xmm7,oword [rdx - 0x80000000]
-vaddsubps xmm4,xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps xmm4,xmm7,oword [rsp]
-a32 vaddsubps xmm12,xmm8,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 vaddsubps xmm12,xmm8,oword [r13d]
-a32 vaddsubps xmm12,xmm8,oword [r15d + 2 * edi + 0x72]
-a32 vaddsubps xmm12,xmm5,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 vaddsubps xmm12,xmm5,oword [r13d]
-vaddsubps xmm12,xmm5,oword [r15d + 2 * edi + 0x72]
-gs vaddsubps xmm12,xmm1,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 gs vaddsubps xmm12,xmm1,oword [r13d]
-gs a32 vaddsubps xmm12,xmm1,oword [r15d + 2 * edi + 0x72]
-vaddsubps xmm13,xmm8,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 vaddsubps xmm13,xmm8,oword [r13d]
-gs vaddsubps xmm13,xmm8,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm13,xmm5,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 gs vaddsubps xmm13,xmm5,oword [r13d]
-vaddsubps xmm13,xmm5,oword [r15d + 2 * edi + 0x72]
-vaddsubps xmm13,xmm1,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 vaddsubps xmm13,xmm1,oword [r13d]
-gs a32 vaddsubps xmm13,xmm1,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm7,xmm8,oword [r11d + r11d * 2 + 0x246bf2a9]
-gs vaddsubps xmm7,xmm8,oword [r13d]
-a32 gs vaddsubps xmm7,xmm8,oword [r15d + 2 * edi + 0x72]
-gs a32 vaddsubps xmm7,xmm5,oword [r11d + r11d * 2 + 0x246bf2a9]
-gs a32 vaddsubps xmm7,xmm5,oword [r13d]
-gs vaddsubps xmm7,xmm5,oword [r15d + 2 * edi + 0x72]
-gs vaddsubps xmm7,xmm1,oword [r11d + r11d * 2 + 0x246bf2a9]
-a32 gs vaddsubps xmm7,xmm1,oword [r13d]
-gs vaddsubps xmm7,xmm1,oword [r15d + 2 * edi + 0x72]
-gs vaddsubps xmm2,xmm2,oword [r11 + r11 * 2 + 0x246bf2a9]
-vaddsubps xmm2,xmm2,oword [rsp]
-vaddsubps xmm2,xmm2,oword [rax]
-gs vaddsubps xmm2,xmm3,oword [r11 + r11 * 2 + 0x246bf2a9]
-gs vaddsubps xmm2,xmm3,oword [rsp]
-vaddsubps xmm2,xmm3,oword [rax]
-gs vaddsubps xmm2,xmm15,oword [r11 + r11 * 2 + 0x246bf2a9]
-vaddsubps xmm2,xmm15,oword [rsp]
-gs vaddsubps xmm2,xmm15,oword [rax]
-gs vaddsubps xmm0,xmm2,oword [r11 + r11 * 2 + 0x246bf2a9]
-gs vaddsubps xmm0,xmm2,oword [rsp]
-vaddsubps xmm0,xmm2,oword [rax]
-gs vaddsubps xmm0,xmm3,oword [r11 + r11 * 2 + 0x246bf2a9]
-vaddsubps xmm0,xmm3,oword [rsp]
-vaddsubps xmm0,xmm3,oword [rax]
-vaddsubps xmm0,xmm15,oword [r11 + r11 * 2 + 0x246bf2a9]
-gs vaddsubps xmm0,xmm15,oword [rsp]
-vaddsubps xmm0,xmm15,oword [rax]
-gs vaddsubps xmm11,xmm2,oword [r11 + r11 * 2 + 0x246bf2a9]
-gs vaddsubps xmm11,xmm2,oword [rsp]
-vaddsubps xmm11,xmm2,oword [rax]
-vaddsubps xmm11,xmm3,oword [r11 + r11 * 2 + 0x246bf2a9]
-vaddsubps xmm11,xmm3,oword [rsp]
-vaddsubps xmm11,xmm3,oword [rax]
-vaddsubps xmm11,xmm15,oword [r11 + r11 * 2 + 0x246bf2a9]
-vaddsubps xmm11,xmm15,oword [rsp]
-gs vaddsubps xmm11,xmm15,oword [rax]
-a32 vaddsubps xmm0,xmm12,oword [ebx + 8 * edx]
-gs a32 vaddsubps xmm0,xmm12,oword [esp]
-a32 gs vaddsubps xmm0,xmm12,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm0,xmm13,oword [ebx + 8 * edx]
-a32 vaddsubps xmm0,xmm13,oword [esp]
-gs vaddsubps xmm0,xmm13,oword [r15d + 2 * edi + 0x72]
-vaddsubps xmm0,xmm0,oword [ebx + 8 * edx]
-a32 vaddsubps xmm0,xmm0,oword [esp]
-a32 gs vaddsubps xmm0,xmm0,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm14,xmm12,oword [ebx + 8 * edx]
-gs vaddsubps xmm14,xmm12,oword [esp]
-gs vaddsubps xmm14,xmm12,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm14,xmm13,oword [ebx + 8 * edx]
-a32 vaddsubps xmm14,xmm13,oword [esp]
-a32 gs vaddsubps xmm14,xmm13,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm14,xmm0,oword [ebx + 8 * edx]
-gs a32 vaddsubps xmm14,xmm0,oword [esp]
-gs vaddsubps xmm14,xmm0,oword [r15d + 2 * edi + 0x72]
-gs vaddsubps xmm1,xmm12,oword [ebx + 8 * edx]
-gs vaddsubps xmm1,xmm12,oword [esp]
-a32 vaddsubps xmm1,xmm12,oword [r15d + 2 * edi + 0x72]
-gs vaddsubps xmm1,xmm13,oword [ebx + 8 * edx]
-gs a32 vaddsubps xmm1,xmm13,oword [esp]
-vaddsubps xmm1,xmm13,oword [r15d + 2 * edi + 0x72]
-gs a32 vaddsubps xmm1,xmm0,oword [ebx + 8 * edx]
-a32 vaddsubps xmm1,xmm0,oword [esp]
-gs a32 vaddsubps xmm1,xmm0,oword [r15d + 2 * edi + 0x72]
-a32 gs vaddsubps xmm7,xmm0,xmm15
-a32 gs vaddsubps xmm7,xmm0,xmm2
-a32 gs vaddsubps xmm7,xmm0,xmm14
-a32 vaddsubps xmm7,xmm11,xmm15
-a32 vaddsubps xmm7,xmm11,xmm2
-a32 vaddsubps xmm7,xmm11,xmm14
-a32 gs vaddsubps xmm7,xmm7,xmm15
-a32 vaddsubps xmm7,xmm7,xmm2
-vaddsubps xmm7,xmm7,xmm14
-a32 gs vaddsubps xmm10,xmm0,xmm15
-a32 gs vaddsubps xmm10,xmm0,xmm2
-a32 vaddsubps xmm10,xmm0,xmm14
-gs a32 vaddsubps xmm10,xmm11,xmm15
-a32 gs vaddsubps xmm10,xmm11,xmm2
-a32 vaddsubps xmm10,xmm11,xmm14
-a32 gs vaddsubps xmm10,xmm7,xmm15
-gs vaddsubps xmm10,xmm7,xmm2
-gs a32 vaddsubps xmm10,xmm7,xmm14
-gs a32 vaddsubps xmm15,xmm0,xmm15
-gs a32 vaddsubps xmm15,xmm0,xmm2
-gs a32 vaddsubps xmm15,xmm0,xmm14
-a32 gs vaddsubps xmm15,xmm11,xmm15
-a32 vaddsubps xmm15,xmm11,xmm2
-gs vaddsubps xmm15,xmm11,xmm14
-gs vaddsubps xmm15,xmm7,xmm15
-gs a32 vaddsubps xmm15,xmm7,xmm2
-a32 vaddsubps xmm15,xmm7,xmm14
-vaddsubps xmm11,xmm0,xmm10
-vaddsubps xmm11,xmm0,xmm12
-a32 vaddsubps xmm11,xmm0,xmm5
-gs vaddsubps xmm11,xmm3,xmm10
-a32 vaddsubps xmm11,xmm3,xmm12
-a32 vaddsubps xmm11,xmm3,xmm5
-gs vaddsubps xmm11,xmm7,xmm10
-a32 gs vaddsubps xmm11,xmm7,xmm12
-vaddsubps xmm11,xmm7,xmm5
-a32 vaddsubps xmm4,xmm0,xmm10
-a32 gs vaddsubps xmm4,xmm0,xmm12
-a32 vaddsubps xmm4,xmm0,xmm5
-gs vaddsubps xmm4,xmm3,xmm10
-vaddsubps xmm4,xmm3,xmm12
-a32 vaddsubps xmm4,xmm3,xmm5
-gs vaddsubps xmm4,xmm7,xmm10
-a32 vaddsubps xmm4,xmm7,xmm12
-vaddsubps xmm4,xmm7,xmm5
-gs vaddsubps xmm2,xmm0,xmm10
-gs vaddsubps xmm2,xmm0,xmm12
-gs vaddsubps xmm2,xmm0,xmm5
-gs a32 vaddsubps xmm2,xmm3,xmm10
-vaddsubps xmm2,xmm3,xmm12
-gs vaddsubps xmm2,xmm3,xmm5
-vaddsubps xmm2,xmm7,xmm10
-vaddsubps xmm2,xmm7,xmm12
-gs a32 vaddsubps xmm2,xmm7,xmm5
-vaddsubps ymm2,ymm5,yword [rsp]
-gs vaddsubps ymm2,ymm5,yword [rsp + 1 * rbp]
-vaddsubps ymm2,ymm5,yword [rbp]
-vaddsubps ymm2,ymm9,yword [rsp]
-gs vaddsubps ymm2,ymm9,yword [rsp + 1 * rbp]
-gs vaddsubps ymm2,ymm9,yword [rbp]
-vaddsubps ymm2,ymm6,yword [rsp]
-vaddsubps ymm2,ymm6,yword [rsp + 1 * rbp]
-vaddsubps ymm2,ymm6,yword [rbp]
-gs vaddsubps ymm6,ymm5,yword [rsp]
-gs vaddsubps ymm6,ymm5,yword [rsp + 1 * rbp]
-gs vaddsubps ymm6,ymm5,yword [rbp]
-gs vaddsubps ymm6,ymm9,yword [rsp]
-vaddsubps ymm6,ymm9,yword [rsp + 1 * rbp]
-vaddsubps ymm6,ymm9,yword [rbp]
-gs vaddsubps ymm6,ymm6,yword [rsp]
-gs vaddsubps ymm6,ymm6,yword [rsp + 1 * rbp]
-gs vaddsubps ymm6,ymm6,yword [rbp]
-gs vaddsubps ymm7,ymm5,yword [rsp]
-vaddsubps ymm7,ymm5,yword [rsp + 1 * rbp]
-gs vaddsubps ymm7,ymm5,yword [rbp]
-vaddsubps ymm7,ymm9,yword [rsp]
-gs vaddsubps ymm7,ymm9,yword [rsp + 1 * rbp]
-gs vaddsubps ymm7,ymm9,yword [rbp]
-gs vaddsubps ymm7,ymm6,yword [rsp]
-vaddsubps ymm7,ymm6,yword [rsp + 1 * rbp]
-vaddsubps ymm7,ymm6,yword [rbp]
-gs vaddsubps ymm10,ymm6,yword [edx - 0x80000000]
-gs a32 vaddsubps ymm10,ymm6,yword [esp + 1 * ebp]
-a32 gs vaddsubps ymm10,ymm6,yword [esp]
-a32 vaddsubps ymm10,ymm14,yword [edx - 0x80000000]
-gs a32 vaddsubps ymm10,ymm14,yword [esp + 1 * ebp]
-vaddsubps ymm10,ymm14,yword [esp]
-vaddsubps ymm10,ymm4,yword [edx - 0x80000000]
-gs a32 vaddsubps ymm10,ymm4,yword [esp + 1 * ebp]
-gs a32 vaddsubps ymm10,ymm4,yword [esp]
-gs a32 vaddsubps ymm12,ymm6,yword [edx - 0x80000000]
-a32 gs vaddsubps ymm12,ymm6,yword [esp + 1 * ebp]
-a32 vaddsubps ymm12,ymm6,yword [esp]
-a32 vaddsubps ymm12,ymm14,yword [edx - 0x80000000]
-gs a32 vaddsubps ymm12,ymm14,yword [esp + 1 * ebp]
-vaddsubps ymm12,ymm14,yword [esp]
-gs vaddsubps ymm12,ymm4,yword [edx - 0x80000000]
-gs vaddsubps ymm12,ymm4,yword [esp + 1 * ebp]
-a32 gs vaddsubps ymm12,ymm4,yword [esp]
-gs vaddsubps ymm0,ymm6,yword [edx - 0x80000000]
-gs a32 vaddsubps ymm0,ymm6,yword [esp + 1 * ebp]
-vaddsubps ymm0,ymm6,yword [esp]
-a32 gs vaddsubps ymm0,ymm14,yword [edx - 0x80000000]
-a32 gs vaddsubps ymm0,ymm14,yword [esp + 1 * ebp]
-a32 gs vaddsubps ymm0,ymm14,yword [esp]
-vaddsubps ymm0,ymm4,yword [edx - 0x80000000]
-gs a32 vaddsubps ymm0,ymm4,yword [esp + 1 * ebp]
-gs a32 vaddsubps ymm0,ymm4,yword [esp]
-gs vaddsubps ymm1,ymm12,yword [rbx + 8 * rdx]
-gs vaddsubps ymm1,ymm12,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps ymm1,ymm12,yword [rax]
-vaddsubps ymm1,ymm6,yword [rbx + 8 * rdx]
-gs vaddsubps ymm1,ymm6,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps ymm1,ymm6,yword [rax]
-vaddsubps ymm1,ymm15,yword [rbx + 8 * rdx]
-vaddsubps ymm1,ymm15,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps ymm1,ymm15,yword [rax]
-gs vaddsubps ymm0,ymm12,yword [rbx + 8 * rdx]
-gs vaddsubps ymm0,ymm12,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps ymm0,ymm12,yword [rax]
-gs vaddsubps ymm0,ymm6,yword [rbx + 8 * rdx]
-gs vaddsubps ymm0,ymm6,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps ymm0,ymm6,yword [rax]
-gs vaddsubps ymm0,ymm15,yword [rbx + 8 * rdx]
-vaddsubps ymm0,ymm15,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps ymm0,ymm15,yword [rax]
-vaddsubps ymm4,ymm12,yword [rbx + 8 * rdx]
-vaddsubps ymm4,ymm12,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps ymm4,ymm12,yword [rax]
-gs vaddsubps ymm4,ymm6,yword [rbx + 8 * rdx]
-gs vaddsubps ymm4,ymm6,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vaddsubps ymm4,ymm6,yword [rax]
-vaddsubps ymm4,ymm15,yword [rbx + 8 * rdx]
-vaddsubps ymm4,ymm15,yword [r14 + 1 * rdx + 0x7FFFFFFF]
-vaddsubps ymm4,ymm15,yword [rax]
-a32 gs vaddsubps ymm2,ymm14,yword [r13d]
-a32 gs vaddsubps ymm2,ymm14,yword [r12d]
-gs vaddsubps ymm2,ymm14,yword [r15d + 2 * edi + 0x72]
-gs a32 vaddsubps ymm2,ymm11,yword [r13d]
-gs a32 vaddsubps ymm2,ymm11,yword [r12d]
-vaddsubps ymm2,ymm11,yword [r15d + 2 * edi + 0x72]
-vaddsubps ymm2,ymm9,yword [r13d]
-vaddsubps ymm2,ymm9,yword [r12d]
-gs a32 vaddsubps ymm2,ymm9,yword [r15d + 2 * edi + 0x72]
-gs a32 vaddsubps ymm5,ymm14,yword [r13d]
-a32 vaddsubps ymm5,ymm14,yword [r12d]
-a32 gs vaddsubps ymm5,ymm14,yword [r15d + 2 * edi + 0x72]
-gs a32 vaddsubps ymm5,ymm11,yword [r13d]
-vaddsubps ymm5,ymm11,yword [r12d]
-vaddsubps ymm5,ymm11,yword [r15d + 2 * edi + 0x72]
-a32 vaddsubps ymm5,ymm9,yword [r13d]
-vaddsubps ymm5,ymm9,yword [r12d]
-a32 gs vaddsubps ymm5,ymm9,yword [r15d + 2 * edi + 0x72]
-gs vaddsubps ymm4,ymm14,yword [r13d]
-a32 vaddsubps ymm4,ymm14,yword [r12d]
-a32 gs vaddsubps ymm4,ymm14,yword [r15d + 2 * edi + 0x72]
-vaddsubps ymm4,ymm11,yword [r13d]
-a32 vaddsubps ymm4,ymm11,yword [r12d]
-a32 vaddsubps ymm4,ymm11,yword [r15d + 2 * edi + 0x72]
-a32 vaddsubps ymm4,ymm9,yword [r13d]
-vaddsubps ymm4,ymm9,yword [r12d]
-vaddsubps ymm4,ymm9,yword [r15d + 2 * edi + 0x72]
-gs vaddsubps ymm2,ymm2,ymm1
-a32 vaddsubps ymm2,ymm2,ymm12
-vaddsubps ymm2,ymm2,ymm8
-a32 vaddsubps ymm2,ymm10,ymm1
-a32 vaddsubps ymm2,ymm10,ymm12
-a32 vaddsubps ymm2,ymm10,ymm8
-gs vaddsubps ymm2,ymm1,ymm1
-gs a32 vaddsubps ymm2,ymm1,ymm12
-vaddsubps ymm2,ymm1,ymm8
-gs a32 vaddsubps ymm5,ymm2,ymm1
-gs a32 vaddsubps ymm5,ymm2,ymm12
-vaddsubps ymm5,ymm2,ymm8
-a32 gs vaddsubps ymm5,ymm10,ymm1
-vaddsubps ymm5,ymm10,ymm12
-gs vaddsubps ymm5,ymm10,ymm8
-a32 gs vaddsubps ymm5,ymm1,ymm1
-gs a32 vaddsubps ymm5,ymm1,ymm12
-gs vaddsubps ymm5,ymm1,ymm8
-a32 gs vaddsubps ymm4,ymm2,ymm1
-gs vaddsubps ymm4,ymm2,ymm12
-gs vaddsubps ymm4,ymm2,ymm8
-a32 vaddsubps ymm4,ymm10,ymm1
-gs a32 vaddsubps ymm4,ymm10,ymm12
-vaddsubps ymm4,ymm10,ymm8
-gs vaddsubps ymm4,ymm1,ymm1
-a32 vaddsubps ymm4,ymm1,ymm12
-gs a32 vaddsubps ymm4,ymm1,ymm8
-gs vaddsubps ymm3,ymm14,ymm1
-a32 gs vaddsubps ymm3,ymm14,ymm15
-gs vaddsubps ymm3,ymm14,ymm13
-gs vaddsubps ymm3,ymm4,ymm1
-a32 gs vaddsubps ymm3,ymm4,ymm15
-vaddsubps ymm3,ymm4,ymm13
-gs vaddsubps ymm3,ymm12,ymm1
-a32 vaddsubps ymm3,ymm12,ymm15
-gs vaddsubps ymm3,ymm12,ymm13
-gs vaddsubps ymm11,ymm14,ymm1
-a32 gs vaddsubps ymm11,ymm14,ymm15
-gs vaddsubps ymm11,ymm14,ymm13
-a32 gs vaddsubps ymm11,ymm4,ymm1
-vaddsubps ymm11,ymm4,ymm15
-gs a32 vaddsubps ymm11,ymm4,ymm13
-a32 gs vaddsubps ymm11,ymm12,ymm1
-a32 gs vaddsubps ymm11,ymm12,ymm15
-vaddsubps ymm11,ymm12,ymm13
-vaddsubps ymm10,ymm14,ymm1
-vaddsubps ymm10,ymm14,ymm15
-gs vaddsubps ymm10,ymm14,ymm13
-gs vaddsubps ymm10,ymm4,ymm1
-a32 gs vaddsubps ymm10,ymm4,ymm15
-a32 gs vaddsubps ymm10,ymm4,ymm13
-vaddsubps ymm10,ymm12,ymm1
-a32 gs vaddsubps ymm10,ymm12,ymm15
-gs vaddsubps ymm10,ymm12,ymm13
+gs vaddsubps xmm5,xmm15,oword [r11 + r11 * 2 + 0x18ca977a]
+vaddsubps xmm5,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vaddsubps xmm5,xmm15,oword [rbp]
+vaddsubps xmm5,xmm8,oword [r11 + r11 * 2 + 0x18ca977a]
+gs vaddsubps xmm5,xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vaddsubps xmm5,xmm8,oword [rbp]
+vaddsubps xmm5,xmm4,oword [r11 + r11 * 2 + 0x18ca977a]
+gs vaddsubps xmm5,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vaddsubps xmm5,xmm4,oword [rbp]
+vaddsubps xmm0,xmm15,oword [r11 + r11 * 2 + 0x18ca977a]
+gs vaddsubps xmm0,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vaddsubps xmm0,xmm15,oword [rbp]
+vaddsubps xmm0,xmm8,oword [r11 + r11 * 2 + 0x18ca977a]
+vaddsubps xmm0,xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vaddsubps xmm0,xmm8,oword [rbp]
+vaddsubps xmm0,xmm4,oword [r11 + r11 * 2 + 0x18ca977a]
+vaddsubps xmm0,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vaddsubps xmm0,xmm4,oword [rbp]
+gs vaddsubps xmm10,xmm15,oword [r11 + r11 * 2 + 0x18ca977a]
+vaddsubps xmm10,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vaddsubps xmm10,xmm15,oword [rbp]
+vaddsubps xmm10,xmm8,oword [r11 + r11 * 2 + 0x18ca977a]
+vaddsubps xmm10,xmm8,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vaddsubps xmm10,xmm8,oword [rbp]
+vaddsubps xmm10,xmm4,oword [r11 + r11 * 2 + 0x18ca977a]
+gs vaddsubps xmm10,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vaddsubps xmm10,xmm4,oword [rbp]
+vaddsubps xmm9,xmm12,oword [esp]
+vaddsubps xmm9,xmm12,oword [r13d]
+gs a32 vaddsubps xmm9,xmm12,oword [ebp]
+vaddsubps xmm9,xmm8,oword [esp]
+vaddsubps xmm9,xmm8,oword [r13d]
+vaddsubps xmm9,xmm8,oword [ebp]
+vaddsubps xmm9,xmm15,oword [esp]
+vaddsubps xmm9,xmm15,oword [r13d]
+gs a32 vaddsubps xmm9,xmm15,oword [ebp]
+gs a32 vaddsubps xmm6,xmm12,oword [esp]
+a32 vaddsubps xmm6,xmm12,oword [r13d]
+gs a32 vaddsubps xmm6,xmm12,oword [ebp]
+gs a32 vaddsubps xmm6,xmm8,oword [esp]
+a32 vaddsubps xmm6,xmm8,oword [r13d]
+gs vaddsubps xmm6,xmm8,oword [ebp]
+a32 gs vaddsubps xmm6,xmm15,oword [esp]
+vaddsubps xmm6,xmm15,oword [r13d]
+a32 gs vaddsubps xmm6,xmm15,oword [ebp]
+a32 vaddsubps xmm3,xmm12,oword [esp]
+a32 vaddsubps xmm3,xmm12,oword [r13d]
+a32 vaddsubps xmm3,xmm12,oword [ebp]
+gs vaddsubps xmm3,xmm8,oword [esp]
+a32 vaddsubps xmm3,xmm8,oword [r13d]
+gs vaddsubps xmm3,xmm8,oword [ebp]
+a32 vaddsubps xmm3,xmm15,oword [esp]
+gs a32 vaddsubps xmm3,xmm15,oword [r13d]
+vaddsubps xmm3,xmm15,oword [ebp]
+vaddsubps xmm4,xmm10,oword [rbp]
+vaddsubps xmm4,xmm10,oword [rsp + 1 * rbp]
+gs vaddsubps xmm4,xmm10,oword [r13]
+vaddsubps xmm4,xmm11,oword [rbp]
+vaddsubps xmm4,xmm11,oword [rsp + 1 * rbp]
+vaddsubps xmm4,xmm11,oword [r13]
+vaddsubps xmm4,xmm9,oword [rbp]
+vaddsubps xmm4,xmm9,oword [rsp + 1 * rbp]
+gs vaddsubps xmm4,xmm9,oword [r13]
+vaddsubps xmm14,xmm10,oword [rbp]
+vaddsubps xmm14,xmm10,oword [rsp + 1 * rbp]
+gs vaddsubps xmm14,xmm10,oword [r13]
+gs vaddsubps xmm14,xmm11,oword [rbp]
+vaddsubps xmm14,xmm11,oword [rsp + 1 * rbp]
+gs vaddsubps xmm14,xmm11,oword [r13]
+gs vaddsubps xmm14,xmm9,oword [rbp]
+gs vaddsubps xmm14,xmm9,oword [rsp + 1 * rbp]
+gs vaddsubps xmm14,xmm9,oword [r13]
+vaddsubps xmm10,xmm10,oword [rbp]
+vaddsubps xmm10,xmm10,oword [rsp + 1 * rbp]
+gs vaddsubps xmm10,xmm10,oword [r13]
+vaddsubps xmm10,xmm11,oword [rbp]
+vaddsubps xmm10,xmm11,oword [rsp + 1 * rbp]
+vaddsubps xmm10,xmm11,oword [r13]
+vaddsubps xmm10,xmm9,oword [rbp]
+gs vaddsubps xmm10,xmm9,oword [rsp + 1 * rbp]
+gs vaddsubps xmm10,xmm9,oword [r13]
+a32 vaddsubps xmm11,xmm12,oword [r11d + r11d * 2 + 0x18ca977a]
+a32 vaddsubps xmm11,xmm12,oword [eax]
+a32 vaddsubps xmm11,xmm12,oword [esp]
+a32 vaddsubps xmm11,xmm2,oword [r11d + r11d * 2 + 0x18ca977a]
+vaddsubps xmm11,xmm2,oword [eax]
+a32 vaddsubps xmm11,xmm2,oword [esp]
+gs a32 vaddsubps xmm11,xmm14,oword [r11d + r11d * 2 + 0x18ca977a]
+vaddsubps xmm11,xmm14,oword [eax]
+a32 vaddsubps xmm11,xmm14,oword [esp]
+a32 vaddsubps xmm0,xmm12,oword [r11d + r11d * 2 + 0x18ca977a]
+gs a32 vaddsubps xmm0,xmm12,oword [eax]
+a32 gs vaddsubps xmm0,xmm12,oword [esp]
+vaddsubps xmm0,xmm2,oword [r11d + r11d * 2 + 0x18ca977a]
+gs a32 vaddsubps xmm0,xmm2,oword [eax]
+a32 vaddsubps xmm0,xmm2,oword [esp]
+a32 vaddsubps xmm0,xmm14,oword [r11d + r11d * 2 + 0x18ca977a]
+a32 gs vaddsubps xmm0,xmm14,oword [eax]
+gs a32 vaddsubps xmm0,xmm14,oword [esp]
+gs a32 vaddsubps xmm13,xmm12,oword [r11d + r11d * 2 + 0x18ca977a]
+gs vaddsubps xmm13,xmm12,oword [eax]
+a32 vaddsubps xmm13,xmm12,oword [esp]
+a32 gs vaddsubps xmm13,xmm2,oword [r11d + r11d * 2 + 0x18ca977a]
+gs vaddsubps xmm13,xmm2,oword [eax]
+gs vaddsubps xmm13,xmm2,oword [esp]
+vaddsubps xmm13,xmm14,oword [r11d + r11d * 2 + 0x18ca977a]
+a32 gs vaddsubps xmm13,xmm14,oword [eax]
+a32 vaddsubps xmm13,xmm14,oword [esp]
+a32 gs vaddsubps xmm7,xmm14,xmm15
+gs vaddsubps xmm7,xmm14,xmm8
+a32 gs vaddsubps xmm7,xmm14,xmm10
+a32 gs vaddsubps xmm7,xmm12,xmm15
+a32 gs vaddsubps xmm7,xmm12,xmm8
+gs a32 vaddsubps xmm7,xmm12,xmm10
+vaddsubps xmm7,xmm1,xmm15
+a32 vaddsubps xmm7,xmm1,xmm8
+vaddsubps xmm7,xmm1,xmm10
+gs vaddsubps xmm0,xmm14,xmm15
+gs a32 vaddsubps xmm0,xmm14,xmm8
+gs a32 vaddsubps xmm0,xmm14,xmm10
+gs a32 vaddsubps xmm0,xmm12,xmm15
+vaddsubps xmm0,xmm12,xmm8
+a32 gs vaddsubps xmm0,xmm12,xmm10
+gs vaddsubps xmm0,xmm1,xmm15
+a32 gs vaddsubps xmm0,xmm1,xmm8
+a32 vaddsubps xmm0,xmm1,xmm10
+a32 gs vaddsubps xmm11,xmm14,xmm15
+vaddsubps xmm11,xmm14,xmm8
+a32 vaddsubps xmm11,xmm14,xmm10
+a32 vaddsubps xmm11,xmm12,xmm15
+gs vaddsubps xmm11,xmm12,xmm8
+vaddsubps xmm11,xmm12,xmm10
+gs vaddsubps xmm11,xmm1,xmm15
+gs a32 vaddsubps xmm11,xmm1,xmm8
+a32 gs vaddsubps xmm11,xmm1,xmm10
+gs vaddsubps xmm7,xmm9,xmm10
+a32 gs vaddsubps xmm7,xmm9,xmm4
+vaddsubps xmm7,xmm9,xmm6
+vaddsubps xmm7,xmm3,xmm10
+a32 vaddsubps xmm7,xmm3,xmm4
+vaddsubps xmm7,xmm3,xmm6
+a32 gs vaddsubps xmm7,xmm15,xmm10
+gs vaddsubps xmm7,xmm15,xmm4
+a32 vaddsubps xmm7,xmm15,xmm6
+gs a32 vaddsubps xmm13,xmm9,xmm10
+vaddsubps xmm13,xmm9,xmm4
+vaddsubps xmm13,xmm9,xmm6
+a32 gs vaddsubps xmm13,xmm3,xmm10
+a32 gs vaddsubps xmm13,xmm3,xmm4
+vaddsubps xmm13,xmm3,xmm6
+gs a32 vaddsubps xmm13,xmm15,xmm10
+a32 gs vaddsubps xmm13,xmm15,xmm4
+vaddsubps xmm13,xmm15,xmm6
+a32 gs vaddsubps xmm0,xmm9,xmm10
+vaddsubps xmm0,xmm9,xmm4
+a32 vaddsubps xmm0,xmm9,xmm6
+a32 gs vaddsubps xmm0,xmm3,xmm10
+a32 vaddsubps xmm0,xmm3,xmm4
+gs a32 vaddsubps xmm0,xmm3,xmm6
+vaddsubps xmm0,xmm15,xmm10
+a32 vaddsubps xmm0,xmm15,xmm4
+gs a32 vaddsubps xmm0,xmm15,xmm6
+gs vaddsubps ymm10,ymm4,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm10,ymm4,yword [rdx - 0x80000000]
+vaddsubps ymm10,ymm4,yword [rsp + 1 * rbp]
+gs vaddsubps ymm10,ymm12,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm10,ymm12,yword [rdx - 0x80000000]
+vaddsubps ymm10,ymm12,yword [rsp + 1 * rbp]
+vaddsubps ymm10,ymm5,yword [r15 + 2 * rdi + 0x72]
+gs vaddsubps ymm10,ymm5,yword [rdx - 0x80000000]
+vaddsubps ymm10,ymm5,yword [rsp + 1 * rbp]
+vaddsubps ymm9,ymm4,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm9,ymm4,yword [rdx - 0x80000000]
+gs vaddsubps ymm9,ymm4,yword [rsp + 1 * rbp]
+gs vaddsubps ymm9,ymm12,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm9,ymm12,yword [rdx - 0x80000000]
+vaddsubps ymm9,ymm12,yword [rsp + 1 * rbp]
+gs vaddsubps ymm9,ymm5,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm9,ymm5,yword [rdx - 0x80000000]
+gs vaddsubps ymm9,ymm5,yword [rsp + 1 * rbp]
+gs vaddsubps ymm12,ymm4,yword [r15 + 2 * rdi + 0x72]
+gs vaddsubps ymm12,ymm4,yword [rdx - 0x80000000]
+gs vaddsubps ymm12,ymm4,yword [rsp + 1 * rbp]
+gs vaddsubps ymm12,ymm12,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm12,ymm12,yword [rdx - 0x80000000]
+vaddsubps ymm12,ymm12,yword [rsp + 1 * rbp]
+gs vaddsubps ymm12,ymm5,yword [r15 + 2 * rdi + 0x72]
+vaddsubps ymm12,ymm5,yword [rdx - 0x80000000]
+vaddsubps ymm12,ymm5,yword [rsp + 1 * rbp]
+gs vaddsubps ymm14,ymm3,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs vaddsubps ymm14,ymm3,yword [r15d + 2 * edi + 0x72]
+a32 vaddsubps ymm14,ymm3,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 vaddsubps ymm14,ymm12,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm14,ymm12,yword [r15d + 2 * edi + 0x72]
+gs vaddsubps ymm14,ymm12,yword [r11d + r11d * 2 + 0x20f8baba]
+gs a32 vaddsubps ymm14,ymm5,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs vaddsubps ymm14,ymm5,yword [r15d + 2 * edi + 0x72]
+a32 gs vaddsubps ymm14,ymm5,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 gs vaddsubps ymm4,ymm3,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vaddsubps ymm4,ymm3,yword [r15d + 2 * edi + 0x72]
+vaddsubps ymm4,ymm3,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 gs vaddsubps ymm4,ymm12,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm4,ymm12,yword [r15d + 2 * edi + 0x72]
+gs a32 vaddsubps ymm4,ymm12,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 vaddsubps ymm4,ymm5,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vaddsubps ymm4,ymm5,yword [r15d + 2 * edi + 0x72]
+gs vaddsubps ymm4,ymm5,yword [r11d + r11d * 2 + 0x20f8baba]
+gs a32 vaddsubps ymm15,ymm3,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm15,ymm3,yword [r15d + 2 * edi + 0x72]
+vaddsubps ymm15,ymm3,yword [r11d + r11d * 2 + 0x20f8baba]
+gs a32 vaddsubps ymm15,ymm12,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm15,ymm12,yword [r15d + 2 * edi + 0x72]
+vaddsubps ymm15,ymm12,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 gs vaddsubps ymm15,ymm5,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm15,ymm5,yword [r15d + 2 * edi + 0x72]
+gs a32 vaddsubps ymm15,ymm5,yword [r11d + r11d * 2 + 0x20f8baba]
+vaddsubps ymm7,ymm0,yword [r13]
+vaddsubps ymm7,ymm0,yword [rbp]
+gs vaddsubps ymm7,ymm0,yword [rdx - 0x80000000]
+vaddsubps ymm7,ymm3,yword [r13]
+gs vaddsubps ymm7,ymm3,yword [rbp]
+gs vaddsubps ymm7,ymm3,yword [rdx - 0x80000000]
+gs vaddsubps ymm7,ymm7,yword [r13]
+gs vaddsubps ymm7,ymm7,yword [rbp]
+vaddsubps ymm7,ymm7,yword [rdx - 0x80000000]
+vaddsubps ymm0,ymm0,yword [r13]
+vaddsubps ymm0,ymm0,yword [rbp]
+gs vaddsubps ymm0,ymm0,yword [rdx - 0x80000000]
+vaddsubps ymm0,ymm3,yword [r13]
+gs vaddsubps ymm0,ymm3,yword [rbp]
+vaddsubps ymm0,ymm3,yword [rdx - 0x80000000]
+gs vaddsubps ymm0,ymm7,yword [r13]
+vaddsubps ymm0,ymm7,yword [rbp]
+gs vaddsubps ymm0,ymm7,yword [rdx - 0x80000000]
+gs vaddsubps ymm12,ymm0,yword [r13]
+gs vaddsubps ymm12,ymm0,yword [rbp]
+vaddsubps ymm12,ymm0,yword [rdx - 0x80000000]
+vaddsubps ymm12,ymm3,yword [r13]
+gs vaddsubps ymm12,ymm3,yword [rbp]
+gs vaddsubps ymm12,ymm3,yword [rdx - 0x80000000]
+gs vaddsubps ymm12,ymm7,yword [r13]
+vaddsubps ymm12,ymm7,yword [rbp]
+vaddsubps ymm12,ymm7,yword [rdx - 0x80000000]
+vaddsubps ymm15,ymm12,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs vaddsubps ymm15,ymm12,yword [r11d + r11d * 2 + 0x20f8baba]
+gs vaddsubps ymm15,ymm12,yword [edx - 0x80000000]
+gs vaddsubps ymm15,ymm9,yword [r14d + 1 * edx + 0x7FFFFFFF]
+vaddsubps ymm15,ymm9,yword [r11d + r11d * 2 + 0x20f8baba]
+vaddsubps ymm15,ymm9,yword [edx - 0x80000000]
+gs vaddsubps ymm15,ymm13,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vaddsubps ymm15,ymm13,yword [r11d + r11d * 2 + 0x20f8baba]
+gs a32 vaddsubps ymm15,ymm13,yword [edx - 0x80000000]
+a32 gs vaddsubps ymm3,ymm12,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vaddsubps ymm3,ymm12,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 gs vaddsubps ymm3,ymm12,yword [edx - 0x80000000]
+a32 gs vaddsubps ymm3,ymm9,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vaddsubps ymm3,ymm9,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 vaddsubps ymm3,ymm9,yword [edx - 0x80000000]
+gs a32 vaddsubps ymm3,ymm13,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm3,ymm13,yword [r11d + r11d * 2 + 0x20f8baba]
+gs a32 vaddsubps ymm3,ymm13,yword [edx - 0x80000000]
+a32 vaddsubps ymm0,ymm12,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs vaddsubps ymm0,ymm12,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 vaddsubps ymm0,ymm12,yword [edx - 0x80000000]
+vaddsubps ymm0,ymm9,yword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vaddsubps ymm0,ymm9,yword [r11d + r11d * 2 + 0x20f8baba]
+gs a32 vaddsubps ymm0,ymm9,yword [edx - 0x80000000]
+a32 gs vaddsubps ymm0,ymm13,yword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 vaddsubps ymm0,ymm13,yword [r11d + r11d * 2 + 0x20f8baba]
+a32 gs vaddsubps ymm0,ymm13,yword [edx - 0x80000000]
+gs vaddsubps ymm3,ymm3,ymm13
+a32 vaddsubps ymm3,ymm3,ymm15
+gs a32 vaddsubps ymm3,ymm3,ymm4
+gs a32 vaddsubps ymm3,ymm15,ymm13
+a32 vaddsubps ymm3,ymm15,ymm15
+a32 gs vaddsubps ymm3,ymm15,ymm4
+gs vaddsubps ymm3,ymm10,ymm13
+vaddsubps ymm3,ymm10,ymm15
+a32 gs vaddsubps ymm3,ymm10,ymm4
+vaddsubps ymm12,ymm3,ymm13
+gs a32 vaddsubps ymm12,ymm3,ymm15
+a32 vaddsubps ymm12,ymm3,ymm4
+vaddsubps ymm12,ymm15,ymm13
+gs vaddsubps ymm12,ymm15,ymm15
+a32 vaddsubps ymm12,ymm15,ymm4
+a32 gs vaddsubps ymm12,ymm10,ymm13
+a32 gs vaddsubps ymm12,ymm10,ymm15
+gs vaddsubps ymm12,ymm10,ymm4
+vaddsubps ymm5,ymm3,ymm13
+gs vaddsubps ymm5,ymm3,ymm15
+gs a32 vaddsubps ymm5,ymm3,ymm4
+gs vaddsubps ymm5,ymm15,ymm13
+gs vaddsubps ymm5,ymm15,ymm15
+gs a32 vaddsubps ymm5,ymm15,ymm4
+vaddsubps ymm5,ymm10,ymm13
+a32 gs vaddsubps ymm5,ymm10,ymm15
+gs a32 vaddsubps ymm5,ymm10,ymm4
+vaddsubps ymm0,ymm1,ymm15
+a32 gs vaddsubps ymm0,ymm1,ymm6
+vaddsubps ymm0,ymm1,ymm14
+a32 vaddsubps ymm0,ymm10,ymm15
+vaddsubps ymm0,ymm10,ymm6
+a32 gs vaddsubps ymm0,ymm10,ymm14
+gs a32 vaddsubps ymm0,ymm11,ymm15
+a32 gs vaddsubps ymm0,ymm11,ymm6
+a32 vaddsubps ymm0,ymm11,ymm14
+a32 gs vaddsubps ymm15,ymm1,ymm15
+gs a32 vaddsubps ymm15,ymm1,ymm6
+a32 vaddsubps ymm15,ymm1,ymm14
+gs vaddsubps ymm15,ymm10,ymm15
+vaddsubps ymm15,ymm10,ymm6
+a32 gs vaddsubps ymm15,ymm10,ymm14
+gs a32 vaddsubps ymm15,ymm11,ymm15
+gs a32 vaddsubps ymm15,ymm11,ymm6
+vaddsubps ymm15,ymm11,ymm14
+a32 gs vaddsubps ymm1,ymm1,ymm15
+gs a32 vaddsubps ymm1,ymm1,ymm6
+gs a32 vaddsubps ymm1,ymm1,ymm14
+gs a32 vaddsubps ymm1,ymm10,ymm15
+gs a32 vaddsubps ymm1,ymm10,ymm6
+gs a32 vaddsubps ymm1,ymm10,ymm14
+vaddsubps ymm1,ymm11,ymm15
+a32 vaddsubps ymm1,ymm11,ymm6
+gs a32 vaddsubps ymm1,ymm11,ymm14

@@ -1,72 +1,72 @@
+gs vcvtdq2pd xmm8, [r15 + 2 * rdi + 0x72]
+vcvtdq2pd xmm8, [rbx + 8 * rdx]
+gs vcvtdq2pd xmm8, [rsp]
+gs vcvtdq2pd xmm13, [r15 + 2 * rdi + 0x72]
+vcvtdq2pd xmm13, [rbx + 8 * rdx]
+vcvtdq2pd xmm13, [rsp]
+vcvtdq2pd xmm15, [r15 + 2 * rdi + 0x72]
+vcvtdq2pd xmm15, [rbx + 8 * rdx]
+gs vcvtdq2pd xmm15, [rsp]
+a32 gs vcvtdq2pd xmm13, [r15d + 2 * edi + 0x72]
+a32 vcvtdq2pd xmm13, [r12d]
+gs vcvtdq2pd xmm13, [ebx + 8 * edx]
+a32 gs vcvtdq2pd xmm0, [r15d + 2 * edi + 0x72]
+gs a32 vcvtdq2pd xmm0, [r12d]
+a32 gs vcvtdq2pd xmm0, [ebx + 8 * edx]
+vcvtdq2pd xmm8, [r15d + 2 * edi + 0x72]
+gs a32 vcvtdq2pd xmm8, [r12d]
+vcvtdq2pd xmm8, [ebx + 8 * edx]
+vcvtdq2pd xmm9, [rax]
+vcvtdq2pd xmm9, [rbx + 8 * rdx]
 vcvtdq2pd xmm9, [r13]
-vcvtdq2pd xmm9, [rdx - 0x80000000]
-gs vcvtdq2pd xmm9, [r15 + 2 * rdi + 0x72]
-gs vcvtdq2pd xmm14, [r13]
-gs vcvtdq2pd xmm14, [rdx - 0x80000000]
-gs vcvtdq2pd xmm14, [r15 + 2 * rdi + 0x72]
-vcvtdq2pd xmm10, [r13]
-vcvtdq2pd xmm10, [rdx - 0x80000000]
-gs vcvtdq2pd xmm10, [r15 + 2 * rdi + 0x72]
-gs vcvtdq2pd xmm4, [r15d + 2 * edi + 0x72]
-gs a32 vcvtdq2pd xmm4, [r14d + 1 * edx + 0x7FFFFFFF]
-gs vcvtdq2pd xmm4, [r13d]
-gs a32 vcvtdq2pd xmm14, [r15d + 2 * edi + 0x72]
-a32 vcvtdq2pd xmm14, [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vcvtdq2pd xmm14, [r13d]
-a32 gs vcvtdq2pd xmm2, [r15d + 2 * edi + 0x72]
-gs vcvtdq2pd xmm2, [r14d + 1 * edx + 0x7FFFFFFF]
-vcvtdq2pd xmm2, [r13d]
-gs vcvtdq2pd xmm1, [rdx - 0x80000000]
-vcvtdq2pd xmm1, [r13]
-vcvtdq2pd xmm1, [rsp]
-gs vcvtdq2pd xmm9, [rdx - 0x80000000]
-gs vcvtdq2pd xmm9, [r13]
-vcvtdq2pd xmm9, [rsp]
-gs vcvtdq2pd xmm7, [rdx - 0x80000000]
-vcvtdq2pd xmm7, [r13]
-gs vcvtdq2pd xmm7, [rsp]
-gs a32 vcvtdq2pd xmm11, [ebx + 8 * edx]
-a32 gs vcvtdq2pd xmm11, [r13d]
-gs a32 vcvtdq2pd xmm11, [esp]
-a32 gs vcvtdq2pd xmm4, [ebx + 8 * edx]
-vcvtdq2pd xmm4, [r13d]
+vcvtdq2pd xmm2, [rax]
+vcvtdq2pd xmm2, [rbx + 8 * rdx]
+gs vcvtdq2pd xmm2, [r13]
+gs vcvtdq2pd xmm0, [rax]
+gs vcvtdq2pd xmm0, [rbx + 8 * rdx]
+vcvtdq2pd xmm0, [r13]
+a32 gs vcvtdq2pd xmm12, [edx - 0x80000000]
+gs a32 vcvtdq2pd xmm12, [r11d + r11d * 2 + 0x30fb4518]
+a32 vcvtdq2pd xmm12, [esp]
+gs vcvtdq2pd xmm4, [edx - 0x80000000]
+a32 gs vcvtdq2pd xmm4, [r11d + r11d * 2 + 0x30fb4518]
 a32 gs vcvtdq2pd xmm4, [esp]
-a32 vcvtdq2pd xmm6, [ebx + 8 * edx]
-a32 gs vcvtdq2pd xmm6, [r13d]
-gs vcvtdq2pd xmm6, [esp]
-a32 gs vcvtdq2pd xmm11,xmm0
-gs a32 vcvtdq2pd xmm11,xmm2
-a32 vcvtdq2pd xmm11,xmm6
-a32 vcvtdq2pd xmm14,xmm0
-vcvtdq2pd xmm14,xmm2
-gs vcvtdq2pd xmm14,xmm6
-a32 gs vcvtdq2pd xmm9,xmm0
-gs vcvtdq2pd xmm9,xmm2
-a32 vcvtdq2pd xmm9,xmm6
-a32 gs vcvtdq2pd xmm12,xmm9
-gs vcvtdq2pd xmm12,xmm13
-a32 vcvtdq2pd xmm12,xmm10
-gs vcvtdq2pd xmm13,xmm9
-a32 vcvtdq2pd xmm13,xmm13
-gs a32 vcvtdq2pd xmm13,xmm10
-a32 gs vcvtdq2pd xmm9,xmm9
-a32 vcvtdq2pd xmm9,xmm13
-a32 vcvtdq2pd xmm9,xmm10
-a32 gs vcvtdq2pd ymm11,xmm2
-vcvtdq2pd ymm11,xmm12
-a32 gs vcvtdq2pd ymm11,xmm7
-a32 vcvtdq2pd ymm2,xmm2
-gs a32 vcvtdq2pd ymm2,xmm12
-a32 vcvtdq2pd ymm2,xmm7
-a32 vcvtdq2pd ymm1,xmm2
-a32 gs vcvtdq2pd ymm1,xmm12
-gs vcvtdq2pd ymm1,xmm7
-a32 gs vcvtdq2pd ymm10,xmm1
-gs vcvtdq2pd ymm10,xmm10
-a32 vcvtdq2pd ymm10,xmm3
-vcvtdq2pd ymm6,xmm1
-vcvtdq2pd ymm6,xmm10
-a32 vcvtdq2pd ymm6,xmm3
-gs vcvtdq2pd ymm12,xmm1
-a32 vcvtdq2pd ymm12,xmm10
-vcvtdq2pd ymm12,xmm3
+gs vcvtdq2pd xmm3, [edx - 0x80000000]
+gs a32 vcvtdq2pd xmm3, [r11d + r11d * 2 + 0x30fb4518]
+gs a32 vcvtdq2pd xmm3, [esp]
+a32 gs vcvtdq2pd xmm1,xmm11
+vcvtdq2pd xmm1,xmm15
+a32 vcvtdq2pd xmm1,xmm12
+a32 vcvtdq2pd xmm6,xmm11
+a32 gs vcvtdq2pd xmm6,xmm15
+gs vcvtdq2pd xmm6,xmm12
+vcvtdq2pd xmm15,xmm11
+gs vcvtdq2pd xmm15,xmm15
+a32 vcvtdq2pd xmm15,xmm12
+a32 gs vcvtdq2pd xmm2,xmm11
+gs vcvtdq2pd xmm2,xmm3
+a32 gs vcvtdq2pd xmm2,xmm13
+a32 gs vcvtdq2pd xmm6,xmm11
+a32 vcvtdq2pd xmm6,xmm3
+vcvtdq2pd xmm6,xmm13
+a32 vcvtdq2pd xmm3,xmm11
+gs vcvtdq2pd xmm3,xmm3
+gs vcvtdq2pd xmm3,xmm13
+gs vcvtdq2pd ymm9,xmm0
+gs a32 vcvtdq2pd ymm9,xmm8
+a32 gs vcvtdq2pd ymm9,xmm3
+vcvtdq2pd ymm7,xmm0
+gs vcvtdq2pd ymm7,xmm8
+gs vcvtdq2pd ymm7,xmm3
+gs a32 vcvtdq2pd ymm5,xmm0
+a32 gs vcvtdq2pd ymm5,xmm8
+vcvtdq2pd ymm5,xmm3
+a32 vcvtdq2pd ymm15,xmm6
+a32 vcvtdq2pd ymm15,xmm4
+gs vcvtdq2pd ymm15,xmm12
+vcvtdq2pd ymm13,xmm6
+gs a32 vcvtdq2pd ymm13,xmm4
+a32 gs vcvtdq2pd ymm13,xmm12
+a32 gs vcvtdq2pd ymm14,xmm6
+a32 vcvtdq2pd ymm14,xmm4
+vcvtdq2pd ymm14,xmm12

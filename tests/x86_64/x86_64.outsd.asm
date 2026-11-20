@@ -1,2 +1,2 @@
-gs outsd 
-gs repne a32 outsd 
+repne gs a32 outsd 
+repne gs outsd 

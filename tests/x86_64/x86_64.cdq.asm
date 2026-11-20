@@ -1,2 +1,2 @@
 a32 cdq 
-gs a32 cdq 
+a32 gs cdq 

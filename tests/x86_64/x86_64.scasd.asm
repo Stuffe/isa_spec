@@ -1,2 +1,2 @@
-scasd 
-rep gs a32 scasd 
+gs a32 rep scasd 
+gs rep a32 scasd 

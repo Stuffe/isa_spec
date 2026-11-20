@@ -1,81 +1,81 @@
-vaesdec xmm8,xmm10,oword [r12]
-vaesdec xmm8,xmm10,oword [rsp + 1 * rbp]
-gs vaesdec xmm8,xmm10,oword [rax]
-gs vaesdec xmm8,xmm6,oword [r12]
-gs vaesdec xmm8,xmm6,oword [rsp + 1 * rbp]
-gs vaesdec xmm8,xmm6,oword [rax]
-gs vaesdec xmm8,xmm0,oword [r12]
-vaesdec xmm8,xmm0,oword [rsp + 1 * rbp]
-gs vaesdec xmm8,xmm0,oword [rax]
-gs vaesdec xmm2,xmm10,oword [r12]
-vaesdec xmm2,xmm10,oword [rsp + 1 * rbp]
-vaesdec xmm2,xmm10,oword [rax]
-vaesdec xmm2,xmm6,oword [r12]
-vaesdec xmm2,xmm6,oword [rsp + 1 * rbp]
-vaesdec xmm2,xmm6,oword [rax]
-gs vaesdec xmm2,xmm0,oword [r12]
-gs vaesdec xmm2,xmm0,oword [rsp + 1 * rbp]
-vaesdec xmm2,xmm0,oword [rax]
-gs vaesdec xmm4,xmm10,oword [r12]
-gs vaesdec xmm4,xmm10,oword [rsp + 1 * rbp]
-gs vaesdec xmm4,xmm10,oword [rax]
-gs vaesdec xmm4,xmm6,oword [r12]
-gs vaesdec xmm4,xmm6,oword [rsp + 1 * rbp]
-gs vaesdec xmm4,xmm6,oword [rax]
-gs vaesdec xmm4,xmm0,oword [r12]
-gs vaesdec xmm4,xmm0,oword [rsp + 1 * rbp]
-vaesdec xmm4,xmm0,oword [rax]
-gs vaesdec xmm1,xmm15,oword [esp]
-gs vaesdec xmm1,xmm15,oword [ebp]
-gs vaesdec xmm1,xmm15,oword [r11d + r11d * 2 + 0x76b426a9]
-gs a32 vaesdec xmm1,xmm9,oword [esp]
-vaesdec xmm1,xmm9,oword [ebp]
-gs a32 vaesdec xmm1,xmm9,oword [r11d + r11d * 2 + 0x76b426a9]
-gs a32 vaesdec xmm1,xmm1,oword [esp]
-a32 gs vaesdec xmm1,xmm1,oword [ebp]
-vaesdec xmm1,xmm1,oword [r11d + r11d * 2 + 0x76b426a9]
-gs a32 vaesdec xmm6,xmm15,oword [esp]
-a32 gs vaesdec xmm6,xmm15,oword [ebp]
-a32 vaesdec xmm6,xmm15,oword [r11d + r11d * 2 + 0x76b426a9]
-vaesdec xmm6,xmm9,oword [esp]
-vaesdec xmm6,xmm9,oword [ebp]
-a32 vaesdec xmm6,xmm9,oword [r11d + r11d * 2 + 0x76b426a9]
-a32 vaesdec xmm6,xmm1,oword [esp]
-a32 vaesdec xmm6,xmm1,oword [ebp]
-gs a32 vaesdec xmm6,xmm1,oword [r11d + r11d * 2 + 0x76b426a9]
-gs vaesdec xmm5,xmm15,oword [esp]
-a32 vaesdec xmm5,xmm15,oword [ebp]
-gs a32 vaesdec xmm5,xmm15,oword [r11d + r11d * 2 + 0x76b426a9]
-vaesdec xmm5,xmm9,oword [esp]
-a32 gs vaesdec xmm5,xmm9,oword [ebp]
-gs a32 vaesdec xmm5,xmm9,oword [r11d + r11d * 2 + 0x76b426a9]
-gs vaesdec xmm5,xmm1,oword [esp]
-gs vaesdec xmm5,xmm1,oword [ebp]
-vaesdec xmm5,xmm1,oword [r11d + r11d * 2 + 0x76b426a9]
-vaesdec xmm4,xmm15,xmm5
-a32 gs vaesdec xmm4,xmm15,xmm0
-a32 gs vaesdec xmm4,xmm15,xmm10
-a32 gs vaesdec xmm4,xmm0,xmm5
-a32 vaesdec xmm4,xmm0,xmm0
-a32 gs vaesdec xmm4,xmm0,xmm10
-gs vaesdec xmm4,xmm12,xmm5
-gs vaesdec xmm4,xmm12,xmm0
-a32 gs vaesdec xmm4,xmm12,xmm10
-vaesdec xmm6,xmm15,xmm5
-a32 gs vaesdec xmm6,xmm15,xmm0
-vaesdec xmm6,xmm15,xmm10
-a32 vaesdec xmm6,xmm0,xmm5
-a32 gs vaesdec xmm6,xmm0,xmm0
-gs a32 vaesdec xmm6,xmm0,xmm10
-gs vaesdec xmm6,xmm12,xmm5
-gs a32 vaesdec xmm6,xmm12,xmm0
-a32 gs vaesdec xmm6,xmm12,xmm10
-a32 vaesdec xmm15,xmm15,xmm5
-a32 gs vaesdec xmm15,xmm15,xmm0
-gs vaesdec xmm15,xmm15,xmm10
-a32 vaesdec xmm15,xmm0,xmm5
-a32 vaesdec xmm15,xmm0,xmm0
-a32 vaesdec xmm15,xmm0,xmm10
-gs a32 vaesdec xmm15,xmm12,xmm5
-gs a32 vaesdec xmm15,xmm12,xmm0
-gs a32 vaesdec xmm15,xmm12,xmm10
+gs vaesdec xmm0,xmm1,oword [rdx - 0x80000000]
+gs vaesdec xmm0,xmm1,oword [r12]
+vaesdec xmm0,xmm1,oword [r15 + 2 * rdi + 0x72]
+vaesdec xmm0,xmm8,oword [rdx - 0x80000000]
+gs vaesdec xmm0,xmm8,oword [r12]
+gs vaesdec xmm0,xmm8,oword [r15 + 2 * rdi + 0x72]
+vaesdec xmm0,xmm5,oword [rdx - 0x80000000]
+vaesdec xmm0,xmm5,oword [r12]
+vaesdec xmm0,xmm5,oword [r15 + 2 * rdi + 0x72]
+gs vaesdec xmm11,xmm1,oword [rdx - 0x80000000]
+gs vaesdec xmm11,xmm1,oword [r12]
+vaesdec xmm11,xmm1,oword [r15 + 2 * rdi + 0x72]
+vaesdec xmm11,xmm8,oword [rdx - 0x80000000]
+vaesdec xmm11,xmm8,oword [r12]
+gs vaesdec xmm11,xmm8,oword [r15 + 2 * rdi + 0x72]
+gs vaesdec xmm11,xmm5,oword [rdx - 0x80000000]
+vaesdec xmm11,xmm5,oword [r12]
+vaesdec xmm11,xmm5,oword [r15 + 2 * rdi + 0x72]
+vaesdec xmm10,xmm1,oword [rdx - 0x80000000]
+vaesdec xmm10,xmm1,oword [r12]
+vaesdec xmm10,xmm1,oword [r15 + 2 * rdi + 0x72]
+vaesdec xmm10,xmm8,oword [rdx - 0x80000000]
+vaesdec xmm10,xmm8,oword [r12]
+gs vaesdec xmm10,xmm8,oword [r15 + 2 * rdi + 0x72]
+vaesdec xmm10,xmm5,oword [rdx - 0x80000000]
+gs vaesdec xmm10,xmm5,oword [r12]
+vaesdec xmm10,xmm5,oword [r15 + 2 * rdi + 0x72]
+a32 vaesdec xmm1,xmm3,oword [r13d]
+gs vaesdec xmm1,xmm3,oword [esp]
+gs a32 vaesdec xmm1,xmm3,oword [r15d + 2 * edi + 0x72]
+a32 vaesdec xmm1,xmm7,oword [r13d]
+gs a32 vaesdec xmm1,xmm7,oword [esp]
+gs vaesdec xmm1,xmm7,oword [r15d + 2 * edi + 0x72]
+vaesdec xmm1,xmm13,oword [r13d]
+gs vaesdec xmm1,xmm13,oword [esp]
+vaesdec xmm1,xmm13,oword [r15d + 2 * edi + 0x72]
+a32 vaesdec xmm5,xmm3,oword [r13d]
+vaesdec xmm5,xmm3,oword [esp]
+gs vaesdec xmm5,xmm3,oword [r15d + 2 * edi + 0x72]
+gs vaesdec xmm5,xmm7,oword [r13d]
+vaesdec xmm5,xmm7,oword [esp]
+gs vaesdec xmm5,xmm7,oword [r15d + 2 * edi + 0x72]
+a32 gs vaesdec xmm5,xmm13,oword [r13d]
+gs vaesdec xmm5,xmm13,oword [esp]
+vaesdec xmm5,xmm13,oword [r15d + 2 * edi + 0x72]
+gs a32 vaesdec xmm0,xmm3,oword [r13d]
+a32 vaesdec xmm0,xmm3,oword [esp]
+gs vaesdec xmm0,xmm3,oword [r15d + 2 * edi + 0x72]
+a32 gs vaesdec xmm0,xmm7,oword [r13d]
+vaesdec xmm0,xmm7,oword [esp]
+vaesdec xmm0,xmm7,oword [r15d + 2 * edi + 0x72]
+a32 vaesdec xmm0,xmm13,oword [r13d]
+a32 vaesdec xmm0,xmm13,oword [esp]
+vaesdec xmm0,xmm13,oword [r15d + 2 * edi + 0x72]
+vaesdec xmm7,xmm6,xmm7
+a32 gs vaesdec xmm7,xmm6,xmm0
+a32 gs vaesdec xmm7,xmm6,xmm8
+gs a32 vaesdec xmm7,xmm3,xmm7
+a32 vaesdec xmm7,xmm3,xmm0
+a32 gs vaesdec xmm7,xmm3,xmm8
+gs vaesdec xmm7,xmm11,xmm7
+vaesdec xmm7,xmm11,xmm0
+a32 vaesdec xmm7,xmm11,xmm8
+gs vaesdec xmm10,xmm6,xmm7
+a32 gs vaesdec xmm10,xmm6,xmm0
+a32 gs vaesdec xmm10,xmm6,xmm8
+gs vaesdec xmm10,xmm3,xmm7
+gs vaesdec xmm10,xmm3,xmm0
+vaesdec xmm10,xmm3,xmm8
+gs a32 vaesdec xmm10,xmm11,xmm7
+a32 vaesdec xmm10,xmm11,xmm0
+a32 gs vaesdec xmm10,xmm11,xmm8
+gs vaesdec xmm13,xmm6,xmm7
+gs vaesdec xmm13,xmm6,xmm0
+gs vaesdec xmm13,xmm6,xmm8
+a32 gs vaesdec xmm13,xmm3,xmm7
+a32 vaesdec xmm13,xmm3,xmm0
+gs vaesdec xmm13,xmm3,xmm8
+a32 vaesdec xmm13,xmm11,xmm7
+gs vaesdec xmm13,xmm11,xmm0
+a32 gs vaesdec xmm13,xmm11,xmm8

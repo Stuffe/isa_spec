@@ -1,2 +1,2 @@
-gs o16 fsincos 
-o16 gs a32 fsincos 
+gs fsincos 
+o16 a32 gs fsincos 

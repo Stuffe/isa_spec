@@ -1,81 +1,81 @@
-gs vfmadd132ss xmm5,xmm6,dword [rsp + 1 * rbp]
-vfmadd132ss xmm5,xmm6,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfmadd132ss xmm5,xmm6,dword [r15 + 2 * rdi + 0x72]
-gs vfmadd132ss xmm5,xmm15,dword [rsp + 1 * rbp]
-vfmadd132ss xmm5,xmm15,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-vfmadd132ss xmm5,xmm15,dword [r15 + 2 * rdi + 0x72]
-gs vfmadd132ss xmm5,xmm11,dword [rsp + 1 * rbp]
-vfmadd132ss xmm5,xmm11,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-vfmadd132ss xmm5,xmm11,dword [r15 + 2 * rdi + 0x72]
-vfmadd132ss xmm7,xmm6,dword [rsp + 1 * rbp]
-gs vfmadd132ss xmm7,xmm6,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-vfmadd132ss xmm7,xmm6,dword [r15 + 2 * rdi + 0x72]
-vfmadd132ss xmm7,xmm15,dword [rsp + 1 * rbp]
-vfmadd132ss xmm7,xmm15,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfmadd132ss xmm7,xmm15,dword [r15 + 2 * rdi + 0x72]
-gs vfmadd132ss xmm7,xmm11,dword [rsp + 1 * rbp]
-vfmadd132ss xmm7,xmm11,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfmadd132ss xmm7,xmm11,dword [r15 + 2 * rdi + 0x72]
-gs vfmadd132ss xmm0,xmm6,dword [rsp + 1 * rbp]
-gs vfmadd132ss xmm0,xmm6,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfmadd132ss xmm0,xmm6,dword [r15 + 2 * rdi + 0x72]
-vfmadd132ss xmm0,xmm15,dword [rsp + 1 * rbp]
-vfmadd132ss xmm0,xmm15,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-vfmadd132ss xmm0,xmm15,dword [r15 + 2 * rdi + 0x72]
-gs vfmadd132ss xmm0,xmm11,dword [rsp + 1 * rbp]
-vfmadd132ss xmm0,xmm11,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfmadd132ss xmm0,xmm11,dword [r15 + 2 * rdi + 0x72]
-gs a32 vfmadd132ss xmm1,xmm15,dword [r12d]
-gs vfmadd132ss xmm1,xmm15,dword [ebp]
-gs vfmadd132ss xmm1,xmm15,dword [ebx + 8 * edx]
-gs a32 vfmadd132ss xmm1,xmm13,dword [r12d]
-vfmadd132ss xmm1,xmm13,dword [ebp]
-gs vfmadd132ss xmm1,xmm13,dword [ebx + 8 * edx]
-gs a32 vfmadd132ss xmm1,xmm7,dword [r12d]
-vfmadd132ss xmm1,xmm7,dword [ebp]
-a32 gs vfmadd132ss xmm1,xmm7,dword [ebx + 8 * edx]
-gs a32 vfmadd132ss xmm8,xmm15,dword [r12d]
-gs vfmadd132ss xmm8,xmm15,dword [ebp]
-a32 gs vfmadd132ss xmm8,xmm15,dword [ebx + 8 * edx]
-a32 gs vfmadd132ss xmm8,xmm13,dword [r12d]
-gs vfmadd132ss xmm8,xmm13,dword [ebp]
-a32 vfmadd132ss xmm8,xmm13,dword [ebx + 8 * edx]
-gs vfmadd132ss xmm8,xmm7,dword [r12d]
-gs a32 vfmadd132ss xmm8,xmm7,dword [ebp]
-gs a32 vfmadd132ss xmm8,xmm7,dword [ebx + 8 * edx]
-gs vfmadd132ss xmm3,xmm15,dword [r12d]
-a32 gs vfmadd132ss xmm3,xmm15,dword [ebp]
-gs a32 vfmadd132ss xmm3,xmm15,dword [ebx + 8 * edx]
-vfmadd132ss xmm3,xmm13,dword [r12d]
-gs a32 vfmadd132ss xmm3,xmm13,dword [ebp]
-a32 vfmadd132ss xmm3,xmm13,dword [ebx + 8 * edx]
-gs vfmadd132ss xmm3,xmm7,dword [r12d]
-a32 gs vfmadd132ss xmm3,xmm7,dword [ebp]
-gs a32 vfmadd132ss xmm3,xmm7,dword [ebx + 8 * edx]
-a32 vfmadd132ss xmm0,xmm6,xmm2
-a32 vfmadd132ss xmm0,xmm6,xmm8
-gs vfmadd132ss xmm0,xmm6,xmm0
-gs vfmadd132ss xmm0,xmm14,xmm2
-a32 gs vfmadd132ss xmm0,xmm14,xmm8
-a32 vfmadd132ss xmm0,xmm14,xmm0
-vfmadd132ss xmm0,xmm12,xmm2
-gs vfmadd132ss xmm0,xmm12,xmm8
-vfmadd132ss xmm0,xmm12,xmm0
-vfmadd132ss xmm15,xmm6,xmm2
-gs a32 vfmadd132ss xmm15,xmm6,xmm8
-gs vfmadd132ss xmm15,xmm6,xmm0
-a32 gs vfmadd132ss xmm15,xmm14,xmm2
-a32 vfmadd132ss xmm15,xmm14,xmm8
-a32 gs vfmadd132ss xmm15,xmm14,xmm0
-a32 vfmadd132ss xmm15,xmm12,xmm2
-a32 gs vfmadd132ss xmm15,xmm12,xmm8
-a32 vfmadd132ss xmm15,xmm12,xmm0
-a32 vfmadd132ss xmm5,xmm6,xmm2
-vfmadd132ss xmm5,xmm6,xmm8
-vfmadd132ss xmm5,xmm6,xmm0
-a32 gs vfmadd132ss xmm5,xmm14,xmm2
-a32 gs vfmadd132ss xmm5,xmm14,xmm8
-a32 gs vfmadd132ss xmm5,xmm14,xmm0
-vfmadd132ss xmm5,xmm12,xmm2
-vfmadd132ss xmm5,xmm12,xmm8
-a32 vfmadd132ss xmm5,xmm12,xmm0
+vfmadd132ss xmm13,xmm2,dword [rsp]
+gs vfmadd132ss xmm13,xmm2,dword [r13]
+gs vfmadd132ss xmm13,xmm2,dword [rax]
+vfmadd132ss xmm13,xmm12,dword [rsp]
+gs vfmadd132ss xmm13,xmm12,dword [r13]
+vfmadd132ss xmm13,xmm12,dword [rax]
+gs vfmadd132ss xmm13,xmm11,dword [rsp]
+gs vfmadd132ss xmm13,xmm11,dword [r13]
+vfmadd132ss xmm13,xmm11,dword [rax]
+vfmadd132ss xmm8,xmm2,dword [rsp]
+gs vfmadd132ss xmm8,xmm2,dword [r13]
+gs vfmadd132ss xmm8,xmm2,dword [rax]
+gs vfmadd132ss xmm8,xmm12,dword [rsp]
+vfmadd132ss xmm8,xmm12,dword [r13]
+vfmadd132ss xmm8,xmm12,dword [rax]
+gs vfmadd132ss xmm8,xmm11,dword [rsp]
+vfmadd132ss xmm8,xmm11,dword [r13]
+gs vfmadd132ss xmm8,xmm11,dword [rax]
+vfmadd132ss xmm0,xmm2,dword [rsp]
+vfmadd132ss xmm0,xmm2,dword [r13]
+gs vfmadd132ss xmm0,xmm2,dword [rax]
+gs vfmadd132ss xmm0,xmm12,dword [rsp]
+gs vfmadd132ss xmm0,xmm12,dword [r13]
+vfmadd132ss xmm0,xmm12,dword [rax]
+vfmadd132ss xmm0,xmm11,dword [rsp]
+gs vfmadd132ss xmm0,xmm11,dword [r13]
+vfmadd132ss xmm0,xmm11,dword [rax]
+a32 vfmadd132ss xmm10,xmm5,dword [r12d]
+a32 gs vfmadd132ss xmm10,xmm5,dword [r11d + r11d * 2 + 0x179145c6]
+vfmadd132ss xmm10,xmm5,dword [r13d]
+gs vfmadd132ss xmm10,xmm13,dword [r12d]
+gs a32 vfmadd132ss xmm10,xmm13,dword [r11d + r11d * 2 + 0x179145c6]
+a32 vfmadd132ss xmm10,xmm13,dword [r13d]
+vfmadd132ss xmm10,xmm0,dword [r12d]
+a32 gs vfmadd132ss xmm10,xmm0,dword [r11d + r11d * 2 + 0x179145c6]
+vfmadd132ss xmm10,xmm0,dword [r13d]
+vfmadd132ss xmm11,xmm5,dword [r12d]
+gs a32 vfmadd132ss xmm11,xmm5,dword [r11d + r11d * 2 + 0x179145c6]
+vfmadd132ss xmm11,xmm5,dword [r13d]
+a32 vfmadd132ss xmm11,xmm13,dword [r12d]
+vfmadd132ss xmm11,xmm13,dword [r11d + r11d * 2 + 0x179145c6]
+a32 gs vfmadd132ss xmm11,xmm13,dword [r13d]
+vfmadd132ss xmm11,xmm0,dword [r12d]
+a32 vfmadd132ss xmm11,xmm0,dword [r11d + r11d * 2 + 0x179145c6]
+vfmadd132ss xmm11,xmm0,dword [r13d]
+gs a32 vfmadd132ss xmm8,xmm5,dword [r12d]
+gs a32 vfmadd132ss xmm8,xmm5,dword [r11d + r11d * 2 + 0x179145c6]
+gs vfmadd132ss xmm8,xmm5,dword [r13d]
+vfmadd132ss xmm8,xmm13,dword [r12d]
+a32 gs vfmadd132ss xmm8,xmm13,dword [r11d + r11d * 2 + 0x179145c6]
+a32 vfmadd132ss xmm8,xmm13,dword [r13d]
+gs vfmadd132ss xmm8,xmm0,dword [r12d]
+a32 gs vfmadd132ss xmm8,xmm0,dword [r11d + r11d * 2 + 0x179145c6]
+a32 gs vfmadd132ss xmm8,xmm0,dword [r13d]
+a32 gs vfmadd132ss xmm13,xmm7,xmm12
+a32 vfmadd132ss xmm13,xmm7,xmm15
+gs vfmadd132ss xmm13,xmm7,xmm0
+gs a32 vfmadd132ss xmm13,xmm2,xmm12
+vfmadd132ss xmm13,xmm2,xmm15
+a32 vfmadd132ss xmm13,xmm2,xmm0
+gs vfmadd132ss xmm13,xmm8,xmm12
+a32 vfmadd132ss xmm13,xmm8,xmm15
+a32 vfmadd132ss xmm13,xmm8,xmm0
+vfmadd132ss xmm9,xmm7,xmm12
+gs vfmadd132ss xmm9,xmm7,xmm15
+vfmadd132ss xmm9,xmm7,xmm0
+vfmadd132ss xmm9,xmm2,xmm12
+gs a32 vfmadd132ss xmm9,xmm2,xmm15
+vfmadd132ss xmm9,xmm2,xmm0
+a32 vfmadd132ss xmm9,xmm8,xmm12
+a32 vfmadd132ss xmm9,xmm8,xmm15
+a32 vfmadd132ss xmm9,xmm8,xmm0
+gs a32 vfmadd132ss xmm5,xmm7,xmm12
+vfmadd132ss xmm5,xmm7,xmm15
+gs a32 vfmadd132ss xmm5,xmm7,xmm0
+a32 gs vfmadd132ss xmm5,xmm2,xmm12
+a32 vfmadd132ss xmm5,xmm2,xmm15
+a32 vfmadd132ss xmm5,xmm2,xmm0
+gs a32 vfmadd132ss xmm5,xmm8,xmm12
+a32 vfmadd132ss xmm5,xmm8,xmm15
+vfmadd132ss xmm5,xmm8,xmm0

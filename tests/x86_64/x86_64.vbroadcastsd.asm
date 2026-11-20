@@ -1,27 +1,27 @@
-gs vbroadcastsd ymm5,qword [rbx + 8 * rdx]
-vbroadcastsd ymm5,qword [r13]
-vbroadcastsd ymm5,qword [r12]
-gs vbroadcastsd ymm9,qword [rbx + 8 * rdx]
-vbroadcastsd ymm9,qword [r13]
-gs vbroadcastsd ymm9,qword [r12]
-gs vbroadcastsd ymm7,qword [rbx + 8 * rdx]
-gs vbroadcastsd ymm7,qword [r13]
-gs vbroadcastsd ymm7,qword [r12]
-gs a32 vbroadcastsd ymm6,qword [r11d + r11d * 2 + 0x2a3ea8bc]
-vbroadcastsd ymm6,qword [r12d]
-gs a32 vbroadcastsd ymm6,qword [ebp]
-vbroadcastsd ymm1,qword [r11d + r11d * 2 + 0x2a3ea8bc]
-vbroadcastsd ymm1,qword [r12d]
-gs a32 vbroadcastsd ymm1,qword [ebp]
-vbroadcastsd ymm11,qword [r11d + r11d * 2 + 0x2a3ea8bc]
-vbroadcastsd ymm11,qword [r12d]
-vbroadcastsd ymm11,qword [ebp]
-gs vbroadcastsd ymm9,xmm8
-vbroadcastsd ymm9,xmm5
-a32 vbroadcastsd ymm9,xmm0
-gs a32 vbroadcastsd ymm8,xmm8
-vbroadcastsd ymm8,xmm5
+vbroadcastsd ymm4,qword [rsp + 1 * rbp]
+gs vbroadcastsd ymm4,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vbroadcastsd ymm4,qword [r11 + r11 * 2 + 0x2f5c0a3e]
+vbroadcastsd ymm12,qword [rsp + 1 * rbp]
+vbroadcastsd ymm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vbroadcastsd ymm12,qword [r11 + r11 * 2 + 0x2f5c0a3e]
+vbroadcastsd ymm0,qword [rsp + 1 * rbp]
+gs vbroadcastsd ymm0,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vbroadcastsd ymm0,qword [r11 + r11 * 2 + 0x2f5c0a3e]
+a32 vbroadcastsd ymm8,qword [r15d + 2 * edi + 0x72]
+vbroadcastsd ymm8,qword [esp + 1 * ebp]
+vbroadcastsd ymm8,qword [r13d]
+a32 gs vbroadcastsd ymm5,qword [r15d + 2 * edi + 0x72]
+a32 gs vbroadcastsd ymm5,qword [esp + 1 * ebp]
+vbroadcastsd ymm5,qword [r13d]
+gs vbroadcastsd ymm14,qword [r15d + 2 * edi + 0x72]
+gs vbroadcastsd ymm14,qword [esp + 1 * ebp]
+vbroadcastsd ymm14,qword [r13d]
+gs vbroadcastsd ymm13,xmm2
+gs a32 vbroadcastsd ymm13,xmm9
+gs vbroadcastsd ymm13,xmm0
+a32 vbroadcastsd ymm0,xmm2
+a32 vbroadcastsd ymm0,xmm9
+a32 gs vbroadcastsd ymm0,xmm0
+a32 vbroadcastsd ymm8,xmm2
+gs vbroadcastsd ymm8,xmm9
 gs vbroadcastsd ymm8,xmm0
-gs a32 vbroadcastsd ymm6,xmm8
-gs vbroadcastsd ymm6,xmm5
-gs vbroadcastsd ymm6,xmm0

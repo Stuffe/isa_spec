@@ -1,2 +1,2 @@
-o16 cmc 
-a32 gs o16 cmc 
+gs a32 cmc 
+a32 cmc 

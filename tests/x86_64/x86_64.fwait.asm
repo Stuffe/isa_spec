@@ -1,2 +1,2 @@
-gs  o16 a32 fwait 
-a32 o16 gs  fwait 
+gs o16  fwait 
+gs o16 a32 fwait 

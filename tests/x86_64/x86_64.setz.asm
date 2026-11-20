@@ -1,18 +1,18 @@
-o16 gs setz byte [r11 + r11 * 2 + 0x79eda1a3]
-setz byte [rbx + 8 * rdx]
-gs o16 setz byte [r13]
-gs o16 setz byte [eax]
-a32 o16 gs setz byte [ebp]
-gs o16 setz byte [r14d + 1 * edx + 0x7FFFFFFF]
-o16 gs setz byte [r13]
-gs o16 setz byte [rbx + 8 * rdx]
-o16 gs setz byte [r15 + 2 * rdi + 0x72]
-o16 a32 gs setz byte [ebp]
-gs o16 setz byte [esp + 1 * ebp]
-setz byte [r12d]
-o16 a32 setz sil
-gs o16 setz dil
-o16 a32 setz spl
-gs setz r10b
-gs a32 setz r11b
-a32 o16 gs setz sil
+gs setz byte [rdx - 0x80000000]
+gs o16 setz byte [r12]
+o16 setz byte [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs a32 setz byte [edx - 0x80000000]
+setz byte [esp]
+o16 a32 setz byte [r11d + r11d * 2 + 0x1866c8e3]
+gs o16 setz byte [r11 + r11 * 2 + 0x1866c8e3]
+gs o16 setz byte [rsp + 1 * rbp]
+o16 gs setz byte [rdx - 0x80000000]
+gs o16 a32 setz byte [r11d + r11d * 2 + 0x1866c8e3]
+a32 gs setz byte [r15d + 2 * edi + 0x72]
+o16 setz byte [ebp]
+a32 gs setz bpl
+o16 a32 gs setz cl
+a32 gs o16 setz al
+a32 gs o16 setz r10b
+a32 gs o16 setz dil
+o16 gs a32 setz r8b

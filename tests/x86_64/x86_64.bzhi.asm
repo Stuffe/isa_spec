@@ -1,162 +1,162 @@
-bzhi rsi,qword [rdx - 0x80000000],r10
-bzhi rsi,qword [rdx - 0x80000000],rsi
-bzhi rsi,qword [rdx - 0x80000000],rax
-gs bzhi rsi,qword [r12],r10
-bzhi rsi,qword [r12],rsi
-bzhi rsi,qword [r12],rax
-gs bzhi rsi,qword [r13],r10
-bzhi rsi,qword [r13],rsi
-gs bzhi rsi,qword [r13],rax
-gs bzhi rdi,qword [rdx - 0x80000000],r10
-bzhi rdi,qword [rdx - 0x80000000],rsi
-bzhi rdi,qword [rdx - 0x80000000],rax
-bzhi rdi,qword [r12],r10
-gs bzhi rdi,qword [r12],rsi
-gs bzhi rdi,qword [r12],rax
-gs bzhi rdi,qword [r13],r10
-bzhi rdi,qword [r13],rsi
-gs bzhi rdi,qword [r13],rax
-bzhi rsp,qword [rdx - 0x80000000],r10
-gs bzhi rsp,qword [rdx - 0x80000000],rsi
-bzhi rsp,qword [rdx - 0x80000000],rax
-gs bzhi rsp,qword [r12],r10
-bzhi rsp,qword [r12],rsi
-gs bzhi rsp,qword [r12],rax
-bzhi rsp,qword [r13],r10
-gs bzhi rsp,qword [r13],rsi
-bzhi rsp,qword [r13],rax
-a32 gs bzhi r9,qword [r14d + 1 * edx + 0x7FFFFFFF],r10
-bzhi r9,qword [r14d + 1 * edx + 0x7FFFFFFF],rdi
-bzhi r9,qword [r14d + 1 * edx + 0x7FFFFFFF],r8
-gs a32 bzhi r9,qword [r12d],r10
-a32 bzhi r9,qword [r12d],rdi
-gs a32 bzhi r9,qword [r12d],r8
-a32 gs bzhi r9,qword [r13d],r10
-gs a32 bzhi r9,qword [r13d],rdi
-bzhi r9,qword [r13d],r8
-a32 gs bzhi r13,qword [r14d + 1 * edx + 0x7FFFFFFF],r10
-gs bzhi r13,qword [r14d + 1 * edx + 0x7FFFFFFF],rdi
-a32 gs bzhi r13,qword [r14d + 1 * edx + 0x7FFFFFFF],r8
-gs a32 bzhi r13,qword [r12d],r10
-a32 gs bzhi r13,qword [r12d],rdi
-gs bzhi r13,qword [r12d],r8
-a32 bzhi r13,qword [r13d],r10
-a32 gs bzhi r13,qword [r13d],rdi
-bzhi r13,qword [r13d],r8
-gs bzhi rcx,qword [r14d + 1 * edx + 0x7FFFFFFF],r10
-a32 bzhi rcx,qword [r14d + 1 * edx + 0x7FFFFFFF],rdi
-gs a32 bzhi rcx,qword [r14d + 1 * edx + 0x7FFFFFFF],r8
-a32 bzhi rcx,qword [r12d],r10
-a32 bzhi rcx,qword [r12d],rdi
-gs a32 bzhi rcx,qword [r12d],r8
-bzhi rcx,qword [r13d],r10
-gs bzhi rcx,qword [r13d],rdi
-gs bzhi rcx,qword [r13d],r8
-gs a32 bzhi rax,r14,r11
-gs a32 bzhi rax,r14,r9
-a32 gs bzhi rax,r14,rdi
-bzhi rax,r13,r11
-bzhi rax,r13,r9
-gs bzhi rax,r13,rdi
-bzhi rax,rbp,r11
-a32 bzhi rax,rbp,r9
-gs bzhi rax,rbp,rdi
-a32 gs bzhi rbp,r14,r11
-a32 gs bzhi rbp,r14,r9
-gs bzhi rbp,r14,rdi
-a32 bzhi rbp,r13,r11
-gs bzhi rbp,r13,r9
-gs a32 bzhi rbp,r13,rdi
-gs a32 bzhi rbp,rbp,r11
-a32 gs bzhi rbp,rbp,r9
-bzhi rbp,rbp,rdi
-gs bzhi rsi,r14,r11
-bzhi rsi,r14,r9
-a32 bzhi rsi,r14,rdi
-gs a32 bzhi rsi,r13,r11
-a32 gs bzhi rsi,r13,r9
-a32 bzhi rsi,r13,rdi
-a32 gs bzhi rsi,rbp,r11
-bzhi rsi,rbp,r9
-a32 bzhi rsi,rbp,rdi
-gs bzhi ecx,dword [r12],r12d
-gs bzhi ecx,dword [r12],eax
-gs bzhi ecx,dword [r12],r15d
-bzhi ecx,dword [r11 + r11 * 2 + 0x54509b29],r12d
-gs bzhi ecx,dword [r11 + r11 * 2 + 0x54509b29],eax
-gs bzhi ecx,dword [r11 + r11 * 2 + 0x54509b29],r15d
-bzhi ecx,dword [rsp + 1 * rbp],r12d
-gs bzhi ecx,dword [rsp + 1 * rbp],eax
-bzhi ecx,dword [rsp + 1 * rbp],r15d
-bzhi esp,dword [r12],r12d
-bzhi esp,dword [r12],eax
-bzhi esp,dword [r12],r15d
-gs bzhi esp,dword [r11 + r11 * 2 + 0x54509b29],r12d
-bzhi esp,dword [r11 + r11 * 2 + 0x54509b29],eax
-bzhi esp,dword [r11 + r11 * 2 + 0x54509b29],r15d
-bzhi esp,dword [rsp + 1 * rbp],r12d
+bzhi rdx,qword [rdx - 0x80000000],r11
+bzhi rdx,qword [rdx - 0x80000000],r8
+gs bzhi rdx,qword [rdx - 0x80000000],r13
+gs bzhi rdx,qword [r14 + 1 * rdx + 0x7FFFFFFF],r11
+gs bzhi rdx,qword [r14 + 1 * rdx + 0x7FFFFFFF],r8
+gs bzhi rdx,qword [r14 + 1 * rdx + 0x7FFFFFFF],r13
+bzhi rdx,qword [rsp + 1 * rbp],r11
+gs bzhi rdx,qword [rsp + 1 * rbp],r8
+bzhi rdx,qword [rsp + 1 * rbp],r13
+bzhi r11,qword [rdx - 0x80000000],r11
+bzhi r11,qword [rdx - 0x80000000],r8
+bzhi r11,qword [rdx - 0x80000000],r13
+bzhi r11,qword [r14 + 1 * rdx + 0x7FFFFFFF],r11
+bzhi r11,qword [r14 + 1 * rdx + 0x7FFFFFFF],r8
+bzhi r11,qword [r14 + 1 * rdx + 0x7FFFFFFF],r13
+bzhi r11,qword [rsp + 1 * rbp],r11
+gs bzhi r11,qword [rsp + 1 * rbp],r8
+gs bzhi r11,qword [rsp + 1 * rbp],r13
+gs bzhi r12,qword [rdx - 0x80000000],r11
+bzhi r12,qword [rdx - 0x80000000],r8
+bzhi r12,qword [rdx - 0x80000000],r13
+bzhi r12,qword [r14 + 1 * rdx + 0x7FFFFFFF],r11
+gs bzhi r12,qword [r14 + 1 * rdx + 0x7FFFFFFF],r8
+gs bzhi r12,qword [r14 + 1 * rdx + 0x7FFFFFFF],r13
+gs bzhi r12,qword [rsp + 1 * rbp],r11
+bzhi r12,qword [rsp + 1 * rbp],r8
+bzhi r12,qword [rsp + 1 * rbp],r13
+gs bzhi rbp,qword [r11d + r11d * 2 + 0x2a275c0c],rbp
+gs bzhi rbp,qword [r11d + r11d * 2 + 0x2a275c0c],rdx
+a32 gs bzhi rbp,qword [r11d + r11d * 2 + 0x2a275c0c],r13
+gs bzhi rbp,qword [r15d + 2 * edi + 0x72],rbp
+gs a32 bzhi rbp,qword [r15d + 2 * edi + 0x72],rdx
+bzhi rbp,qword [r15d + 2 * edi + 0x72],r13
+gs a32 bzhi rbp,qword [ebp],rbp
+a32 gs bzhi rbp,qword [ebp],rdx
+gs bzhi rbp,qword [ebp],r13
+bzhi rdx,qword [r11d + r11d * 2 + 0x2a275c0c],rbp
+bzhi rdx,qword [r11d + r11d * 2 + 0x2a275c0c],rdx
+gs bzhi rdx,qword [r11d + r11d * 2 + 0x2a275c0c],r13
+gs a32 bzhi rdx,qword [r15d + 2 * edi + 0x72],rbp
+a32 gs bzhi rdx,qword [r15d + 2 * edi + 0x72],rdx
+bzhi rdx,qword [r15d + 2 * edi + 0x72],r13
+bzhi rdx,qword [ebp],rbp
+bzhi rdx,qword [ebp],rdx
+gs a32 bzhi rdx,qword [ebp],r13
+gs bzhi rax,qword [r11d + r11d * 2 + 0x2a275c0c],rbp
+bzhi rax,qword [r11d + r11d * 2 + 0x2a275c0c],rdx
+gs bzhi rax,qword [r11d + r11d * 2 + 0x2a275c0c],r13
+a32 bzhi rax,qword [r15d + 2 * edi + 0x72],rbp
+a32 gs bzhi rax,qword [r15d + 2 * edi + 0x72],rdx
+a32 bzhi rax,qword [r15d + 2 * edi + 0x72],r13
+gs a32 bzhi rax,qword [ebp],rbp
+a32 gs bzhi rax,qword [ebp],rdx
+a32 gs bzhi rax,qword [ebp],r13
+gs a32 bzhi rbx,r14,rdi
+bzhi rbx,r14,r10
+gs a32 bzhi rbx,r14,r8
+a32 gs bzhi rbx,rcx,rdi
+gs bzhi rbx,rcx,r10
+a32 bzhi rbx,rcx,r8
+bzhi rbx,rax,rdi
+a32 gs bzhi rbx,rax,r10
+a32 gs bzhi rbx,rax,r8
+gs a32 bzhi rax,r14,rdi
+gs bzhi rax,r14,r10
+a32 gs bzhi rax,r14,r8
+a32 gs bzhi rax,rcx,rdi
+gs a32 bzhi rax,rcx,r10
+bzhi rax,rcx,r8
+a32 gs bzhi rax,rax,rdi
+a32 bzhi rax,rax,r10
+a32 bzhi rax,rax,r8
+gs a32 bzhi rsi,r14,rdi
+bzhi rsi,r14,r10
+gs a32 bzhi rsi,r14,r8
+gs a32 bzhi rsi,rcx,rdi
+a32 gs bzhi rsi,rcx,r10
+a32 gs bzhi rsi,rcx,r8
+a32 gs bzhi rsi,rax,rdi
+gs bzhi rsi,rax,r10
+gs bzhi rsi,rax,r8
+gs bzhi edi,dword [rsp + 1 * rbp],edx
+bzhi edi,dword [rsp + 1 * rbp],eax
+gs bzhi edi,dword [rsp + 1 * rbp],r13d
+gs bzhi edi,dword [rbx + 8 * rdx],edx
+gs bzhi edi,dword [rbx + 8 * rdx],eax
+gs bzhi edi,dword [rbx + 8 * rdx],r13d
+bzhi edi,dword [r14 + 1 * rdx + 0x7FFFFFFF],edx
+bzhi edi,dword [r14 + 1 * rdx + 0x7FFFFFFF],eax
+bzhi edi,dword [r14 + 1 * rdx + 0x7FFFFFFF],r13d
+bzhi esp,dword [rsp + 1 * rbp],edx
 gs bzhi esp,dword [rsp + 1 * rbp],eax
-gs bzhi esp,dword [rsp + 1 * rbp],r15d
-gs bzhi ebp,dword [r12],r12d
-gs bzhi ebp,dword [r12],eax
-bzhi ebp,dword [r12],r15d
-gs bzhi ebp,dword [r11 + r11 * 2 + 0x54509b29],r12d
-bzhi ebp,dword [r11 + r11 * 2 + 0x54509b29],eax
-bzhi ebp,dword [r11 + r11 * 2 + 0x54509b29],r15d
-gs bzhi ebp,dword [rsp + 1 * rbp],r12d
+gs bzhi esp,dword [rsp + 1 * rbp],r13d
+gs bzhi esp,dword [rbx + 8 * rdx],edx
+gs bzhi esp,dword [rbx + 8 * rdx],eax
+gs bzhi esp,dword [rbx + 8 * rdx],r13d
+gs bzhi esp,dword [r14 + 1 * rdx + 0x7FFFFFFF],edx
+bzhi esp,dword [r14 + 1 * rdx + 0x7FFFFFFF],eax
+gs bzhi esp,dword [r14 + 1 * rdx + 0x7FFFFFFF],r13d
+bzhi ebp,dword [rsp + 1 * rbp],edx
 bzhi ebp,dword [rsp + 1 * rbp],eax
-gs bzhi ebp,dword [rsp + 1 * rbp],r15d
-a32 gs bzhi r11d,dword [esp + 1 * ebp],ebx
-bzhi r11d,dword [esp + 1 * ebp],edx
-a32 gs bzhi r11d,dword [esp + 1 * ebp],r10d
-gs a32 bzhi r11d,dword [r11d + r11d * 2 + 0x54509b29],ebx
-gs bzhi r11d,dword [r11d + r11d * 2 + 0x54509b29],edx
-gs a32 bzhi r11d,dword [r11d + r11d * 2 + 0x54509b29],r10d
-gs bzhi r11d,dword [r13d],ebx
-gs a32 bzhi r11d,dword [r13d],edx
-a32 bzhi r11d,dword [r13d],r10d
-a32 bzhi edx,dword [esp + 1 * ebp],ebx
-gs a32 bzhi edx,dword [esp + 1 * ebp],edx
-a32 gs bzhi edx,dword [esp + 1 * ebp],r10d
-bzhi edx,dword [r11d + r11d * 2 + 0x54509b29],ebx
-a32 gs bzhi edx,dword [r11d + r11d * 2 + 0x54509b29],edx
-gs a32 bzhi edx,dword [r11d + r11d * 2 + 0x54509b29],r10d
-a32 gs bzhi edx,dword [r13d],ebx
-a32 bzhi edx,dword [r13d],edx
-gs bzhi edx,dword [r13d],r10d
-gs bzhi ebp,dword [esp + 1 * ebp],ebx
-gs bzhi ebp,dword [esp + 1 * ebp],edx
-gs a32 bzhi ebp,dword [esp + 1 * ebp],r10d
-gs a32 bzhi ebp,dword [r11d + r11d * 2 + 0x54509b29],ebx
-gs bzhi ebp,dword [r11d + r11d * 2 + 0x54509b29],edx
-bzhi ebp,dword [r11d + r11d * 2 + 0x54509b29],r10d
-bzhi ebp,dword [r13d],ebx
-gs a32 bzhi ebp,dword [r13d],edx
-bzhi ebp,dword [r13d],r10d
-a32 bzhi esp,r8d,esp
-bzhi esp,r8d,ecx
-gs a32 bzhi esp,r8d,r15d
-bzhi esp,edi,esp
-a32 gs bzhi esp,edi,ecx
-a32 gs bzhi esp,edi,r15d
-gs bzhi esp,r12d,esp
-a32 gs bzhi esp,r12d,ecx
-bzhi esp,r12d,r15d
-gs bzhi r11d,r8d,esp
-a32 gs bzhi r11d,r8d,ecx
-gs bzhi r11d,r8d,r15d
-gs a32 bzhi r11d,edi,esp
-bzhi r11d,edi,ecx
-a32 bzhi r11d,edi,r15d
-gs a32 bzhi r11d,r12d,esp
-gs bzhi r11d,r12d,ecx
-gs bzhi r11d,r12d,r15d
-a32 gs bzhi r10d,r8d,esp
-a32 bzhi r10d,r8d,ecx
-gs a32 bzhi r10d,r8d,r15d
-a32 bzhi r10d,edi,esp
-gs a32 bzhi r10d,edi,ecx
-bzhi r10d,edi,r15d
-a32 gs bzhi r10d,r12d,esp
-a32 gs bzhi r10d,r12d,ecx
-a32 bzhi r10d,r12d,r15d
+gs bzhi ebp,dword [rsp + 1 * rbp],r13d
+gs bzhi ebp,dword [rbx + 8 * rdx],edx
+gs bzhi ebp,dword [rbx + 8 * rdx],eax
+gs bzhi ebp,dword [rbx + 8 * rdx],r13d
+gs bzhi ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF],edx
+gs bzhi ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF],eax
+bzhi ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF],r13d
+gs bzhi ebx,dword [r11d + r11d * 2 + 0x1460c7ea],r9d
+a32 bzhi ebx,dword [r11d + r11d * 2 + 0x1460c7ea],ebp
+gs a32 bzhi ebx,dword [r11d + r11d * 2 + 0x1460c7ea],r12d
+a32 gs bzhi ebx,dword [edx - 0x80000000],r9d
+a32 bzhi ebx,dword [edx - 0x80000000],ebp
+gs bzhi ebx,dword [edx - 0x80000000],r12d
+gs bzhi ebx,dword [esp],r9d
+gs bzhi ebx,dword [esp],ebp
+bzhi ebx,dword [esp],r12d
+a32 gs bzhi r13d,dword [r11d + r11d * 2 + 0x1460c7ea],r9d
+gs a32 bzhi r13d,dword [r11d + r11d * 2 + 0x1460c7ea],ebp
+a32 gs bzhi r13d,dword [r11d + r11d * 2 + 0x1460c7ea],r12d
+gs a32 bzhi r13d,dword [edx - 0x80000000],r9d
+bzhi r13d,dword [edx - 0x80000000],ebp
+a32 bzhi r13d,dword [edx - 0x80000000],r12d
+gs bzhi r13d,dword [esp],r9d
+gs bzhi r13d,dword [esp],ebp
+a32 gs bzhi r13d,dword [esp],r12d
+bzhi eax,dword [r11d + r11d * 2 + 0x1460c7ea],r9d
+a32 bzhi eax,dword [r11d + r11d * 2 + 0x1460c7ea],ebp
+a32 bzhi eax,dword [r11d + r11d * 2 + 0x1460c7ea],r12d
+gs bzhi eax,dword [edx - 0x80000000],r9d
+gs a32 bzhi eax,dword [edx - 0x80000000],ebp
+gs a32 bzhi eax,dword [edx - 0x80000000],r12d
+bzhi eax,dword [esp],r9d
+a32 bzhi eax,dword [esp],ebp
+gs a32 bzhi eax,dword [esp],r12d
+gs bzhi ecx,ecx,eax
+bzhi ecx,ecx,r14d
+bzhi ecx,ecx,r11d
+gs bzhi ecx,r12d,eax
+gs bzhi ecx,r12d,r14d
+gs bzhi ecx,r12d,r11d
+a32 bzhi ecx,eax,eax
+a32 bzhi ecx,eax,r14d
+gs bzhi ecx,eax,r11d
+bzhi r12d,ecx,eax
+a32 gs bzhi r12d,ecx,r14d
+a32 bzhi r12d,ecx,r11d
+gs a32 bzhi r12d,r12d,eax
+bzhi r12d,r12d,r14d
+a32 bzhi r12d,r12d,r11d
+a32 bzhi r12d,eax,eax
+bzhi r12d,eax,r14d
+gs a32 bzhi r12d,eax,r11d
+bzhi r15d,ecx,eax
+gs a32 bzhi r15d,ecx,r14d
+bzhi r15d,ecx,r11d
+gs bzhi r15d,r12d,eax
+bzhi r15d,r12d,r14d
+a32 bzhi r15d,r12d,r11d
+gs bzhi r15d,eax,eax
+a32 bzhi r15d,eax,r14d
+gs a32 bzhi r15d,eax,r11d

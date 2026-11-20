@@ -1,54 +1,54 @@
-o16 cmpleps xmm11,oword [rdx - 0x80000000]
-o16 cmpleps xmm11,oword [rbp]
-o16 gs cmpleps xmm11,oword [r11 + r11 * 2 + 0x1145d35d]
-o16 gs cmpleps xmm9,oword [rdx - 0x80000000]
-cmpleps xmm9,oword [rbp]
-o16 cmpleps xmm9,oword [r11 + r11 * 2 + 0x1145d35d]
-o16 cmpleps xmm0,oword [rdx - 0x80000000]
-gs cmpleps xmm0,oword [rbp]
-gs cmpleps xmm0,oword [r11 + r11 * 2 + 0x1145d35d]
-a32 o16 cmpleps xmm10,oword [ebx + 8 * edx]
-a32 gs o16 cmpleps xmm10,oword [r13d]
-o16 gs a32 cmpleps xmm10,oword [r15d + 2 * edi + 0x72]
-cmpleps xmm4,oword [ebx + 8 * edx]
-a32 o16 cmpleps xmm4,oword [r13d]
-gs cmpleps xmm4,oword [r15d + 2 * edi + 0x72]
-o16 gs a32 cmpleps xmm3,oword [ebx + 8 * edx]
-a32 gs o16 cmpleps xmm3,oword [r13d]
-a32 gs o16 cmpleps xmm3,oword [r15d + 2 * edi + 0x72]
-o16 cmpleps xmm9,oword [rsp + 1 * rbp]
-o16 gs cmpleps xmm9,oword [r15 + 2 * rdi + 0x72]
-gs cmpleps xmm9,oword [rsp]
-gs o16 cmpleps xmm10,oword [rsp + 1 * rbp]
-cmpleps xmm10,oword [r15 + 2 * rdi + 0x72]
-gs o16 cmpleps xmm10,oword [rsp]
-gs o16 cmpleps xmm2,oword [rsp + 1 * rbp]
-gs o16 cmpleps xmm2,oword [r15 + 2 * rdi + 0x72]
-gs o16 cmpleps xmm2,oword [rsp]
-o16 gs a32 cmpleps xmm3,oword [esp]
-o16 gs cmpleps xmm3,oword [r11d + r11d * 2 + 0x1145d35d]
-cmpleps xmm3,oword [ebp]
-o16 gs cmpleps xmm6,oword [esp]
-a32 gs cmpleps xmm6,oword [r11d + r11d * 2 + 0x1145d35d]
-o16 a32 cmpleps xmm6,oword [ebp]
-o16 cmpleps xmm10,oword [esp]
-o16 gs a32 cmpleps xmm10,oword [r11d + r11d * 2 + 0x1145d35d]
-o16 gs a32 cmpleps xmm10,oword [ebp]
-a32 gs o16 cmpleps xmm13,xmm9
-a32 o16 gs cmpleps xmm13,xmm8
-a32 gs cmpleps xmm13,xmm4
-a32 cmpleps xmm6,xmm9
-a32 gs cmpleps xmm6,xmm8
-a32 o16 cmpleps xmm6,xmm4
-o16 cmpleps xmm1,xmm9
-o16 a32 gs cmpleps xmm1,xmm8
-a32 cmpleps xmm1,xmm4
-o16 a32 cmpleps xmm3,xmm0
-o16 gs a32 cmpleps xmm3,xmm10
-gs a32 cmpleps xmm3,xmm15
-a32 cmpleps xmm6,xmm0
-gs o16 cmpleps xmm6,xmm10
-gs o16 a32 cmpleps xmm6,xmm15
-a32 o16 cmpleps xmm0,xmm0
-gs o16 cmpleps xmm0,xmm10
-gs a32 o16 cmpleps xmm0,xmm15
+o16 gs cmpleps xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmpleps xmm6,oword [r13]
+o16 cmpleps xmm6,oword [rbp]
+gs o16 cmpleps xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmpleps xmm7,oword [r13]
+cmpleps xmm7,oword [rbp]
+gs cmpleps xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 cmpleps xmm0,oword [r13]
+cmpleps xmm0,oword [rbp]
+cmpleps xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 a32 gs cmpleps xmm15,oword [r12d]
+a32 o16 cmpleps xmm15,oword [esp + 1 * ebp]
+gs a32 o16 cmpleps xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs o16 a32 cmpleps xmm0,oword [r12d]
+gs a32 o16 cmpleps xmm0,oword [esp + 1 * ebp]
+o16 cmpleps xmm14,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 cmpleps xmm14,oword [r12d]
+a32 cmpleps xmm14,oword [esp + 1 * ebp]
+gs o16 cmpleps xmm3,oword [r12]
+cmpleps xmm3,oword [rdx - 0x80000000]
+o16 cmpleps xmm3,oword [rsp + 1 * rbp]
+gs o16 cmpleps xmm1,oword [r12]
+gs o16 cmpleps xmm1,oword [rdx - 0x80000000]
+gs o16 cmpleps xmm1,oword [rsp + 1 * rbp]
+o16 cmpleps xmm2,oword [r12]
+o16 gs cmpleps xmm2,oword [rdx - 0x80000000]
+o16 gs cmpleps xmm2,oword [rsp + 1 * rbp]
+gs o16 cmpleps xmm8,oword [ebx + 8 * edx]
+cmpleps xmm8,oword [r11d + r11d * 2 + 0x5eafa520]
+o16 a32 cmpleps xmm8,oword [r12d]
+gs o16 a32 cmpleps xmm12,oword [ebx + 8 * edx]
+a32 o16 gs cmpleps xmm12,oword [r11d + r11d * 2 + 0x5eafa520]
+a32 cmpleps xmm12,oword [r12d]
+o16 a32 gs cmpleps xmm0,oword [ebx + 8 * edx]
+a32 o16 cmpleps xmm0,oword [r11d + r11d * 2 + 0x5eafa520]
+o16 cmpleps xmm0,oword [r12d]
+cmpleps xmm5,xmm14
+o16 cmpleps xmm5,xmm10
+gs a32 o16 cmpleps xmm5,xmm0
+gs cmpleps xmm15,xmm14
+a32 cmpleps xmm15,xmm10
+a32 gs cmpleps xmm15,xmm0
+cmpleps xmm14,xmm14
+a32 cmpleps xmm14,xmm10
+gs cmpleps xmm14,xmm0
+a32 gs o16 cmpleps xmm3,xmm9
+gs a32 o16 cmpleps xmm3,xmm14
+o16 a32 cmpleps xmm3,xmm15
+o16 a32 cmpleps xmm12,xmm9
+o16 a32 cmpleps xmm12,xmm14
+gs o16 a32 cmpleps xmm12,xmm15
+o16 gs cmpleps xmm11,xmm9
+o16 a32 gs cmpleps xmm11,xmm14
+o16 a32 gs cmpleps xmm11,xmm15

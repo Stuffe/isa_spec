@@ -1,18 +1,18 @@
-verw word [rbp]
-o16 verw word [r12]
-verw word [r11 + r11 * 2 + 0x6738c76a]
-a32 gs o16 verw word [r15d + 2 * edi + 0x72]
-o16 gs verw word [ebp]
-gs o16 verw word [esp + 1 * ebp]
-o16 verw word [rsp]
-o16 verw word [rbp]
-o16 gs verw word [r12]
-gs verw word [r12d]
-verw word [eax]
-a32 gs o16 verw word [ebx + 8 * edx]
-verw r11w
-gs a32 verw bx
-o16 gs verw si
-gs o16 a32 verw r10w
-gs a32 o16 verw si
-o16 gs verw di
+o16 gs verw word [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs verw word [r13]
+o16 gs verw word [rbp]
+a32 verw word [ebx + 8 * edx]
+gs o16 a32 verw word [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 verw word [eax]
+gs verw word [rsp + 1 * rbp]
+verw word [rdx - 0x80000000]
+gs verw word [rsp]
+gs a32 verw word [ebp]
+verw word [r14d + 1 * edx + 0x7FFFFFFF]
+o16 gs a32 verw word [esp]
+o16 verw r13w
+gs o16 a32 verw di
+a32 o16 verw dx
+gs a32 verw r11w
+o16 verw si
+o16 a32 verw r12w

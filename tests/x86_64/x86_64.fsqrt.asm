@@ -1,2 +1,2 @@
-o16 a32 gs fsqrt 
-o16 gs a32 fsqrt 
+gs o16 a32 fsqrt 
+a32 fsqrt 

@@ -1,216 +1,216 @@
-gs crc32 rsi,byte [r13]
-gs crc32 rsi,byte [r11 + r11 * 2 + 0x78625cf7]
-crc32 rsi,byte [r15 + 2 * rdi + 0x72]
-gs  crc32 rbp,byte [r13]
- gs crc32 rbp,byte [r11 + r11 * 2 + 0x78625cf7]
-gs  crc32 rbp,byte [r15 + 2 * rdi + 0x72]
- gs crc32 rcx,byte [r13]
-crc32 rcx,byte [r11 + r11 * 2 + 0x78625cf7]
- gs crc32 rcx,byte [r15 + 2 * rdi + 0x72]
-crc32 r15,byte [r14d + 1 * edx + 0x7FFFFFFF]
-a32  gs crc32 r15,byte [esp]
- a32 crc32 r15,byte [r15d + 2 * edi + 0x72]
-gs a32  crc32 r8,byte [r14d + 1 * edx + 0x7FFFFFFF]
-a32  crc32 r8,byte [esp]
- gs a32 crc32 r8,byte [r15d + 2 * edi + 0x72]
- a32 gs crc32 r13,byte [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32  crc32 r13,byte [esp]
- gs crc32 r13,byte [r15d + 2 * edi + 0x72]
-gs crc32 rdx,r15b
-a32  gs crc32 rdx,sil
-gs a32  crc32 rdx,r9b
-a32 crc32 rax,r15b
-a32  gs crc32 rax,sil
- a32 gs crc32 rax,r9b
- a32 gs crc32 rcx,r15b
- a32 crc32 rcx,sil
-gs a32  crc32 rcx,r9b
-gs  crc32 ecx,byte [rdx - 0x80000000]
- gs crc32 ecx,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-gs crc32 ecx,byte [r13]
-crc32 r12d,byte [rdx - 0x80000000]
- gs crc32 r12d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-crc32 r12d,byte [r13]
-crc32 edx,byte [rdx - 0x80000000]
-gs  crc32 edx,byte [r14 + 1 * rdx + 0x7FFFFFFF]
-crc32 edx,byte [r13]
-gs  a32 crc32 esi,byte [eax]
-a32  crc32 esi,byte [ebp]
-a32 gs  crc32 esi,byte [r15d + 2 * edi + 0x72]
-gs  crc32 r12d,byte [eax]
-gs  crc32 r12d,byte [ebp]
-crc32 r12d,byte [r15d + 2 * edi + 0x72]
- a32 gs crc32 edi,byte [eax]
- gs a32 crc32 edi,byte [ebp]
-a32 gs crc32 edi,byte [r15d + 2 * edi + 0x72]
-crc32 r9d,byte [r13]
- gs crc32 r9d,byte [rsp]
-crc32 r9d,byte [r12]
-crc32 ecx,byte [r13]
-gs  crc32 ecx,byte [rsp]
-crc32 ecx,byte [r12]
-gs crc32 edi,byte [r13]
-crc32 edi,byte [rsp]
-gs  crc32 edi,byte [r12]
-gs a32  crc32 r11d,byte [edx - 0x80000000]
-a32  gs crc32 r11d,byte [r15d + 2 * edi + 0x72]
-a32 crc32 r11d,byte [esp]
- a32 gs crc32 ecx,byte [edx - 0x80000000]
-crc32 ecx,byte [r15d + 2 * edi + 0x72]
-a32 gs  crc32 ecx,byte [esp]
-a32  crc32 r10d,byte [edx - 0x80000000]
-gs  crc32 r10d,byte [r15d + 2 * edi + 0x72]
-a32 gs  crc32 r10d,byte [esp]
-crc32 ebx,cl
-a32  gs crc32 ebx,r8b
-gs  crc32 ebx,r12b
-gs a32 crc32 eax,cl
- gs a32 crc32 eax,r8b
-a32 gs  crc32 eax,r12b
-gs a32 crc32 r8d,cl
-gs  crc32 r8d,r8b
-a32 crc32 r8d,r12b
-gs  crc32 r14d,r10b
-a32 gs crc32 r14d,dil
-gs  a32 crc32 r14d,r14b
+ gs crc32 rcx,byte [rax]
+crc32 rcx,byte [r12]
+crc32 rcx,byte [r15 + 2 * rdi + 0x72]
+crc32 rsp,byte [rax]
+crc32 rsp,byte [r12]
+gs crc32 rsp,byte [r15 + 2 * rdi + 0x72]
+gs  crc32 r15,byte [rax]
+crc32 r15,byte [r12]
+crc32 r15,byte [r15 + 2 * rdi + 0x72]
+crc32 rdi,byte [r12d]
+a32 gs crc32 rdi,byte [r15d + 2 * edi + 0x72]
+crc32 rdi,byte [edx - 0x80000000]
+crc32 rdx,byte [r12d]
+ gs crc32 rdx,byte [r15d + 2 * edi + 0x72]
+crc32 rdx,byte [edx - 0x80000000]
+ gs crc32 r10,byte [r12d]
+crc32 r10,byte [r15d + 2 * edi + 0x72]
+a32 crc32 r10,byte [edx - 0x80000000]
+a32 gs crc32 r12,bl
+gs a32  crc32 r12,r11b
+a32 gs crc32 r12,r8b
+ a32 crc32 rdx,bl
+gs  crc32 rdx,r11b
+ gs crc32 rdx,r8b
+gs a32  crc32 rbx,bl
+ a32 crc32 rbx,r11b
+ gs a32 crc32 rbx,r8b
+crc32 r15d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+crc32 r15d,byte [r13]
+ gs crc32 r15d,byte [rax]
+crc32 edi,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+crc32 edi,byte [r13]
+gs crc32 edi,byte [rax]
+gs  crc32 r13d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+gs  crc32 r13d,byte [r13]
+ gs crc32 r13d,byte [rax]
+a32 gs  crc32 edx,byte [ebp]
+ a32 gs crc32 edx,byte [esp]
+crc32 edx,byte [esp + 1 * ebp]
+crc32 r14d,byte [ebp]
+gs a32  crc32 r14d,byte [esp]
+ a32 gs crc32 r14d,byte [esp + 1 * ebp]
+ a32 gs crc32 ebp,byte [ebp]
+a32  crc32 ebp,byte [esp]
+a32 crc32 ebp,byte [esp + 1 * ebp]
+gs crc32 r11d,byte [r15 + 2 * rdi + 0x72]
+gs crc32 r11d,byte [r11 + r11 * 2 + 0xb5be4c1]
+crc32 r11d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+gs crc32 r10d,byte [r15 + 2 * rdi + 0x72]
+crc32 r10d,byte [r11 + r11 * 2 + 0xb5be4c1]
+crc32 r10d,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+crc32 ecx,byte [r15 + 2 * rdi + 0x72]
+gs  crc32 ecx,byte [r11 + r11 * 2 + 0xb5be4c1]
+crc32 ecx,byte [r14 + 1 * rdx + 0x7FFFFFFF]
+ a32 gs crc32 r8d,byte [r14d + 1 * edx + 0x7FFFFFFF]
+a32  gs crc32 r8d,byte [ebx + 8 * edx]
+ gs crc32 r8d,byte [eax]
+ gs crc32 r11d,byte [r14d + 1 * edx + 0x7FFFFFFF]
+a32  gs crc32 r11d,byte [ebx + 8 * edx]
+ gs a32 crc32 r11d,byte [eax]
+a32 gs  crc32 r14d,byte [r14d + 1 * edx + 0x7FFFFFFF]
+ a32 gs crc32 r14d,byte [ebx + 8 * edx]
+crc32 r14d,byte [eax]
+gs  crc32 edx,r8b
+gs  crc32 edx,dil
+gs  crc32 edx,sil
+gs crc32 r14d,r8b
+ gs crc32 r14d,dil
+gs crc32 r14d,sil
+crc32 ebx,r8b
+gs a32 crc32 ebx,dil
+a32  crc32 ebx,sil
+ a32 gs crc32 edx,al
 gs a32  crc32 edx,r10b
-a32  gs crc32 edx,dil
- gs a32 crc32 edx,r14b
-a32  gs crc32 r15d,r10b
- gs crc32 r15d,dil
-crc32 r15d,r14b
- gs crc32 r13d,word [r15 + 2 * rdi + 0x72]
-o16  gs crc32 r13d,word [rax]
-o16 crc32 r13d,word [rsp]
- gs crc32 esp,word [r15 + 2 * rdi + 0x72]
-o16 gs  crc32 esp,word [rax]
-o16  crc32 esp,word [rsp]
-gs  crc32 r10d,word [r15 + 2 * rdi + 0x72]
-gs  o16 crc32 r10d,word [rax]
-gs  o16 crc32 r10d,word [rsp]
-a32  crc32 esi,word [esp]
-o16 a32  gs crc32 esi,word [eax]
-gs a32  o16 crc32 esi,word [ebx + 8 * edx]
-gs a32  crc32 r11d,word [esp]
-a32 o16  crc32 r11d,word [eax]
-o16  a32 gs crc32 r11d,word [ebx + 8 * edx]
-gs o16  a32 crc32 ebp,word [esp]
-o16  a32 gs crc32 ebp,word [eax]
-a32 gs o16  crc32 ebp,word [ebx + 8 * edx]
-o16 crc32 r10d,word [r13]
-gs o16 crc32 r10d,word [r11 + r11 * 2 + 0xe60a87f]
-gs o16  crc32 r10d,word [rbx + 8 * rdx]
- o16 gs crc32 edx,word [r13]
- gs o16 crc32 edx,word [r11 + r11 * 2 + 0xe60a87f]
-o16  gs crc32 edx,word [rbx + 8 * rdx]
-gs  o16 crc32 r12d,word [r13]
-o16 gs  crc32 r12d,word [r11 + r11 * 2 + 0xe60a87f]
- gs crc32 r12d,word [rbx + 8 * rdx]
- o16 gs crc32 ebp,word [r12d]
- gs crc32 ebp,word [r15d + 2 * edi + 0x72]
-o16 gs a32 crc32 ebp,word [esp + 1 * ebp]
-a32 gs o16 crc32 r8d,word [r12d]
-gs  o16 crc32 r8d,word [r15d + 2 * edi + 0x72]
-a32 o16  crc32 r8d,word [esp + 1 * ebp]
-o16  gs a32 crc32 r13d,word [r12d]
-a32 crc32 r13d,word [r15d + 2 * edi + 0x72]
-a32 o16  gs crc32 r13d,word [esp + 1 * ebp]
-o16 gs  crc32 ebx,ax
-gs crc32 ebx,bp
-o16  gs a32 crc32 ebx,r12w
-o16 gs  crc32 r11d,ax
-o16 gs a32 crc32 r11d,bp
- a32 o16 crc32 r11d,r12w
-a32  gs o16 crc32 eax,ax
-o16 a32 gs crc32 eax,bp
- gs o16 crc32 eax,r12w
-a32 o16  gs crc32 edi,r14w
-gs o16 a32 crc32 edi,di
-a32 o16 gs  crc32 edi,r15w
-a32 o16 gs crc32 esp,r14w
- o16 crc32 esp,di
-o16  a32 gs crc32 esp,r15w
-gs o16 a32 crc32 esi,r14w
-o16 gs  crc32 esi,di
-o16  a32 gs crc32 esi,r15w
-gs crc32 rsi,qword [rax]
-gs crc32 rsi,qword [rsp + 1 * rbp]
-crc32 rsi,qword [r11 + r11 * 2 + 0x6fe75e67]
-crc32 rbp,qword [rax]
-gs  crc32 rbp,qword [rsp + 1 * rbp]
- gs crc32 rbp,qword [r11 + r11 * 2 + 0x6fe75e67]
-crc32 rdx,qword [rax]
-gs  crc32 rdx,qword [rsp + 1 * rbp]
- gs crc32 rdx,qword [r11 + r11 * 2 + 0x6fe75e67]
- gs crc32 rax,qword [edx - 0x80000000]
-a32 crc32 rax,qword [r11d + r11d * 2 + 0x6fe75e67]
- gs crc32 rax,qword [r12d]
-gs crc32 rcx,qword [edx - 0x80000000]
-crc32 rcx,qword [r11d + r11d * 2 + 0x6fe75e67]
-a32  crc32 rcx,qword [r12d]
- a32 gs crc32 rdx,qword [edx - 0x80000000]
- a32 gs crc32 rdx,qword [r11d + r11d * 2 + 0x6fe75e67]
-crc32 rdx,qword [r12d]
-gs crc32 rdx,rbp
- gs crc32 rdx,r10
-gs a32  crc32 rdx,r12
-gs  crc32 r11,rbp
-gs crc32 r11,r10
-gs  crc32 r11,r12
-gs a32 crc32 r14,rbp
-crc32 r14,r10
-gs a32 crc32 r14,r12
- gs crc32 r14d,dword [rsp + 1 * rbp]
-crc32 r14d,dword [r11 + r11 * 2 + 0x7cc8b4fb]
-gs  crc32 r14d,dword [rdx - 0x80000000]
-gs  crc32 r9d,dword [rsp + 1 * rbp]
- gs crc32 r9d,dword [r11 + r11 * 2 + 0x7cc8b4fb]
-crc32 r9d,dword [rdx - 0x80000000]
-crc32 r11d,dword [rsp + 1 * rbp]
-crc32 r11d,dword [r11 + r11 * 2 + 0x7cc8b4fb]
-gs crc32 r11d,dword [rdx - 0x80000000]
- a32 crc32 esi,dword [esp]
-a32 gs  crc32 esi,dword [ebp]
- a32 crc32 esi,dword [r13d]
-crc32 edx,dword [esp]
-gs a32 crc32 edx,dword [ebp]
-gs  crc32 edx,dword [r13d]
-crc32 esp,dword [esp]
- gs crc32 esp,dword [ebp]
-crc32 esp,dword [r13d]
-gs crc32 ebp,dword [r15 + 2 * rdi + 0x72]
- gs crc32 ebp,dword [rsp]
- gs crc32 ebp,dword [rbx + 8 * rdx]
+ gs a32 crc32 edx,r9b
+crc32 esi,al
+ gs a32 crc32 esi,r10b
+ gs a32 crc32 esi,r9b
+crc32 r13d,al
+gs  crc32 r13d,r10b
+crc32 r13d,r9b
+o16 gs crc32 r12d,word [rax]
+gs  o16 crc32 r12d,word [rsp]
+gs o16  crc32 r12d,word [r13]
+o16 crc32 r9d,word [rax]
+o16 crc32 r9d,word [rsp]
+o16  gs crc32 r9d,word [r13]
+crc32 ecx,word [rax]
+ o16 crc32 ecx,word [rsp]
+ o16 crc32 ecx,word [r13]
+gs  a32 o16 crc32 r12d,word [edx - 0x80000000]
+o16  gs crc32 r12d,word [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32  crc32 r12d,word [esp + 1 * ebp]
+o16 a32 gs crc32 esi,word [edx - 0x80000000]
+ gs o16 a32 crc32 esi,word [r14d + 1 * edx + 0x7FFFFFFF]
+ gs o16 a32 crc32 esi,word [esp + 1 * ebp]
+a32  gs o16 crc32 r9d,word [edx - 0x80000000]
+a32 crc32 r9d,word [r14d + 1 * edx + 0x7FFFFFFF]
+ gs a32 o16 crc32 r9d,word [esp + 1 * ebp]
+ gs o16 crc32 r13d,word [r15 + 2 * rdi + 0x72]
+ gs o16 crc32 r13d,word [rdx - 0x80000000]
+gs crc32 r13d,word [r13]
+o16  crc32 ebx,word [r15 + 2 * rdi + 0x72]
+gs  crc32 ebx,word [rdx - 0x80000000]
+ gs o16 crc32 ebx,word [r13]
+o16  gs crc32 edx,word [r15 + 2 * rdi + 0x72]
+o16 gs  crc32 edx,word [rdx - 0x80000000]
+gs o16  crc32 edx,word [r13]
+o16 a32 crc32 edx,word [esp + 1 * ebp]
+ a32 crc32 edx,word [eax]
+a32 o16  crc32 edx,word [esp]
+o16  crc32 r9d,word [esp + 1 * ebp]
+ a32 gs crc32 r9d,word [eax]
+o16  gs crc32 r9d,word [esp]
+ o16 a32 gs crc32 r10d,word [esp + 1 * ebp]
+gs o16 crc32 r10d,word [eax]
+o16 gs a32  crc32 r10d,word [esp]
+ o16 a32 gs crc32 r15d,bp
+o16 a32  crc32 r15d,r9w
+a32 o16  crc32 r15d,r8w
+o16 a32 gs  crc32 r12d,bp
+a32 gs  crc32 r12d,r9w
+ o16 gs a32 crc32 r12d,r8w
+gs o16 a32  crc32 r8d,bp
+gs  o16 crc32 r8d,r9w
+o16 a32 gs crc32 r8d,r8w
+ a32 o16 gs crc32 r11d,cx
+ a32 gs crc32 r11d,r15w
+ o16 gs a32 crc32 r11d,si
+a32 o16  gs crc32 r14d,cx
+o16 a32 gs  crc32 r14d,r15w
+ a32 o16 gs crc32 r14d,si
+crc32 r9d,cx
+ gs o16 crc32 r9d,r15w
+gs  a32 o16 crc32 r9d,si
+gs  crc32 rbp,qword [rdx - 0x80000000]
+gs  crc32 rbp,qword [rbx + 8 * rdx]
+gs  crc32 rbp,qword [r12]
+gs crc32 r15,qword [rdx - 0x80000000]
+ gs crc32 r15,qword [rbx + 8 * rdx]
+gs  crc32 r15,qword [r12]
+ gs crc32 rdx,qword [rdx - 0x80000000]
+gs  crc32 rdx,qword [rbx + 8 * rdx]
+gs crc32 rdx,qword [r12]
+ gs crc32 rcx,qword [r13d]
+crc32 rcx,qword [eax]
+gs a32  crc32 rcx,qword [esp]
+ a32 gs crc32 r9,qword [r13d]
+crc32 r9,qword [eax]
+a32  crc32 r9,qword [esp]
+ a32 gs crc32 rsp,qword [r13d]
+a32 crc32 rsp,qword [eax]
+a32 gs crc32 rsp,qword [esp]
+a32  crc32 rsp,r11
+a32  crc32 rsp,rdx
+a32  gs crc32 rsp,rsp
+a32 gs crc32 r9,r11
+a32 gs  crc32 r9,rdx
+a32 gs  crc32 r9,rsp
+a32  gs crc32 r10,r11
+a32 gs  crc32 r10,rdx
+gs crc32 r10,rsp
+crc32 ecx,dword [r11 + r11 * 2 + 0x3bd174e3]
+gs  crc32 ecx,dword [r13]
+gs crc32 ecx,dword [r15 + 2 * rdi + 0x72]
+crc32 r8d,dword [r11 + r11 * 2 + 0x3bd174e3]
+ gs crc32 r8d,dword [r13]
+gs  crc32 r8d,dword [r15 + 2 * rdi + 0x72]
+crc32 r15d,dword [r11 + r11 * 2 + 0x3bd174e3]
+ gs crc32 r15d,dword [r13]
+ gs crc32 r15d,dword [r15 + 2 * rdi + 0x72]
+gs a32 crc32 ebp,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs crc32 ebp,dword [r12d]
+crc32 ebp,dword [r11d + r11d * 2 + 0x3bd174e3]
+gs a32 crc32 ecx,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32  gs crc32 ecx,dword [r12d]
+crc32 ecx,dword [r11d + r11d * 2 + 0x3bd174e3]
+crc32 edi,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs  a32 crc32 edi,dword [r12d]
+a32 gs  crc32 edi,dword [r11d + r11d * 2 + 0x3bd174e3]
+gs crc32 eax,dword [r15 + 2 * rdi + 0x72]
+crc32 eax,dword [r11 + r11 * 2 + 0x3bd174e3]
+gs  crc32 eax,dword [rsp + 1 * rbp]
+ gs crc32 r8d,dword [r15 + 2 * rdi + 0x72]
+crc32 r8d,dword [r11 + r11 * 2 + 0x3bd174e3]
+ gs crc32 r8d,dword [rsp + 1 * rbp]
 crc32 r14d,dword [r15 + 2 * rdi + 0x72]
-gs  crc32 r14d,dword [rsp]
-gs  crc32 r14d,dword [rbx + 8 * rdx]
-gs crc32 esp,dword [r15 + 2 * rdi + 0x72]
-gs crc32 esp,dword [rsp]
-crc32 esp,dword [rbx + 8 * rdx]
-a32 gs  crc32 r8d,dword [r12d]
-gs  crc32 r8d,dword [esp + 1 * ebp]
-gs a32  crc32 r8d,dword [r11d + r11d * 2 + 0x7cc8b4fb]
-crc32 r12d,dword [r12d]
- a32 gs crc32 r12d,dword [esp + 1 * ebp]
-a32  gs crc32 r12d,dword [r11d + r11d * 2 + 0x7cc8b4fb]
-a32 gs crc32 esp,dword [r12d]
-gs  a32 crc32 esp,dword [esp + 1 * ebp]
- gs crc32 esp,dword [r11d + r11d * 2 + 0x7cc8b4fb]
- gs a32 crc32 esi,r10d
-a32 gs crc32 esi,r12d
-gs crc32 esi,r15d
-crc32 edx,r10d
- gs a32 crc32 edx,r12d
-crc32 edx,r15d
-gs  a32 crc32 ecx,r10d
-a32 gs  crc32 ecx,r12d
- gs a32 crc32 ecx,r15d
-gs a32  crc32 r13d,edi
-gs  a32 crc32 r13d,r14d
-gs crc32 r13d,eax
-gs crc32 r14d,edi
-a32 gs crc32 r14d,r14d
- gs a32 crc32 r14d,eax
-gs a32  crc32 r10d,edi
-crc32 r10d,r14d
-crc32 r10d,eax
+crc32 r14d,dword [r11 + r11 * 2 + 0x3bd174e3]
+crc32 r14d,dword [rsp + 1 * rbp]
+crc32 esi,dword [r13d]
+crc32 esi,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs  crc32 esi,dword [esp]
+gs a32 crc32 r10d,dword [r13d]
+a32 crc32 r10d,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 crc32 r10d,dword [esp]
+ gs crc32 r14d,dword [r13d]
+a32 gs  crc32 r14d,dword [r14d + 1 * edx + 0x7FFFFFFF]
+ a32 crc32 r14d,dword [esp]
+ gs a32 crc32 ecx,r12d
+crc32 ecx,eax
+gs a32  crc32 ecx,ebp
+gs crc32 edi,r12d
+ gs crc32 edi,eax
+ gs crc32 edi,ebp
+gs a32 crc32 ebx,r12d
+crc32 ebx,eax
+a32 gs  crc32 ebx,ebp
+a32 crc32 eax,r12d
+gs a32 crc32 eax,r15d
+a32 gs crc32 eax,edi
+a32 gs crc32 r11d,r12d
+a32 crc32 r11d,r15d
+ a32 gs crc32 r11d,edi
+crc32 r10d,r12d
+a32 gs  crc32 r10d,r15d
+ a32 crc32 r10d,edi

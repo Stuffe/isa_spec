@@ -1,54 +1,54 @@
-gs blcmsk rbx,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-blcmsk rbx,qword [rbp]
-blcmsk rbx,qword [rsp]
-blcmsk r12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-blcmsk r12,qword [rbp]
-gs blcmsk r12,qword [rsp]
-gs blcmsk r10,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs blcmsk r10,qword [rbp]
-gs blcmsk r10,qword [rsp]
-gs a32 blcmsk r10,qword [r11d + r11d * 2 + 0x7172bf72]
-a32 blcmsk r10,qword [r12d]
-a32 gs blcmsk r10,qword [r13d]
-blcmsk r15,qword [r11d + r11d * 2 + 0x7172bf72]
-a32 blcmsk r15,qword [r12d]
-gs blcmsk r15,qword [r13d]
-gs a32 blcmsk rsi,qword [r11d + r11d * 2 + 0x7172bf72]
-a32 gs blcmsk rsi,qword [r12d]
-a32 gs blcmsk rsi,qword [r13d]
-gs blcmsk r14,rax
-gs blcmsk r14,r11
-gs a32 blcmsk r14,r9
-a32 blcmsk rdi,rax
-a32 gs blcmsk rdi,r11
-a32 blcmsk rdi,r9
-a32 gs blcmsk r12,rax
-a32 gs blcmsk r12,r11
-gs blcmsk r12,r9
-gs blcmsk r9d,dword [r11 + r11 * 2 + 0x760750d6]
-blcmsk r9d,dword [r15 + 2 * rdi + 0x72]
-blcmsk r9d,dword [r12]
-gs blcmsk r15d,dword [r11 + r11 * 2 + 0x760750d6]
-blcmsk r15d,dword [r15 + 2 * rdi + 0x72]
-gs blcmsk r15d,dword [r12]
-gs blcmsk r11d,dword [r11 + r11 * 2 + 0x760750d6]
-gs blcmsk r11d,dword [r15 + 2 * rdi + 0x72]
-blcmsk r11d,dword [r12]
-a32 gs blcmsk ecx,dword [ebp]
-gs blcmsk ecx,dword [eax]
-gs a32 blcmsk ecx,dword [esp]
-gs a32 blcmsk ebx,dword [ebp]
-a32 blcmsk ebx,dword [eax]
-blcmsk ebx,dword [esp]
-a32 gs blcmsk r8d,dword [ebp]
-a32 gs blcmsk r8d,dword [eax]
-gs a32 blcmsk r8d,dword [esp]
-a32 blcmsk ebx,r9d
-a32 blcmsk ebx,edi
-gs blcmsk ebx,ecx
-gs a32 blcmsk ecx,r9d
-blcmsk ecx,edi
-blcmsk ecx,ecx
-gs a32 blcmsk r8d,r9d
-gs blcmsk r8d,edi
-blcmsk r8d,ecx
+blcmsk rsp,qword [r13]
+gs blcmsk rsp,qword [rbx + 8 * rdx]
+gs blcmsk rsp,qword [rdx - 0x80000000]
+blcmsk r10,qword [r13]
+gs blcmsk r10,qword [rbx + 8 * rdx]
+blcmsk r10,qword [rdx - 0x80000000]
+gs blcmsk rsi,qword [r13]
+blcmsk rsi,qword [rbx + 8 * rdx]
+gs blcmsk rsi,qword [rdx - 0x80000000]
+gs a32 blcmsk r13,qword [ebp]
+gs blcmsk r13,qword [r13d]
+gs a32 blcmsk r13,qword [edx - 0x80000000]
+gs blcmsk rax,qword [ebp]
+gs blcmsk rax,qword [r13d]
+gs blcmsk rax,qword [edx - 0x80000000]
+gs blcmsk rcx,qword [ebp]
+blcmsk rcx,qword [r13d]
+gs blcmsk rcx,qword [edx - 0x80000000]
+gs a32 blcmsk r15,r9
+blcmsk r15,r15
+gs blcmsk r15,rdi
+a32 gs blcmsk r8,r9
+gs a32 blcmsk r8,r15
+gs a32 blcmsk r8,rdi
+gs a32 blcmsk r10,r9
+gs a32 blcmsk r10,r15
+gs a32 blcmsk r10,rdi
+blcmsk r15d,dword [rsp]
+blcmsk r15d,dword [rax]
+gs blcmsk r15d,dword [r13]
+gs blcmsk r11d,dword [rsp]
+blcmsk r11d,dword [rax]
+gs blcmsk r11d,dword [r13]
+blcmsk edx,dword [rsp]
+gs blcmsk edx,dword [rax]
+gs blcmsk edx,dword [r13]
+a32 blcmsk esi,dword [esp + 1 * ebp]
+gs blcmsk esi,dword [r11d + r11d * 2 + 0x613776eb]
+gs a32 blcmsk esi,dword [r13d]
+a32 blcmsk r10d,dword [esp + 1 * ebp]
+a32 gs blcmsk r10d,dword [r11d + r11d * 2 + 0x613776eb]
+gs a32 blcmsk r10d,dword [r13d]
+blcmsk esp,dword [esp + 1 * ebp]
+gs blcmsk esp,dword [r11d + r11d * 2 + 0x613776eb]
+blcmsk esp,dword [r13d]
+a32 blcmsk ebx,r8d
+a32 gs blcmsk ebx,r13d
+gs a32 blcmsk ebx,ecx
+gs a32 blcmsk r11d,r8d
+a32 blcmsk r11d,r13d
+gs a32 blcmsk r11d,ecx
+gs a32 blcmsk edi,r8d
+a32 blcmsk edi,r13d
+a32 blcmsk edi,ecx

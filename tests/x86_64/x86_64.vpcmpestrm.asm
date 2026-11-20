@@ -1,81 +1,81 @@
-vpcmpestrm xmm15,oword [rdx - 0x80000000],127
-gs vpcmpestrm xmm15,oword [rdx - 0x80000000],-119
-vpcmpestrm xmm15,oword [rdx - 0x80000000],0
-gs vpcmpestrm xmm15,oword [rsp],127
-gs vpcmpestrm xmm15,oword [rsp],-119
-vpcmpestrm xmm15,oword [rsp],0
-gs vpcmpestrm xmm15,oword [r13],127
-vpcmpestrm xmm15,oword [r13],-119
-vpcmpestrm xmm15,oword [r13],0
-gs vpcmpestrm xmm10,oword [rdx - 0x80000000],127
-gs vpcmpestrm xmm10,oword [rdx - 0x80000000],-119
-vpcmpestrm xmm10,oword [rdx - 0x80000000],0
 gs vpcmpestrm xmm10,oword [rsp],127
-gs vpcmpestrm xmm10,oword [rsp],-119
-vpcmpestrm xmm10,oword [rsp],0
-gs vpcmpestrm xmm10,oword [r13],127
-vpcmpestrm xmm10,oword [r13],-119
-gs vpcmpestrm xmm10,oword [r13],0
-vpcmpestrm xmm13,oword [rdx - 0x80000000],127
-vpcmpestrm xmm13,oword [rdx - 0x80000000],-119
-vpcmpestrm xmm13,oword [rdx - 0x80000000],0
-vpcmpestrm xmm13,oword [rsp],127
-vpcmpestrm xmm13,oword [rsp],-119
-vpcmpestrm xmm13,oword [rsp],0
-gs vpcmpestrm xmm13,oword [r13],127
-vpcmpestrm xmm13,oword [r13],-119
-vpcmpestrm xmm13,oword [r13],0
-gs a32 vpcmpestrm xmm12,oword [esp + 1 * ebp],-119
-gs a32 vpcmpestrm xmm12,oword [esp + 1 * ebp],127
-gs vpcmpestrm xmm12,oword [esp + 1 * ebp],2
-a32 vpcmpestrm xmm12,oword [ebp],-119
-gs vpcmpestrm xmm12,oword [ebp],127
-gs vpcmpestrm xmm12,oword [ebp],2
-a32 vpcmpestrm xmm12,oword [esp],-119
-a32 vpcmpestrm xmm12,oword [esp],127
-vpcmpestrm xmm12,oword [esp],2
-gs vpcmpestrm xmm7,oword [esp + 1 * ebp],-119
-gs a32 vpcmpestrm xmm7,oword [esp + 1 * ebp],127
-a32 vpcmpestrm xmm7,oword [esp + 1 * ebp],2
-gs a32 vpcmpestrm xmm7,oword [ebp],-119
-gs a32 vpcmpestrm xmm7,oword [ebp],127
-vpcmpestrm xmm7,oword [ebp],2
-gs a32 vpcmpestrm xmm7,oword [esp],-119
-a32 gs vpcmpestrm xmm7,oword [esp],127
-a32 gs vpcmpestrm xmm7,oword [esp],2
-a32 vpcmpestrm xmm4,oword [esp + 1 * ebp],-119
-gs vpcmpestrm xmm4,oword [esp + 1 * ebp],127
-gs vpcmpestrm xmm4,oword [esp + 1 * ebp],2
-a32 vpcmpestrm xmm4,oword [ebp],-119
-gs a32 vpcmpestrm xmm4,oword [ebp],127
-gs a32 vpcmpestrm xmm4,oword [ebp],2
-a32 gs vpcmpestrm xmm4,oword [esp],-119
-vpcmpestrm xmm4,oword [esp],127
-gs vpcmpestrm xmm4,oword [esp],2
-gs a32 vpcmpestrm xmm7,xmm13,2
-gs vpcmpestrm xmm7,xmm13,-41
-gs vpcmpestrm xmm7,xmm13,-119
-gs vpcmpestrm xmm7,xmm3,2
-a32 gs vpcmpestrm xmm7,xmm3,-41
-gs a32 vpcmpestrm xmm7,xmm3,-119
-gs vpcmpestrm xmm7,xmm14,2
-a32 gs vpcmpestrm xmm7,xmm14,-41
-a32 gs vpcmpestrm xmm7,xmm14,-119
-a32 gs vpcmpestrm xmm1,xmm13,2
-vpcmpestrm xmm1,xmm13,-41
-a32 vpcmpestrm xmm1,xmm13,-119
-a32 gs vpcmpestrm xmm1,xmm3,2
-gs a32 vpcmpestrm xmm1,xmm3,-41
-vpcmpestrm xmm1,xmm3,-119
-gs vpcmpestrm xmm1,xmm14,2
-a32 vpcmpestrm xmm1,xmm14,-41
-a32 gs vpcmpestrm xmm1,xmm14,-119
-gs vpcmpestrm xmm5,xmm13,2
-a32 vpcmpestrm xmm5,xmm13,-41
-gs vpcmpestrm xmm5,xmm13,-119
-gs a32 vpcmpestrm xmm5,xmm3,2
-gs a32 vpcmpestrm xmm5,xmm3,-41
-a32 gs vpcmpestrm xmm5,xmm3,-119
-a32 gs vpcmpestrm xmm5,xmm14,2
-gs a32 vpcmpestrm xmm5,xmm14,-41
-gs vpcmpestrm xmm5,xmm14,-119
+gs vpcmpestrm xmm10,oword [rsp],28
+vpcmpestrm xmm10,oword [rsp],-128
+gs vpcmpestrm xmm10,oword [rdx - 0x80000000],127
+gs vpcmpestrm xmm10,oword [rdx - 0x80000000],28
+gs vpcmpestrm xmm10,oword [rdx - 0x80000000],-128
+gs vpcmpestrm xmm10,oword [rbx + 8 * rdx],127
+gs vpcmpestrm xmm10,oword [rbx + 8 * rdx],28
+vpcmpestrm xmm10,oword [rbx + 8 * rdx],-128
+gs vpcmpestrm xmm11,oword [rsp],127
+gs vpcmpestrm xmm11,oword [rsp],28
+gs vpcmpestrm xmm11,oword [rsp],-128
+vpcmpestrm xmm11,oword [rdx - 0x80000000],127
+gs vpcmpestrm xmm11,oword [rdx - 0x80000000],28
+gs vpcmpestrm xmm11,oword [rdx - 0x80000000],-128
+gs vpcmpestrm xmm11,oword [rbx + 8 * rdx],127
+gs vpcmpestrm xmm11,oword [rbx + 8 * rdx],28
+gs vpcmpestrm xmm11,oword [rbx + 8 * rdx],-128
+gs vpcmpestrm xmm0,oword [rsp],127
+vpcmpestrm xmm0,oword [rsp],28
+gs vpcmpestrm xmm0,oword [rsp],-128
+vpcmpestrm xmm0,oword [rdx - 0x80000000],127
+gs vpcmpestrm xmm0,oword [rdx - 0x80000000],28
+gs vpcmpestrm xmm0,oword [rdx - 0x80000000],-128
+gs vpcmpestrm xmm0,oword [rbx + 8 * rdx],127
+vpcmpestrm xmm0,oword [rbx + 8 * rdx],28
+gs vpcmpestrm xmm0,oword [rbx + 8 * rdx],-128
+a32 gs vpcmpestrm xmm6,oword [r15d + 2 * edi + 0x72],127
+a32 gs vpcmpestrm xmm6,oword [r15d + 2 * edi + 0x72],28
+gs vpcmpestrm xmm6,oword [r15d + 2 * edi + 0x72],0
+a32 gs vpcmpestrm xmm6,oword [eax],127
+gs vpcmpestrm xmm6,oword [eax],28
+vpcmpestrm xmm6,oword [eax],0
+a32 gs vpcmpestrm xmm6,oword [esp],127
+a32 gs vpcmpestrm xmm6,oword [esp],28
+vpcmpestrm xmm6,oword [esp],0
+gs vpcmpestrm xmm11,oword [r15d + 2 * edi + 0x72],127
+vpcmpestrm xmm11,oword [r15d + 2 * edi + 0x72],28
+gs a32 vpcmpestrm xmm11,oword [r15d + 2 * edi + 0x72],0
+vpcmpestrm xmm11,oword [eax],127
+a32 gs vpcmpestrm xmm11,oword [eax],28
+a32 gs vpcmpestrm xmm11,oword [eax],0
+gs a32 vpcmpestrm xmm11,oword [esp],127
+gs vpcmpestrm xmm11,oword [esp],28
+a32 gs vpcmpestrm xmm11,oword [esp],0
+a32 vpcmpestrm xmm9,oword [r15d + 2 * edi + 0x72],127
+a32 vpcmpestrm xmm9,oword [r15d + 2 * edi + 0x72],28
+gs vpcmpestrm xmm9,oword [r15d + 2 * edi + 0x72],0
+a32 vpcmpestrm xmm9,oword [eax],127
+gs a32 vpcmpestrm xmm9,oword [eax],28
+a32 gs vpcmpestrm xmm9,oword [eax],0
+a32 gs vpcmpestrm xmm9,oword [esp],127
+a32 vpcmpestrm xmm9,oword [esp],28
+gs a32 vpcmpestrm xmm9,oword [esp],0
+a32 vpcmpestrm xmm10,xmm11,67
+vpcmpestrm xmm10,xmm11,0
+gs vpcmpestrm xmm10,xmm11,127
+vpcmpestrm xmm10,xmm2,67
+gs vpcmpestrm xmm10,xmm2,0
+gs a32 vpcmpestrm xmm10,xmm2,127
+a32 vpcmpestrm xmm10,xmm14,67
+a32 gs vpcmpestrm xmm10,xmm14,0
+a32 vpcmpestrm xmm10,xmm14,127
+gs a32 vpcmpestrm xmm4,xmm11,67
+gs a32 vpcmpestrm xmm4,xmm11,0
+gs vpcmpestrm xmm4,xmm11,127
+a32 vpcmpestrm xmm4,xmm2,67
+gs vpcmpestrm xmm4,xmm2,0
+a32 vpcmpestrm xmm4,xmm2,127
+a32 vpcmpestrm xmm4,xmm14,67
+a32 gs vpcmpestrm xmm4,xmm14,0
+a32 vpcmpestrm xmm4,xmm14,127
+vpcmpestrm xmm7,xmm11,67
+a32 gs vpcmpestrm xmm7,xmm11,0
+a32 gs vpcmpestrm xmm7,xmm11,127
+gs vpcmpestrm xmm7,xmm2,67
+a32 gs vpcmpestrm xmm7,xmm2,0
+gs a32 vpcmpestrm xmm7,xmm2,127
+a32 vpcmpestrm xmm7,xmm14,67
+vpcmpestrm xmm7,xmm14,0
+gs vpcmpestrm xmm7,xmm14,127

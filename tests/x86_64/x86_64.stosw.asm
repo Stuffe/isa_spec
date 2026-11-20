@@ -1,2 +1,2 @@
-o16 a32 stosw 
-gs a32 repne o16 stosw 
+repne gs stosw 
+a32 repne stosw 

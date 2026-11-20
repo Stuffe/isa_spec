@@ -1,18 +1,18 @@
-seta byte [r13]
+o16 seta byte [r13]
 o16 seta byte [rsp + 1 * rbp]
-seta byte [rax]
-o16 gs a32 seta byte [r13d]
-a32 o16 gs seta byte [esp]
-o16 a32 gs seta byte [eax]
-gs o16 seta byte [rsp]
-gs seta byte [rbx + 8 * rdx]
-gs o16 seta byte [r13]
-gs a32 seta byte [ebx + 8 * edx]
-o16 seta byte [esp]
-a32 seta byte [r12d]
-seta al
-seta sil
-a32 gs o16 seta cl
-o16 seta spl
-a32 seta r15b
-o16 a32 seta r12b
+o16 gs seta byte [rax]
+seta byte [r14d + 1 * edx + 0x7FFFFFFF]
+gs o16 seta byte [esp + 1 * ebp]
+a32 seta byte [r13d]
+o16 seta byte [rbp]
+seta byte [r13]
+o16 seta byte [rax]
+a32 seta byte [esp]
+a32 gs o16 seta byte [esp + 1 * ebp]
+gs a32 o16 seta byte [r14d + 1 * edx + 0x7FFFFFFF]
+gs o16 a32 seta r10b
+a32 o16 gs seta cl
+gs o16 seta bpl
+a32 o16 seta al
+a32 o16 seta spl
+gs a32 seta r8b

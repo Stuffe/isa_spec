@@ -1,162 +1,162 @@
-gs vsubsd xmm14,xmm14,qword [rdx - 0x80000000]
-vsubsd xmm14,xmm14,qword [rax]
-gs vsubsd xmm14,xmm14,qword [rsp + 1 * rbp]
-vsubsd xmm14,xmm12,qword [rdx - 0x80000000]
-vsubsd xmm14,xmm12,qword [rax]
-vsubsd xmm14,xmm12,qword [rsp + 1 * rbp]
-vsubsd xmm14,xmm8,qword [rdx - 0x80000000]
-gs vsubsd xmm14,xmm8,qword [rax]
-vsubsd xmm14,xmm8,qword [rsp + 1 * rbp]
-vsubsd xmm1,xmm14,qword [rdx - 0x80000000]
-gs vsubsd xmm1,xmm14,qword [rax]
-gs vsubsd xmm1,xmm14,qword [rsp + 1 * rbp]
-gs vsubsd xmm1,xmm12,qword [rdx - 0x80000000]
-gs vsubsd xmm1,xmm12,qword [rax]
-gs vsubsd xmm1,xmm12,qword [rsp + 1 * rbp]
-gs vsubsd xmm1,xmm8,qword [rdx - 0x80000000]
-vsubsd xmm1,xmm8,qword [rax]
-gs vsubsd xmm1,xmm8,qword [rsp + 1 * rbp]
-gs vsubsd xmm4,xmm14,qword [rdx - 0x80000000]
-vsubsd xmm4,xmm14,qword [rax]
-gs vsubsd xmm4,xmm14,qword [rsp + 1 * rbp]
-gs vsubsd xmm4,xmm12,qword [rdx - 0x80000000]
-vsubsd xmm4,xmm12,qword [rax]
-vsubsd xmm4,xmm12,qword [rsp + 1 * rbp]
-gs vsubsd xmm4,xmm8,qword [rdx - 0x80000000]
-vsubsd xmm4,xmm8,qword [rax]
-gs vsubsd xmm4,xmm8,qword [rsp + 1 * rbp]
-gs vsubsd xmm1,xmm4,qword [ebx + 8 * edx]
-gs vsubsd xmm1,xmm4,qword [r11d + r11d * 2 + 0x76f952e1]
-a32 vsubsd xmm1,xmm4,qword [ebp]
-a32 vsubsd xmm1,xmm15,qword [ebx + 8 * edx]
-gs a32 vsubsd xmm1,xmm15,qword [r11d + r11d * 2 + 0x76f952e1]
-gs a32 vsubsd xmm1,xmm15,qword [ebp]
-gs vsubsd xmm1,xmm13,qword [ebx + 8 * edx]
-a32 vsubsd xmm1,xmm13,qword [r11d + r11d * 2 + 0x76f952e1]
-a32 vsubsd xmm1,xmm13,qword [ebp]
-a32 gs vsubsd xmm8,xmm4,qword [ebx + 8 * edx]
-gs vsubsd xmm8,xmm4,qword [r11d + r11d * 2 + 0x76f952e1]
-vsubsd xmm8,xmm4,qword [ebp]
-vsubsd xmm8,xmm15,qword [ebx + 8 * edx]
-gs vsubsd xmm8,xmm15,qword [r11d + r11d * 2 + 0x76f952e1]
-a32 gs vsubsd xmm8,xmm15,qword [ebp]
-gs vsubsd xmm8,xmm13,qword [ebx + 8 * edx]
-gs vsubsd xmm8,xmm13,qword [r11d + r11d * 2 + 0x76f952e1]
-a32 vsubsd xmm8,xmm13,qword [ebp]
-gs a32 vsubsd xmm6,xmm4,qword [ebx + 8 * edx]
-a32 vsubsd xmm6,xmm4,qword [r11d + r11d * 2 + 0x76f952e1]
-vsubsd xmm6,xmm4,qword [ebp]
-gs a32 vsubsd xmm6,xmm15,qword [ebx + 8 * edx]
-vsubsd xmm6,xmm15,qword [r11d + r11d * 2 + 0x76f952e1]
-gs a32 vsubsd xmm6,xmm15,qword [ebp]
-a32 vsubsd xmm6,xmm13,qword [ebx + 8 * edx]
-a32 vsubsd xmm6,xmm13,qword [r11d + r11d * 2 + 0x76f952e1]
-gs a32 vsubsd xmm6,xmm13,qword [ebp]
-vsubsd xmm15,xmm1,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm15,xmm1,qword [rdx - 0x80000000]
-gs vsubsd xmm15,xmm1,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vsubsd xmm15,xmm6,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm15,xmm6,qword [rdx - 0x80000000]
-vsubsd xmm15,xmm6,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-vsubsd xmm15,xmm12,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm15,xmm12,qword [rdx - 0x80000000]
-gs vsubsd xmm15,xmm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vsubsd xmm8,xmm1,qword [r11 + r11 * 2 + 0x76f952e1]
-gs vsubsd xmm8,xmm1,qword [rdx - 0x80000000]
-gs vsubsd xmm8,xmm1,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vsubsd xmm8,xmm6,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm8,xmm6,qword [rdx - 0x80000000]
-vsubsd xmm8,xmm6,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-vsubsd xmm8,xmm12,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm8,xmm12,qword [rdx - 0x80000000]
-gs vsubsd xmm8,xmm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vsubsd xmm4,xmm1,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm4,xmm1,qword [rdx - 0x80000000]
-gs vsubsd xmm4,xmm1,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-vsubsd xmm4,xmm6,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm4,xmm6,qword [rdx - 0x80000000]
-vsubsd xmm4,xmm6,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vsubsd xmm4,xmm12,qword [r11 + r11 * 2 + 0x76f952e1]
-vsubsd xmm4,xmm12,qword [rdx - 0x80000000]
-vsubsd xmm4,xmm12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs a32 vsubsd xmm9,xmm4,qword [esp]
-a32 gs vsubsd xmm9,xmm4,qword [ebp]
-a32 gs vsubsd xmm9,xmm4,qword [ebx + 8 * edx]
-vsubsd xmm9,xmm7,qword [esp]
-a32 gs vsubsd xmm9,xmm7,qword [ebp]
-a32 vsubsd xmm9,xmm7,qword [ebx + 8 * edx]
-vsubsd xmm9,xmm3,qword [esp]
-gs vsubsd xmm9,xmm3,qword [ebp]
-a32 gs vsubsd xmm9,xmm3,qword [ebx + 8 * edx]
-vsubsd xmm15,xmm4,qword [esp]
-vsubsd xmm15,xmm4,qword [ebp]
-gs vsubsd xmm15,xmm4,qword [ebx + 8 * edx]
-a32 vsubsd xmm15,xmm7,qword [esp]
-a32 gs vsubsd xmm15,xmm7,qword [ebp]
-vsubsd xmm15,xmm7,qword [ebx + 8 * edx]
-gs a32 vsubsd xmm15,xmm3,qword [esp]
-vsubsd xmm15,xmm3,qword [ebp]
-gs vsubsd xmm15,xmm3,qword [ebx + 8 * edx]
-gs vsubsd xmm5,xmm4,qword [esp]
-gs a32 vsubsd xmm5,xmm4,qword [ebp]
-a32 gs vsubsd xmm5,xmm4,qword [ebx + 8 * edx]
-a32 vsubsd xmm5,xmm7,qword [esp]
-a32 vsubsd xmm5,xmm7,qword [ebp]
-gs a32 vsubsd xmm5,xmm7,qword [ebx + 8 * edx]
-a32 vsubsd xmm5,xmm3,qword [esp]
-a32 vsubsd xmm5,xmm3,qword [ebp]
-gs a32 vsubsd xmm5,xmm3,qword [ebx + 8 * edx]
-a32 vsubsd xmm15,xmm9,xmm4
-a32 gs vsubsd xmm15,xmm9,xmm10
-a32 gs vsubsd xmm15,xmm9,xmm9
-vsubsd xmm15,xmm0,xmm4
-gs vsubsd xmm15,xmm0,xmm10
-a32 vsubsd xmm15,xmm0,xmm9
-vsubsd xmm15,xmm14,xmm4
-vsubsd xmm15,xmm14,xmm10
-a32 vsubsd xmm15,xmm14,xmm9
-vsubsd xmm1,xmm9,xmm4
-a32 vsubsd xmm1,xmm9,xmm10
-vsubsd xmm1,xmm9,xmm9
-gs vsubsd xmm1,xmm0,xmm4
-a32 vsubsd xmm1,xmm0,xmm10
-a32 vsubsd xmm1,xmm0,xmm9
-gs vsubsd xmm1,xmm14,xmm4
-a32 vsubsd xmm1,xmm14,xmm10
-gs a32 vsubsd xmm1,xmm14,xmm9
-a32 vsubsd xmm7,xmm9,xmm4
-gs vsubsd xmm7,xmm9,xmm10
-gs vsubsd xmm7,xmm9,xmm9
-a32 gs vsubsd xmm7,xmm0,xmm4
-vsubsd xmm7,xmm0,xmm10
-vsubsd xmm7,xmm0,xmm9
-a32 gs vsubsd xmm7,xmm14,xmm4
-a32 gs vsubsd xmm7,xmm14,xmm10
-gs a32 vsubsd xmm7,xmm14,xmm9
-gs vsubsd xmm8,xmm8,xmm7
-gs a32 vsubsd xmm8,xmm8,xmm3
-vsubsd xmm8,xmm8,xmm1
-vsubsd xmm8,xmm5,xmm7
-a32 vsubsd xmm8,xmm5,xmm3
-gs a32 vsubsd xmm8,xmm5,xmm1
-vsubsd xmm8,xmm6,xmm7
-vsubsd xmm8,xmm6,xmm3
-vsubsd xmm8,xmm6,xmm1
-a32 vsubsd xmm12,xmm8,xmm7
-a32 vsubsd xmm12,xmm8,xmm3
-vsubsd xmm12,xmm8,xmm1
-vsubsd xmm12,xmm5,xmm7
-gs vsubsd xmm12,xmm5,xmm3
-vsubsd xmm12,xmm5,xmm1
-a32 gs vsubsd xmm12,xmm6,xmm7
-a32 vsubsd xmm12,xmm6,xmm3
-a32 gs vsubsd xmm12,xmm6,xmm1
-a32 gs vsubsd xmm11,xmm8,xmm7
-gs a32 vsubsd xmm11,xmm8,xmm3
-gs a32 vsubsd xmm11,xmm8,xmm1
-a32 gs vsubsd xmm11,xmm5,xmm7
-a32 vsubsd xmm11,xmm5,xmm3
-gs vsubsd xmm11,xmm5,xmm1
-a32 vsubsd xmm11,xmm6,xmm7
-a32 gs vsubsd xmm11,xmm6,xmm3
-a32 vsubsd xmm11,xmm6,xmm1
+vsubsd xmm11,xmm8,qword [r15 + 2 * rdi + 0x72]
+vsubsd xmm11,xmm8,qword [r12]
+gs vsubsd xmm11,xmm8,qword [rbx + 8 * rdx]
+gs vsubsd xmm11,xmm1,qword [r15 + 2 * rdi + 0x72]
+gs vsubsd xmm11,xmm1,qword [r12]
+gs vsubsd xmm11,xmm1,qword [rbx + 8 * rdx]
+gs vsubsd xmm11,xmm12,qword [r15 + 2 * rdi + 0x72]
+vsubsd xmm11,xmm12,qword [r12]
+vsubsd xmm11,xmm12,qword [rbx + 8 * rdx]
+vsubsd xmm4,xmm8,qword [r15 + 2 * rdi + 0x72]
+gs vsubsd xmm4,xmm8,qword [r12]
+vsubsd xmm4,xmm8,qword [rbx + 8 * rdx]
+vsubsd xmm4,xmm1,qword [r15 + 2 * rdi + 0x72]
+vsubsd xmm4,xmm1,qword [r12]
+gs vsubsd xmm4,xmm1,qword [rbx + 8 * rdx]
+vsubsd xmm4,xmm12,qword [r15 + 2 * rdi + 0x72]
+vsubsd xmm4,xmm12,qword [r12]
+vsubsd xmm4,xmm12,qword [rbx + 8 * rdx]
+vsubsd xmm10,xmm8,qword [r15 + 2 * rdi + 0x72]
+gs vsubsd xmm10,xmm8,qword [r12]
+vsubsd xmm10,xmm8,qword [rbx + 8 * rdx]
+gs vsubsd xmm10,xmm1,qword [r15 + 2 * rdi + 0x72]
+gs vsubsd xmm10,xmm1,qword [r12]
+gs vsubsd xmm10,xmm1,qword [rbx + 8 * rdx]
+gs vsubsd xmm10,xmm12,qword [r15 + 2 * rdi + 0x72]
+vsubsd xmm10,xmm12,qword [r12]
+gs vsubsd xmm10,xmm12,qword [rbx + 8 * rdx]
+a32 gs vsubsd xmm12,xmm11,qword [ebx + 8 * edx]
+vsubsd xmm12,xmm11,qword [eax]
+vsubsd xmm12,xmm11,qword [edx - 0x80000000]
+gs a32 vsubsd xmm12,xmm0,qword [ebx + 8 * edx]
+gs a32 vsubsd xmm12,xmm0,qword [eax]
+a32 gs vsubsd xmm12,xmm0,qword [edx - 0x80000000]
+vsubsd xmm12,xmm13,qword [ebx + 8 * edx]
+gs a32 vsubsd xmm12,xmm13,qword [eax]
+vsubsd xmm12,xmm13,qword [edx - 0x80000000]
+a32 vsubsd xmm8,xmm11,qword [ebx + 8 * edx]
+a32 vsubsd xmm8,xmm11,qword [eax]
+vsubsd xmm8,xmm11,qword [edx - 0x80000000]
+a32 vsubsd xmm8,xmm0,qword [ebx + 8 * edx]
+a32 gs vsubsd xmm8,xmm0,qword [eax]
+a32 gs vsubsd xmm8,xmm0,qword [edx - 0x80000000]
+gs a32 vsubsd xmm8,xmm13,qword [ebx + 8 * edx]
+gs vsubsd xmm8,xmm13,qword [eax]
+vsubsd xmm8,xmm13,qword [edx - 0x80000000]
+vsubsd xmm1,xmm11,qword [ebx + 8 * edx]
+vsubsd xmm1,xmm11,qword [eax]
+vsubsd xmm1,xmm11,qword [edx - 0x80000000]
+a32 vsubsd xmm1,xmm0,qword [ebx + 8 * edx]
+a32 vsubsd xmm1,xmm0,qword [eax]
+vsubsd xmm1,xmm0,qword [edx - 0x80000000]
+a32 gs vsubsd xmm1,xmm13,qword [ebx + 8 * edx]
+a32 gs vsubsd xmm1,xmm13,qword [eax]
+vsubsd xmm1,xmm13,qword [edx - 0x80000000]
+gs vsubsd xmm8,xmm6,qword [rdx - 0x80000000]
+gs vsubsd xmm8,xmm6,qword [rsp]
+vsubsd xmm8,xmm6,qword [rbp]
+gs vsubsd xmm8,xmm13,qword [rdx - 0x80000000]
+vsubsd xmm8,xmm13,qword [rsp]
+gs vsubsd xmm8,xmm13,qword [rbp]
+gs vsubsd xmm8,xmm11,qword [rdx - 0x80000000]
+gs vsubsd xmm8,xmm11,qword [rsp]
+vsubsd xmm8,xmm11,qword [rbp]
+vsubsd xmm9,xmm6,qword [rdx - 0x80000000]
+vsubsd xmm9,xmm6,qword [rsp]
+vsubsd xmm9,xmm6,qword [rbp]
+gs vsubsd xmm9,xmm13,qword [rdx - 0x80000000]
+gs vsubsd xmm9,xmm13,qword [rsp]
+gs vsubsd xmm9,xmm13,qword [rbp]
+gs vsubsd xmm9,xmm11,qword [rdx - 0x80000000]
+gs vsubsd xmm9,xmm11,qword [rsp]
+gs vsubsd xmm9,xmm11,qword [rbp]
+gs vsubsd xmm15,xmm6,qword [rdx - 0x80000000]
+vsubsd xmm15,xmm6,qword [rsp]
+vsubsd xmm15,xmm6,qword [rbp]
+vsubsd xmm15,xmm13,qword [rdx - 0x80000000]
+gs vsubsd xmm15,xmm13,qword [rsp]
+gs vsubsd xmm15,xmm13,qword [rbp]
+vsubsd xmm15,xmm11,qword [rdx - 0x80000000]
+vsubsd xmm15,xmm11,qword [rsp]
+gs vsubsd xmm15,xmm11,qword [rbp]
+gs vsubsd xmm0,xmm3,qword [eax]
+a32 vsubsd xmm0,xmm3,qword [r12d]
+gs a32 vsubsd xmm0,xmm3,qword [esp + 1 * ebp]
+gs vsubsd xmm0,xmm8,qword [eax]
+gs vsubsd xmm0,xmm8,qword [r12d]
+a32 gs vsubsd xmm0,xmm8,qword [esp + 1 * ebp]
+gs vsubsd xmm0,xmm11,qword [eax]
+gs a32 vsubsd xmm0,xmm11,qword [r12d]
+vsubsd xmm0,xmm11,qword [esp + 1 * ebp]
+a32 vsubsd xmm4,xmm3,qword [eax]
+a32 gs vsubsd xmm4,xmm3,qword [r12d]
+a32 vsubsd xmm4,xmm3,qword [esp + 1 * ebp]
+gs vsubsd xmm4,xmm8,qword [eax]
+a32 gs vsubsd xmm4,xmm8,qword [r12d]
+a32 gs vsubsd xmm4,xmm8,qword [esp + 1 * ebp]
+a32 gs vsubsd xmm4,xmm11,qword [eax]
+gs a32 vsubsd xmm4,xmm11,qword [r12d]
+vsubsd xmm4,xmm11,qword [esp + 1 * ebp]
+a32 vsubsd xmm6,xmm3,qword [eax]
+a32 vsubsd xmm6,xmm3,qword [r12d]
+gs vsubsd xmm6,xmm3,qword [esp + 1 * ebp]
+gs a32 vsubsd xmm6,xmm8,qword [eax]
+vsubsd xmm6,xmm8,qword [r12d]
+vsubsd xmm6,xmm8,qword [esp + 1 * ebp]
+a32 gs vsubsd xmm6,xmm11,qword [eax]
+gs a32 vsubsd xmm6,xmm11,qword [r12d]
+gs a32 vsubsd xmm6,xmm11,qword [esp + 1 * ebp]
+vsubsd xmm7,xmm9,xmm3
+gs vsubsd xmm7,xmm9,xmm2
+a32 gs vsubsd xmm7,xmm9,xmm11
+gs a32 vsubsd xmm7,xmm14,xmm3
+a32 gs vsubsd xmm7,xmm14,xmm2
+vsubsd xmm7,xmm14,xmm11
+a32 vsubsd xmm7,xmm4,xmm3
+gs a32 vsubsd xmm7,xmm4,xmm2
+gs a32 vsubsd xmm7,xmm4,xmm11
+gs vsubsd xmm6,xmm9,xmm3
+vsubsd xmm6,xmm9,xmm2
+a32 gs vsubsd xmm6,xmm9,xmm11
+gs a32 vsubsd xmm6,xmm14,xmm3
+gs a32 vsubsd xmm6,xmm14,xmm2
+vsubsd xmm6,xmm14,xmm11
+a32 gs vsubsd xmm6,xmm4,xmm3
+a32 gs vsubsd xmm6,xmm4,xmm2
+gs vsubsd xmm6,xmm4,xmm11
+a32 gs vsubsd xmm12,xmm9,xmm3
+gs vsubsd xmm12,xmm9,xmm2
+a32 gs vsubsd xmm12,xmm9,xmm11
+gs vsubsd xmm12,xmm14,xmm3
+a32 gs vsubsd xmm12,xmm14,xmm2
+a32 vsubsd xmm12,xmm14,xmm11
+gs a32 vsubsd xmm12,xmm4,xmm3
+gs vsubsd xmm12,xmm4,xmm2
+vsubsd xmm12,xmm4,xmm11
+gs a32 vsubsd xmm13,xmm9,xmm6
+gs a32 vsubsd xmm13,xmm9,xmm2
+a32 gs vsubsd xmm13,xmm9,xmm7
+gs a32 vsubsd xmm13,xmm11,xmm6
+gs vsubsd xmm13,xmm11,xmm2
+a32 vsubsd xmm13,xmm11,xmm7
+a32 gs vsubsd xmm13,xmm10,xmm6
+gs a32 vsubsd xmm13,xmm10,xmm2
+gs a32 vsubsd xmm13,xmm10,xmm7
+gs vsubsd xmm2,xmm9,xmm6
+vsubsd xmm2,xmm9,xmm2
+a32 vsubsd xmm2,xmm9,xmm7
+vsubsd xmm2,xmm11,xmm6
+gs a32 vsubsd xmm2,xmm11,xmm2
+a32 gs vsubsd xmm2,xmm11,xmm7
+vsubsd xmm2,xmm10,xmm6
+vsubsd xmm2,xmm10,xmm2
+gs vsubsd xmm2,xmm10,xmm7
+gs vsubsd xmm7,xmm9,xmm6
+vsubsd xmm7,xmm9,xmm2
+a32 vsubsd xmm7,xmm9,xmm7
+gs a32 vsubsd xmm7,xmm11,xmm6
+a32 vsubsd xmm7,xmm11,xmm2
+a32 vsubsd xmm7,xmm11,xmm7
+vsubsd xmm7,xmm10,xmm6
+vsubsd xmm7,xmm10,xmm2
+gs vsubsd xmm7,xmm10,xmm7

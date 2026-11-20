@@ -26,7 +26,7 @@ type
 
   OperandName = object
     kind: TokenKind
-    value: string
+    value: StreamSlice
 
   BitPattern = object
     bits: seq[Bitfield]
@@ -44,27 +44,27 @@ type
     values: seq[OperandValue]
 
   InstIncompleteParseResult = object
-    final_index: int
     case is_err: bool
     of false:
       pattern_substitutions: seq[PatternSubstitution]
       values: seq[OperandValue]
       names: seq[OperandName]
-      tokens: seq[Token]
+      tokens: seq[TokenKind]
     of true:
       error: string
       error_priority: int
+      error_token_index: int
 
   InstParseResult = object
-    final_index: int
     case is_err: bool
     of false:
       bits: BitPattern
       operands: seq[OperandValue]
-      tokens: seq[Token]
+      tokens: seq[TokenKind]
     of true:
       error: string
       error_priority: int
+      error_token_index: int
 
   SliceParseState = object
     name: string
@@ -528,15 +528,16 @@ func get_bit_pattern(
           if top >= pattern_size_truncated:
             let top = (top - pattern_size_truncated).min(top_word_size.int - 1)
             let bottom = 0.max(bottom - pattern_size_truncated)
-            new_bits.add(
-              Bitfield(
-                id: to_bit_field_kind(first_word_index),
-                top: cast[uint32](top),
-                bottom: cast[uint32](bottom),
+            if top >= bottom:
+              new_bits.add(
+                Bitfield(
+                  id: to_bit_field_kind(first_word_index),
+                  top: cast[uint32](top),
+                  bottom: cast[uint32](bottom),
+                )
               )
-            )
-            for _ in bottom .. top:
-              pattern.add('0')
+              for _ in bottom .. top:
+                pattern.add('0')
 
           top = pattern_size_truncated - 1
           for index in top_word_index + 1 .. top_word_index + num_word - 2:
@@ -708,7 +709,7 @@ func is_defined(
   return false
 
 func parse_instruction(
-  s: var StreamSlice,
+  lexer_tokens: openArray[LexerToken],
   inst: InstructionUnbranched,
   isa_spec: IsaSpec,
   defines: Table[StreamSlice, (FieldKind, DefineValue)],
@@ -716,7 +717,7 @@ func parse_instruction(
 ): seq[InstIncompleteParseResult]
 
 func parse_instruction(
-  s: var StreamSlice,
+  lexer_tokens: openArray[LexerToken],
   inst: InstructionDebranched,
   isa_spec: IsaSpec,
   defines: Table[StreamSlice, (FieldKind, DefineValue)],
@@ -724,541 +725,345 @@ func parse_instruction(
 ): seq[InstParseResult]
 
 func parse_instruction_syntax_part(
-    s: var StreamSlice,
+    lexer_tokens: openArray[LexerToken],
     inst: InstructionUnbranched | InstructionDebranched,
-    syntax_index: int,
-    operand_index: int,
     isa_spec: IsaSpec,
     defines: Table[StreamSlice, (FieldKind, DefineValue)],
-    values: var seq[OperandValue],
-    names: var seq[OperandName],
     resolved_patterns: var Table[string, InstructionDebranched],
     error_on_incomplete: static[bool] = true,
 ): seq[InstIncompleteParseResult] =
-  let root_cp = s.checkpoint()
-  template error(msg: string, priority: int, sub_priority: int = 0) =
-    s.restore(root_cp)
-    return
-      @[
-        InstIncompleteParseResult(
-          is_err: true,
-          error_priority: 0xFF0000 + (priority shl 8) + sub_priority,
-          error: msg,
-        )
-      ]
+  proc merge(
+      best_err: var InstIncompleteParseResult,
+      msg: string,
+      priority: int,
+      sub_priority: int = 0,
+  ) =
+    let priority = 0xFF0000 + (priority shl 8) + sub_priority
+    if best_err.error_priority < priority:
+      best_err.error = msg
+      best_err.error_priority = priority
 
-  if syntax_index >= inst.syntax.len:
-    when error_on_incomplete:
-      isa_spec.skip_whitespaces(s)
-      if peek(s) notin {'\n', '\0'}:
-        error(
-          translate(31337_84557608492963, "Unknown code found after instruction: ") &
-            $from_line_start_to_here(s),
-          operand_index,
-        )
+  var branches:
+    Deque[tuple[operand_index: int, syntax_index: int, ret: InstIncompleteParseResult]]
 
-    return
-      @[
-        InstIncompleteParseResult(
-          is_err: false,
-          final_index: s.get_index(),
-          values: values,
-          names: names,
-          tokens: s.collect_tokens(),
-        )
-      ]
+  branches.add_last((0, 0, InstIncompleteParseResult()))
 
-  template check[T](input: (string, T)): T =
-    let (err, res) = input
-    if err != "":
-      error(err, operand_index)
-    res
+  var best_err = InstIncompleteParseResult(is_err: true, error_priority: -1)
 
-  func fixed(val: uint64): OperandValue =
-    return OperandValue(kind: ok_fixed, value: val)
+  while branches.len > 0:
+    block BLK_OUTER:
+      var (operand_index, syntax_index, ret) = branches.pop_first()
+      for syntax_index in syntax_index ..< inst.syntax.len:
+        let syntax = inst.syntax[syntax_index]
 
-  let syntax = inst.syntax[syntax_index]
-  let syntax_index = syntax_index + 1
-  case syntax.kind
-  of sk_any_number_of_spaces:
-    isa_spec.skip_whitespaces(s)
-    return parse_instruction_syntax_part(
-      s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
-      resolved_patterns, error_on_incomplete,
-    )
-  of sk_at_least_one_space:
-    let start_index = s.get_index()
-    isa_spec.skip_whitespaces(s)
-    if s.get_index() == start_index:
-      error(translate(31337_18981788561705, "Expected whitespace here"), operand_index)
-    return parse_instruction_syntax_part(
-      s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
-      resolved_patterns, error_on_incomplete,
-    )
-  of sk_fixed:
-    if matches(s, syntax.text, tk = tk_mnenomic):
-      return parse_instruction_syntax_part(
-        s, inst, syntax_index, operand_index, isa_spec, defines, values, names,
-        resolved_patterns, error_on_incomplete,
-      )
-    elif operand_index == 0:
-      error(translate(31337_21828993759952, "Unknown instruction"), operand_index)
-    else:
-      error(
-        translate(
-          31337_19581803133960,
-          "Expected '{syntax}' after '{partial_instruction}'",
-          ("syntax", syntax.text),
-          ("partial_instruction", from_line_start_to_here(s)),
-        ),
-        operand_index,
-      )
-  of sk_field:
-    let cp = s.checkpoint()
-    let options = inst.operands[operand_index].options
-    var op_value: OperandValue
-    var op_name: OperandName
-    var err_msg: string
-    var err_sub_priority: int
-    for j, field in options:
-      let is_last = j == options.high
-      s.restore(cp)
-      case field
-      of fk_label:
-        if matches(s, '.', tk = tk_number):
-          let jump_distance = check(get_signed(s))
-          let value = check(parse_signed(jump_distance))
-          op_value = OperandValue(kind: ok_relative, offset: cast[int64](value))
-          op_name = OperandName(kind: tk_number, value: $value)
-        else:
-          let label_name = get_identifier(s, tk = tk_label)
-          if label_name.len == 0:
-            if err_msg == "":
-              err_msg =
-                translate(31337_83023561541280, "Was expecting a label name here")
-
-            if not is_last:
-              continue
-            error(err_msg, operand_index, err_sub_priority)
-
-          if label_name.is_defined(isa_spec, defines):
-            if err_msg == "":
-              err_msg =
-                translate(31337_83023561541280, "Was expecting a label name here")
-
-            if not is_last:
-              continue
-            error(err_msg, operand_index, err_sub_priority)
-
-          op_value = OperandValue(kind: ok_label_ref, name: label_name)
-          op_name = OperandName(kind: tk_label, value: $label_name)
-
-        break
-      else:
-        if not is_variable(field):
-          block BLK_PARSE_IMM:
-            var base: int
-            if field in {fk_simm_1 .. fk_simm_64}:
-              let (err_simm, s_simm) = get_signed(s, base)
-              if err_simm == "":
-                let num = check(parse_signed(s_simm))
-                if not num.in_range(field):
-                  if err_sub_priority < 1 or err_msg == "":
-                    err_msg = translate(
-                      31337_53378617686677,
-                      "Value {num} outside of range for {field}",
-                      ("num", $s_simm),
-                      ("field", field),
-                    )
-                    err_sub_priority = 1
-
-                  if not is_last:
-                    continue
-                  error(err_msg, operand_index, err_sub_priority)
-
-                op_value = fixed(num)
-                op_name = OperandName(kind: tk_number, value: $s_simm)
-                break BLK_PARSE_IMM
-
-            let (err_uimm, s_uimm) = get_unsigned(s, base)
-            if err_uimm == "":
-              let num = check(parse_unsigned(s_uimm))
-              if not num.in_range(field):
-                if err_sub_priority < 1 or err_msg == "":
-                  err_msg = translate(
-                    31337_12097260550100,
-                    "Value {num} outside of range for {field}",
-                    ("num", $s_uimm),
-                    ("field", field),
-                  )
-                  err_sub_priority = 1
-
-                if not is_last:
-                  continue
-                error(err_msg, operand_index, err_sub_priority)
-
-              op_value = fixed(num)
-              op_name = OperandName(kind: tk_number, value: $s_uimm)
-              break BLK_PARSE_IMM
-
-            let (err_simm, s_simm) = get_signed(s, base)
-            if err_simm == "":
-              if err_sub_priority < 1 or err_msg == "":
-                err_msg = translate(
-                  31337_12097260550100,
-                  "Value {num} outside of range for {field}",
-                  ("num", $s_simm),
-                  ("field", field),
-                )
-                err_sub_priority = 1
-
-              if not is_last:
-                continue
-              error(err_msg, operand_index, err_sub_priority)
-
-            let field_string = get_identifier(s, tk = tk_const)
-            if field_string.len == 0:
-              if err_msg == "":
-                err_msg = translate(
-                  31337_33085034295813, "Expected either a number or a symbol"
-                )
-
-              if not is_last:
-                continue
-              error(err_msg, operand_index, err_sub_priority)
-
-            let (field_kind, value) =
-              defines.getOrDefault(field_string, (fk_label, DefineValue()))
-            if field_kind.is_extendable_to(field):
-              op_value = fixed(value.value)
-              op_name = OperandName(kind: tk_const, value: $value.value)
+        let lexer_index = ret.tokens.len
+        case syntax.kind
+        of sk_fixed_identifier, sk_fixed_number, sk_fixed_string, sk_fixed_separator:
+          if lexer_index >= lexer_tokens.len or
+              syntax.text != lexer_tokens[lexer_index].text:
+            if operand_index == 0:
+              best_err.merge(
+                translate(31337_21828993759952, "Unknown instruction"), operand_index
+              )
             else:
-              if err_msg == "":
-                err_msg = translate(
-                  31337_86607635528717,
-                  "Undefined constant {field_string}",
-                  ("field_string", field_string),
-                )
-
-              if not is_last:
-                continue
-              error(err_msg, operand_index, err_sub_priority)
-        else:
-          # Some user defined field type
-          let pre_field_cp = s.checkpoint()
-          let field_string = get_identifier(s, tk = tk_const)
-
-          let (field_kind, value) =
-            defines.getOrDefault(field_string, (fk_label, DefineValue()))
-          if field_kind == field:
-            op_value = fixed(value.value)
-            op_name = OperandName(kind: tk_const, value: $value.value)
-          else:
-            s.restore(pre_field_cp)
-
-            var found = -1
-            var name: string
-            var value: uint64
-            for field_value in isa_spec.field_types[field].values:
-              if field_value.name.len > found and s.matches(field_value.name, false):
-                value = field_value.value
-                name = $field_value.name
-                found = name.len
-            if found >= 0:
-              s.skip(name.len, tk = tk_field_name)
-              op_value = fixed(value)
-              op_name = OperandName(kind: tk_field_name, value: name)
-            else:
-              # TODO: Add multiple field types to error message if multiple are allowed
-              if err_msg == "":
-                if field_string.len == 0:
-                  err_msg = translate(
-                    31337_66273157704409,
-                    "Missing a '{field_type}' operand here",
-                    ("field_type", isa_spec.field_types[field].name),
-                  )
-                else:
-                  err_msg = translate(
-                    31337_79977943868423,
-                    "'{field_string}' is not a '{field_type}'",
-                    ("field_string", field_string),
-                    ("field_type", isa_spec.field_types[field].name),
-                  )
-
-              if not is_last:
-                continue
-              error(err_msg, operand_index, err_sub_priority)
-
-        break
-
-    values.add(op_value)
-    names.add(op_name)
-    result = parse_instruction_syntax_part(
-      s,
-      inst,
-      syntax_index,
-      operand_index + 1,
-      isa_spec,
-      defines,
-      values,
-      names,
-      resolved_patterns,
-      error_on_incomplete,
-    )
-    discard values.pop()
-    return result
-  of sk_pattern:
-    assert inst.operands[operand_index].kind == otk_pattern
-
-    var cur_resolved_patterns: seq[InstructionDebranched]
-    block BLK_RESOLVE_PATTERN:
-      for i, pattern in inst.operands[operand_index].patterns:
-        let pattern_key =
-          if pattern.index == uint8.high:
-            ""
-          else:
-            $pattern.index & '\0' & pattern.args.join("\0")
-
-        let instruction =
-          if pattern_key in resolved_patterns:
-            resolved_patterns[pattern_key]
-          else:
-            let resolved_pattern =
-              isa_spec.patterns[pattern.index].pattern.resolve(pattern.args)
-            var sslice = new_stream_slice(resolved_pattern)
-            let (err, instruction) = get_instruction(sslice, isa_spec, pattern.index)
-
-            if err != "":
-              error(
+              best_err.merge(
                 translate(
-                  31337_87525828760679,
-                  "Failed to resolve pattern ({err}): {resolved_pattern}",
-                  ("err", err),
-                  ("resolved_pattern", resolved_pattern),
+                  31337_19581803133960,
+                  "Expected '{syntax}' after '{partial_instruction}'",
+                  ("syntax", syntax.text),
+                  (
+                    "partial_instruction",
+                    lexer_tokens[0 ..< lexer_index].mapIt(it.text).join(" "),
+                  ),
                 ),
-                2 * inst.operands.len - operand_index.int,
+                operand_index,
               )
-
-            resolved_patterns[pattern_key] = instruction
-            instruction
-
-        cur_resolved_patterns.add(instruction)
-
-    let cp = checkpoint(s)
-    var best_err = InstIncompleteParseResult(is_err: true)
-
-    for i, pattern_inst in cur_resolved_patterns:
-      for pattern_inst_res in parse_instruction(
-        s, pattern_inst, isa_spec, defines, resolved_patterns
-      ):
-        if pattern_inst_res.is_err:
-          s.restore(cp)
-          if result.len == 0 and
-              pattern_inst_res.error_priority > best_err.error_priority:
-            best_err = InstIncompleteParseResult(
-              is_err: true,
-              error_priority: pattern_inst_res.error_priority + operand_index.int,
-              error: pattern_inst_res.error,
-            )
-        else:
-          s.set_index(pattern_inst_res.final_index)
-          s.restore_tokens(pattern_inst_res.tokens)
-          let rets = parse_instruction_syntax_part(
-            s,
-            inst,
-            syntax_index,
-            operand_index + 1,
-            isa_spec,
-            defines,
-            values,
-            names,
-            resolved_patterns,
-            error_on_incomplete,
-          )
-          s.restore(cp)
-          if rets[0].is_err:
-            if result.len == 0 and rets[0].error_priority >= best_err.error_priority:
-              best_err = rets[0]
+            break BLK_OUTER
+          if syntax.kind == sk_fixed_identifier:
+            ret.tokens.add(tk_mnemonic)
+          elif syntax.kind == sk_fixed_number:
+            ret.tokens.add(tk_number)
+          elif syntax.kind == sk_fixed_string:
+            ret.tokens.add(tk_string)
           else:
-            for ret in rets:
-              result.add(ret)
-              result[^1].pattern_substitutions.add(
-                PatternSubstitution(
-                  index: operand_index.uint8,
-                  bits: pattern_inst_res.bits,
-                  values: pattern_inst_res.operands,
-                )
-              )
-
-    if result.len == 0:
-      return @[best_err]
-
-func pre_parse_instruction(
-    s: StreamSlice, syntaxs: seq[Syntax], isa_spec: IsaSpec
-): (int, string) =
-  # The 2 requirements for this check is:
-  # 1. It must not produce false negatives, i.e. what fails this is 100% sure to fail latter checks
-  # 2. It must be fast. Trade off with false-positive probability as needed
-
-  let original_s = s
-  var s = s
-  var idx = 0
-  for syntax in syntaxs:
-    idx += 1
-    case syntax.kind
-    of sk_fixed:
-      if not matches(s, syntax.text):
-        return
-          if original_s.get_index() != s.get_index():
-            (
-              0,
+            ret.tokens.add(tk_separator)
+        of sk_field:
+          if lexer_index >= lexer_tokens.len:
+            best_err.merge(
               translate(
                 31337_19581803133960,
                 "Expected '{syntax}' after '{partial_instruction}'",
                 ("syntax", syntax.text),
                 (
                   "partial_instruction",
-                  s.get_slice(original_s.get_index(), s.get_index()),
+                  lexer_tokens[0 ..< lexer_index].mapIt(it.text).join(" "),
                 ),
               ),
+              operand_index,
             )
-          else:
-            (-1, translate(31337_37770431994640, "Invalid instruction"))
-    of sk_any_number_of_spaces:
-      isa_spec.skip_whitespaces(s)
-    of sk_at_least_one_space:
-      let start_index = s.get_index()
-      isa_spec.skip_whitespaces(s)
-      if s.get_index() == start_index:
-        return
-          if original_s.get_index() != s.get_index():
-            (
-              0,
-              translate(
-                31337_69537550553443,
-                "Expected at least one whitespace character after '{partial_instruction}'",
-                (
-                  "partial_instruction",
-                  s.get_slice(original_s.get_index(), s.get_index()),
-                ),
-              ),
-            )
-          else:
-            (-1, translate(31337_37770431994640, "Invalid instruction"))
-    of sk_field, sk_pattern:
-      break
+            break BLK_OUTER
 
-  var priority = 1
-  for i in idx ..< syntaxs.len:
-    let syntax = syntaxs[i]
-    var has_failed = false
-    let s_index = s.get_index()
-    case syntax.kind
-    of sk_fixed:
-      while not matches(s, syntax.text):
-        if peek(s) in {'\n', '\0'}:
-          has_failed = true
-          break
-        skip(s)
-    of sk_at_least_one_space:
-      while true:
-        let start_index = s.get_index()
-        isa_spec.skip_whitespaces(s)
-        if s.get_index() != start_index:
-          break
-        if peek(s) in {'\n', '\0'}:
-          has_failed = true
-          break
-        skip(s)
-    else:
-      discard
+          let options = inst.operands[operand_index].options
+          var op_value: OperandValue
+          var op_name: OperandName
+          var err_msg: string
+          var err_sub_priority: int
 
-    if has_failed:
-      let partial_instruction = s.get_slice(original_s.get_index(), s_index)
-      let msg =
-        case syntax.kind
-        of sk_fixed:
-          translate(
-            31337_19581803133960,
-            "Expected '{syntax}' after '{partial_instruction}'",
-            ("syntax", syntax.text),
-            ("partial_instruction", partial_instruction),
+          let token_0 = lexer_tokens[lexer_index]
+          let const_name = token_0.text
+          let (const_fk, const_value) =
+            defines.getOrDefault(const_name, (fk_label, DefineValue()))
+          for field in options:
+            case field
+            of fk_label:
+              # Label reference
+              if token_0.kind == ltk_identifier:
+                let label_name = token_0.text
+                if label_name.is_defined(isa_spec, defines):
+                  if err_msg == "":
+                    err_msg =
+                      translate(31337_83023561541280, "Expected a label name here")
+                  continue
+
+                op_value = OperandValue(kind: ok_label_ref, name: label_name)
+                op_name = OperandName(kind: tk_label, value: label_name)
+                ret.tokens.add(tk_label)
+
+                break
+
+              # Relative address
+              if lexer_index + 1 >= lexer_tokens.len:
+                if err_msg == "":
+                  err_msg =
+                    translate(31337_83023561541280, "Expected a label name here")
+
+              let token_1 = lexer_tokens[lexer_index + 1]
+              let (err, jump_distance) = parse_signed(token_1.text)
+              if err != "":
+                best_err.merge(
+                  translate(31337, "Expected a number after '.' for relative address"),
+                  operand_index,
+                )
+                break BLK_OUTER
+
+              op_value =
+                OperandValue(kind: ok_relative, offset: cast[int64](jump_distance))
+              op_name = OperandName(kind: tk_number, value: token_0.text)
+              ret.tokens.add(tk_number)
+              ret.tokens.add(tk_number)
+              break
+            of fk_imm_0 .. fk_uimm_64, fk_simm_1 .. fk_simm_64:
+              # Constant reference
+              if token_0.kind == ltk_identifier:
+                if not const_fk.is_extendable_to(field):
+                  if err_msg == "":
+                    err_msg = translate(
+                      31337_86607635528717,
+                      "Undefined constant {field_string}",
+                      ("field_string", const_name),
+                    )
+                  continue
+
+                op_value = OperandValue(kind: ok_fixed, value: const_value.value)
+                op_name = OperandName(kind: tk_const, value: const_name)
+                ret.tokens.add(tk_const)
+                break
+
+              if token_0.kind != ltk_number:
+                if err_msg == "":
+                  err_msg = translate(
+                    31337_33085034295813, "Expected either a number or a constant"
+                  )
+                continue
+
+              # Signed immediate
+              if field in {fk_simm_1 .. fk_simm_64}:
+                let (err_simm, num) = parse_signed(token_0.text)
+                if err_simm != "" or not num.in_range(field):
+                  if err_msg == "" or err_sub_priority < 1:
+                    err_msg = translate(
+                      31337_53378617686677,
+                      "Value {num} outside of range for {field}",
+                      ("num", token_0.text),
+                      ("field", field),
+                    )
+                    err_sub_priority = 1
+                  continue
+
+                op_value = OperandValue(kind: ok_fixed, value: num)
+                op_name = OperandName(kind: tk_number, value: token_0.text)
+                ret.tokens.add(tk_number)
+                break
+
+              # Unsigned immediate
+              let (err_uimm, num) = parse_unsigned(token_0.text)
+              if err_uimm != "" or not num.in_range(field):
+                if err_msg == "" or err_sub_priority < 1:
+                  err_msg = translate(
+                    31337_12097260550100,
+                    "Value {num} outside of range for {field}",
+                    ("num", token_0.text),
+                    ("field", field),
+                  )
+                  err_sub_priority = 1
+                continue
+
+              op_value = OperandValue(kind: ok_fixed, value: num)
+              op_name = OperandName(kind: tk_number, value: token_0.text)
+              ret.tokens.add(tk_number)
+              break
+            else:
+              if token_0.kind != ltk_identifier:
+                if err_msg == "":
+                  err_msg = translate(
+                    31337_66273157704409,
+                    "Missing a '{field_type}' operand here",
+                    ("field_type", isa_spec.field_types[field].name),
+                  )
+                continue
+
+              # Some user defined field type
+              if const_fk == field:
+                op_value = OperandValue(kind: ok_fixed, value: const_value.value)
+                op_name = OperandName(kind: tk_const, value: const_name)
+                ret.tokens.add(tk_const)
+                break
+
+              for field_value in isa_spec.field_types[field].values:
+                if field_value.name == const_name:
+                  op_value = OperandValue(kind: ok_fixed, value: field_value.value)
+                  op_name = OperandName(kind: tk_field_name, value: const_name)
+                  ret.tokens.add(tk_field_name)
+                  break
+              if op_name.value.len > 0:
+                break
+
+              # TODO: Add multiple field types to error message if multiple are allowed
+              if err_msg == "":
+                err_msg = translate(
+                  31337_79977943868423,
+                  "'{field_string}' is not a '{field_type}'",
+                  ("field_string", const_name),
+                  ("field_type", isa_spec.field_types[field].name),
+                )
+                continue
+
+          if op_name.value.len == 0:
+            best_err.merge(err_msg, operand_index, err_sub_priority)
+            break BLK_OUTER
+
+          ret.values.add(op_value)
+          ret.names.add(op_name)
+          operand_index += 1
+        of sk_pattern:
+          assert inst.operands[operand_index].kind == otk_pattern
+
+          var cur_resolved_patterns: seq[InstructionDebranched]
+          block BLK_RESOLVE_PATTERN:
+            for i, pattern in inst.operands[operand_index].patterns:
+              var pattern_key: string
+              if pattern.index != uint8.high:
+                pattern_key = $pattern.index & '\0'
+                for str in pattern.str_args:
+                  pattern_key &= str & '\0'
+                for field in pattern.field_args:
+                  pattern_key &= $field.ord & '\0'
+
+              let instruction =
+                if pattern_key in resolved_patterns:
+                  resolved_patterns[pattern_key]
+                else:
+                  let (resolved_body, resolved_inst) = isa_spec.patterns[pattern.index].resolve(
+                    pattern.str_args, pattern.field_args
+                  )
+                  var sslice = new_stream_slice(resolved_body)
+                  let (err, instruction) =
+                    parse_instruction_def(sslice, isa_spec, resolved_inst)
+
+                  if err != "":
+                    best_err.merge(
+                      translate(
+                        31337_87525828760679,
+                        "Failed to resolve pattern body ({err}): {resolved_body}",
+                        ("err", err),
+                        ("resolved_body", resolved_body),
+                      ),
+                      2 * inst.operands.len - operand_index.int,
+                    )
+                    break BLK_OUTER
+
+                  resolved_patterns[pattern_key] = instruction
+                  instruction
+
+              cur_resolved_patterns.add(instruction)
+
+          var pattern_best_err = InstIncompleteParseResult(is_err: true)
+          for i, pattern_inst in cur_resolved_patterns:
+            for pattern_inst_res in parse_instruction(
+              lexer_tokens[lexer_index ..^ 1],
+              pattern_inst,
+              isa_spec,
+              defines,
+              resolved_patterns,
+            ):
+              if pattern_inst_res.is_err:
+                pattern_best_err.merge(
+                  pattern_inst_res.error,
+                  pattern_inst_res.error_priority + operand_index.int,
+                )
+                continue
+
+              var saved_ret = ret
+              saved_ret.tokens.add(pattern_inst_res.tokens)
+              saved_ret.pattern_substitutions.add(
+                PatternSubstitution(
+                  index: operand_index.uint8,
+                  bits: pattern_inst_res.bits,
+                  values: pattern_inst_res.operands,
+                )
+              )
+              branches.add_last((operand_index + 1, syntax_index + 1, saved_ret))
+
+          break BLK_OUTER
+
+      when error_on_incomplete:
+        let lexer_index = ret.tokens.len
+        if lexer_index < lexer_tokens.len:
+          best_err.merge(
+            translate(31337_84557608492963, "Unknown code found after instruction: ") &
+              $lexer_tokens[lexer_index].text,
+            operand_index,
           )
-        of sk_at_least_one_space:
-          translate(
-            31337_69537550553443,
-            "Expected at least one whitespace character after '{partial_instruction}'",
-            ("partial_instruction", partial_instruction),
-          )
-        else:
-          translate(
-            31337_82512572175623,
-            "Unexpected end of instruction after {partial_instruction}",
-            ("partial_instruction", partial_instruction),
-          )
-      return (priority, msg)
+          break BLK_OUTER
 
-    priority += 1
+      result.add(ret)
 
-  (0, "")
+  if result.len == 0:
+    result.add(best_err)
 
 func parse_instruction(
-    s: var StreamSlice,
+    lexer_tokens: openArray[LexerToken],
     inst: InstructionUnbranched,
     isa_spec: IsaSpec,
     defines: Table[StreamSlice, (FieldKind, DefineValue)],
     resolved_patterns: var Table[string, InstructionDebranched],
 ): seq[InstIncompleteParseResult] =
-  let cp = s.checkpoint()
-  let (priority, err) = pre_parse_instruction(s, inst.syntax, isa_spec)
-  s.restore(cp)
-  if err != "":
-    return
-      @[InstIncompleteParseResult(is_err: true, error_priority: priority, error: err)]
-
-  var op_values: seq[OperandValue]
-  var op_names: seq[OperandName]
   result = parse_instruction_syntax_part(
-    s,
-    inst,
-    0,
-    0,
-    isa_spec,
-    defines,
-    op_values,
-    op_names,
-    resolved_patterns,
-    error_on_incomplete = true,
+    lexer_tokens, inst, isa_spec, defines, resolved_patterns, error_on_incomplete = true
   )
 
-  for it in result.mitems:
-    if not it.is_err:
-      it.pattern_substitutions.reverse()
-
 func parse_instruction(
-    s: var StreamSlice,
+    lexer_tokens: openArray[LexerToken],
     inst: InstructionDebranched,
     isa_spec: IsaSpec,
     defines: Table[StreamSlice, (FieldKind, DefineValue)],
     resolved_patterns: var Table[string, InstructionDebranched],
 ): seq[InstParseResult] =
-  let cp = s.checkpoint()
-  let (priority, err) = pre_parse_instruction(s, inst.syntax, isa_spec)
-  s.restore(cp)
-  if err != "":
-    return @[InstParseResult(is_err: true, error_priority: priority, error: err)]
-
-  var op_values: seq[OperandValue]
-  var op_names: seq[OperandName]
   var ret = parse_instruction_syntax_part(
-    s,
+    lexer_tokens,
     inst,
-    0,
-    0,
     isa_spec,
     defines,
-    op_values,
-    op_names,
     resolved_patterns,
     error_on_incomplete = false,
   )
@@ -1270,12 +1075,11 @@ func parse_instruction(
       if it.error_priority > best_err.error_priority:
         best_err = InstParseResult(
           is_err: true,
-          final_index: it.final_index,
+          error_token_index: it.error_token_index,
           error_priority: it.error_priority,
           error: it.error,
         )
     else:
-      it.pattern_substitutions.reverse()
       let (err, bits) = get_bit_pattern(
         inst.bit_pattern, isa_spec, inst, it.values, it.pattern_substitutions, true
       )
@@ -1283,11 +1087,7 @@ func parse_instruction(
       if err == "":
         result.add(
           InstParseResult(
-            is_err: false,
-            final_index: it.final_index,
-            operands: it.values,
-            bits: bits,
-            tokens: it.tokens,
+            is_err: false, operands: it.values, bits: bits, tokens: it.tokens
           )
         )
       elif it.error_priority > best_err.error_priority:
@@ -1295,7 +1095,7 @@ func parse_instruction(
           @[
             InstParseResult(
               is_err: true,
-              final_index: it.final_index,
+              error_token_index: it.error_token_index,
               error_priority: int.high,
               error: err,
             )
@@ -1479,6 +1279,394 @@ func is_any_pc_rel(values: seq[OperandValue]): bool =
       return true
   false
 
+type AssemblyLineParseResultKind = enum
+  alpki_dont_care
+  alpki_success
+  alpki_error
+
+type AssemblyLineError = tuple[error_priority: int, error: string]
+
+func parse_number_literal(
+    sources: var ParseContext, lexer_tokens: openArray[LexerToken], isa_spec: IsaSpec
+): (AssemblyLineParseResultKind, AssemblyLineError, tuple[value: uint64, size: uint64]) =
+  # Ex: U64 1234, U8 0x123
+  if lexer_tokens.len != 2 or lexer_tokens[0].kind != ltk_identifier or
+      lexer_tokens[1].kind != ltk_number:
+    result[0] = alpki_dont_care
+    return
+
+  let cp = checkpoint(sources[^1].s)
+  let (size_error, size, is_signed) = get_size(sources[^1].s)
+
+  var has_ws_after_size = false
+  if size_error == "":
+    let start_index = sources[^1].s.start
+    isa_spec.skip_whitespaces(sources[^1].s)
+    has_ws_after_size = sources[^1].s.start != start_index
+
+  let (number_error, number) = get_unsigned(sources[^1].s)
+  if size_error != "" and number_error != "":
+    sources[^1].s.restore(cp)
+    result[0] = alpki_dont_care
+    return
+
+  if size_error != "":
+    result[1] = (
+      int.high,
+      translate(
+        31337_45433710484419,
+        "Expected a size before the number, like: U64 {number}",
+        ("number", number),
+      ),
+    )
+    sources[^1].s.restore(cp)
+    result[0] = alpki_dont_care
+    return
+
+  if is_signed:
+    result[0] = alpki_error
+    result[1].error =
+      translate(31337_83649060120708, "Signed numbers are not supported")
+    return
+
+  if size mod 8 != 0 or size == 0:
+    result[0] = alpki_error
+    result[1].error = translate(
+      31337_67922577781529, "Only positive multiples of 8 bits are supported for now"
+    )
+    return
+
+  if not has_ws_after_size:
+    result[0] = alpki_error
+    result[1].error = translate(
+      31337_80097289956044,
+      "Expected some whitespace between the size and the number, like U{size} {number}",
+      ("size", size),
+      ("number", number),
+    )
+    return
+
+  if number_error != "":
+    result[1] = (
+      int.high,
+      translate(31337_60515742509356, "Expected a number after a size declaration"),
+    )
+    sources[^1].s.restore(cp)
+    result[0] = alpki_dont_care
+    return
+
+  var value = parse_unsigned(number).on_err:
+    result[0] = alpki_error
+    result[1].error = err
+    return
+
+  result[0] = alpki_success
+  result[2] = (value, size)
+
+func parse_string_literal(
+    sources: var ParseContext, lexer_tokens: openArray[LexerToken], isa_spec: IsaSpec
+): (AssemblyLineParseResultKind, AssemblyLineError, string) =
+  # Ex: "\"Hello\" World", '"Hello" World', `"Hello" World`
+  if lexer_tokens.len != 1 or lexer_tokens[0].kind != ltk_string:
+    result[0] = alpki_dont_care
+    return
+
+  let str_with_quotes = get_string(sources[^1].s).on_err:
+    result[0] = alpki_error
+    result[1].error = err
+    return
+
+  let str = descape_string_content(str_with_quotes).on_err:
+    result[0] = alpki_error
+    result[1].error = err
+    return
+
+  result[0] = alpki_success
+  result[2] = str
+
+func parse_pad_to_directive(
+    sources: var ParseContext, lexer_tokens: openArray[LexerToken], isa_spec: IsaSpec
+): (AssemblyLineParseResultKind, AssemblyLineError, uint64) =
+  # Ex: @1234
+  if lexer_tokens.len != 2 or lexer_tokens[0].kind != ltk_separator or
+      lexer_tokens[0].text != "@" or lexer_tokens[1].kind != ltk_number:
+    result[0] = alpki_dont_care
+    return
+
+  if not matches(sources[^1].s, '@', tk = tk_operator):
+    result[0] = alpki_dont_care
+    return
+
+  let (number_error, s_number) = get_unsigned(sources[^1].s)
+  if number_error != "":
+    result[0] = alpki_error
+    result[1].error =
+      translate(31337_48895355188042, "Expect an unsigned number literal after '@'")
+    return
+
+  change_token_kind(sources[^1].s, tk_number, tk_label)
+
+  let (err, number) = parse_unsigned(s_number)
+  if err != "":
+    result[0] = alpki_error
+    result[1].error =
+      translate(31337_48895355188042, "Expect an unsigned number literal after '@'")
+    return
+
+  result[0] = alpki_success
+  result[2] = number
+
+func parse_label_declaration(
+    sources: var ParseContext, lexer_tokens: openArray[LexerToken], isa_spec: IsaSpec
+): (
+  AssemblyLineParseResultKind, AssemblyLineError, tuple[name: StreamSlice, public: bool]
+) =
+  if (lexer_tokens.len != 2 and lexer_tokens.len != 3) or
+      lexer_tokens[^1].kind != ltk_separator or lexer_tokens[^1].text != ":" or
+      lexer_tokens[^2].kind != ltk_identifier or lexer_tokens[0].kind != ltk_identifier:
+    result[0] = alpki_dont_care
+    return
+
+  if lexer_tokens.len == 3 and lexer_tokens[0].text != "pub":
+    result[0] = alpki_dont_care
+    return
+
+  let cp = checkpoint(sources[^1].s)
+
+  var public = false
+  if lexer_tokens[0].text == "pub":
+    discard get_identifier(sources[^1].s, tk = tk_label)
+    change_token_kind(sources[^1].s, tk_label, tk_keyword)
+    isa_spec.skip_whitespaces(sources[^1].s)
+    public = true
+
+  let label = get_identifier(sources[^1].s, tk = tk_label)
+  if not matches(sources[^1].s, ':', tk = tk_label):
+    sources[^1].s.restore(cp)
+    result[0] = alpki_dont_care
+    return
+
+  if label in sources[^1].defines or label in sources[^1].labels:
+    result[0] = alpki_error
+    result[1].error = translate(
+      31337_42442531119863,
+      "{constant_name} is already declared",
+      ("constant_name", label),
+    )
+    return
+
+  result[0] = alpki_success
+  result[2] = (label, public)
+
+func parse_const_definition(
+    sources: var ParseContext, lexer_tokens: openArray[LexerToken], isa_spec: IsaSpec
+): (
+  AssemblyLineParseResultKind,
+  AssemblyLineError,
+  tuple[name: StreamSlice, kind: FieldKind, value: DefineValue],
+) =
+  if lexer_tokens.len < 3:
+    result[0] = alpki_dont_care
+    return
+
+  let cp = checkpoint(sources[^1].s)
+
+  var public = false
+  if lexer_tokens[0].text == "pub":
+    discard get_identifier(sources[^1].s, tk = tk_label)
+    change_token_kind(sources[^1].s, tk_label, tk_keyword)
+    isa_spec.skip_whitespaces(sources[^1].s)
+    public = true
+
+  if not matches(sources[^1].s, "const", tk = tk_keyword):
+    sources[^1].s.restore(cp)
+    result[0] = alpki_dont_care
+    return
+
+  isa_spec.skip_whitespaces(sources[^1].s)
+
+  let constant_name = get_identifier(sources[^1].s, tk = tk_const)
+  if constant_name.len == 0:
+    result[0] = alpki_error
+    result[1].error = translate(31337_33085034295813, "Expected a constant name")
+    return
+
+  isa_spec.skip_whitespaces(sources[^1].s)
+
+  if not matches(sources[^1].s, '=', tk = tk_operator):
+    result[0] = alpki_error
+    result[1].error = translate(31337_47300717145684, "Missing '=' after 'const'")
+    return
+
+  if constant_name in sources[^1].defines or constant_name in sources[^1].labels:
+    result[0] = alpki_error
+    result[1].error = translate(
+      31337_42442531119863,
+      "{constant_name} is already declared",
+      ("constant_name", constant_name),
+    )
+    return
+
+  for field_values in isa_spec.field_types.values:
+    for field in field_values.values:
+      if field.name == constant_name:
+        result[0] = alpki_error
+        result[1].error = translate(
+          31337_42442531119863,
+          "{constant_name} is already declared",
+          ("constant_name", constant_name),
+        )
+        return
+
+  isa_spec.skip_whitespaces(sources[^1].s)
+
+  let (err_uimm, s_uimm) = get_unsigned(sources[^1].s)
+  if err_uimm == "":
+    let value = parse_unsigned(s_uimm).on_err:
+      result[0] = alpki_error
+      result[1].error = err
+      return
+
+    result[0] = alpki_success
+    result[2] = (
+      constant_name, get_tighest_uimm(value), DefineValue(public: public, value: value)
+    )
+    return
+
+  let (err_simm, s_simm) = get_signed(sources[^1].s)
+  if err_simm == "":
+    let value = parse_signed(s_simm).on_err:
+      result[0] = alpki_error
+      result[1].error = err
+      return
+
+    result[0] = alpki_success
+    result[2] = (
+      constant_name, get_tighest_simm(value), DefineValue(public: public, value: value)
+    )
+    return
+
+  let field_or_another_constant_name = get_identifier(sources[^1].s, tk = tk_const)
+  let (constant_kind, defined_value) = sources[^1].defines.getOrDefault(
+    field_or_another_constant_name, (fk_label, DefineValue())
+  )
+  if constant_kind != fk_label:
+    result[0] = alpki_success
+    result[2] = (
+      constant_name,
+      constant_kind,
+      DefineValue(public: public, value: defined_value.value),
+    )
+    return
+
+  for field_kind, field_values in isa_spec.field_types:
+    for field in field_values.values:
+      if field.name == field_or_another_constant_name:
+        result[0] = alpki_success
+        result[2] =
+          (constant_name, field_kind, DefineValue(public: public, value: field.value))
+        return
+
+  result[0] = alpki_error
+  result[1].error = translate(
+    31337_90294506138532, "Definition value must be either a number or a field"
+  )
+
+proc parse_include_statement(
+    sources: var ParseContext,
+    lexer_tokens: openArray[LexerToken],
+    isa_spec: IsaSpec,
+    base_path: string,
+): (AssemblyLineParseResultKind, AssemblyLineError, SliceParseState) =
+  if lexer_tokens.len < 2:
+    result[0] = alpki_dont_care
+    return
+
+  let cp = checkpoint(sources[^1].s)
+
+  var public = false
+  if matches(sources[^1].s, "pub", tk = tk_keyword):
+    isa_spec.skip_whitespaces(sources[^1].s)
+    public = true
+
+  if not matches(sources[^1].s, "include", tk = tk_keyword):
+    sources[^1].s.restore(cp)
+    result[0] = alpki_dont_care
+    return
+
+  const NAME_CHARS = IdentChars
+  const PATH_CHARS = NAME_CHARS + {'\\', '/', '.'}
+
+  isa_spec.skip_whitespaces(sources[^1].s)
+
+  var normal_path = sources[^1].dir_path
+  while peek(sources[^1].s) in PATH_CHARS:
+    normal_path.add(read(sources[^1].s, tk = tk_string))
+  normal_path = normalizedPath(normal_path).replace('\\', '/')
+
+  let idx_slash = normal_path.rfind('/')
+  let dir_path = normal_path[0 ..< idx_slash + 1]
+  let file_name = normal_path[idx_slash + 1 ..^ 1]
+  normal_path.add(".asm")
+
+  var included_name: string
+
+  isa_spec.skip_whitespaces(sources[^1].s)
+  if not matches(sources[^1].s, "as", tk = tk_keyword):
+    if file_name.contains(AllChars - NAME_CHARS):
+      result[0] = alpki_error
+      result[1].error = translate(
+        31337_62050046600010,
+        "The file name {name} cannot be used as referencable alias, declare another alias using the keyword 'as', e.g. 'include .A as A'",
+        ("name", file_name),
+      )
+      return
+
+    included_name = file_name
+  else:
+    let old_s = sources[^1].s
+    isa_spec.skip_whitespaces(sources[^1].s)
+    if old_s == sources[^1].s:
+      result[0] = alpki_error
+      result[1].error =
+        translate(31337_35071857261934, "Expected some whitespace after 'as'")
+      return
+
+    while peek(sources[^1].s) in NAME_CHARS:
+      included_name.add(read(sources[^1].s, tk = tk_label))
+
+  isa_spec.skip_whitespaces(sources[^1].s)
+  if peek(sources[^1].s) notin {'\n', '\0'}:
+    result[0] = alpki_error
+    result[1].error =
+      translate(31337_58979769991732, "Expected a new line after 'include'")
+    return
+
+  for any_state in sources:
+    if any_state.normal_path == normal_path:
+      result[0] = alpki_error
+      result[1].error =
+        translate(31337_19131785861372, "Recursive inclusion of: ") & normal_path
+      return
+
+  let full_path = base_path / normal_path
+  if not fileExists(full_path):
+    result[0] = alpki_error
+    result[1].error =
+      translate(31337_66575346967082, "File does not exist: ") & normal_path
+    return
+
+  let source = readFile(full_path)
+
+  result[0] = alpki_success
+  result[2] = SliceParseState(
+    name: included_name,
+    s: new_stream_slice(source, with_tokens = true),
+    dir_path: dir_path,
+    normal_path: normal_path,
+    public: public,
+  )
+
 proc estimate_labels(
     unknown_labels: var seq[StreamSlice],
     ctx: var EstimationContext,
@@ -1509,107 +1697,82 @@ proc estimate_labels(
       while not ctx.sources[^1].s.finished():
         ctx.sources[^1].skip_line(false)
 
-        let progress_index = get_index(ctx.sources[^1].s)
+        let progress_index = ctx.sources[^1].s.start
+
+        let (lexer_tokens, lexer_hash) = block:
+          var s = ctx.sources[^1].s
+          stop_tokenization(s)
+          get_lexer_tokens(
+            s, isa_spec.mnemonics, isa_spec.line_comments, isa_spec.block_comments
+          )
 
         block BLK_INNER:
-          block BLK_NUMBER_LITERAL:
-            let cp = checkpoint(ctx.sources[^1].s)
-            let (size_error, size, is_signed) = get_size(ctx.sources[^1].s)
-
-            var has_ws_after_size = false
-            if size_error == "":
-              let start_index = ctx.sources[^1].s.get_index()
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-              has_ws_after_size = ctx.sources[^1].s.get_index() != start_index
-
-            let (number_error, number) = get_unsigned(ctx.sources[^1].s)
-            if size_error != "" and number_error != "":
-              ctx.sources[^1].s.restore(cp)
-              break BLK_NUMBER_LITERAL
-
-            if size_error != "" or is_signed or size mod 8 != 0 or size == 0 or
-                not has_ws_after_size or number_error != "":
+          block:
+            let (r, _, number) =
+              parse_number_literal(ctx.sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              discard
+            of alpki_error:
               ctx.sources[^1].skip_line()
               break BLK_INNER
-
-            let (err, _) = parse_unsigned(number)
-            if err != "":
-              ctx.sources[^1].skip_line()
+            of alpki_success:
+              ctx.code_pointer += number.size div 8
+              ctx.sources[^1].skip_line(false)
               break BLK_INNER
 
-            ctx.code_pointer += size div 8
-            ctx.sources[^1].skip_line(false)
-            break BLK_INNER
-
-          block BLK_STRING_LITERAL:
-            if peek(ctx.sources[^1].s) notin QUOTES:
-              break BLK_STRING_LITERAL
-
-            let raw_literal = get_string(ctx.sources[^1].s).on_err:
+          block:
+            let (r, _, str) = parse_string_literal(ctx.sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              discard
+            of alpki_error:
               ctx.sources[^1].skip_line()
               break BLK_INNER
-
-            let literal = descape_string_content(raw_literal).on_err:
-              ctx.sources[^1].skip_line()
+            of alpki_success:
+              ctx.code_pointer += cast[uint64](str.len)
+              ctx.sources[^1].skip_line(false)
               break BLK_INNER
 
-            ctx.code_pointer += cast[uint64](literal.len)
-            ctx.sources[^1].skip_line(false)
-            break BLK_INNER
-
-          block BLK_PAD_TO_DIRECTIVE:
-            if peek(ctx.sources[^1].s) != '@':
-              break BLK_PAD_TO_DIRECTIVE
-
-            let (number_error, s_number) = get_unsigned(ctx.sources[^1].s)
-            if number_error != "":
+          block:
+            let (r, _, number) =
+              parse_pad_to_directive(ctx.sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              discard
+            of alpki_error:
               ctx.sources[^1].skip_line()
               break BLK_INNER
-
-            let (err, number) = parse_unsigned(s_number)
-            if err != "":
-              ctx.sources[^1].skip_line()
-              break BLK_INNER
-
-            ctx.estimated_codes.peekLast().delay += 1
-            if ctx.code_pointer > number:
-              ctx.estimated_codes.peekLast().len = cast[uint32](0)
-            else:
-              ctx.estimated_codes.peekLast().len =
-                cast[uint32](number - ctx.code_pointer)
-              ctx.code_pointer = number
-
-            ctx.estimated_codes.addLast((0'u32, 0'u32))
-
-            ctx.sources[^1].skip_line(false)
-            break BLK_INNER
-
-          block BLK_SPECIAL:
-            let cp = checkpoint(ctx.sources[^1].s)
-            var special_test = get_identifier(ctx.sources[^1].s)
-
-            let public =
-              if special_test == "pub":
-                isa_spec.skip_whitespaces(ctx.sources[^1].s)
-                special_test = get_identifier(ctx.sources[^1].s)
-                true
+            of alpki_success:
+              ctx.estimated_codes.peekLast().delay += 1
+              if ctx.code_pointer > number:
+                ctx.estimated_codes.peekLast().len = cast[uint32](0)
               else:
-                false
+                ctx.estimated_codes.peekLast().len =
+                  cast[uint32](number - ctx.code_pointer)
+                ctx.code_pointer = number
 
-            if special_test.len != 0 and peek(ctx.sources[^1].s) == ':':
-              if special_test in ctx.sources[^1].defines or
-                  special_test in ctx.sources[^1].labels:
-                ctx.sources[^1].skip_line()
-                break BLK_INNER
+              ctx.estimated_codes.addLast((0'u32, 0'u32))
 
-              skip(ctx.sources[^1].s)
+              ctx.sources[^1].skip_line(false)
+              break BLK_INNER
 
-              ctx.sources[^1].labels[special_test] =
-                DefineValue(public: public, value: uint64.high)
+          block:
+            let (r, _, label) =
+              parse_label_declaration(ctx.sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              discard
+            of alpki_error:
+              ctx.sources[^1].skip_line()
+              break BLK_INNER
+            of alpki_success:
+              ctx.sources[^1].labels[label.name] =
+                DefineValue(public: label.public, value: uint64.high)
 
-              let fully_qualified_label = ctx.prefix_unknown_label & special_test
+              let fully_qualified_label = ctx.prefix_unknown_label & label.name
               ctx.estimated_labels.labels[fully_qualified_label] =
-                DefineValue(public: public, value: cast[uint64](ctx.code_pointer))
+                DefineValue(public: label.public, value: cast[uint64](ctx.code_pointer))
 
               let unknown_label_idx = unknown_labels.find(fully_qualified_label)
               if unknown_label_idx >= 0:
@@ -1620,160 +1783,44 @@ proc estimate_labels(
                 return
               break BLK_INNER
 
-            if special_test == "include":
-              const NAME_CHARS = IdentChars
-              const PATH_CHARS = NAME_CHARS + {'\\', '/', '.'}
-
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-
-              var normal_path = ctx.sources[^1].dir_path
-              while peek(ctx.sources[^1].s) in PATH_CHARS:
-                normal_path.add(read(ctx.sources[^1].s))
-              normal_path = normalizedPath(normal_path).replace('\\', '/')
-
-              let idx_slash = normal_path.rfind('/')
-              let dir_path = normal_path[0 ..< idx_slash + 1]
-              let file_name = normal_path[idx_slash + 1 ..^ 1]
-              normal_path.add(".asm")
-
-              var included_name: string
-              let is_file_name_legal_included_name =
-                not file_name.contains(AllChars - NAME_CHARS)
-
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-              if not matches(ctx.sources[^1].s, "as", tk = tk_separator):
-                if is_file_name_legal_included_name:
-                  included_name = file_name
-                else:
-                  ctx.sources[^1].skip_line()
-                  break BLK_INNER
-              else:
-                let old_s = ctx.sources[^1].s
-                isa_spec.skip_whitespaces(ctx.sources[^1].s)
-                if old_s == ctx.sources[^1].s:
-                  ctx.sources[^1].skip_line()
-                  break BLK_INNER
-
-                while peek(ctx.sources[^1].s) in NAME_CHARS:
-                  included_name.add(read(ctx.sources[^1].s))
-
-              for any_state in ctx.sources:
-                if any_state.normal_path == normal_path:
-                  ctx.sources[^1].skip_line()
-                  break BLK_INNER
-
-              let full_path = base_path / normal_path
-              if not fileExists(full_path):
-                ctx.sources[^1].skip_line()
-                break BLK_INNER
-
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-              if peek(ctx.sources[^1].s) notin {'\n', '\0'}:
-                ctx.sources[^1].skip_line()
-                break BLK_INNER
-
-              ctx.prefix_unknown_label.add(included_name)
-              ctx.prefix_unknown_label.add('.')
-
-              let source = readFile(full_path)
-              ctx.sources.add(
-                SliceParseState(
-                  name: included_name,
-                  s: new_stream_slice(source),
-                  dir_path: dir_path,
-                  normal_path: normal_path,
-                  public: public,
-                )
-              )
-              break BLK_OUTER
-
-            if special_test == "const":
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-              let definition_name = get_identifier(ctx.sources[^1].s)
-
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-
-              if read(ctx.sources[^1].s) != '=':
-                ctx.sources[^1].skip_line()
-                break BLK_INNER
-
-              if definition_name in ctx.sources[^1].defines or
-                  definition_name in ctx.sources[^1].labels:
-                ctx.sources[^1].skip_line()
-                break BLK_INNER
-
-              for field_values in isa_spec.field_types.values:
-                for field in field_values.values:
-                  if field.name == definition_name:
-                    ctx.sources[^1].skip_line()
-                    break BLK_INNER
-
-              isa_spec.skip_whitespaces(ctx.sources[^1].s)
-
-              let (err_uimm, s_uimm) = get_unsigned(ctx.sources[^1].s)
-              if err_uimm == "":
-                let value = parse_unsigned(s_uimm).on_err:
-                  ctx.sources[^1].skip_line()
-                  break BLK_INNER
-
-                ctx.sources[^1].defines[definition_name] =
-                  (get_tighest_uimm(value), DefineValue(public: public, value: value))
-                ctx.sources[^1].skip_line(false)
-                break BLK_INNER
-
-              let (err_simm, s_simm) = get_signed(ctx.sources[^1].s)
-              if err_simm == "":
-                let value = parse_signed(s_simm).on_err:
-                  ctx.sources[^1].skip_line()
-                  break BLK_INNER
-
-                ctx.sources[^1].defines[definition_name] =
-                  (get_tighest_simm(value), DefineValue(public: public, value: value))
-                ctx.sources[^1].skip_line(false)
-                break BLK_INNER
-
-              let define_value = get_identifier(ctx.sources[^1].s)
-              let (field_kind, value) = ctx.sources[^1].defines.getOrDefault(
-                define_value, (fk_label, DefineValue())
-              )
-              if field_kind != fk_label:
-                ctx.sources[^1].defines[definition_name] = (field_kind, value)
-                ctx.sources[^1].skip_line(false)
-                break BLK_INNER
-
-              for field_kind, field_values in isa_spec.field_types:
-                for field in field_values.values:
-                  if field.name == define_value:
-                    ctx.sources[^1].defines[definition_name] =
-                      (field_kind, DefineValue(public: public, value: field.value))
-                    ctx.sources[^1].skip_line(false)
-                    break BLK_INNER
-
+          block:
+            let (r, _, constant) =
+              parse_const_definition(ctx.sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              discard
+            of alpki_error:
               ctx.sources[^1].skip_line()
               break BLK_INNER
+            of alpki_success:
+              ctx.sources[^1].defines[constant.name] = (constant.kind, constant.value)
 
-            ctx.sources[^1].s.restore(cp)
+          block:
+            let (r, _, new_source) =
+              parse_include_statement(ctx.sources, lexer_tokens, isa_spec, base_path)
+            case r
+            of alpki_dont_care:
+              discard
+            of alpki_error:
+              ctx.sources[^1].skip_line()
+              break BLK_INNER
+            of alpki_success:
+              ctx.prefix_unknown_label.add(new_source.name)
+              ctx.prefix_unknown_label.add('.')
+              ctx.sources.add(new_source)
+              stop_tokenization(ctx.sources[^1].s)
+              break BLK_OUTER
 
           block BLK_INSTRUCTION:
-            let cp = checkpoint(ctx.sources[^1].s)
-            var final_index = ctx.sources[^1].s.get_index()
-
             ctx.estimated_codes.peekLast().delay += 1
 
-            for inst in isa_spec.instructions:
-              ctx.sources[^1].s.restore(cp)
-
+            for inst_idx in isa_spec.instruction_hashes.getOrDefault(lexer_hash):
+              let inst = isa_spec.instructions[inst_idx]
               let has_pc_rel_virtual = inst.has_pc_rel_virtual()
 
               for inst_res in parse_instruction(
-                ctx.sources[^1].s,
-                inst,
-                isa_spec,
-                ctx.sources[^1].defines,
-                resolved_patterns,
+                lexer_tokens, inst, isa_spec, ctx.sources[^1].defines, resolved_patterns
               ):
-                final_index = inst_res.final_index
-
                 # The instruction failed to parse, the just extract the error message for report
                 if inst_res.is_err:
                   continue
@@ -1793,7 +1840,7 @@ proc estimate_labels(
                       ctx.estimated_codes.addLast((0'u32, 0'u32))
                       ctx.code_pointer += inst_len
 
-                    set_index(ctx.sources[^1].s, inst_res.final_index)
+                    ctx.sources[^1].s.start = lexer_tokens[^1].text.finish
                     ctx.sources[^1].skip_line(false)
                     break BLK_INNER
 
@@ -1816,14 +1863,14 @@ proc estimate_labels(
                   instruction_count += 1
                   ctx.code_pointer += cast[uint64](bits.bit_length div 8)
 
-                  set_index(ctx.sources[^1].s, inst_res.final_index)
+                  ctx.sources[^1].s.start = lexer_tokens[^1].text.finish
                   ctx.sources[^1].skip_line(false)
                   break BLK_INNER
 
             ctx.sources[^1].skip_line()
             break BLK_INNER
 
-        if get_index(ctx.sources[^1].s) <= progress_index:
+        if ctx.sources[^1].s.start <= progress_index:
           ctx.sources[^1].skip_line()
 
       if ctx.sources.len <= original_num_source:
@@ -1920,6 +1967,7 @@ proc assemble*(
   var resolved_label_prefixes: ResolvedLabelPrefixes
   var unresolved_instructions:
     seq[((InstructionDebranched, BitPattern, seq[OperandValue], uint64, string, int))]
+
   while true:
     block BLK_OUTER:
       assert sources.len > 0
@@ -1929,208 +1977,126 @@ proc assemble*(
       )
       sources[^1].skip_line(false)
       while not sources[^1].s.finished():
-        let progress_index = get_index(sources[^1].s)
+        let progress_index = sources[^1].s.start
+
+        let (lexer_tokens, lexer_hash) = block:
+          var s = sources[^1].s
+          stop_tokenization(s)
+          get_lexer_tokens(
+            s, isa_spec.mnemonics, isa_spec.line_comments, isa_spec.block_comments
+          )
 
         block BLK_INNER:
-          var best_err =
-            (error_priority: int.low, error: "", final_index: sources[^1].s.get_index())
+          var best_err = (error_priority: int.low, error: "")
 
-          block BLK_NUMBER_LITERAL:
-            let cp = checkpoint(sources[^1].s)
-            let (size_error, size, is_signed) = get_size(sources[^1].s)
-
-            var has_ws_after_size = false
-            if size_error == "":
-              let start_index = sources[^1].s.get_index()
-              isa_spec.skip_whitespaces(sources[^1].s)
-              has_ws_after_size = sources[^1].s.get_index() != start_index
-
-            let (number_error, number) = get_unsigned(sources[^1].s)
-            if size_error != "" and number_error != "":
-              sources[^1].s.restore(cp)
-              break BLK_NUMBER_LITERAL
-
-            if size_error != "":
-              best_err = (
-                int.high,
-                translate(
-                  31337_45433710484419,
-                  "Expected a size before the number, like: U64 {number}",
-                  ("number", number),
-                ),
-                sources[^1].s.get_index(),
-              )
-              sources[^1].s.restore(cp)
-              break BLK_NUMBER_LITERAL
-
-            if is_signed:
-              sources[^1].error(
-                translate(31337_83649060120708, "Signed numbers are not supported")
-              )
+          block:
+            let (r, err, number) = parse_number_literal(sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              if err.error_priority > best_err.error_priority:
+                best_err = err
+            of alpki_error:
+              sources[^1].error(err.error)
               sources[^1].skip_line()
               break BLK_INNER
+            of alpki_success:
+              let size = number.size
+              let mask = uint64.high shr (64 - size)
+              var value = number.value and mask
+              case isa_spec.endianness
+              of end_little:
+                var i = size div 8
+                while i > 0:
+                  ret.machine_code.add(cast[uint8](value))
+                  value = value shr 8
+                  i -= 1
+              of end_big:
+                var i = size div 8 - 1
+                while true:
+                  ret.machine_code.add(cast[uint8](value shr (i * 8)))
+                  if i == 0:
+                    break
+                  i -= 1
 
-            if size mod 8 != 0 or size == 0:
-              sources[^1].error(
-                translate(
-                  31337_67922577781529,
-                  "Only positive multiples of 8 bits are supported for now",
-                )
-              )
-              sources[^1].skip_line()
+              sources[^1].skip_line(false)
               break BLK_INNER
 
-            if not has_ws_after_size:
-              sources[^1].error(
-                translate(
-                  31337_80097289956044,
-                  "Expected some whitespace between the size and the number, like U{size} {number}",
-                  ("size", size),
-                  ("number", number),
-                )
-              )
+          block:
+            let (r, err, str) = parse_string_literal(sources, lexer_tokens, isa_spec)
+
+            case r
+            of alpki_dont_care:
+              if err.error_priority > best_err.error_priority:
+                best_err = err
+            of alpki_error:
+              sources[^1].error(err.error)
               sources[^1].skip_line()
               break BLK_INNER
+            of alpki_success:
+              for c in str:
+                if c == '\n':
+                  sources[^1].line_counter += 1
+                ret.machine_code.add(cast[uint8](c.ord))
 
-            if number_error != "":
-              best_err = (
-                int.high,
-                translate(
-                  31337_60515742509356, "Expected a number after a size declaration"
-                ),
-                sources[^1].s.get_index(),
-              )
-              sources[^1].s.restore(cp)
-              break BLK_NUMBER_LITERAL
-
-            var value = parse_unsigned(number).on_err:
-              sources[^1].error(err)
-              sources[^1].skip_line()
+              sources[^1].skip_line(false)
               break BLK_INNER
 
-            let mask = uint64.high shr (64 - size)
-            value = value and mask
-            case isa_spec.endianness
-            of end_little:
-              var i = size div 8
-              while i > 0:
-                ret.machine_code.add(cast[uint8](value))
-                value = value shr 8
-                i -= 1
-            of end_big:
-              var i = size div 8 - 1
-              while true:
-                ret.machine_code.add(cast[uint8](value shr (i * 8)))
-                if i == 0:
-                  break
-                i -= 1
-
-            sources[^1].skip_line(false)
-            break BLK_INNER
-
-          block BLK_STRING_LITERAL:
-            if peek(sources[^1].s) notin QUOTES:
-              break BLK_STRING_LITERAL
-
-            let raw_literal = get_string(sources[^1].s).on_err:
-              sources[^1].error(err)
+          block:
+            let (r, err, number) =
+              parse_pad_to_directive(sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              if err.error_priority > best_err.error_priority:
+                best_err = err
+            of alpki_error:
+              sources[^1].error(err.error)
               sources[^1].skip_line()
               break BLK_INNER
-
-            let literal = descape_string_content(raw_literal).on_err:
-              sources[^1].error(err)
-              sources[^1].skip_line()
-              break BLK_INNER
-
-            for i in literal.low .. literal.high:
-              if literal[i] == '\n':
-                sources[^1].line_counter += 1
-              ret.machine_code.add(cast[uint8](ord(literal[i])))
-
-            sources[^1].skip_line(false)
-            break BLK_INNER
-
-          block BLK_PAD_TO_DIRECTIVE:
-            if not matches(sources[^1].s, '@', tk = tk_operator):
-              break BLK_PAD_TO_DIRECTIVE
-
-            let (number_error, s_number) = get_unsigned(sources[^1].s)
-            if number_error != "":
-              sources[^1].error(
-                translate(31337_48895355188042, "Expect a number literal after '@'")
-              )
-              sources[^1].skip_line()
-              break BLK_INNER
-
-            change_token_kind(sources[^1].s, tk_number, tk_label)
-
-            let (err, number) = parse_unsigned(s_number)
-            if err != "":
-              sources[^1].error(
-                translate(31337_48895355188042, "Expect a number literal after '@'")
-              )
-              sources[^1].skip_line()
-              break BLK_INNER
-
-            let pc = cast[uint64](ret.machine_code.len)
-            if pc > number:
-              sources[^1].error(
-                translate(
-                  31337_51466436379956,
-                  "Can only pad forward, current address is at: {address}",
-                  ("address", ret.machine_code.len),
-                )
-              )
-              sources[^1].skip_line()
-              break BLK_INNER
-
-            block BLK_ADJUST_LABEL_ESTIMATES:
-              if est_ctx.estimated_codes.len != 0:
-                if est_ctx.estimated_codes.peekFirst().delay <= 1:
-                  let len = est_ctx.estimated_codes.popFirst().len
-                  if len > 0:
-                    est_ctx.estimated_labels.correction -= len
-                    est_ctx.estimated_labels.correction += number - pc
-                else:
-                  est_ctx.estimated_codes.peekFirst().delay -= 1
-
-            ret.machine_code.set_len(number)
-            sources[^1].skip_line(false)
-            break BLK_INNER
-
-          block BLK_SPECIAL:
-            let cp = checkpoint(sources[^1].s)
-            var special_test = get_identifier(sources[^1].s, tk = tk_label)
-
-            let public =
-              if special_test == "pub":
-                change_token_kind(sources[^1].s, tk_label, tk_keyword)
-                isa_spec.skip_whitespaces(sources[^1].s)
-                special_test = get_identifier(sources[^1].s, tk = tk_label)
-                true
-              else:
-                false
-
-            if special_test.len != 0 and matches(sources[^1].s, ':', tk = tk_label):
-              if special_test in sources[^1].defines or
-                  special_test in sources[^1].labels:
+            of alpki_success:
+              let pc = cast[uint64](ret.machine_code.len)
+              if pc > number:
                 sources[^1].error(
                   translate(
-                    31337_42442531119863,
-                    "{constant_name} is already declared",
-                    ("constant_name", special_test),
+                    31337_51466436379956,
+                    "Can only pad forward, current address is at: {address}",
+                    ("address", ret.machine_code.len),
                   )
                 )
                 sources[^1].skip_line()
                 break BLK_INNER
 
-              isa_spec.skip_whitespaces(sources[^1].s)
+              block BLK_ADJUST_LABEL_ESTIMATES:
+                if est_ctx.estimated_codes.len != 0:
+                  if est_ctx.estimated_codes.peekFirst().delay <= 1:
+                    let len = est_ctx.estimated_codes.popFirst().len
+                    if len > 0:
+                      est_ctx.estimated_labels.correction -= len
+                      est_ctx.estimated_labels.correction += number - pc
+                  else:
+                    est_ctx.estimated_codes.peekFirst().delay -= 1
 
-              sources[^1].labels[special_test] =
-                DefineValue(public: public, value: cast[uint64](ret.machine_code.len))
+              ret.machine_code.set_len(number)
+              sources[^1].skip_line(false)
+              break BLK_INNER
+
+          block:
+            let (r, err, label) =
+              parse_label_declaration(sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              if err.error_priority > best_err.error_priority:
+                best_err = err
+            of alpki_error:
+              sources[^1].error(err.error)
+              sources[^1].skip_line()
+              break BLK_INNER
+            of alpki_success:
+              sources[^1].labels[label.name] = DefineValue(
+                public: label.public, value: cast[uint64](ret.machine_code.len)
+              )
 
               var est_label: DefineValue
-              let fully_qualified_label = prefix_unknown_label & special_test
+              let fully_qualified_label = prefix_unknown_label & label.name
               if est_ctx.estimated_labels.labels.pop(fully_qualified_label, est_label):
                 for i in countdown(unresolved_instructions.high, 0):
                   if not unresolved_instructions[i][2].can_be_actualized(
@@ -2167,7 +2133,7 @@ proc assemble*(
                       translate(
                         31337_51460031660101,
                         "Could not assemble instruction on resolving label {name}: {err}",
-                        ("name", special_test),
+                        ("name", label.name),
                         ("err", error),
                       ),
                     )
@@ -2179,192 +2145,41 @@ proc assemble*(
               sources[^1].skip_line(false)
               break BLK_INNER
 
-            if special_test == "include":
-              change_token_kind(sources[^1].s, tk_label, tk_keyword)
-              const NAME_CHARS = IdentChars
-              const PATH_CHARS = NAME_CHARS + {'\\', '/', '.'}
-
-              isa_spec.skip_whitespaces(sources[^1].s)
-
-              var normal_path = sources[^1].dir_path
-              while peek(sources[^1].s) in PATH_CHARS:
-                normal_path.add(read(sources[^1].s, tk = tk_string))
-              normal_path = normalizedPath(normal_path).replace('\\', '/')
-
-              let idx_slash = normal_path.rfind('/')
-              let dir_path = normal_path[0 ..< idx_slash + 1]
-              let file_name = normal_path[idx_slash + 1 ..^ 1]
-              normal_path.add(".asm")
-
-              var included_name: string
-              let is_file_name_legal_included_name =
-                not file_name.contains(AllChars - NAME_CHARS)
-
-              isa_spec.skip_whitespaces(sources[^1].s)
-              if not matches(sources[^1].s, "as", tk = tk_keyword):
-                if is_file_name_legal_included_name:
-                  included_name = file_name
-                else:
-                  sources[^1].error(
-                    translate(
-                      31337_62050046600010,
-                      "The file name {name} cannot be used as referencable alias, declare another alias using the keyword 'as', e.g. 'include .A as A'",
-                      ("name", file_name),
-                    )
-                  )
-                  sources[^1].skip_line()
-                  break BLK_INNER
-              else:
-                let old_s = sources[^1].s
-                isa_spec.skip_whitespaces(sources[^1].s)
-                if old_s == sources[^1].s:
-                  sources[^1].error(
-                    translate(
-                      31337_35071857261934, "Expected some whitespace after 'as'"
-                    )
-                  )
-                  sources[^1].skip_line()
-                  break BLK_INNER
-
-                while peek(sources[^1].s) in NAME_CHARS:
-                  included_name.add(read(sources[^1].s, tk = tk_label))
-
-              for any_state in sources:
-                if any_state.normal_path == normal_path:
-                  sources[^1].error(
-                    translate(31337_19131785861372, "Recursive inclusion of: ") &
-                      normal_path
-                  )
-                  sources[^1].skip_line()
-                  break BLK_INNER
-
-              let full_path = base_path / normal_path
-              if not fileExists(full_path):
-                sources[^1].error(
-                  translate(31337_66575346967082, "File does not exist: ") & normal_path
-                )
-                sources[^1].skip_line()
-                break BLK_INNER
-
-              isa_spec.skip_whitespaces(sources[^1].s)
-              if peek(sources[^1].s) notin {'\n', '\0'}:
-                sources[^1].error(
-                  translate(31337_58979769991732, "Expected a new line after 'include'")
-                )
-                sources[^1].skip_line()
-                break BLK_INNER
-
-              prefix_unknown_label.add(included_name)
-              prefix_unknown_label.add('.')
-
-              let source = readFile(full_path)
-              sources.add(
-                SliceParseState(
-                  name: included_name,
-                  s: new_stream_slice(source, with_tokens = true),
-                  dir_path: dir_path,
-                  normal_path: normal_path,
-                  public: public,
-                )
-              )
-              break BLK_OUTER
-
-            if special_test == "const":
-              change_token_kind(sources[^1].s, tk_label, tk_keyword)
-              isa_spec.skip_whitespaces(sources[^1].s)
-              let definition_name = get_identifier(sources[^1].s, tk = tk_const)
-
-              isa_spec.skip_whitespaces(sources[^1].s)
-
-              if not matches(sources[^1].s, '=', tk = tk_operator):
-                sources[^1].error(
-                  translate(31337_47300717145684, "Missing '=' after 'const'")
-                )
-                sources[^1].skip_line()
-                break BLK_INNER
-
-              if definition_name in sources[^1].defines or
-                  definition_name in sources[^1].labels:
-                sources[^1].error(
-                  translate(
-                    31337_42442531119863,
-                    "{constant_name} is already declared",
-                    ("constant_name", definition_name),
-                  )
-                )
-                sources[^1].skip_line()
-                break BLK_INNER
-
-              for field_values in isa_spec.field_types.values:
-                for field in field_values.values:
-                  if field.name == definition_name:
-                    sources[^1].error(
-                      translate(
-                        31337_42442531119863,
-                        "{constant_name} is already declared",
-                        ("constant_name", definition_name),
-                      )
-                    )
-                    sources[^1].skip_line()
-                    break BLK_INNER
-
-              isa_spec.skip_whitespaces(sources[^1].s)
-
-              let (err_uimm, s_uimm) = get_unsigned(sources[^1].s)
-              if err_uimm == "":
-                let value = parse_unsigned(s_uimm).on_err:
-                  sources[^1].error(err)
-                  sources[^1].skip_line()
-                  break BLK_INNER
-
-                sources[^1].defines[definition_name] =
-                  (get_tighest_uimm(value), DefineValue(public: public, value: value))
-                sources[^1].skip_line(false)
-                break BLK_INNER
-
-              let (err_simm, s_simm) = get_signed(sources[^1].s)
-              if err_simm == "":
-                let value = parse_signed(s_simm).on_err:
-                  sources[^1].error(err)
-                  sources[^1].skip_line()
-                  break BLK_INNER
-
-                sources[^1].defines[definition_name] =
-                  (get_tighest_simm(value), DefineValue(public: public, value: value))
-                sources[^1].skip_line(false)
-                break BLK_INNER
-
-              let define_value = get_identifier(sources[^1].s, tk = tk_const)
-              let (field_kind, value) = sources[^1].defines.getOrDefault(
-                define_value, (fk_label, DefineValue())
-              )
-              if field_kind != fk_label:
-                sources[^1].defines[definition_name] = (field_kind, value)
-                sources[^1].skip_line(false)
-                break BLK_INNER
-
-              for field_kind, field_values in isa_spec.field_types:
-                for field in field_values.values:
-                  if field.name == define_value:
-                    sources[^1].defines[definition_name] =
-                      (field_kind, DefineValue(public: public, value: field.value))
-                    sources[^1].skip_line(false)
-                    break BLK_INNER
-
-              sources[^1].error(
-                translate(
-                  31337_90294506138532,
-                  "Definition value must be either a number or a field",
-                )
-              )
+          block:
+            let (r, err, constant) =
+              parse_const_definition(sources, lexer_tokens, isa_spec)
+            case r
+            of alpki_dont_care:
+              if err.error_priority > best_err.error_priority:
+                best_err = err
+            of alpki_error:
+              sources[^1].error(err.error)
               sources[^1].skip_line()
               break BLK_INNER
+            of alpki_success:
+              sources[^1].defines[constant.name] = (constant.kind, constant.value)
+              sources[^1].skip_line(false)
+              break BLK_INNER
 
-            sources[^1].s.restore(cp)
+          block:
+            let (r, err, new_source) =
+              parse_include_statement(sources, lexer_tokens, isa_spec, base_path)
+            case r
+            of alpki_dont_care:
+              if err.error_priority > best_err.error_priority:
+                best_err = err
+            of alpki_error:
+              sources[^1].error(err.error)
+              sources[^1].skip_line()
+              break BLK_INNER
+            of alpki_success:
+              prefix_unknown_label.add(new_source.name)
+              prefix_unknown_label.add('.')
+              sources.add(new_source)
+              break BLK_OUTER
 
           block BLK_INSTRUCTION:
             let original_s = sources[^1].s
-            let cp = checkpoint(sources[^1].s)
 
             var to_add_inst_len: bool
             block BLK_ADJUST_LABEL_ESTIMATES:
@@ -2377,20 +2192,19 @@ proc assemble*(
                 else:
                   est_ctx.estimated_codes.peekFirst().delay -= 1
 
-            for inst in isa_spec.instructions:
-              sources[^1].s.restore(cp) # Reset to the beginning of the line
+            for inst_idx in isa_spec.instruction_hashes.getOrDefault(lexer_hash):
+              let inst = isa_spec.instructions[inst_idx]
 
               var description = inst.description
 
               # Patternized instructions may spawn multiple valid matches
               for inst_res in parse_instruction(
-                sources[^1].s, inst, isa_spec, sources[^1].defines, resolved_patterns
+                lexer_tokens, inst, isa_spec, sources[^1].defines, resolved_patterns
               ):
                 # The de-patternized instruction failed to parse, the just extract the error message for report
                 if inst_res.is_err:
                   if inst_res.error_priority > best_err.error_priority:
-                    best_err =
-                      (inst_res.error_priority, inst_res.error, inst_res.final_index)
+                    best_err = (inst_res.error_priority, inst_res.error)
                   continue
 
                 var to_cease_search_on_error = false
@@ -2403,7 +2217,7 @@ proc assemble*(
                   )
                   if err != "":
                     if int.high - 1 > best_err.error_priority:
-                      best_err = (int.high - 1, err, inst_res.final_index)
+                      best_err = (int.high - 1, err)
                     continue
 
                   let ip = cast[uint64](ret.machine_code.len)
@@ -2452,7 +2266,6 @@ proc assemble*(
                             ],
                           ),
                         ),
-                        inst_res.final_index,
                       )
                       break BLK_INSTRUCTION
 
@@ -2487,7 +2300,7 @@ proc assemble*(
                             "Undefined label {name}",
                             ("name", actualization.undefined_label),
                           )
-                      best_err = (int.high, msg, inst_res.final_index)
+                      best_err = (int.high, msg)
                       break BLK_INSTRUCTION
 
                     est_ctx.estimated_labels.correction -= inst_len
@@ -2506,7 +2319,7 @@ proc assemble*(
                           "Undefined label {name}",
                           ("name", actualization.undefined_label),
                         )
-                    best_err = (int.high, msg, inst_res.final_index)
+                    best_err = (int.high, msg)
                     break BLK_INSTRUCTION
 
                   let (error, words) =
@@ -2519,7 +2332,7 @@ proc assemble*(
                         inst_debranched, bits, actualization.estimated_values, ip
                       )
                   if error != "":
-                    best_err = (int.high, error, inst_res.final_index)
+                    best_err = (int.high, error)
                     continue
 
                   instruction_count += 1
@@ -2554,19 +2367,23 @@ proc assemble*(
 
                       description = description.replace(
                         "%" & part.text,
-                        "[color_weak=#{" & $name.kind & "}]" & name.value &
+                        "[color_weak=#{" & $name.kind & "}]" & $name.value &
                           "[/color_weak]",
                       )
 
-                  set_index(sources[^1].s, inst_res.final_index)
                   if sources.len < 2:
                     add_top_file_description(description)
+                  for idx, token in lexer_tokens:
+                    sources[^1].s.start = token.text.start
+                    add_token(sources[^1].s, tk_whitespace)
+                    sources[^1].s.start = token.text.finish
+                    add_token(sources[^1].s, inst_res.tokens[idx])
                   sources[^1].skip_line(false)
-                  sources[^1].s.restore_tokens(inst_res.tokens)
                   break BLK_INNER
 
                 if to_cease_search_on_error:
                   break BLK_INSTRUCTION
+
           sources[^1].error(
             if best_err.error != "":
               best_err.error
@@ -2578,7 +2395,7 @@ proc assemble*(
 
         sources[^1].skip_line(false)
 
-        if get_index(sources[^1].s) <= progress_index:
+        if sources[^1].s.start <= progress_index:
           sources[^1].error(
             translate(31337_35210741057769, "Can't understand this line")
           )
@@ -2608,7 +2425,7 @@ proc assemble*(
             else:
               # Generate a unique, not typable name for internal labels
               "$" & state.name & "[" & $(state.line_counter + 1) & "]." & name
-          
+
           label.public = label.public and state.public
           sources[^1].labels[new_name] = label
 
@@ -2774,12 +2591,7 @@ func decode(
       var s_description = decoder.description.replace("[", "\\[")
       for part in decoder.syntax:
         case part.kind
-        of sk_any_number_of_spaces:
-          if s_inst.len > 0 and s_inst[^1] != ' ':
-            s_inst &= " "
-        of sk_at_least_one_space:
-          s_inst &= " "
-        of sk_fixed:
+        of sk_fixed_identifier, sk_fixed_number, sk_fixed_string, sk_fixed_separator:
           when is_bb_code:
             s_inst &= part.text.replace("[", "\\[")
           else:

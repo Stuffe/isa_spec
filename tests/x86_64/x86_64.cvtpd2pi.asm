@@ -1,54 +1,54 @@
-cvtpd2pi mm3,oword [r11 + r11 * 2 + 0x4af9b373]
-cvtpd2pi mm3,oword [r15 + 2 * rdi + 0x72]
- gs cvtpd2pi mm3,oword [rsp]
-gs cvtpd2pi mm6,oword [r11 + r11 * 2 + 0x4af9b373]
-cvtpd2pi mm6,oword [r15 + 2 * rdi + 0x72]
- gs cvtpd2pi mm6,oword [rsp]
-gs  cvtpd2pi mm1,oword [r11 + r11 * 2 + 0x4af9b373]
-gs cvtpd2pi mm1,oword [r15 + 2 * rdi + 0x72]
-gs cvtpd2pi mm1,oword [rsp]
-a32 cvtpd2pi mm6,oword [r13d]
-cvtpd2pi mm6,oword [eax]
- gs a32 cvtpd2pi mm6,oword [r12d]
- gs cvtpd2pi mm2,oword [r13d]
-a32 cvtpd2pi mm2,oword [eax]
-gs cvtpd2pi mm2,oword [r12d]
-gs  cvtpd2pi mm1,oword [r13d]
-a32 gs cvtpd2pi mm1,oword [eax]
-cvtpd2pi mm1,oword [r12d]
-gs cvtpd2pi mm2,oword [rbp]
-cvtpd2pi mm2,oword [rsp]
+gs  cvtpd2pi mm0,oword [rsp + 1 * rbp]
+cvtpd2pi mm0,oword [r11 + r11 * 2 + 0x2951bb54]
+cvtpd2pi mm0,oword [r15 + 2 * rdi + 0x72]
+cvtpd2pi mm4,oword [rsp + 1 * rbp]
+gs cvtpd2pi mm4,oword [r11 + r11 * 2 + 0x2951bb54]
+cvtpd2pi mm4,oword [r15 + 2 * rdi + 0x72]
+gs cvtpd2pi mm2,oword [rsp + 1 * rbp]
+cvtpd2pi mm2,oword [r11 + r11 * 2 + 0x2951bb54]
 gs  cvtpd2pi mm2,oword [r15 + 2 * rdi + 0x72]
-gs cvtpd2pi mm1,oword [rbp]
-cvtpd2pi mm1,oword [rsp]
- gs cvtpd2pi mm1,oword [r15 + 2 * rdi + 0x72]
-cvtpd2pi mm3,oword [rbp]
-cvtpd2pi mm3,oword [rsp]
-cvtpd2pi mm3,oword [r15 + 2 * rdi + 0x72]
-a32  cvtpd2pi mm2,oword [esp]
- a32 cvtpd2pi mm2,oword [r11d + r11d * 2 + 0x4af9b373]
-gs  cvtpd2pi mm2,oword [ebp]
-a32 gs cvtpd2pi mm3,oword [esp]
-gs  cvtpd2pi mm3,oword [r11d + r11d * 2 + 0x4af9b373]
- a32 cvtpd2pi mm3,oword [ebp]
-cvtpd2pi mm4,oword [esp]
- gs a32 cvtpd2pi mm4,oword [r11d + r11d * 2 + 0x4af9b373]
-cvtpd2pi mm4,oword [ebp]
-gs a32 cvtpd2pi mm1,xmm11
- a32 cvtpd2pi mm1,xmm3
-gs  a32 cvtpd2pi mm1,xmm10
-a32 gs  cvtpd2pi mm6,xmm11
-a32  gs cvtpd2pi mm6,xmm3
-cvtpd2pi mm6,xmm10
-a32 cvtpd2pi mm7,xmm11
-a32  cvtpd2pi mm7,xmm3
-cvtpd2pi mm7,xmm10
- a32 cvtpd2pi mm0,xmm0
-a32  cvtpd2pi mm0,xmm1
- gs cvtpd2pi mm0,xmm13
-gs  cvtpd2pi mm6,xmm0
-gs cvtpd2pi mm6,xmm1
-gs a32  cvtpd2pi mm6,xmm13
-gs  cvtpd2pi mm7,xmm0
- gs cvtpd2pi mm7,xmm1
- gs a32 cvtpd2pi mm7,xmm13
+gs  a32 cvtpd2pi mm5,oword [r14d + 1 * edx + 0x7FFFFFFF]
+cvtpd2pi mm5,oword [ebp]
+ a32 gs cvtpd2pi mm5,oword [esp]
+cvtpd2pi mm3,oword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 cvtpd2pi mm3,oword [ebp]
+ a32 gs cvtpd2pi mm3,oword [esp]
+a32  gs cvtpd2pi mm1,oword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs  cvtpd2pi mm1,oword [ebp]
+cvtpd2pi mm1,oword [esp]
+gs cvtpd2pi mm5,oword [r11 + r11 * 2 + 0x2951bb54]
+cvtpd2pi mm5,oword [rdx - 0x80000000]
+cvtpd2pi mm5,oword [rax]
+ gs cvtpd2pi mm3,oword [r11 + r11 * 2 + 0x2951bb54]
+gs  cvtpd2pi mm3,oword [rdx - 0x80000000]
+cvtpd2pi mm3,oword [rax]
+cvtpd2pi mm4,oword [r11 + r11 * 2 + 0x2951bb54]
+gs  cvtpd2pi mm4,oword [rdx - 0x80000000]
+ gs cvtpd2pi mm4,oword [rax]
+gs cvtpd2pi mm6,oword [edx - 0x80000000]
+ gs a32 cvtpd2pi mm6,oword [ebp]
+a32  gs cvtpd2pi mm6,oword [esp + 1 * ebp]
+cvtpd2pi mm2,oword [edx - 0x80000000]
+gs cvtpd2pi mm2,oword [ebp]
+a32 gs cvtpd2pi mm2,oword [esp + 1 * ebp]
+ a32 gs cvtpd2pi mm1,oword [edx - 0x80000000]
+a32 cvtpd2pi mm1,oword [ebp]
+gs  a32 cvtpd2pi mm1,oword [esp + 1 * ebp]
+ a32 gs cvtpd2pi mm2,xmm3
+ gs cvtpd2pi mm2,xmm5
+a32 gs  cvtpd2pi mm2,xmm6
+gs  cvtpd2pi mm4,xmm3
+a32 cvtpd2pi mm4,xmm5
+a32 cvtpd2pi mm4,xmm6
+gs  cvtpd2pi mm0,xmm3
+gs cvtpd2pi mm0,xmm5
+gs a32 cvtpd2pi mm0,xmm6
+cvtpd2pi mm0,xmm11
+a32  cvtpd2pi mm0,xmm2
+cvtpd2pi mm0,xmm5
+ a32 cvtpd2pi mm3,xmm11
+a32 gs cvtpd2pi mm3,xmm2
+a32 cvtpd2pi mm3,xmm5
+gs a32  cvtpd2pi mm2,xmm11
+ gs cvtpd2pi mm2,xmm2
+cvtpd2pi mm2,xmm5

@@ -1,2 +1,2 @@
-o16 gs a32 vmsave 
-o16 vmsave 
+a32 o16 gs vmsave 
+gs o16 a32 vmsave 

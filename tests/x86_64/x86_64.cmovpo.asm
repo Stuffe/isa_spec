@@ -1,135 +1,135 @@
-gs cmovpo rbx,qword [rdx - 0x80000000]
-cmovpo rbx,qword [rbx + 8 * rdx]
+cmovpo rdi,qword [rsp]
+cmovpo rdi,qword [r11 + r11 * 2 + 0x3e584977]
+gs cmovpo rdi,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovpo r10,qword [rsp]
+cmovpo r10,qword [r11 + r11 * 2 + 0x3e584977]
+cmovpo r10,qword [r14 + 1 * rdx + 0x7FFFFFFF]
 gs cmovpo rbx,qword [rsp]
-gs cmovpo r9,qword [rdx - 0x80000000]
-cmovpo r9,qword [rbx + 8 * rdx]
-gs cmovpo r9,qword [rsp]
-gs cmovpo r13,qword [rdx - 0x80000000]
-cmovpo r13,qword [rbx + 8 * rdx]
-gs cmovpo r13,qword [rsp]
-gs a32 cmovpo rdx,qword [esp]
-cmovpo rdx,qword [r12d]
-gs cmovpo rdx,qword [edx - 0x80000000]
-a32 cmovpo rsi,qword [esp]
-a32 cmovpo rsi,qword [r12d]
-cmovpo rsi,qword [edx - 0x80000000]
-a32 gs cmovpo rcx,qword [esp]
-cmovpo rcx,qword [r12d]
-a32 gs cmovpo rcx,qword [edx - 0x80000000]
-a32 gs cmovpo r12,r9
-a32 gs cmovpo r12,r15
-a32 cmovpo r12,r11
-cmovpo r9,r9
-a32 gs cmovpo r9,r15
-cmovpo r9,r11
-gs a32 cmovpo rbp,r9
-gs cmovpo rbp,r15
-gs a32 cmovpo rbp,r11
-cmovpo esi,dword [rax]
-gs cmovpo esi,dword [rsp + 1 * rbp]
-gs cmovpo esi,dword [r12]
-gs cmovpo r15d,dword [rax]
-cmovpo r15d,dword [rsp + 1 * rbp]
-gs cmovpo r15d,dword [r12]
-cmovpo r10d,dword [rax]
+gs cmovpo rbx,qword [r11 + r11 * 2 + 0x3e584977]
+gs cmovpo rbx,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+a32 cmovpo rsp,qword [r15d + 2 * edi + 0x72]
+cmovpo rsp,qword [eax]
+cmovpo rsp,qword [ebx + 8 * edx]
+a32 cmovpo rdi,qword [r15d + 2 * edi + 0x72]
+gs cmovpo rdi,qword [eax]
+gs cmovpo rdi,qword [ebx + 8 * edx]
+gs a32 cmovpo r9,qword [r15d + 2 * edi + 0x72]
+gs a32 cmovpo r9,qword [eax]
+a32 gs cmovpo r9,qword [ebx + 8 * edx]
+gs a32 cmovpo rsp,r14
+a32 cmovpo rsp,rax
+a32 gs cmovpo rsp,rbx
+a32 cmovpo rcx,r14
+gs a32 cmovpo rcx,rax
+gs cmovpo rcx,rbx
+cmovpo r9,r14
+cmovpo r9,rax
+gs a32 cmovpo r9,rbx
+cmovpo r10d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovpo r10d,dword [r13]
 cmovpo r10d,dword [rsp + 1 * rbp]
-gs cmovpo r10d,dword [r12]
-gs a32 cmovpo r14d,dword [r15d + 2 * edi + 0x72]
-a32 cmovpo r14d,dword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs cmovpo r14d,dword [edx - 0x80000000]
-a32 gs cmovpo esi,dword [r15d + 2 * edi + 0x72]
-gs cmovpo esi,dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs cmovpo esi,dword [edx - 0x80000000]
-gs cmovpo r8d,dword [r15d + 2 * edi + 0x72]
-a32 cmovpo r8d,dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs cmovpo r8d,dword [edx - 0x80000000]
-cmovpo edi,dword [rsp]
-gs cmovpo edi,dword [rsp + 1 * rbp]
-gs cmovpo edi,dword [r15 + 2 * rdi + 0x72]
-cmovpo r11d,dword [rsp]
-cmovpo r11d,dword [rsp + 1 * rbp]
-cmovpo r11d,dword [r15 + 2 * rdi + 0x72]
-gs cmovpo esp,dword [rsp]
-gs cmovpo esp,dword [rsp + 1 * rbp]
-cmovpo esp,dword [r15 + 2 * rdi + 0x72]
-a32 gs cmovpo ebx,dword [esp]
-gs cmovpo ebx,dword [r15d + 2 * edi + 0x72]
-gs cmovpo ebx,dword [ebx + 8 * edx]
-cmovpo esi,dword [esp]
-cmovpo esi,dword [r15d + 2 * edi + 0x72]
-cmovpo esi,dword [ebx + 8 * edx]
-a32 gs cmovpo r9d,dword [esp]
-cmovpo r9d,dword [r15d + 2 * edi + 0x72]
-a32 cmovpo r9d,dword [ebx + 8 * edx]
-gs cmovpo ebp,r14d
-cmovpo ebp,r11d
-gs a32 cmovpo ebp,eax
-gs cmovpo r12d,r14d
-cmovpo r12d,r11d
-gs cmovpo r12d,eax
-cmovpo r11d,r14d
-a32 cmovpo r11d,r11d
-gs cmovpo r11d,eax
-a32 cmovpo edi,r9d
-a32 gs cmovpo edi,r11d
-cmovpo edi,esi
-a32 gs cmovpo r12d,r9d
-a32 gs cmovpo r12d,r11d
-gs cmovpo r12d,esi
-gs cmovpo r15d,r9d
-a32 cmovpo r15d,r11d
+gs cmovpo ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovpo ebp,dword [r13]
+cmovpo ebp,dword [rsp + 1 * rbp]
+gs cmovpo r12d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovpo r12d,dword [r13]
+cmovpo r12d,dword [rsp + 1 * rbp]
+a32 cmovpo ecx,dword [r13d]
+a32 gs cmovpo ecx,dword [r15d + 2 * edi + 0x72]
+a32 cmovpo ecx,dword [esp]
+gs cmovpo r8d,dword [r13d]
+cmovpo r8d,dword [r15d + 2 * edi + 0x72]
+cmovpo r8d,dword [esp]
+a32 cmovpo ebp,dword [r13d]
+a32 cmovpo ebp,dword [r15d + 2 * edi + 0x72]
+a32 cmovpo ebp,dword [esp]
+gs cmovpo r11d,dword [r13]
+gs cmovpo r11d,dword [rbx + 8 * rdx]
+cmovpo r11d,dword [rbp]
+gs cmovpo ebx,dword [r13]
+cmovpo ebx,dword [rbx + 8 * rdx]
+gs cmovpo ebx,dword [rbp]
+gs cmovpo r14d,dword [r13]
+cmovpo r14d,dword [rbx + 8 * rdx]
+gs cmovpo r14d,dword [rbp]
+a32 cmovpo ebx,dword [ebx + 8 * edx]
+a32 cmovpo ebx,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs cmovpo ebx,dword [ebp]
+gs a32 cmovpo ecx,dword [ebx + 8 * edx]
+a32 gs cmovpo ecx,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 cmovpo ecx,dword [ebp]
+a32 cmovpo r15d,dword [ebx + 8 * edx]
+a32 gs cmovpo r15d,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs cmovpo r15d,dword [ebp]
+a32 gs cmovpo r10d,esp
+a32 gs cmovpo r10d,ebx
+cmovpo r10d,r14d
+a32 cmovpo r13d,esp
+a32 gs cmovpo r13d,ebx
+a32 cmovpo r13d,r14d
+cmovpo ecx,esp
+a32 cmovpo ecx,ebx
+a32 gs cmovpo ecx,r14d
+a32 gs cmovpo ebp,r11d
+a32 cmovpo ebp,esi
+cmovpo ebp,ebp
+a32 gs cmovpo r13d,r11d
+gs a32 cmovpo r13d,esi
+cmovpo r13d,ebp
+cmovpo r15d,r11d
 a32 cmovpo r15d,esi
-o16 gs cmovpo r12w,word [r12]
-cmovpo r12w,word [r15 + 2 * rdi + 0x72]
-cmovpo r12w,word [rbx + 8 * rdx]
-o16 cmovpo r13w,word [r12]
-o16 gs cmovpo r13w,word [r15 + 2 * rdi + 0x72]
-o16 gs cmovpo r13w,word [rbx + 8 * rdx]
-gs cmovpo di,word [r12]
-gs o16 cmovpo di,word [r15 + 2 * rdi + 0x72]
-gs o16 cmovpo di,word [rbx + 8 * rdx]
-o16 gs cmovpo r11w,word [r12d]
-o16 a32 gs cmovpo r11w,word [ebx + 8 * edx]
-gs o16 a32 cmovpo r11w,word [ebp]
-gs o16 a32 cmovpo r13w,word [r12d]
-o16 a32 gs cmovpo r13w,word [ebx + 8 * edx]
-cmovpo r13w,word [ebp]
-o16 cmovpo ax,word [r12d]
-gs a32 o16 cmovpo ax,word [ebx + 8 * edx]
-o16 a32 gs cmovpo ax,word [ebp]
-gs o16 cmovpo si,word [rbx + 8 * rdx]
-o16 cmovpo si,word [r15 + 2 * rdi + 0x72]
-o16 cmovpo si,word [r14 + 1 * rdx + 0x7FFFFFFF]
-gs cmovpo sp,word [rbx + 8 * rdx]
+gs cmovpo r15d,ebp
+gs cmovpo r15w,word [r13]
+o16 cmovpo r15w,word [rax]
+o16 cmovpo r15w,word [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs cmovpo r11w,word [r13]
+o16 gs cmovpo r11w,word [rax]
+gs cmovpo r11w,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 cmovpo r14w,word [r13]
+gs cmovpo r14w,word [rax]
+o16 cmovpo r14w,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovpo cx,word [ebx + 8 * edx]
+a32 gs cmovpo cx,word [r12d]
+a32 gs o16 cmovpo cx,word [esp + 1 * ebp]
+gs a32 cmovpo di,word [ebx + 8 * edx]
+o16 a32 cmovpo di,word [r12d]
+o16 gs cmovpo di,word [esp + 1 * ebp]
+a32 gs o16 cmovpo si,word [ebx + 8 * edx]
+o16 a32 cmovpo si,word [r12d]
+o16 a32 gs cmovpo si,word [esp + 1 * ebp]
+cmovpo bp,word [r15 + 2 * rdi + 0x72]
+gs o16 cmovpo bp,word [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovpo bp,word [rbx + 8 * rdx]
+gs cmovpo r13w,word [r15 + 2 * rdi + 0x72]
+o16 gs cmovpo r13w,word [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovpo r13w,word [rbx + 8 * rdx]
 gs cmovpo sp,word [r15 + 2 * rdi + 0x72]
-o16 gs cmovpo sp,word [r14 + 1 * rdx + 0x7FFFFFFF]
-o16 cmovpo r8w,word [rbx + 8 * rdx]
-cmovpo r8w,word [r15 + 2 * rdi + 0x72]
-gs cmovpo r8w,word [r14 + 1 * rdx + 0x7FFFFFFF]
-a32 gs o16 cmovpo bx,word [r15d + 2 * edi + 0x72]
-a32 gs o16 cmovpo bx,word [ebx + 8 * edx]
-gs o16 cmovpo bx,word [esp + 1 * ebp]
-a32 o16 gs cmovpo r11w,word [r15d + 2 * edi + 0x72]
-gs o16 cmovpo r11w,word [ebx + 8 * edx]
-gs a32 cmovpo r11w,word [esp + 1 * ebp]
-gs cmovpo r12w,word [r15d + 2 * edi + 0x72]
-o16 a32 gs cmovpo r12w,word [ebx + 8 * edx]
-a32 o16 gs cmovpo r12w,word [esp + 1 * ebp]
-gs a32 cmovpo r8w,r9w
-a32 o16 cmovpo r8w,bx
-a32 gs o16 cmovpo r8w,cx
-o16 a32 gs cmovpo r12w,r9w
-gs o16 cmovpo r12w,bx
-gs cmovpo r12w,cx
-o16 cmovpo sp,r9w
-gs a32 o16 cmovpo sp,bx
-a32 cmovpo sp,cx
-a32 o16 gs cmovpo r10w,ax
-o16 gs cmovpo r10w,sp
-gs a32 cmovpo r10w,r12w
-o16 gs a32 cmovpo r13w,ax
-gs a32 cmovpo r13w,sp
-gs cmovpo r13w,r12w
-gs a32 o16 cmovpo bx,ax
-cmovpo bx,sp
-gs a32 o16 cmovpo bx,r12w
+cmovpo sp,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovpo sp,word [rbx + 8 * rdx]
+cmovpo bp,word [r13d]
+a32 cmovpo bp,word [eax]
+a32 gs o16 cmovpo bp,word [esp]
+gs o16 cmovpo r10w,word [r13d]
+cmovpo r10w,word [eax]
+a32 o16 gs cmovpo r10w,word [esp]
+gs o16 a32 cmovpo r15w,word [r13d]
+o16 a32 gs cmovpo r15w,word [eax]
+a32 o16 cmovpo r15w,word [esp]
+gs a32 cmovpo r11w,si
+gs cmovpo r11w,r11w
+o16 gs a32 cmovpo r11w,bp
+o16 gs a32 cmovpo ax,si
+gs cmovpo ax,r11w
+o16 a32 cmovpo ax,bp
+a32 gs cmovpo r12w,si
+gs o16 cmovpo r12w,r11w
+a32 gs o16 cmovpo r12w,bp
+o16 gs cmovpo r8w,r14w
+gs a32 o16 cmovpo r8w,dx
+a32 o16 cmovpo r8w,sp
+gs o16 a32 cmovpo r13w,r14w
+o16 gs a32 cmovpo r13w,dx
+a32 cmovpo r13w,sp
+cmovpo di,r14w
+a32 o16 gs cmovpo di,dx
+gs o16 a32 cmovpo di,sp

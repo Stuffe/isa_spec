@@ -1,2 +1,2 @@
-a32 o16 sahf 
-gs a32 sahf 
+a32 gs sahf 
+a32 gs sahf 

@@ -1,2 +1,2 @@
-gs o16 skinit 
-gs o16 skinit 
+gs a32 skinit 
+a32 o16 gs skinit 

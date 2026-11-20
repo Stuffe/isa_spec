@@ -1,27 +1,27 @@
-gs vphaddubd xmm4,oword [rax]
-gs vphaddubd xmm4,oword [rbx + 8 * rdx]
-vphaddubd xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-vphaddubd xmm7,oword [rax]
-gs vphaddubd xmm7,oword [rbx + 8 * rdx]
-gs vphaddubd xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vphaddubd xmm0,oword [rax]
-vphaddubd xmm0,oword [rbx + 8 * rdx]
-gs vphaddubd xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-a32 vphaddubd xmm1,oword [esp]
-a32 vphaddubd xmm1,oword [r15d + 2 * edi + 0x72]
-a32 gs vphaddubd xmm1,oword [esp + 1 * ebp]
-gs a32 vphaddubd xmm5,oword [esp]
-a32 vphaddubd xmm5,oword [r15d + 2 * edi + 0x72]
-gs vphaddubd xmm5,oword [esp + 1 * ebp]
-gs a32 vphaddubd xmm7,oword [esp]
-gs vphaddubd xmm7,oword [r15d + 2 * edi + 0x72]
-gs vphaddubd xmm7,oword [esp + 1 * ebp]
-gs vphaddubd xmm11,xmm4
-gs vphaddubd xmm11,xmm13
-a32 gs vphaddubd xmm11,xmm15
-a32 vphaddubd xmm1,xmm4
-a32 vphaddubd xmm1,xmm13
-a32 vphaddubd xmm1,xmm15
-a32 vphaddubd xmm6,xmm4
-gs vphaddubd xmm6,xmm13
-vphaddubd xmm6,xmm15
+vphaddubd xmm15,oword [rsp]
+gs vphaddubd xmm15,oword [r12]
+gs vphaddubd xmm15,oword [rbp]
+gs vphaddubd xmm8,oword [rsp]
+vphaddubd xmm8,oword [r12]
+gs vphaddubd xmm8,oword [rbp]
+gs vphaddubd xmm0,oword [rsp]
+vphaddubd xmm0,oword [r12]
+vphaddubd xmm0,oword [rbp]
+a32 vphaddubd xmm1,oword [ebp]
+gs a32 vphaddubd xmm1,oword [esp]
+vphaddubd xmm1,oword [r12d]
+gs vphaddubd xmm15,oword [ebp]
+a32 vphaddubd xmm15,oword [esp]
+gs a32 vphaddubd xmm15,oword [r12d]
+vphaddubd xmm8,oword [ebp]
+gs vphaddubd xmm8,oword [esp]
+a32 gs vphaddubd xmm8,oword [r12d]
+vphaddubd xmm13,xmm2
+vphaddubd xmm13,xmm10
+vphaddubd xmm13,xmm14
+vphaddubd xmm7,xmm2
+a32 vphaddubd xmm7,xmm10
+gs a32 vphaddubd xmm7,xmm14
+a32 gs vphaddubd xmm0,xmm2
+a32 vphaddubd xmm0,xmm10
+gs vphaddubd xmm0,xmm14

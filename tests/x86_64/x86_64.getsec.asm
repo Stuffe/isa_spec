@@ -1,2 +1,2 @@
-a32 gs o16 getsec 
-gs getsec 
+gs o16 getsec 
+gs a32 o16 getsec 

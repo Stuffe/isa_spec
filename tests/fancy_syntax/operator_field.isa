@@ -12,25 +12,36 @@ r5 101
 r6 110
 r7 111
 
-operator
-"+"  000
-"-"  001
-"&"  010
-"|"  011
-"&&" 110
-"||" 111
+[patterns]
 
-shift_amount
-"1"  00
-"2"  01
-"4"  10
-"8"  11
+pattern p0()
++
+000
+
+pattern p1()
+-
+001
+
+pattern p2()
+&
+010
+
+pattern p3()
+|
+011
+
+pattern p6()
+&&
+110
+
+pattern p7()
+||
+111
+
+pattern operator()
+%p[p0() | p1() | p2() | p3() | p6() | p7()]
+%p
 
 [instructions]
-%t(register) = %a(register) %o(operator) %b(register)
+%t(register) = %a(register) %o[operator()] %b(register)
 0ooo 0ttt 0aaa 0bbb
-
-
-%t(register) = mem[%b(register) + %s(shift_amount) * %o(register)]
-10ss 0ttt 0bbb 0ooo
-

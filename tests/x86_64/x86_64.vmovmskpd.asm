@@ -1,72 +1,72 @@
-a32 gs vmovmskpd r12,xmm1
-gs a32 vmovmskpd r12,xmm6
-vmovmskpd r12,xmm8
-gs a32 vmovmskpd rsi,xmm1
-a32 vmovmskpd rsi,xmm6
-gs a32 vmovmskpd rsi,xmm8
-gs vmovmskpd rax,xmm1
-gs a32 vmovmskpd rax,xmm6
-vmovmskpd rax,xmm8
-a32 vmovmskpd r11,xmm7
-gs vmovmskpd r11,xmm13
-a32 gs vmovmskpd r11,xmm0
-gs a32 vmovmskpd r10,xmm7
-a32 gs vmovmskpd r10,xmm13
-gs a32 vmovmskpd r10,xmm0
-a32 gs vmovmskpd r12,xmm7
-vmovmskpd r12,xmm13
-a32 vmovmskpd r12,xmm0
-a32 vmovmskpd rbx,ymm6
-a32 gs vmovmskpd rbx,ymm11
-gs vmovmskpd rbx,ymm2
-a32 vmovmskpd r12,ymm6
-vmovmskpd r12,ymm11
-gs vmovmskpd r12,ymm2
-gs a32 vmovmskpd r14,ymm6
-gs a32 vmovmskpd r14,ymm11
-gs a32 vmovmskpd r14,ymm2
-vmovmskpd rdi,ymm8
-gs a32 vmovmskpd rdi,ymm10
+a32 gs vmovmskpd rsi,xmm13
+gs vmovmskpd rsi,xmm11
+gs vmovmskpd rsi,xmm9
+gs vmovmskpd rdx,xmm13
+gs vmovmskpd rdx,xmm11
+a32 gs vmovmskpd rdx,xmm9
+a32 gs vmovmskpd r13,xmm13
+gs a32 vmovmskpd r13,xmm11
+a32 gs vmovmskpd r13,xmm9
+a32 gs vmovmskpd r10,xmm8
+gs a32 vmovmskpd r10,xmm3
+gs a32 vmovmskpd r10,xmm12
+gs vmovmskpd rdx,xmm8
+vmovmskpd rdx,xmm3
+vmovmskpd rdx,xmm12
+gs vmovmskpd rbx,xmm8
+gs a32 vmovmskpd rbx,xmm3
+vmovmskpd rbx,xmm12
+a32 vmovmskpd rcx,ymm1
+vmovmskpd rcx,ymm7
+a32 vmovmskpd rcx,ymm3
+a32 gs vmovmskpd rdx,ymm1
+gs a32 vmovmskpd rdx,ymm7
+gs a32 vmovmskpd rdx,ymm3
+gs vmovmskpd rbx,ymm1
+gs a32 vmovmskpd rbx,ymm7
+a32 vmovmskpd rbx,ymm3
+a32 gs vmovmskpd rdi,ymm12
 gs a32 vmovmskpd rdi,ymm1
-vmovmskpd r9,ymm8
-vmovmskpd r9,ymm10
-gs a32 vmovmskpd r9,ymm1
-gs vmovmskpd rbp,ymm8
-a32 gs vmovmskpd rbp,ymm10
-a32 vmovmskpd rbp,ymm1
-gs vmovmskpd r9d,xmm1
-gs vmovmskpd r9d,xmm11
-vmovmskpd r9d,xmm2
-vmovmskpd edi,xmm1
-a32 vmovmskpd edi,xmm11
-a32 gs vmovmskpd edi,xmm2
+a32 gs vmovmskpd rdi,ymm14
+vmovmskpd r14,ymm12
+a32 gs vmovmskpd r14,ymm1
+a32 gs vmovmskpd r14,ymm14
+a32 vmovmskpd rdx,ymm12
+vmovmskpd rdx,ymm1
+a32 vmovmskpd rdx,ymm14
+gs a32 vmovmskpd r13d,xmm11
+gs a32 vmovmskpd r13d,xmm5
+vmovmskpd r13d,xmm6
+gs vmovmskpd r15d,xmm11
+a32 vmovmskpd r15d,xmm5
+gs vmovmskpd r15d,xmm6
+gs vmovmskpd r12d,xmm11
+a32 gs vmovmskpd r12d,xmm5
+vmovmskpd r12d,xmm6
+vmovmskpd r14d,xmm15
 a32 vmovmskpd r14d,xmm1
-gs a32 vmovmskpd r14d,xmm11
-gs vmovmskpd r14d,xmm2
-a32 gs vmovmskpd ebx,xmm11
-vmovmskpd ebx,xmm0
-gs a32 vmovmskpd ebx,xmm13
-a32 vmovmskpd ebp,xmm11
-gs vmovmskpd ebp,xmm0
-vmovmskpd ebp,xmm13
-gs a32 vmovmskpd ecx,xmm11
-vmovmskpd ecx,xmm0
-a32 vmovmskpd ecx,xmm13
-gs a32 vmovmskpd ebx,ymm1
-gs vmovmskpd ebx,ymm3
-a32 vmovmskpd ebx,ymm8
-gs a32 vmovmskpd r12d,ymm1
-vmovmskpd r12d,ymm3
-gs a32 vmovmskpd r12d,ymm8
-a32 gs vmovmskpd r10d,ymm1
-gs vmovmskpd r10d,ymm3
-a32 vmovmskpd r10d,ymm8
-gs a32 vmovmskpd r13d,ymm4
-gs vmovmskpd r13d,ymm10
-a32 vmovmskpd r13d,ymm2
-vmovmskpd r12d,ymm4
-a32 gs vmovmskpd r12d,ymm10
-gs a32 vmovmskpd r12d,ymm2
-vmovmskpd ebp,ymm4
-vmovmskpd ebp,ymm10
-a32 vmovmskpd ebp,ymm2
+vmovmskpd r14d,xmm3
+vmovmskpd eax,xmm15
+gs vmovmskpd eax,xmm1
+gs vmovmskpd eax,xmm3
+a32 vmovmskpd ebp,xmm15
+gs a32 vmovmskpd ebp,xmm1
+gs vmovmskpd ebp,xmm3
+a32 vmovmskpd esi,ymm8
+gs vmovmskpd esi,ymm5
+gs a32 vmovmskpd esi,ymm7
+a32 gs vmovmskpd eax,ymm8
+vmovmskpd eax,ymm5
+vmovmskpd eax,ymm7
+a32 vmovmskpd esp,ymm8
+a32 gs vmovmskpd esp,ymm5
+gs a32 vmovmskpd esp,ymm7
+a32 gs vmovmskpd r12d,ymm3
+gs vmovmskpd r12d,ymm15
+gs a32 vmovmskpd r12d,ymm10
+gs a32 vmovmskpd r9d,ymm3
+gs vmovmskpd r9d,ymm15
+a32 gs vmovmskpd r9d,ymm10
+gs vmovmskpd esp,ymm3
+gs vmovmskpd esp,ymm15
+a32 vmovmskpd esp,ymm10

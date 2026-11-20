@@ -1,2 +1,2 @@
-rdpmc 
-a32 o16 rdpmc 
+gs o16 a32 rdpmc 
+gs a32 rdpmc 

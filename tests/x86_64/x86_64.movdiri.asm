@@ -1,54 +1,54 @@
-gs movdiri dword [r12],edi
-movdiri dword [r12],ebx
-o16 gs movdiri dword [r12],esi
-o16 movdiri dword [rax],edi
-o16 movdiri dword [rax],ebx
-movdiri dword [rax],esi
-o16 gs movdiri dword [r14 + 1 * rdx + 0x7FFFFFFF],edi
-o16 movdiri dword [r14 + 1 * rdx + 0x7FFFFFFF],ebx
-movdiri dword [r14 + 1 * rdx + 0x7FFFFFFF],esi
-gs a32 o16 movdiri dword [r15d + 2 * edi + 0x72],esp
-gs o16 a32 movdiri dword [r15d + 2 * edi + 0x72],r15d
-gs movdiri dword [r15d + 2 * edi + 0x72],ebp
-a32 o16 movdiri dword [ebx + 8 * edx],esp
-o16 gs a32 movdiri dword [ebx + 8 * edx],r15d
-gs movdiri dword [ebx + 8 * edx],ebp
-o16 a32 movdiri dword [edx - 0x80000000],esp
-a32 o16 gs movdiri dword [edx - 0x80000000],r15d
-o16 movdiri dword [edx - 0x80000000],ebp
-o16 movdiri dword [r13],esi
-movdiri dword [r13],edi
-o16 movdiri dword [r13],r15d
-gs movdiri dword [rsp],esi
-o16 movdiri dword [rsp],edi
-movdiri dword [rsp],r15d
-gs movdiri dword [r12],esi
-gs o16 movdiri dword [r12],edi
-movdiri dword [r12],r15d
-gs a32 movdiri dword [ebx + 8 * edx],r11d
-gs movdiri dword [ebx + 8 * edx],r13d
+o16 gs movdiri dword [rbx + 8 * rdx],edi
+gs movdiri dword [rbx + 8 * rdx],esi
+gs o16 movdiri dword [rbx + 8 * rdx],r13d
+gs movdiri dword [rax],edi
+o16 movdiri dword [rax],esi
+o16 movdiri dword [rax],r13d
+gs movdiri dword [r14 + 1 * rdx + 0x7FFFFFFF],edi
+o16 movdiri dword [r14 + 1 * rdx + 0x7FFFFFFF],esi
+gs o16 movdiri dword [r14 + 1 * rdx + 0x7FFFFFFF],r13d
+movdiri dword [esp],r9d
+a32 o16 movdiri dword [esp],r11d
+a32 o16 movdiri dword [esp],r10d
+a32 o16 gs movdiri dword [ebp],r9d
+gs o16 movdiri dword [ebp],r11d
+gs movdiri dword [ebp],r10d
+gs a32 movdiri dword [r15d + 2 * edi + 0x72],r9d
+a32 o16 movdiri dword [r15d + 2 * edi + 0x72],r11d
+gs o16 movdiri dword [r15d + 2 * edi + 0x72],r10d
+movdiri dword [r15 + 2 * rdi + 0x72],r8d
+movdiri dword [r15 + 2 * rdi + 0x72],esp
+gs o16 movdiri dword [r15 + 2 * rdi + 0x72],edi
+gs movdiri dword [r13],r8d
+gs o16 movdiri dword [r13],esp
+o16 movdiri dword [r13],edi
+o16 movdiri dword [r12],r8d
+gs movdiri dword [r12],esp
+o16 movdiri dword [r12],edi
+movdiri dword [ebx + 8 * edx],r15d
+a32 gs o16 movdiri dword [ebx + 8 * edx],ecx
 gs o16 a32 movdiri dword [ebx + 8 * edx],edi
-a32 gs movdiri dword [esp + 1 * ebp],r11d
-gs movdiri dword [esp + 1 * ebp],r13d
-a32 o16 movdiri dword [esp + 1 * ebp],edi
-o16 a32 movdiri dword [eax],r11d
-movdiri dword [eax],r13d
-o16 a32 movdiri dword [eax],edi
-o16 gs movdiri qword [rsp],r11
-o16 gs movdiri qword [rsp],rsi
-gs movdiri qword [rsp],r13
-o16 movdiri qword [r13],r11
-o16 gs movdiri qword [r13],rsi
-o16 movdiri qword [r13],r13
-gs movdiri qword [rsp + 1 * rbp],r11
-gs movdiri qword [rsp + 1 * rbp],rsi
-movdiri qword [rsp + 1 * rbp],r13
-o16 gs a32 movdiri qword [edx - 0x80000000],rsi
-a32 o16 gs movdiri qword [edx - 0x80000000],r13
-gs a32 o16 movdiri qword [edx - 0x80000000],rdi
-gs movdiri qword [ebp],rsi
-o16 a32 gs movdiri qword [ebp],r13
-o16 a32 gs movdiri qword [ebp],rdi
-o16 gs movdiri qword [r11d + r11d * 2 + 0x32ee2e4f],rsi
-a32 o16 gs movdiri qword [r11d + r11d * 2 + 0x32ee2e4f],r13
-gs o16 movdiri qword [r11d + r11d * 2 + 0x32ee2e4f],rdi
+a32 o16 movdiri dword [r15d + 2 * edi + 0x72],r15d
+a32 movdiri dword [r15d + 2 * edi + 0x72],ecx
+gs o16 movdiri dword [r15d + 2 * edi + 0x72],edi
+o16 a32 movdiri dword [esp + 1 * ebp],r15d
+a32 gs o16 movdiri dword [esp + 1 * ebp],ecx
+gs movdiri dword [esp + 1 * ebp],edi
+movdiri qword [rax],r8
+o16 gs movdiri qword [rax],rdi
+movdiri qword [rax],rbx
+gs o16 movdiri qword [r13],r8
+o16 movdiri qword [r13],rdi
+gs o16 movdiri qword [r13],rbx
+movdiri qword [r11 + r11 * 2 + 0x229b4b97],r8
+movdiri qword [r11 + r11 * 2 + 0x229b4b97],rdi
+o16 movdiri qword [r11 + r11 * 2 + 0x229b4b97],rbx
+a32 gs o16 movdiri qword [edx - 0x80000000],rsi
+o16 gs movdiri qword [edx - 0x80000000],r15
+o16 gs movdiri qword [edx - 0x80000000],r10
+a32 movdiri qword [r13d],rsi
+o16 movdiri qword [r13d],r15
+o16 a32 gs movdiri qword [r13d],r10
+o16 gs a32 movdiri qword [r15d + 2 * edi + 0x72],rsi
+movdiri qword [r15d + 2 * edi + 0x72],r15
+movdiri qword [r15d + 2 * edi + 0x72],r10

@@ -1,54 +1,54 @@
-sqrtpd xmm13,oword [r13]
-sqrtpd xmm13,oword [r15 + 2 * rdi + 0x72]
-gs sqrtpd xmm13,oword [rbp]
-sqrtpd xmm0,oword [r13]
- gs sqrtpd xmm0,oword [r15 + 2 * rdi + 0x72]
-sqrtpd xmm0,oword [rbp]
-gs  sqrtpd xmm10,oword [r13]
-sqrtpd xmm10,oword [r15 + 2 * rdi + 0x72]
-gs sqrtpd xmm10,oword [rbp]
- a32 sqrtpd xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs  sqrtpd xmm5,oword [eax]
- gs sqrtpd xmm5,oword [ebx + 8 * edx]
- gs a32 sqrtpd xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs  sqrtpd xmm15,oword [eax]
-gs  a32 sqrtpd xmm15,oword [ebx + 8 * edx]
- gs sqrtpd xmm13,oword [r14d + 1 * edx + 0x7FFFFFFF]
- a32 gs sqrtpd xmm13,oword [eax]
-a32 sqrtpd xmm13,oword [ebx + 8 * edx]
- gs sqrtpd xmm13,oword [rbp]
- gs sqrtpd xmm13,oword [rbx + 8 * rdx]
-sqrtpd xmm13,oword [rdx - 0x80000000]
-sqrtpd xmm11,oword [rbp]
+sqrtpd xmm0,oword [rbx + 8 * rdx]
+gs sqrtpd xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+sqrtpd xmm0,oword [rdx - 0x80000000]
 sqrtpd xmm11,oword [rbx + 8 * rdx]
-sqrtpd xmm11,oword [rdx - 0x80000000]
- gs sqrtpd xmm14,oword [rbp]
-sqrtpd xmm14,oword [rbx + 8 * rdx]
-sqrtpd xmm14,oword [rdx - 0x80000000]
-gs  a32 sqrtpd xmm1,oword [ebp]
-gs a32  sqrtpd xmm1,oword [r13d]
-a32  gs sqrtpd xmm1,oword [r12d]
-sqrtpd xmm6,oword [ebp]
-a32 gs  sqrtpd xmm6,oword [r13d]
- a32 gs sqrtpd xmm6,oword [r12d]
-a32 sqrtpd xmm15,oword [ebp]
-gs sqrtpd xmm15,oword [r13d]
-a32 gs sqrtpd xmm15,oword [r12d]
-gs sqrtpd xmm10,xmm15
-a32 gs sqrtpd xmm10,xmm5
- a32 gs sqrtpd xmm10,xmm9
-gs sqrtpd xmm13,xmm15
- a32 gs sqrtpd xmm13,xmm5
-gs  a32 sqrtpd xmm13,xmm9
-gs  a32 sqrtpd xmm8,xmm15
- a32 gs sqrtpd xmm8,xmm5
-a32  sqrtpd xmm8,xmm9
-a32 gs  sqrtpd xmm0,xmm8
- a32 sqrtpd xmm0,xmm15
-gs  sqrtpd xmm0,xmm3
-a32 gs sqrtpd xmm13,xmm8
-sqrtpd xmm13,xmm15
-sqrtpd xmm13,xmm3
-a32  sqrtpd xmm15,xmm8
-a32 gs sqrtpd xmm15,xmm15
-a32  gs sqrtpd xmm15,xmm3
+gs sqrtpd xmm11,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs sqrtpd xmm11,oword [rdx - 0x80000000]
+ gs sqrtpd xmm12,oword [rbx + 8 * rdx]
+gs sqrtpd xmm12,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+sqrtpd xmm12,oword [rdx - 0x80000000]
+ a32 sqrtpd xmm1,oword [esp + 1 * ebp]
+a32 sqrtpd xmm1,oword [edx - 0x80000000]
+gs sqrtpd xmm1,oword [r11d + r11d * 2 + 0x10e56952]
+a32  gs sqrtpd xmm8,oword [esp + 1 * ebp]
+gs sqrtpd xmm8,oword [edx - 0x80000000]
+ a32 gs sqrtpd xmm8,oword [r11d + r11d * 2 + 0x10e56952]
+a32 gs sqrtpd xmm14,oword [esp + 1 * ebp]
+a32 gs sqrtpd xmm14,oword [edx - 0x80000000]
+a32 sqrtpd xmm14,oword [r11d + r11d * 2 + 0x10e56952]
+sqrtpd xmm13,oword [rdx - 0x80000000]
+gs sqrtpd xmm13,oword [rax]
+ gs sqrtpd xmm13,oword [r12]
+gs sqrtpd xmm9,oword [rdx - 0x80000000]
+sqrtpd xmm9,oword [rax]
+sqrtpd xmm9,oword [r12]
+gs sqrtpd xmm3,oword [rdx - 0x80000000]
+sqrtpd xmm3,oword [rax]
+gs  sqrtpd xmm3,oword [r12]
+ a32 gs sqrtpd xmm2,oword [r15d + 2 * edi + 0x72]
+a32 gs sqrtpd xmm2,oword [r11d + r11d * 2 + 0x10e56952]
+sqrtpd xmm2,oword [esp]
+a32 gs sqrtpd xmm8,oword [r15d + 2 * edi + 0x72]
+a32 sqrtpd xmm8,oword [r11d + r11d * 2 + 0x10e56952]
+ a32 gs sqrtpd xmm8,oword [esp]
+gs  a32 sqrtpd xmm1,oword [r15d + 2 * edi + 0x72]
+ a32 gs sqrtpd xmm1,oword [r11d + r11d * 2 + 0x10e56952]
+gs sqrtpd xmm1,oword [esp]
+ a32 gs sqrtpd xmm1,xmm6
+ gs a32 sqrtpd xmm1,xmm9
+gs a32 sqrtpd xmm1,xmm1
+ gs a32 sqrtpd xmm2,xmm6
+ a32 gs sqrtpd xmm2,xmm9
+gs sqrtpd xmm2,xmm1
+gs sqrtpd xmm4,xmm6
+ gs sqrtpd xmm4,xmm9
+gs a32  sqrtpd xmm4,xmm1
+gs a32 sqrtpd xmm1,xmm15
+a32  sqrtpd xmm1,xmm10
+a32  gs sqrtpd xmm1,xmm13
+a32  sqrtpd xmm13,xmm15
+sqrtpd xmm13,xmm10
+a32 gs sqrtpd xmm13,xmm13
+gs  sqrtpd xmm2,xmm15
+ gs a32 sqrtpd xmm2,xmm10
+gs a32  sqrtpd xmm2,xmm13

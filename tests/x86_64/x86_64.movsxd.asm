@@ -1,27 +1,27 @@
-movsxd r12,dword [r15 + 2 * rdi + 0x72]
-o16 movsxd r12,dword [rbx + 8 * rdx]
-gs movsxd r12,dword [r13]
-gs o16 movsxd rsp,dword [r15 + 2 * rdi + 0x72]
-movsxd rsp,dword [rbx + 8 * rdx]
-o16 gs movsxd rsp,dword [r13]
-gs o16 movsxd rbx,dword [r15 + 2 * rdi + 0x72]
-movsxd rbx,dword [rbx + 8 * rdx]
-gs movsxd rbx,dword [r13]
-o16 gs a32 movsxd r12,dword [edx - 0x80000000]
-o16 gs movsxd r12,dword [r12d]
-gs o16 movsxd r12,dword [r11d + r11d * 2 + 0x5d28eaf5]
-a32 o16 movsxd r13,dword [edx - 0x80000000]
-gs o16 movsxd r13,dword [r12d]
-a32 gs o16 movsxd r13,dword [r11d + r11d * 2 + 0x5d28eaf5]
-a32 gs movsxd r14,dword [edx - 0x80000000]
-gs movsxd r14,dword [r12d]
-gs a32 movsxd r14,dword [r11d + r11d * 2 + 0x5d28eaf5]
-o16 a32 gs movsxd r11,r11d
-o16 gs movsxd r11,r8d
-a32 gs movsxd r11,r15d
-a32 gs o16 movsxd rcx,r11d
-gs o16 a32 movsxd rcx,r8d
-o16 a32 gs movsxd rcx,r15d
-o16 movsxd r12,r11d
-o16 a32 movsxd r12,r8d
-a32 o16 movsxd r12,r15d
+gs movsxd rsp,dword [rsp]
+o16 movsxd rsp,dword [r12]
+movsxd rsp,dword [r11 + r11 * 2 + 0x7b6d9aa8]
+o16 movsxd r14,dword [rsp]
+o16 movsxd r14,dword [r12]
+o16 gs movsxd r14,dword [r11 + r11 * 2 + 0x7b6d9aa8]
+o16 movsxd r12,dword [rsp]
+gs movsxd r12,dword [r12]
+gs o16 movsxd r12,dword [r11 + r11 * 2 + 0x7b6d9aa8]
+movsxd rsi,dword [ebp]
+o16 a32 gs movsxd rsi,dword [esp + 1 * ebp]
+a32 o16 gs movsxd rsi,dword [r15d + 2 * edi + 0x72]
+gs o16 movsxd rdx,dword [ebp]
+a32 o16 gs movsxd rdx,dword [esp + 1 * ebp]
+gs a32 o16 movsxd rdx,dword [r15d + 2 * edi + 0x72]
+a32 o16 movsxd rbx,dword [ebp]
+gs o16 a32 movsxd rbx,dword [esp + 1 * ebp]
+a32 gs movsxd rbx,dword [r15d + 2 * edi + 0x72]
+a32 o16 movsxd rbp,r13d
+o16 a32 gs movsxd rbp,r10d
+gs a32 movsxd rbp,r15d
+o16 a32 gs movsxd r11,r13d
+gs movsxd r11,r10d
+gs o16 movsxd r11,r15d
+a32 gs movsxd r15,r13d
+gs a32 o16 movsxd r15,r10d
+o16 gs movsxd r15,r15d

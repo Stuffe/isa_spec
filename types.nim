@@ -1,4 +1,4 @@
-import std/[algorithm, options, tables]
+import std/[algorithm, options, sets, tables]
 
 import expressions, parse, translations
 
@@ -166,7 +166,8 @@ type OperandTypeKind* = enum
 
 type OperandTypePattern* = object
   index*: uint8
-  args*: seq[string]
+  str_args*: seq[string]
+  field_args*: seq[FieldKind]
 
 type OperandTypeVirtual* = object
   variable_name*: string
@@ -213,16 +214,32 @@ type Bitfield* = object
   bottom*: uint32
   is_direct*: bool
 
-type SyntaxKind* = enum
-  sk_fixed
+type LexerTokenKind* {.pure, size: uint64.sizeof.} = enum
+  ltk_none
+  ltk_identifier
+  ltk_number
+  ltk_separator
+  ltk_string
+
+type LexerToken* = object
+  kind*: LexerTokenKind
+  text*: StreamSlice
+
+type SyntaxKind* {.pure, size: uint8.sizeof.} = enum
+  sk_fixed_identifier
+  sk_fixed_number
+  sk_fixed_string
+  sk_fixed_separator
   sk_field
   sk_pattern
-  sk_any_number_of_spaces
-  sk_at_least_one_space
 
 type Syntax* = object
-  kind*: SyntaxKind
   text*: string
+  case kind*: SyntaxKind
+  of sk_field, sk_pattern:
+    index*: int
+  else:
+    discard
 
 type Assertion* = object
   exp*: ExpRef
@@ -246,9 +263,17 @@ type InstructionDebranched* = object
   bit_pattern*: string
   description*: string
 
+type InstructionPattern* = object
+  syntax*: seq[Syntax]
+  operands*: seq[OperandType]
+  asserts*: seq[Assertion]
+  string_interpolations*: seq[tuple[texts: seq[string], parameters: seq[int]]]
+  field_extensions*:
+    seq[tuple[parameter: int, operand: int, option: int, option_parameter: int]]
+
 func name*(i: InstructionUnbranched | InstructionDebranched): string =
   for part in i.syntax:
-    if part.kind == sk_fixed:
+    if part.kind == sk_fixed_identifier:
       return part.text
 
 func operands*(i: InstructionUnbranched): seq[OperandType] {.error.}
@@ -320,16 +345,66 @@ func debranch_to_last_branch*(inst: InstructionUnbranched): InstructionDebranche
   )
 
 type ParametrizedPattern* = object
+  inst*: InstructionPattern
   texts*: seq[string]
   parameters*: seq[int]
 
-func resolve*(p: ParametrizedPattern, args: seq[string]): string =
+func resolve*(
+    p: ParametrizedPattern, str_args: seq[string], field_args: seq[FieldKind]
+): (string, InstructionDebranched) =
+  var body: string
   for i in 0 .. p.parameters.high:
-    result &= $p.texts[i]
-    result &= $args[p.parameters[i]]
+    body &= p.texts[i]
+    body &= $str_args[p.parameters[i]]
 
   if p.texts.len > p.parameters.len:
-    result &= $p.texts[^1]
+    body &= p.texts[^1]
+
+  var inst = InstructionDebranched(
+    syntax: p.inst.syntax, operands: p.inst.operands, asserts: p.inst.asserts
+  )
+  for ext in p.inst.field_extensions:
+    let field = field_args[ext.parameter]
+    let idx = ext.operand
+    if inst.operands[idx].kind != otk_pattern:
+      assert ext.option_parameter == 0
+
+      inst.operands[idx].options[ext.option] = field
+      continue
+
+    inst.operands[idx].patterns[ext.option].field_args[ext.option_parameter] = field
+
+  var str_int_idx = 0
+  var op_idx = 0
+  for syntax in inst.syntax.mitems:
+    case syntax.kind
+    of sk_fixed_string:
+      let p = p.inst.string_interpolations[str_int_idx]
+      for i in 0 .. p.parameters.high:
+        syntax.text &= p.texts[i]
+        syntax.text &= $str_args[p.parameters[i]]
+
+      if p.texts.len > p.parameters.len:
+        syntax.text &= p.texts[^1]
+      str_int_idx += 1
+    of sk_field:
+      op_idx += 1
+    of sk_pattern:
+      for option in inst.operands[op_idx].patterns.mitems:
+        for parameter in option.str_args.mitems:
+          let p = p.inst.string_interpolations[str_int_idx]
+          for i in 0 .. p.parameters.high:
+            parameter &= p.texts[i]
+            parameter &= $str_args[p.parameters[i]]
+
+          if p.texts.len > p.parameters.len:
+            parameter &= p.texts[^1]
+          str_int_idx += 1
+      op_idx += 1
+    else:
+      discard
+
+  return (body, inst)
 
 type InstructionDecodingPath* = object
   exprs*: seq[OperandTypeVirtual]
@@ -365,11 +440,12 @@ type IsaSpec* = object
   line_comments*: seq[string]
   block_comments*: seq[(string, string)]
   endianness*: Endianness
-  code_alignment*: int
   field_types*: Table[FieldKind, FieldType]
+  mnemonics*: HashSet[string]
+  field_names*: HashSet[string]
   instructions*: seq[InstructionUnbranched]
-  patterns*:
-    seq[tuple[name: string, parameter_count: int, pattern: ParametrizedPattern]]
+  instruction_hashes*: Table[uint64, seq[int]]
+  patterns*: seq[ParametrizedPattern]
   instruction_decoders*: Option[seq[InstructionDecoder]]
 
 type SpecParseResult* = object

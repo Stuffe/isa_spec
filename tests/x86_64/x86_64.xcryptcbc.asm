@@ -1,2 +1,2 @@
-gs a32  o16 xcryptcbc 
-gs  a32 o16 xcryptcbc 
+ o16 xcryptcbc 
+a32  xcryptcbc 

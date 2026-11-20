@@ -1,54 +1,54 @@
-gs vfrczps xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfrczps xmm9,oword [rsp + 1 * rbp]
-vfrczps xmm9,oword [r15 + 2 * rdi + 0x72]
-vfrczps xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfrczps xmm15,oword [rsp + 1 * rbp]
-vfrczps xmm15,oword [r15 + 2 * rdi + 0x72]
-vfrczps xmm11,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vfrczps xmm11,oword [rsp + 1 * rbp]
-vfrczps xmm11,oword [r15 + 2 * rdi + 0x72]
-gs vfrczps xmm3,oword [r12d]
-vfrczps xmm3,oword [esp]
-gs a32 vfrczps xmm3,oword [ebp]
-a32 vfrczps xmm10,oword [r12d]
-gs vfrczps xmm10,oword [esp]
-gs vfrczps xmm10,oword [ebp]
-vfrczps xmm11,oword [r12d]
-gs vfrczps xmm11,oword [esp]
-vfrczps xmm11,oword [ebp]
-gs vfrczps xmm15,xmm6
-vfrczps xmm15,xmm14
-gs a32 vfrczps xmm15,xmm13
-vfrczps xmm8,xmm6
-a32 gs vfrczps xmm8,xmm14
-a32 vfrczps xmm8,xmm13
-a32 vfrczps xmm9,xmm6
-vfrczps xmm9,xmm14
-a32 gs vfrczps xmm9,xmm13
-gs vfrczps ymm1,yword [r11 + r11 * 2 + 0x6f24c4be]
+vfrczps xmm5,oword [rbx + 8 * rdx]
+gs vfrczps xmm5,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfrczps xmm5,oword [rax]
+vfrczps xmm10,oword [rbx + 8 * rdx]
+gs vfrczps xmm10,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+vfrczps xmm10,oword [rax]
+gs vfrczps xmm14,oword [rbx + 8 * rdx]
+vfrczps xmm14,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfrczps xmm14,oword [rax]
+vfrczps xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vfrczps xmm3,oword [esp]
+vfrczps xmm3,oword [esp + 1 * ebp]
+vfrczps xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF]
+vfrczps xmm0,oword [esp]
+a32 gs vfrczps xmm0,oword [esp + 1 * ebp]
+gs a32 vfrczps xmm14,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs vfrczps xmm14,oword [esp]
+vfrczps xmm14,oword [esp + 1 * ebp]
+a32 gs vfrczps xmm12,xmm11
+gs vfrczps xmm12,xmm12
+gs vfrczps xmm12,xmm0
+gs a32 vfrczps xmm8,xmm11
+a32 vfrczps xmm8,xmm12
+vfrczps xmm8,xmm0
+a32 vfrczps xmm6,xmm11
+vfrczps xmm6,xmm12
+gs vfrczps xmm6,xmm0
+gs vfrczps ymm8,yword [rbp]
+gs vfrczps ymm8,yword [rdx - 0x80000000]
+gs vfrczps ymm8,yword [r12]
+vfrczps ymm1,yword [rbp]
 gs vfrczps ymm1,yword [rdx - 0x80000000]
-vfrczps ymm1,yword [r13]
-vfrczps ymm9,yword [r11 + r11 * 2 + 0x6f24c4be]
-vfrczps ymm9,yword [rdx - 0x80000000]
-vfrczps ymm9,yword [r13]
-gs vfrczps ymm13,yword [r11 + r11 * 2 + 0x6f24c4be]
-vfrczps ymm13,yword [rdx - 0x80000000]
-gs vfrczps ymm13,yword [r13]
-gs vfrczps ymm6,yword [r15d + 2 * edi + 0x72]
-a32 gs vfrczps ymm6,yword [r11d + r11d * 2 + 0x6f24c4be]
-a32 vfrczps ymm6,yword [esp + 1 * ebp]
-a32 vfrczps ymm15,yword [r15d + 2 * edi + 0x72]
-a32 vfrczps ymm15,yword [r11d + r11d * 2 + 0x6f24c4be]
-gs a32 vfrczps ymm15,yword [esp + 1 * ebp]
-gs a32 vfrczps ymm4,yword [r15d + 2 * edi + 0x72]
-gs vfrczps ymm4,yword [r11d + r11d * 2 + 0x6f24c4be]
-gs vfrczps ymm4,yword [esp + 1 * ebp]
-vfrczps ymm6,ymm0
-a32 gs vfrczps ymm6,ymm14
-a32 vfrczps ymm6,ymm1
-gs vfrczps ymm9,ymm0
-vfrczps ymm9,ymm14
-gs a32 vfrczps ymm9,ymm1
-gs vfrczps ymm13,ymm0
-gs a32 vfrczps ymm13,ymm14
-gs a32 vfrczps ymm13,ymm1
+gs vfrczps ymm1,yword [r12]
+gs vfrczps ymm2,yword [rbp]
+vfrczps ymm2,yword [rdx - 0x80000000]
+vfrczps ymm2,yword [r12]
+gs a32 vfrczps ymm11,yword [esp]
+gs vfrczps ymm11,yword [ebp]
+gs a32 vfrczps ymm11,yword [r13d]
+gs vfrczps ymm2,yword [esp]
+a32 gs vfrczps ymm2,yword [ebp]
+gs a32 vfrczps ymm2,yword [r13d]
+a32 vfrczps ymm13,yword [esp]
+gs vfrczps ymm13,yword [ebp]
+gs a32 vfrczps ymm13,yword [r13d]
+gs vfrczps ymm2,ymm10
+vfrczps ymm2,ymm11
+a32 gs vfrczps ymm2,ymm12
+vfrczps ymm5,ymm10
+a32 vfrczps ymm5,ymm11
+vfrczps ymm5,ymm12
+vfrczps ymm11,ymm10
+a32 vfrczps ymm11,ymm11
+gs vfrczps ymm11,ymm12

@@ -1,2 +1,2 @@
-a32 o16 gs fneni 
-a32 gs o16 fneni 
+a32 gs fneni 
+o16 a32 fneni 

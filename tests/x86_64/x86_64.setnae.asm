@@ -1,18 +1,18 @@
-o16 gs setnae byte [r15 + 2 * rdi + 0x72]
-gs o16 setnae byte [rbp]
-gs o16 setnae byte [rdx - 0x80000000]
-o16 a32 gs setnae byte [r14d + 1 * edx + 0x7FFFFFFF]
-gs o16 setnae byte [eax]
-o16 gs setnae byte [r12d]
-gs o16 setnae byte [rax]
-o16 gs setnae byte [rbp]
-setnae byte [r13]
-a32 o16 gs setnae byte [eax]
-o16 gs setnae byte [r15d + 2 * edi + 0x72]
-o16 a32 gs setnae byte [edx - 0x80000000]
-a32 o16 setnae r13b
-o16 gs a32 setnae spl
-o16 a32 gs setnae r9b
-a32 o16 setnae cl
-o16 gs a32 setnae al
-o16 gs setnae r12b
+gs o16 setnae byte [r12]
+o16 gs setnae byte [rsp + 1 * rbp]
+o16 gs setnae byte [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 setnae byte [edx - 0x80000000]
+a32 o16 setnae byte [esp]
+o16 setnae byte [r11d + r11d * 2 + 0x1949a18a]
+o16 setnae byte [rdx - 0x80000000]
+gs o16 setnae byte [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs setnae byte [rsp + 1 * rbp]
+o16 gs setnae byte [r11d + r11d * 2 + 0x1949a18a]
+a32 setnae byte [esp + 1 * ebp]
+setnae byte [esp]
+a32 o16 setnae dil
+setnae cl
+a32 setnae al
+gs a32 o16 setnae bpl
+gs o16 setnae r10b
+o16 setnae al

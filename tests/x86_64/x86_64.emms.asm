@@ -1,2 +1,2 @@
-o16 gs a32 emms 
-emms 
+gs o16 emms 
+o16 emms 

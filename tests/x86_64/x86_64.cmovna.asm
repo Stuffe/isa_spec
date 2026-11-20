@@ -1,135 +1,135 @@
-gs cmovna rsi,qword [r13]
-gs cmovna rsi,qword [r11 + r11 * 2 + 0x59024e70]
-gs cmovna rsi,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-cmovna r10,qword [r13]
-cmovna r10,qword [r11 + r11 * 2 + 0x59024e70]
-gs cmovna r10,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs cmovna r12,qword [r13]
-cmovna r12,qword [r11 + r11 * 2 + 0x59024e70]
-cmovna r12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
-a32 cmovna r10,qword [edx - 0x80000000]
-cmovna r10,qword [r14d + 1 * edx + 0x7FFFFFFF]
-cmovna r10,qword [eax]
-a32 gs cmovna rcx,qword [edx - 0x80000000]
-cmovna rcx,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 cmovna rcx,qword [eax]
-gs a32 cmovna rbx,qword [edx - 0x80000000]
-gs a32 cmovna rbx,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 cmovna rbx,qword [eax]
-gs cmovna r8,r14
-a32 gs cmovna r8,r12
-gs a32 cmovna r8,r8
-cmovna r11,r14
-gs a32 cmovna r11,r12
-a32 gs cmovna r11,r8
-gs cmovna r13,r14
-gs cmovna r13,r12
-a32 gs cmovna r13,r8
-cmovna edi,dword [rax]
-gs cmovna edi,dword [r12]
-cmovna edi,dword [rdx - 0x80000000]
-cmovna r11d,dword [rax]
-gs cmovna r11d,dword [r12]
-cmovna r11d,dword [rdx - 0x80000000]
-gs cmovna r10d,dword [rax]
-cmovna r10d,dword [r12]
-gs cmovna r10d,dword [rdx - 0x80000000]
-gs a32 cmovna edx,dword [ebx + 8 * edx]
-gs a32 cmovna edx,dword [r15d + 2 * edi + 0x72]
-a32 cmovna edx,dword [ebp]
-cmovna r15d,dword [ebx + 8 * edx]
-gs cmovna r15d,dword [r15d + 2 * edi + 0x72]
-cmovna r15d,dword [ebp]
-gs cmovna r13d,dword [ebx + 8 * edx]
-gs cmovna r13d,dword [r15d + 2 * edi + 0x72]
-a32 gs cmovna r13d,dword [ebp]
-gs cmovna edx,dword [rsp + 1 * rbp]
-gs cmovna edx,dword [rbx + 8 * rdx]
-cmovna edx,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs cmovna ebp,dword [rsp + 1 * rbp]
-cmovna ebp,dword [rbx + 8 * rdx]
-gs cmovna ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs cmovna esi,dword [rsp + 1 * rbp]
-cmovna esi,dword [rbx + 8 * rdx]
-gs cmovna esi,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs cmovna ebp,dword [r14d + 1 * edx + 0x7FFFFFFF]
-cmovna ebp,dword [eax]
-gs a32 cmovna ebp,dword [r15d + 2 * edi + 0x72]
-gs a32 cmovna edx,dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs cmovna edx,dword [eax]
-gs a32 cmovna edx,dword [r15d + 2 * edi + 0x72]
-cmovna esp,dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 cmovna esp,dword [eax]
-a32 gs cmovna esp,dword [r15d + 2 * edi + 0x72]
-a32 cmovna eax,ecx
-gs cmovna eax,r14d
-gs a32 cmovna eax,edx
-a32 cmovna r14d,ecx
-a32 gs cmovna r14d,r14d
-gs cmovna r14d,edx
-a32 gs cmovna edx,ecx
-cmovna edx,r14d
-gs a32 cmovna edx,edx
-a32 cmovna ebx,ecx
-gs a32 cmovna ebx,r11d
-a32 cmovna ebx,esi
-a32 cmovna r15d,ecx
-a32 gs cmovna r15d,r11d
-cmovna r15d,esi
-cmovna r8d,ecx
-a32 gs cmovna r8d,r11d
-gs a32 cmovna r8d,esi
-o16 cmovna r8w,word [rsp]
-gs o16 cmovna r8w,word [rax]
-cmovna r8w,word [r13]
-gs cmovna r13w,word [rsp]
-gs o16 cmovna r13w,word [rax]
-o16 cmovna r13w,word [r13]
-gs o16 cmovna dx,word [rsp]
-gs cmovna dx,word [rax]
-o16 cmovna dx,word [r13]
-a32 o16 cmovna r15w,word [r14d + 1 * edx + 0x7FFFFFFF]
-o16 gs a32 cmovna r15w,word [ebp]
-o16 a32 gs cmovna r15w,word [r12d]
-o16 a32 gs cmovna di,word [r14d + 1 * edx + 0x7FFFFFFF]
-o16 cmovna di,word [ebp]
-gs o16 a32 cmovna di,word [r12d]
-a32 gs o16 cmovna r12w,word [r14d + 1 * edx + 0x7FFFFFFF]
-a32 cmovna r12w,word [ebp]
-o16 a32 gs cmovna r12w,word [r12d]
-gs o16 cmovna r8w,word [r13]
-o16 cmovna r8w,word [rbp]
-o16 cmovna r8w,word [r12]
-gs o16 cmovna r13w,word [r13]
-o16 cmovna r13w,word [rbp]
-gs o16 cmovna r13w,word [r12]
-o16 gs cmovna bp,word [r13]
-cmovna bp,word [rbp]
-cmovna bp,word [r12]
-gs o16 cmovna r9w,word [ebp]
-o16 cmovna r9w,word [r15d + 2 * edi + 0x72]
-cmovna r9w,word [r12d]
-gs o16 a32 cmovna r11w,word [ebp]
-gs cmovna r11w,word [r15d + 2 * edi + 0x72]
-gs a32 cmovna r11w,word [r12d]
-gs cmovna cx,word [ebp]
-a32 o16 gs cmovna cx,word [r15d + 2 * edi + 0x72]
-gs a32 o16 cmovna cx,word [r12d]
-o16 cmovna di,bx
-gs o16 cmovna di,r13w
-a32 gs o16 cmovna di,r8w
-cmovna ax,bx
-cmovna ax,r13w
-a32 o16 cmovna ax,r8w
-a32 o16 cmovna r10w,bx
-a32 gs o16 cmovna r10w,r13w
-gs o16 a32 cmovna r10w,r8w
-gs o16 a32 cmovna si,ax
-cmovna si,r14w
-a32 o16 gs cmovna si,r8w
-gs o16 cmovna r12w,ax
-a32 cmovna r12w,r14w
-gs cmovna r12w,r8w
-o16 gs cmovna dx,ax
+gs cmovna r11,qword [r15 + 2 * rdi + 0x72]
+cmovna r11,qword [rbx + 8 * rdx]
+gs cmovna r11,qword [r11 + r11 * 2 + 0x10efa531]
+gs cmovna r13,qword [r15 + 2 * rdi + 0x72]
+cmovna r13,qword [rbx + 8 * rdx]
+cmovna r13,qword [r11 + r11 * 2 + 0x10efa531]
+gs cmovna r12,qword [r15 + 2 * rdi + 0x72]
+gs cmovna r12,qword [rbx + 8 * rdx]
+gs cmovna r12,qword [r11 + r11 * 2 + 0x10efa531]
+gs cmovna rcx,qword [esp]
+cmovna rcx,qword [esp + 1 * ebp]
+a32 gs cmovna rcx,qword [r13d]
+gs cmovna rdx,qword [esp]
+gs cmovna rdx,qword [esp + 1 * ebp]
+gs cmovna rdx,qword [r13d]
+a32 cmovna r11,qword [esp]
+cmovna r11,qword [esp + 1 * ebp]
+a32 gs cmovna r11,qword [r13d]
+a32 cmovna rdi,rdi
+gs a32 cmovna rdi,rcx
+a32 cmovna rdi,r11
+gs cmovna r15,rdi
+a32 gs cmovna r15,rcx
+cmovna r15,r11
+a32 cmovna r13,rdi
+a32 gs cmovna r13,rcx
+gs cmovna r13,r11
+cmovna ebx,dword [rsp + 1 * rbp]
+gs cmovna ebx,dword [rdx - 0x80000000]
+cmovna ebx,dword [rbp]
+cmovna esp,dword [rsp + 1 * rbp]
+gs cmovna esp,dword [rdx - 0x80000000]
+gs cmovna esp,dword [rbp]
+cmovna r13d,dword [rsp + 1 * rbp]
+gs cmovna r13d,dword [rdx - 0x80000000]
+cmovna r13d,dword [rbp]
+gs cmovna ebp,dword [esp]
+gs a32 cmovna ebp,dword [esp + 1 * ebp]
+cmovna ebp,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 cmovna esp,dword [esp]
+a32 cmovna esp,dword [esp + 1 * ebp]
+a32 cmovna esp,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 cmovna ebx,dword [esp]
+gs cmovna ebx,dword [esp + 1 * ebp]
+gs cmovna ebx,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs cmovna r15d,dword [rax]
+gs cmovna r15d,dword [rbp]
+gs cmovna r15d,dword [rbx + 8 * rdx]
+gs cmovna r13d,dword [rax]
+gs cmovna r13d,dword [rbp]
+gs cmovna r13d,dword [rbx + 8 * rdx]
+cmovna eax,dword [rax]
+gs cmovna eax,dword [rbp]
+gs cmovna eax,dword [rbx + 8 * rdx]
+a32 cmovna ebp,dword [r14d + 1 * edx + 0x7FFFFFFF]
+cmovna ebp,dword [r12d]
+cmovna ebp,dword [esp]
+a32 cmovna esi,dword [r14d + 1 * edx + 0x7FFFFFFF]
+gs cmovna esi,dword [r12d]
+gs cmovna esi,dword [esp]
+gs cmovna r15d,dword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 cmovna r15d,dword [r12d]
+cmovna r15d,dword [esp]
+a32 cmovna edx,edi
+gs a32 cmovna edx,r12d
+gs cmovna edx,eax
+cmovna r10d,edi
+a32 cmovna r10d,r12d
+gs a32 cmovna r10d,eax
+a32 cmovna esp,edi
+a32 gs cmovna esp,r12d
+gs a32 cmovna esp,eax
+gs a32 cmovna ebx,ebp
+a32 gs cmovna ebx,ecx
+cmovna ebx,r11d
+gs cmovna eax,ebp
+gs a32 cmovna eax,ecx
+gs cmovna eax,r11d
+a32 cmovna r12d,ebp
+cmovna r12d,ecx
+gs a32 cmovna r12d,r11d
+o16 gs cmovna r13w,word [rbx + 8 * rdx]
+cmovna r13w,word [rax]
+gs o16 cmovna r13w,word [r15 + 2 * rdi + 0x72]
+cmovna r14w,word [rbx + 8 * rdx]
+gs o16 cmovna r14w,word [rax]
+o16 gs cmovna r14w,word [r15 + 2 * rdi + 0x72]
+gs cmovna r15w,word [rbx + 8 * rdx]
+o16 gs cmovna r15w,word [rax]
+o16 gs cmovna r15w,word [r15 + 2 * rdi + 0x72]
+o16 gs cmovna r9w,word [r12d]
+o16 gs a32 cmovna r9w,word [r11d + r11d * 2 + 0x6a4e7f1f]
+gs a32 o16 cmovna r9w,word [r15d + 2 * edi + 0x72]
+gs o16 a32 cmovna r13w,word [r12d]
+o16 gs cmovna r13w,word [r11d + r11d * 2 + 0x6a4e7f1f]
+gs a32 cmovna r13w,word [r15d + 2 * edi + 0x72]
+gs cmovna r10w,word [r12d]
+a32 gs o16 cmovna r10w,word [r11d + r11d * 2 + 0x6a4e7f1f]
+o16 a32 cmovna r10w,word [r15d + 2 * edi + 0x72]
+cmovna bx,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 cmovna bx,word [rbp]
+gs o16 cmovna bx,word [rdx - 0x80000000]
+gs o16 cmovna r10w,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 cmovna r10w,word [rbp]
+gs cmovna r10w,word [rdx - 0x80000000]
+gs cmovna bp,word [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs cmovna bp,word [rbp]
+o16 cmovna bp,word [rdx - 0x80000000]
+a32 o16 cmovna r15w,word [esp + 1 * ebp]
+cmovna r15w,word [r14d + 1 * edx + 0x7FFFFFFF]
+o16 gs cmovna r15w,word [r12d]
+a32 gs cmovna r14w,word [esp + 1 * ebp]
+a32 gs cmovna r14w,word [r14d + 1 * edx + 0x7FFFFFFF]
+a32 o16 cmovna r14w,word [r12d]
+o16 a32 gs cmovna sp,word [esp + 1 * ebp]
+a32 gs o16 cmovna sp,word [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs cmovna sp,word [r12d]
+o16 gs a32 cmovna r8w,bp
+gs a32 cmovna r8w,r14w
+gs o16 cmovna r8w,dx
+gs o16 a32 cmovna ax,bp
+gs o16 cmovna ax,r14w
+cmovna ax,dx
+gs a32 o16 cmovna dx,bp
 o16 cmovna dx,r14w
-o16 a32 gs cmovna dx,r8w
+o16 gs a32 cmovna dx,dx
+a32 gs cmovna cx,sp
+a32 o16 gs cmovna cx,di
+o16 cmovna cx,r11w
+gs o16 cmovna r13w,sp
+o16 a32 cmovna r13w,di
+a32 o16 cmovna r13w,r11w
+a32 o16 gs cmovna di,sp
+gs cmovna di,di
+a32 o16 cmovna di,r11w

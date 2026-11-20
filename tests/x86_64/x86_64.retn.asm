@@ -1,5 +1,5 @@
-bnd gs a32 o16 retn 
-a32 o16 bnd gs retn 
-gs o16 a32 retn 8072
-gs bnd o16 retn -32768
-a32 bnd gs retn 22626
+gs bnd o16 a32 retn 
+a32 o16 retn 
+bnd a32 o16 gs retn 0
+o16 bnd gs a32 retn -32768
+gs a32 retn -16041

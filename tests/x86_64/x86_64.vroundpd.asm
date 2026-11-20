@@ -1,162 +1,162 @@
-vroundpd xmm3,oword [rax],-128
-gs vroundpd xmm3,oword [rax],-24
-vroundpd xmm3,oword [rax],-99
-vroundpd xmm3,oword [rbx + 8 * rdx],-128
-gs vroundpd xmm3,oword [rbx + 8 * rdx],-24
-gs vroundpd xmm3,oword [rbx + 8 * rdx],-99
-vroundpd xmm3,oword [rsp + 1 * rbp],-128
-gs vroundpd xmm3,oword [rsp + 1 * rbp],-24
-gs vroundpd xmm3,oword [rsp + 1 * rbp],-99
-gs vroundpd xmm1,oword [rax],-128
-gs vroundpd xmm1,oword [rax],-24
-gs vroundpd xmm1,oword [rax],-99
-vroundpd xmm1,oword [rbx + 8 * rdx],-128
-gs vroundpd xmm1,oword [rbx + 8 * rdx],-24
-gs vroundpd xmm1,oword [rbx + 8 * rdx],-99
-vroundpd xmm1,oword [rsp + 1 * rbp],-128
-vroundpd xmm1,oword [rsp + 1 * rbp],-24
-gs vroundpd xmm1,oword [rsp + 1 * rbp],-99
-vroundpd xmm7,oword [rax],-128
-gs vroundpd xmm7,oword [rax],-24
-vroundpd xmm7,oword [rax],-99
-gs vroundpd xmm7,oword [rbx + 8 * rdx],-128
-gs vroundpd xmm7,oword [rbx + 8 * rdx],-24
-vroundpd xmm7,oword [rbx + 8 * rdx],-99
-gs vroundpd xmm7,oword [rsp + 1 * rbp],-128
-vroundpd xmm7,oword [rsp + 1 * rbp],-24
-gs vroundpd xmm7,oword [rsp + 1 * rbp],-99
-gs a32 vroundpd xmm5,oword [r11d + r11d * 2 + 0x22c8943],-128
-gs a32 vroundpd xmm5,oword [r11d + r11d * 2 + 0x22c8943],127
-vroundpd xmm5,oword [r11d + r11d * 2 + 0x22c8943],66
-vroundpd xmm5,oword [ebp],-128
-gs vroundpd xmm5,oword [ebp],127
-a32 vroundpd xmm5,oword [ebp],66
-a32 vroundpd xmm5,oword [esp + 1 * ebp],-128
-vroundpd xmm5,oword [esp + 1 * ebp],127
-vroundpd xmm5,oword [esp + 1 * ebp],66
-a32 gs vroundpd xmm8,oword [r11d + r11d * 2 + 0x22c8943],-128
-gs a32 vroundpd xmm8,oword [r11d + r11d * 2 + 0x22c8943],127
-gs a32 vroundpd xmm8,oword [r11d + r11d * 2 + 0x22c8943],66
-gs a32 vroundpd xmm8,oword [ebp],-128
-gs a32 vroundpd xmm8,oword [ebp],127
-a32 vroundpd xmm8,oword [ebp],66
-a32 vroundpd xmm8,oword [esp + 1 * ebp],-128
-a32 gs vroundpd xmm8,oword [esp + 1 * ebp],127
-vroundpd xmm8,oword [esp + 1 * ebp],66
-gs vroundpd xmm12,oword [r11d + r11d * 2 + 0x22c8943],-128
-a32 vroundpd xmm12,oword [r11d + r11d * 2 + 0x22c8943],127
-a32 vroundpd xmm12,oword [r11d + r11d * 2 + 0x22c8943],66
-vroundpd xmm12,oword [ebp],-128
-a32 vroundpd xmm12,oword [ebp],127
-gs vroundpd xmm12,oword [ebp],66
-a32 gs vroundpd xmm12,oword [esp + 1 * ebp],-128
-a32 vroundpd xmm12,oword [esp + 1 * ebp],127
-gs vroundpd xmm12,oword [esp + 1 * ebp],66
-a32 gs vroundpd xmm12,xmm15,-99
-gs vroundpd xmm12,xmm15,-24
-a32 vroundpd xmm12,xmm15,66
-vroundpd xmm12,xmm5,-99
-gs vroundpd xmm12,xmm5,-24
-vroundpd xmm12,xmm5,66
-a32 vroundpd xmm12,xmm3,-99
-a32 gs vroundpd xmm12,xmm3,-24
-a32 vroundpd xmm12,xmm3,66
-a32 vroundpd xmm15,xmm15,-99
-gs a32 vroundpd xmm15,xmm15,-24
-vroundpd xmm15,xmm15,66
-a32 gs vroundpd xmm15,xmm5,-99
-a32 vroundpd xmm15,xmm5,-24
-gs a32 vroundpd xmm15,xmm5,66
-a32 vroundpd xmm15,xmm3,-99
-a32 gs vroundpd xmm15,xmm3,-24
-a32 vroundpd xmm15,xmm3,66
-a32 vroundpd xmm1,xmm15,-99
-gs a32 vroundpd xmm1,xmm15,-24
-vroundpd xmm1,xmm15,66
-vroundpd xmm1,xmm5,-99
-a32 gs vroundpd xmm1,xmm5,-24
-gs vroundpd xmm1,xmm5,66
-gs vroundpd xmm1,xmm3,-99
-a32 vroundpd xmm1,xmm3,-24
-vroundpd xmm1,xmm3,66
-gs vroundpd ymm15,yword [rax],121
-gs vroundpd ymm15,yword [rax],-128
-vroundpd ymm15,yword [rax],-41
-vroundpd ymm15,yword [r14 + 1 * rdx + 0x7FFFFFFF],121
-gs vroundpd ymm15,yword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-vroundpd ymm15,yword [r14 + 1 * rdx + 0x7FFFFFFF],-41
-gs vroundpd ymm15,yword [r15 + 2 * rdi + 0x72],121
-gs vroundpd ymm15,yword [r15 + 2 * rdi + 0x72],-128
-vroundpd ymm15,yword [r15 + 2 * rdi + 0x72],-41
-vroundpd ymm14,yword [rax],121
-gs vroundpd ymm14,yword [rax],-128
-vroundpd ymm14,yword [rax],-41
-vroundpd ymm14,yword [r14 + 1 * rdx + 0x7FFFFFFF],121
-vroundpd ymm14,yword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-vroundpd ymm14,yword [r14 + 1 * rdx + 0x7FFFFFFF],-41
-gs vroundpd ymm14,yword [r15 + 2 * rdi + 0x72],121
-gs vroundpd ymm14,yword [r15 + 2 * rdi + 0x72],-128
-vroundpd ymm14,yword [r15 + 2 * rdi + 0x72],-41
-gs vroundpd ymm0,yword [rax],121
-vroundpd ymm0,yword [rax],-128
-gs vroundpd ymm0,yword [rax],-41
-vroundpd ymm0,yword [r14 + 1 * rdx + 0x7FFFFFFF],121
-gs vroundpd ymm0,yword [r14 + 1 * rdx + 0x7FFFFFFF],-128
-gs vroundpd ymm0,yword [r14 + 1 * rdx + 0x7FFFFFFF],-41
-vroundpd ymm0,yword [r15 + 2 * rdi + 0x72],121
-gs vroundpd ymm0,yword [r15 + 2 * rdi + 0x72],-128
-vroundpd ymm0,yword [r15 + 2 * rdi + 0x72],-41
-gs a32 vroundpd ymm8,yword [r12d],127
-gs a32 vroundpd ymm8,yword [r12d],-128
-gs a32 vroundpd ymm8,yword [r12d],-41
-vroundpd ymm8,yword [r14d + 1 * edx + 0x7FFFFFFF],127
-gs vroundpd ymm8,yword [r14d + 1 * edx + 0x7FFFFFFF],-128
-a32 gs vroundpd ymm8,yword [r14d + 1 * edx + 0x7FFFFFFF],-41
-a32 gs vroundpd ymm8,yword [ebx + 8 * edx],127
-gs a32 vroundpd ymm8,yword [ebx + 8 * edx],-128
-a32 gs vroundpd ymm8,yword [ebx + 8 * edx],-41
-vroundpd ymm14,yword [r12d],127
-a32 gs vroundpd ymm14,yword [r12d],-128
-vroundpd ymm14,yword [r12d],-41
-gs vroundpd ymm14,yword [r14d + 1 * edx + 0x7FFFFFFF],127
-a32 vroundpd ymm14,yword [r14d + 1 * edx + 0x7FFFFFFF],-128
-a32 vroundpd ymm14,yword [r14d + 1 * edx + 0x7FFFFFFF],-41
-a32 gs vroundpd ymm14,yword [ebx + 8 * edx],127
-gs a32 vroundpd ymm14,yword [ebx + 8 * edx],-128
-vroundpd ymm14,yword [ebx + 8 * edx],-41
-gs vroundpd ymm15,yword [r12d],127
-a32 vroundpd ymm15,yword [r12d],-128
-a32 gs vroundpd ymm15,yword [r12d],-41
-gs vroundpd ymm15,yword [r14d + 1 * edx + 0x7FFFFFFF],127
-gs vroundpd ymm15,yword [r14d + 1 * edx + 0x7FFFFFFF],-128
-gs vroundpd ymm15,yword [r14d + 1 * edx + 0x7FFFFFFF],-41
-a32 gs vroundpd ymm15,yword [ebx + 8 * edx],127
-gs vroundpd ymm15,yword [ebx + 8 * edx],-128
-a32 gs vroundpd ymm15,yword [ebx + 8 * edx],-41
-vroundpd ymm9,ymm2,0
-a32 vroundpd ymm9,ymm2,-128
-a32 vroundpd ymm9,ymm2,120
-gs a32 vroundpd ymm9,ymm1,0
-a32 vroundpd ymm9,ymm1,-128
-a32 gs vroundpd ymm9,ymm1,120
-a32 vroundpd ymm9,ymm14,0
-vroundpd ymm9,ymm14,-128
-gs vroundpd ymm9,ymm14,120
-gs a32 vroundpd ymm0,ymm2,0
-gs vroundpd ymm0,ymm2,-128
-gs a32 vroundpd ymm0,ymm2,120
-gs a32 vroundpd ymm0,ymm1,0
-vroundpd ymm0,ymm1,-128
-gs vroundpd ymm0,ymm1,120
-a32 vroundpd ymm0,ymm14,0
-gs a32 vroundpd ymm0,ymm14,-128
-vroundpd ymm0,ymm14,120
-vroundpd ymm3,ymm2,0
-a32 vroundpd ymm3,ymm2,-128
-a32 vroundpd ymm3,ymm2,120
-gs a32 vroundpd ymm3,ymm1,0
-vroundpd ymm3,ymm1,-128
-a32 gs vroundpd ymm3,ymm1,120
-gs vroundpd ymm3,ymm14,0
-gs a32 vroundpd ymm3,ymm14,-128
-a32 gs vroundpd ymm3,ymm14,120
+vroundpd xmm11,oword [rsp],0
+vroundpd xmm11,oword [rsp],127
+gs vroundpd xmm11,oword [rsp],-128
+gs vroundpd xmm11,oword [rbx + 8 * rdx],0
+vroundpd xmm11,oword [rbx + 8 * rdx],127
+gs vroundpd xmm11,oword [rbx + 8 * rdx],-128
+vroundpd xmm11,oword [r13],0
+vroundpd xmm11,oword [r13],127
+gs vroundpd xmm11,oword [r13],-128
+vroundpd xmm2,oword [rsp],0
+gs vroundpd xmm2,oword [rsp],127
+vroundpd xmm2,oword [rsp],-128
+vroundpd xmm2,oword [rbx + 8 * rdx],0
+gs vroundpd xmm2,oword [rbx + 8 * rdx],127
+vroundpd xmm2,oword [rbx + 8 * rdx],-128
+vroundpd xmm2,oword [r13],0
+gs vroundpd xmm2,oword [r13],127
+gs vroundpd xmm2,oword [r13],-128
+gs vroundpd xmm13,oword [rsp],0
+gs vroundpd xmm13,oword [rsp],127
+vroundpd xmm13,oword [rsp],-128
+vroundpd xmm13,oword [rbx + 8 * rdx],0
+vroundpd xmm13,oword [rbx + 8 * rdx],127
+gs vroundpd xmm13,oword [rbx + 8 * rdx],-128
+gs vroundpd xmm13,oword [r13],0
+gs vroundpd xmm13,oword [r13],127
+vroundpd xmm13,oword [r13],-128
+a32 gs vroundpd xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+a32 gs vroundpd xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 gs vroundpd xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF],0
+a32 vroundpd xmm0,oword [r13d],-128
+a32 gs vroundpd xmm0,oword [r13d],127
+gs vroundpd xmm0,oword [r13d],0
+vroundpd xmm0,oword [ebp],-128
+a32 gs vroundpd xmm0,oword [ebp],127
+gs a32 vroundpd xmm0,oword [ebp],0
+a32 vroundpd xmm7,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+vroundpd xmm7,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+gs a32 vroundpd xmm7,oword [r14d + 1 * edx + 0x7FFFFFFF],0
+a32 vroundpd xmm7,oword [r13d],-128
+a32 vroundpd xmm7,oword [r13d],127
+a32 gs vroundpd xmm7,oword [r13d],0
+a32 gs vroundpd xmm7,oword [ebp],-128
+a32 vroundpd xmm7,oword [ebp],127
+a32 vroundpd xmm7,oword [ebp],0
+gs vroundpd xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],-128
+gs vroundpd xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],127
+a32 gs vroundpd xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF],0
+gs a32 vroundpd xmm2,oword [r13d],-128
+a32 gs vroundpd xmm2,oword [r13d],127
+a32 vroundpd xmm2,oword [r13d],0
+gs vroundpd xmm2,oword [ebp],-128
+gs a32 vroundpd xmm2,oword [ebp],127
+a32 gs vroundpd xmm2,oword [ebp],0
+a32 gs vroundpd xmm7,xmm14,11
+a32 vroundpd xmm7,xmm14,-43
+gs vroundpd xmm7,xmm14,-128
+gs vroundpd xmm7,xmm7,11
+gs a32 vroundpd xmm7,xmm7,-43
+gs vroundpd xmm7,xmm7,-128
+a32 gs vroundpd xmm7,xmm2,11
+a32 gs vroundpd xmm7,xmm2,-43
+a32 gs vroundpd xmm7,xmm2,-128
+a32 vroundpd xmm5,xmm14,11
+gs a32 vroundpd xmm5,xmm14,-43
+gs a32 vroundpd xmm5,xmm14,-128
+gs vroundpd xmm5,xmm7,11
+gs a32 vroundpd xmm5,xmm7,-43
+gs vroundpd xmm5,xmm7,-128
+vroundpd xmm5,xmm2,11
+a32 vroundpd xmm5,xmm2,-43
+a32 vroundpd xmm5,xmm2,-128
+vroundpd xmm0,xmm14,11
+gs a32 vroundpd xmm0,xmm14,-43
+gs vroundpd xmm0,xmm14,-128
+gs a32 vroundpd xmm0,xmm7,11
+a32 vroundpd xmm0,xmm7,-43
+gs vroundpd xmm0,xmm7,-128
+gs a32 vroundpd xmm0,xmm2,11
+gs vroundpd xmm0,xmm2,-43
+gs a32 vroundpd xmm0,xmm2,-128
+vroundpd ymm3,yword [rdx - 0x80000000],29
+gs vroundpd ymm3,yword [rdx - 0x80000000],0
+gs vroundpd ymm3,yword [rdx - 0x80000000],127
+vroundpd ymm3,yword [rbx + 8 * rdx],29
+vroundpd ymm3,yword [rbx + 8 * rdx],0
+vroundpd ymm3,yword [rbx + 8 * rdx],127
+vroundpd ymm3,yword [rbp],29
+vroundpd ymm3,yword [rbp],0
+vroundpd ymm3,yword [rbp],127
+gs vroundpd ymm8,yword [rdx - 0x80000000],29
+vroundpd ymm8,yword [rdx - 0x80000000],0
+vroundpd ymm8,yword [rdx - 0x80000000],127
+gs vroundpd ymm8,yword [rbx + 8 * rdx],29
+vroundpd ymm8,yword [rbx + 8 * rdx],0
+vroundpd ymm8,yword [rbx + 8 * rdx],127
+gs vroundpd ymm8,yword [rbp],29
+gs vroundpd ymm8,yword [rbp],0
+vroundpd ymm8,yword [rbp],127
+gs vroundpd ymm13,yword [rdx - 0x80000000],29
+gs vroundpd ymm13,yword [rdx - 0x80000000],0
+gs vroundpd ymm13,yword [rdx - 0x80000000],127
+gs vroundpd ymm13,yword [rbx + 8 * rdx],29
+gs vroundpd ymm13,yword [rbx + 8 * rdx],0
+vroundpd ymm13,yword [rbx + 8 * rdx],127
+gs vroundpd ymm13,yword [rbp],29
+vroundpd ymm13,yword [rbp],0
+vroundpd ymm13,yword [rbp],127
+vroundpd ymm12,yword [ebp],127
+gs vroundpd ymm12,yword [ebp],-32
+gs a32 vroundpd ymm12,yword [ebp],-46
+gs vroundpd ymm12,yword [r13d],127
+gs a32 vroundpd ymm12,yword [r13d],-32
+a32 vroundpd ymm12,yword [r13d],-46
+vroundpd ymm12,yword [r11d + r11d * 2 + 0x2dc35247],127
+gs vroundpd ymm12,yword [r11d + r11d * 2 + 0x2dc35247],-32
+a32 vroundpd ymm12,yword [r11d + r11d * 2 + 0x2dc35247],-46
+gs a32 vroundpd ymm8,yword [ebp],127
+gs vroundpd ymm8,yword [ebp],-32
+gs a32 vroundpd ymm8,yword [ebp],-46
+vroundpd ymm8,yword [r13d],127
+gs vroundpd ymm8,yword [r13d],-32
+vroundpd ymm8,yword [r13d],-46
+a32 vroundpd ymm8,yword [r11d + r11d * 2 + 0x2dc35247],127
+vroundpd ymm8,yword [r11d + r11d * 2 + 0x2dc35247],-32
+a32 vroundpd ymm8,yword [r11d + r11d * 2 + 0x2dc35247],-46
+a32 gs vroundpd ymm3,yword [ebp],127
+a32 vroundpd ymm3,yword [ebp],-32
+gs a32 vroundpd ymm3,yword [ebp],-46
+a32 gs vroundpd ymm3,yword [r13d],127
+gs a32 vroundpd ymm3,yword [r13d],-32
+vroundpd ymm3,yword [r13d],-46
+gs vroundpd ymm3,yword [r11d + r11d * 2 + 0x2dc35247],127
+gs vroundpd ymm3,yword [r11d + r11d * 2 + 0x2dc35247],-32
+vroundpd ymm3,yword [r11d + r11d * 2 + 0x2dc35247],-46
+vroundpd ymm8,ymm9,29
+gs vroundpd ymm8,ymm9,0
+gs vroundpd ymm8,ymm9,-46
+vroundpd ymm8,ymm8,29
+vroundpd ymm8,ymm8,0
+a32 vroundpd ymm8,ymm8,-46
+a32 gs vroundpd ymm8,ymm13,29
+vroundpd ymm8,ymm13,0
+a32 vroundpd ymm8,ymm13,-46
+vroundpd ymm13,ymm9,29
+a32 vroundpd ymm13,ymm9,0
+vroundpd ymm13,ymm9,-46
+gs vroundpd ymm13,ymm8,29
+vroundpd ymm13,ymm8,0
+vroundpd ymm13,ymm8,-46
+vroundpd ymm13,ymm13,29
+gs vroundpd ymm13,ymm13,0
+vroundpd ymm13,ymm13,-46
+vroundpd ymm12,ymm9,29
+vroundpd ymm12,ymm9,0
+a32 gs vroundpd ymm12,ymm9,-46
+a32 vroundpd ymm12,ymm8,29
+a32 vroundpd ymm12,ymm8,0
+vroundpd ymm12,ymm8,-46
+a32 gs vroundpd ymm12,ymm13,29
+gs a32 vroundpd ymm12,ymm13,0
+vroundpd ymm12,ymm13,-46

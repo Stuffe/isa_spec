@@ -1,2 +1,2 @@
-a32 gs o16 stc 
-a32 gs o16 stc 
+o16 a32 stc 
+o16 a32 stc 

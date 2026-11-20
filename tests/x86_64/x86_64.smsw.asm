@@ -1,27 +1,27 @@
-gs o16 smsw word [r15 + 2 * rdi + 0x72]
-gs o16 smsw word [rax]
-gs smsw word [rdx - 0x80000000]
-a32 o16 smsw word [esp]
-gs o16 smsw word [r13d]
-a32 gs o16 smsw word [r14d + 1 * edx + 0x7FFFFFFF]
-gs o16 smsw word [rax]
-smsw word [r15 + 2 * rdi + 0x72]
-o16 gs smsw word [r14 + 1 * rdx + 0x7FFFFFFF]
-gs o16 a32 smsw word [ebx + 8 * edx]
-o16 gs smsw word [esp]
-a32 smsw word [r15d + 2 * edi + 0x72]
-smsw rbx
-a32 smsw rsp
+smsw word [rbx + 8 * rdx]
+o16 smsw word [rbp]
+smsw word [rsp + 1 * rbp]
+a32 o16 gs smsw word [ebx + 8 * edx]
+a32 o16 gs smsw word [r13d]
+o16 a32 smsw word [esp + 1 * ebp]
+o16 smsw word [rbp]
+smsw word [r13]
+gs o16 smsw word [rbx + 8 * rdx]
+gs a32 o16 smsw word [edx - 0x80000000]
+a32 smsw word [eax]
+smsw word [r15d + 2 * edi + 0x72]
 smsw r13
-smsw esp
-smsw eax
-gs a32 smsw r10d
-smsw r13d
-smsw ebx
-gs a32 smsw r11d
-gs smsw r8w
-o16 a32 smsw bx
-gs o16 smsw bp
-smsw r14w
-gs a32 smsw r9w
-o16 gs smsw ax
+gs a32 smsw r8
+a32 smsw rdi
+gs a32 smsw r12d
+a32 smsw ebp
+gs a32 smsw ecx
+gs a32 smsw r14d
+gs a32 smsw r12d
+a32 gs smsw ebp
+o16 gs a32 smsw r12w
+gs a32 smsw sp
+o16 a32 gs smsw r10w
+o16 gs a32 smsw r14w
+gs smsw cx
+o16 gs a32 smsw r10w

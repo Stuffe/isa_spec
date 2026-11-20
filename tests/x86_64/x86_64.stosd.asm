@@ -1,2 +1,2 @@
-repne gs stosd 
-gs stosd 
+repne stosd 
+stosd 

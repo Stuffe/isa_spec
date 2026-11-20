@@ -1,81 +1,81 @@
-vextractf128 oword [rbp],ymm15,85
-gs vextractf128 oword [rbp],ymm15,-89
-gs vextractf128 oword [rbp],ymm15,0
-gs vextractf128 oword [rbp],ymm5,85
-gs vextractf128 oword [rbp],ymm5,-89
-vextractf128 oword [rbp],ymm5,0
-gs vextractf128 oword [rbp],ymm13,85
-vextractf128 oword [rbp],ymm13,-89
-vextractf128 oword [rbp],ymm13,0
-gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm15,85
-gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm15,-89
-vextractf128 oword [r15 + 2 * rdi + 0x72],ymm15,0
-vextractf128 oword [r15 + 2 * rdi + 0x72],ymm5,85
-gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm5,-89
-gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm5,0
-vextractf128 oword [r15 + 2 * rdi + 0x72],ymm13,85
-vextractf128 oword [r15 + 2 * rdi + 0x72],ymm13,-89
-vextractf128 oword [r15 + 2 * rdi + 0x72],ymm13,0
-gs vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm15,85
-gs vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm15,-89
-gs vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm15,0
-vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm5,85
-vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm5,-89
-vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm5,0
-gs vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm13,85
-gs vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm13,-89
-gs vextractf128 oword [r11 + r11 * 2 + 0x2186a129],ymm13,0
-a32 vextractf128 oword [r15d + 2 * edi + 0x72],ymm14,85
-gs a32 vextractf128 oword [r15d + 2 * edi + 0x72],ymm14,-128
-gs vextractf128 oword [r15d + 2 * edi + 0x72],ymm14,127
-a32 vextractf128 oword [r15d + 2 * edi + 0x72],ymm3,85
-a32 vextractf128 oword [r15d + 2 * edi + 0x72],ymm3,-128
-gs a32 vextractf128 oword [r15d + 2 * edi + 0x72],ymm3,127
-gs a32 vextractf128 oword [r15d + 2 * edi + 0x72],ymm13,85
-a32 gs vextractf128 oword [r15d + 2 * edi + 0x72],ymm13,-128
-gs vextractf128 oword [r15d + 2 * edi + 0x72],ymm13,127
-gs vextractf128 oword [esp],ymm14,85
-a32 vextractf128 oword [esp],ymm14,-128
-a32 vextractf128 oword [esp],ymm14,127
-a32 vextractf128 oword [esp],ymm3,85
-vextractf128 oword [esp],ymm3,-128
-a32 vextractf128 oword [esp],ymm3,127
-gs a32 vextractf128 oword [esp],ymm13,85
-vextractf128 oword [esp],ymm13,-128
-a32 gs vextractf128 oword [esp],ymm13,127
-gs vextractf128 oword [eax],ymm14,85
-a32 gs vextractf128 oword [eax],ymm14,-128
-gs a32 vextractf128 oword [eax],ymm14,127
-a32 vextractf128 oword [eax],ymm3,85
-gs vextractf128 oword [eax],ymm3,-128
-vextractf128 oword [eax],ymm3,127
-vextractf128 oword [eax],ymm13,85
-gs a32 vextractf128 oword [eax],ymm13,-128
-gs a32 vextractf128 oword [eax],ymm13,127
-a32 gs vextractf128 xmm10,ymm7,85
-a32 gs vextractf128 xmm10,ymm7,-73
-gs vextractf128 xmm10,ymm7,-89
-a32 vextractf128 xmm10,ymm2,85
-a32 gs vextractf128 xmm10,ymm2,-73
-a32 vextractf128 xmm10,ymm2,-89
-gs a32 vextractf128 xmm10,ymm15,85
-vextractf128 xmm10,ymm15,-73
-gs vextractf128 xmm10,ymm15,-89
-a32 gs vextractf128 xmm4,ymm7,85
-a32 gs vextractf128 xmm4,ymm7,-73
-gs a32 vextractf128 xmm4,ymm7,-89
-gs vextractf128 xmm4,ymm2,85
-gs vextractf128 xmm4,ymm2,-73
-gs a32 vextractf128 xmm4,ymm2,-89
-gs a32 vextractf128 xmm4,ymm15,85
-a32 gs vextractf128 xmm4,ymm15,-73
-vextractf128 xmm4,ymm15,-89
-a32 vextractf128 xmm3,ymm7,85
-a32 vextractf128 xmm3,ymm7,-73
-gs vextractf128 xmm3,ymm7,-89
-a32 gs vextractf128 xmm3,ymm2,85
-gs vextractf128 xmm3,ymm2,-73
-gs vextractf128 xmm3,ymm2,-89
-vextractf128 xmm3,ymm15,85
-a32 vextractf128 xmm3,ymm15,-73
-vextractf128 xmm3,ymm15,-89
+vextractf128 oword [r13],ymm0,43
+vextractf128 oword [r13],ymm0,0
+gs vextractf128 oword [r13],ymm0,-128
+gs vextractf128 oword [r13],ymm7,43
+gs vextractf128 oword [r13],ymm7,0
+gs vextractf128 oword [r13],ymm7,-128
+gs vextractf128 oword [r13],ymm3,43
+gs vextractf128 oword [r13],ymm3,0
+gs vextractf128 oword [r13],ymm3,-128
+gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm0,43
+vextractf128 oword [r15 + 2 * rdi + 0x72],ymm0,0
+vextractf128 oword [r15 + 2 * rdi + 0x72],ymm0,-128
+vextractf128 oword [r15 + 2 * rdi + 0x72],ymm7,43
+gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm7,0
+gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm7,-128
+vextractf128 oword [r15 + 2 * rdi + 0x72],ymm3,43
+gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm3,0
+gs vextractf128 oword [r15 + 2 * rdi + 0x72],ymm3,-128
+gs vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm0,43
+vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm0,0
+gs vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm0,-128
+vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm7,43
+gs vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm7,0
+vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm7,-128
+vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm3,43
+gs vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm3,0
+gs vextractf128 oword [r11 + r11 * 2 + 0x3c7174b],ymm3,-128
+gs vextractf128 oword [ebp],ymm3,0
+gs a32 vextractf128 oword [ebp],ymm3,-128
+a32 vextractf128 oword [ebp],ymm3,-99
+a32 vextractf128 oword [ebp],ymm13,0
+a32 gs vextractf128 oword [ebp],ymm13,-128
+a32 gs vextractf128 oword [ebp],ymm13,-99
+gs vextractf128 oword [ebp],ymm9,0
+a32 vextractf128 oword [ebp],ymm9,-128
+gs vextractf128 oword [ebp],ymm9,-99
+a32 gs vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm3,0
+vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm3,-128
+vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm3,-99
+gs a32 vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm13,0
+a32 vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm13,-128
+gs a32 vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm13,-99
+gs vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm9,0
+gs vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm9,-128
+vextractf128 oword [r14d + 1 * edx + 0x7FFFFFFF],ymm9,-99
+gs a32 vextractf128 oword [esp + 1 * ebp],ymm3,0
+gs a32 vextractf128 oword [esp + 1 * ebp],ymm3,-128
+vextractf128 oword [esp + 1 * ebp],ymm3,-99
+a32 vextractf128 oword [esp + 1 * ebp],ymm13,0
+gs vextractf128 oword [esp + 1 * ebp],ymm13,-128
+a32 gs vextractf128 oword [esp + 1 * ebp],ymm13,-99
+a32 gs vextractf128 oword [esp + 1 * ebp],ymm9,0
+a32 vextractf128 oword [esp + 1 * ebp],ymm9,-128
+a32 vextractf128 oword [esp + 1 * ebp],ymm9,-99
+a32 vextractf128 xmm4,ymm15,0
+a32 vextractf128 xmm4,ymm15,-33
+gs a32 vextractf128 xmm4,ymm15,-99
+gs vextractf128 xmm4,ymm8,0
+a32 gs vextractf128 xmm4,ymm8,-33
+a32 vextractf128 xmm4,ymm8,-99
+gs a32 vextractf128 xmm4,ymm13,0
+vextractf128 xmm4,ymm13,-33
+a32 vextractf128 xmm4,ymm13,-99
+gs vextractf128 xmm13,ymm15,0
+gs a32 vextractf128 xmm13,ymm15,-33
+a32 vextractf128 xmm13,ymm15,-99
+gs vextractf128 xmm13,ymm8,0
+gs a32 vextractf128 xmm13,ymm8,-33
+vextractf128 xmm13,ymm8,-99
+a32 vextractf128 xmm13,ymm13,0
+a32 vextractf128 xmm13,ymm13,-33
+gs vextractf128 xmm13,ymm13,-99
+gs a32 vextractf128 xmm15,ymm15,0
+a32 gs vextractf128 xmm15,ymm15,-33
+a32 gs vextractf128 xmm15,ymm15,-99
+gs a32 vextractf128 xmm15,ymm8,0
+a32 gs vextractf128 xmm15,ymm8,-33
+vextractf128 xmm15,ymm8,-99
+a32 vextractf128 xmm15,ymm13,0
+a32 gs vextractf128 xmm15,ymm13,-33
+vextractf128 xmm15,ymm13,-99

@@ -1,2 +1,2 @@
-gs a32 o16 fdecstp 
-gs o16 a32 fdecstp 
+a32 o16 gs fdecstp 
+fdecstp 

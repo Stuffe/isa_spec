@@ -1,2 +1,2 @@
-gs a32 clgi 
+o16 clgi 
 gs clgi 

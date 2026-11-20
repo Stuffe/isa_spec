@@ -1,2 +1,2 @@
-gs a32 o16 vmcall 
-o16 a32 vmcall 
+o16 gs a32 vmcall 
+gs vmcall 

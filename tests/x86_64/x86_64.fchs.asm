@@ -1,2 +1,2 @@
-gs o16 fchs 
-gs fchs 
+o16 gs fchs 
+a32 gs o16 fchs 

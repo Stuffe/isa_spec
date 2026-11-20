@@ -1,162 +1,162 @@
-vfnmadd321ps xmm6,xmm5,oword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps xmm6,xmm5,oword [r12]
-vfnmadd321ps xmm6,xmm5,oword [rbx + 8 * rdx]
-vfnmadd321ps xmm6,xmm0,oword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps xmm6,xmm0,oword [r12]
-vfnmadd321ps xmm6,xmm0,oword [rbx + 8 * rdx]
-gs vfnmadd321ps xmm6,xmm9,oword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps xmm6,xmm9,oword [r12]
-vfnmadd321ps xmm6,xmm9,oword [rbx + 8 * rdx]
-vfnmadd321ps xmm2,xmm5,oword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps xmm2,xmm5,oword [r12]
-gs vfnmadd321ps xmm2,xmm5,oword [rbx + 8 * rdx]
-gs vfnmadd321ps xmm2,xmm0,oword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps xmm2,xmm0,oword [r12]
-vfnmadd321ps xmm2,xmm0,oword [rbx + 8 * rdx]
-gs vfnmadd321ps xmm2,xmm9,oword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps xmm2,xmm9,oword [r12]
-vfnmadd321ps xmm2,xmm9,oword [rbx + 8 * rdx]
-vfnmadd321ps xmm1,xmm5,oword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps xmm1,xmm5,oword [r12]
-vfnmadd321ps xmm1,xmm5,oword [rbx + 8 * rdx]
-vfnmadd321ps xmm1,xmm0,oword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps xmm1,xmm0,oword [r12]
-vfnmadd321ps xmm1,xmm0,oword [rbx + 8 * rdx]
-vfnmadd321ps xmm1,xmm9,oword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps xmm1,xmm9,oword [r12]
-gs vfnmadd321ps xmm1,xmm9,oword [rbx + 8 * rdx]
-vfnmadd321ps xmm7,xmm15,oword [r11d + r11d * 2 + 0x32dcddff]
-a32 gs vfnmadd321ps xmm7,xmm15,oword [r12d]
-gs vfnmadd321ps xmm7,xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vfnmadd321ps xmm7,xmm9,oword [r11d + r11d * 2 + 0x32dcddff]
-a32 gs vfnmadd321ps xmm7,xmm9,oword [r12d]
-a32 vfnmadd321ps xmm7,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs vfnmadd321ps xmm7,xmm2,oword [r11d + r11d * 2 + 0x32dcddff]
-a32 gs vfnmadd321ps xmm7,xmm2,oword [r12d]
-gs a32 vfnmadd321ps xmm7,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF]
-vfnmadd321ps xmm15,xmm15,oword [r11d + r11d * 2 + 0x32dcddff]
-gs vfnmadd321ps xmm15,xmm15,oword [r12d]
-vfnmadd321ps xmm15,xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vfnmadd321ps xmm15,xmm9,oword [r11d + r11d * 2 + 0x32dcddff]
-a32 vfnmadd321ps xmm15,xmm9,oword [r12d]
-gs vfnmadd321ps xmm15,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs vfnmadd321ps xmm15,xmm2,oword [r11d + r11d * 2 + 0x32dcddff]
-vfnmadd321ps xmm15,xmm2,oword [r12d]
-gs vfnmadd321ps xmm15,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 vfnmadd321ps xmm1,xmm15,oword [r11d + r11d * 2 + 0x32dcddff]
-gs vfnmadd321ps xmm1,xmm15,oword [r12d]
-vfnmadd321ps xmm1,xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vfnmadd321ps xmm1,xmm9,oword [r11d + r11d * 2 + 0x32dcddff]
-gs a32 vfnmadd321ps xmm1,xmm9,oword [r12d]
-gs vfnmadd321ps xmm1,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs vfnmadd321ps xmm1,xmm2,oword [r11d + r11d * 2 + 0x32dcddff]
-gs vfnmadd321ps xmm1,xmm2,oword [r12d]
-vfnmadd321ps xmm1,xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF]
-vfnmadd321ps xmm6,xmm7,xmm6
-a32 vfnmadd321ps xmm6,xmm7,xmm3
-vfnmadd321ps xmm6,xmm7,xmm15
-a32 vfnmadd321ps xmm6,xmm4,xmm6
-a32 vfnmadd321ps xmm6,xmm4,xmm3
-a32 gs vfnmadd321ps xmm6,xmm4,xmm15
-a32 gs vfnmadd321ps xmm6,xmm3,xmm6
-a32 gs vfnmadd321ps xmm6,xmm3,xmm3
-gs a32 vfnmadd321ps xmm6,xmm3,xmm15
-a32 gs vfnmadd321ps xmm3,xmm7,xmm6
-gs a32 vfnmadd321ps xmm3,xmm7,xmm3
-a32 gs vfnmadd321ps xmm3,xmm7,xmm15
-a32 gs vfnmadd321ps xmm3,xmm4,xmm6
-a32 vfnmadd321ps xmm3,xmm4,xmm3
-a32 vfnmadd321ps xmm3,xmm4,xmm15
-a32 gs vfnmadd321ps xmm3,xmm3,xmm6
-a32 vfnmadd321ps xmm3,xmm3,xmm3
-gs a32 vfnmadd321ps xmm3,xmm3,xmm15
-gs a32 vfnmadd321ps xmm5,xmm7,xmm6
-a32 vfnmadd321ps xmm5,xmm7,xmm3
-a32 gs vfnmadd321ps xmm5,xmm7,xmm15
-a32 vfnmadd321ps xmm5,xmm4,xmm6
-a32 gs vfnmadd321ps xmm5,xmm4,xmm3
-gs vfnmadd321ps xmm5,xmm4,xmm15
-a32 gs vfnmadd321ps xmm5,xmm3,xmm6
-a32 gs vfnmadd321ps xmm5,xmm3,xmm3
-a32 vfnmadd321ps xmm5,xmm3,xmm15
-vfnmadd321ps ymm7,ymm14,yword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps ymm7,ymm14,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm7,ymm14,yword [rsp]
-vfnmadd321ps ymm7,ymm12,yword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps ymm7,ymm12,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm7,ymm12,yword [rsp]
-gs vfnmadd321ps ymm7,ymm8,yword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps ymm7,ymm8,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm7,ymm8,yword [rsp]
-vfnmadd321ps ymm11,ymm14,yword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps ymm11,ymm14,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm11,ymm14,yword [rsp]
-vfnmadd321ps ymm11,ymm12,yword [r15 + 2 * rdi + 0x72]
-gs vfnmadd321ps ymm11,ymm12,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm11,ymm12,yword [rsp]
-vfnmadd321ps ymm11,ymm8,yword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps ymm11,ymm8,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm11,ymm8,yword [rsp]
-gs vfnmadd321ps ymm15,ymm14,yword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps ymm15,ymm14,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm15,ymm14,yword [rsp]
-gs vfnmadd321ps ymm15,ymm12,yword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps ymm15,ymm12,yword [r11 + r11 * 2 + 0x41bcbedb]
-vfnmadd321ps ymm15,ymm12,yword [rsp]
-vfnmadd321ps ymm15,ymm8,yword [r15 + 2 * rdi + 0x72]
-vfnmadd321ps ymm15,ymm8,yword [r11 + r11 * 2 + 0x41bcbedb]
-gs vfnmadd321ps ymm15,ymm8,yword [rsp]
-a32 vfnmadd321ps ymm9,ymm0,yword [esp + 1 * ebp]
-a32 gs vfnmadd321ps ymm9,ymm0,yword [r11d + r11d * 2 + 0x41bcbedb]
-gs vfnmadd321ps ymm9,ymm0,yword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vfnmadd321ps ymm9,ymm10,yword [esp + 1 * ebp]
-gs vfnmadd321ps ymm9,ymm10,yword [r11d + r11d * 2 + 0x41bcbedb]
-a32 gs vfnmadd321ps ymm9,ymm10,yword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs vfnmadd321ps ymm9,ymm9,yword [esp + 1 * ebp]
-a32 vfnmadd321ps ymm9,ymm9,yword [r11d + r11d * 2 + 0x41bcbedb]
-gs a32 vfnmadd321ps ymm9,ymm9,yword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 vfnmadd321ps ymm8,ymm0,yword [esp + 1 * ebp]
-vfnmadd321ps ymm8,ymm0,yword [r11d + r11d * 2 + 0x41bcbedb]
-gs vfnmadd321ps ymm8,ymm0,yword [r14d + 1 * edx + 0x7FFFFFFF]
-vfnmadd321ps ymm8,ymm10,yword [esp + 1 * ebp]
-a32 vfnmadd321ps ymm8,ymm10,yword [r11d + r11d * 2 + 0x41bcbedb]
-a32 vfnmadd321ps ymm8,ymm10,yword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 vfnmadd321ps ymm8,ymm9,yword [esp + 1 * ebp]
-gs a32 vfnmadd321ps ymm8,ymm9,yword [r11d + r11d * 2 + 0x41bcbedb]
-gs vfnmadd321ps ymm8,ymm9,yword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vfnmadd321ps ymm1,ymm0,yword [esp + 1 * ebp]
-gs a32 vfnmadd321ps ymm1,ymm0,yword [r11d + r11d * 2 + 0x41bcbedb]
-vfnmadd321ps ymm1,ymm0,yword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs vfnmadd321ps ymm1,ymm10,yword [esp + 1 * ebp]
-gs vfnmadd321ps ymm1,ymm10,yword [r11d + r11d * 2 + 0x41bcbedb]
-gs a32 vfnmadd321ps ymm1,ymm10,yword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs vfnmadd321ps ymm1,ymm9,yword [esp + 1 * ebp]
-a32 vfnmadd321ps ymm1,ymm9,yword [r11d + r11d * 2 + 0x41bcbedb]
-gs a32 vfnmadd321ps ymm1,ymm9,yword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vfnmadd321ps ymm12,ymm1,ymm0
-a32 gs vfnmadd321ps ymm12,ymm1,ymm10
-gs a32 vfnmadd321ps ymm12,ymm1,ymm12
-a32 vfnmadd321ps ymm12,ymm4,ymm0
-a32 vfnmadd321ps ymm12,ymm4,ymm10
-a32 gs vfnmadd321ps ymm12,ymm4,ymm12
-vfnmadd321ps ymm12,ymm10,ymm0
-gs a32 vfnmadd321ps ymm12,ymm10,ymm10
-vfnmadd321ps ymm12,ymm10,ymm12
-a32 gs vfnmadd321ps ymm9,ymm1,ymm0
-gs vfnmadd321ps ymm9,ymm1,ymm10
-gs vfnmadd321ps ymm9,ymm1,ymm12
-gs vfnmadd321ps ymm9,ymm4,ymm0
-a32 gs vfnmadd321ps ymm9,ymm4,ymm10
-gs a32 vfnmadd321ps ymm9,ymm4,ymm12
-a32 gs vfnmadd321ps ymm9,ymm10,ymm0
-gs a32 vfnmadd321ps ymm9,ymm10,ymm10
-gs a32 vfnmadd321ps ymm9,ymm10,ymm12
-gs a32 vfnmadd321ps ymm10,ymm1,ymm0
-gs vfnmadd321ps ymm10,ymm1,ymm10
-vfnmadd321ps ymm10,ymm1,ymm12
-a32 gs vfnmadd321ps ymm10,ymm4,ymm0
-gs a32 vfnmadd321ps ymm10,ymm4,ymm10
-vfnmadd321ps ymm10,ymm4,ymm12
-gs a32 vfnmadd321ps ymm10,ymm10,ymm0
-gs vfnmadd321ps ymm10,ymm10,ymm10
-gs a32 vfnmadd321ps ymm10,ymm10,ymm12
+gs vfnmadd321ps xmm7,xmm10,oword [r12]
+gs vfnmadd321ps xmm7,xmm10,oword [rbx + 8 * rdx]
+vfnmadd321ps xmm7,xmm10,oword [rsp + 1 * rbp]
+vfnmadd321ps xmm7,xmm11,oword [r12]
+vfnmadd321ps xmm7,xmm11,oword [rbx + 8 * rdx]
+gs vfnmadd321ps xmm7,xmm11,oword [rsp + 1 * rbp]
+gs vfnmadd321ps xmm7,xmm6,oword [r12]
+gs vfnmadd321ps xmm7,xmm6,oword [rbx + 8 * rdx]
+gs vfnmadd321ps xmm7,xmm6,oword [rsp + 1 * rbp]
+gs vfnmadd321ps xmm6,xmm10,oword [r12]
+gs vfnmadd321ps xmm6,xmm10,oword [rbx + 8 * rdx]
+vfnmadd321ps xmm6,xmm10,oword [rsp + 1 * rbp]
+vfnmadd321ps xmm6,xmm11,oword [r12]
+gs vfnmadd321ps xmm6,xmm11,oword [rbx + 8 * rdx]
+vfnmadd321ps xmm6,xmm11,oword [rsp + 1 * rbp]
+gs vfnmadd321ps xmm6,xmm6,oword [r12]
+vfnmadd321ps xmm6,xmm6,oword [rbx + 8 * rdx]
+vfnmadd321ps xmm6,xmm6,oword [rsp + 1 * rbp]
+vfnmadd321ps xmm13,xmm10,oword [r12]
+gs vfnmadd321ps xmm13,xmm10,oword [rbx + 8 * rdx]
+gs vfnmadd321ps xmm13,xmm10,oword [rsp + 1 * rbp]
+vfnmadd321ps xmm13,xmm11,oword [r12]
+gs vfnmadd321ps xmm13,xmm11,oword [rbx + 8 * rdx]
+vfnmadd321ps xmm13,xmm11,oword [rsp + 1 * rbp]
+gs vfnmadd321ps xmm13,xmm6,oword [r12]
+vfnmadd321ps xmm13,xmm6,oword [rbx + 8 * rdx]
+gs vfnmadd321ps xmm13,xmm6,oword [rsp + 1 * rbp]
+a32 vfnmadd321ps xmm0,xmm9,oword [eax]
+a32 vfnmadd321ps xmm0,xmm9,oword [r13d]
+gs vfnmadd321ps xmm0,xmm9,oword [esp + 1 * ebp]
+vfnmadd321ps xmm0,xmm1,oword [eax]
+vfnmadd321ps xmm0,xmm1,oword [r13d]
+gs a32 vfnmadd321ps xmm0,xmm1,oword [esp + 1 * ebp]
+a32 vfnmadd321ps xmm0,xmm11,oword [eax]
+a32 gs vfnmadd321ps xmm0,xmm11,oword [r13d]
+a32 gs vfnmadd321ps xmm0,xmm11,oword [esp + 1 * ebp]
+vfnmadd321ps xmm9,xmm9,oword [eax]
+vfnmadd321ps xmm9,xmm9,oword [r13d]
+a32 vfnmadd321ps xmm9,xmm9,oword [esp + 1 * ebp]
+gs a32 vfnmadd321ps xmm9,xmm1,oword [eax]
+a32 gs vfnmadd321ps xmm9,xmm1,oword [r13d]
+gs vfnmadd321ps xmm9,xmm1,oword [esp + 1 * ebp]
+gs vfnmadd321ps xmm9,xmm11,oword [eax]
+vfnmadd321ps xmm9,xmm11,oword [r13d]
+a32 vfnmadd321ps xmm9,xmm11,oword [esp + 1 * ebp]
+vfnmadd321ps xmm15,xmm9,oword [eax]
+gs vfnmadd321ps xmm15,xmm9,oword [r13d]
+vfnmadd321ps xmm15,xmm9,oword [esp + 1 * ebp]
+a32 gs vfnmadd321ps xmm15,xmm1,oword [eax]
+vfnmadd321ps xmm15,xmm1,oword [r13d]
+a32 vfnmadd321ps xmm15,xmm1,oword [esp + 1 * ebp]
+gs vfnmadd321ps xmm15,xmm11,oword [eax]
+a32 gs vfnmadd321ps xmm15,xmm11,oword [r13d]
+a32 vfnmadd321ps xmm15,xmm11,oword [esp + 1 * ebp]
+a32 vfnmadd321ps xmm15,xmm8,xmm13
+a32 gs vfnmadd321ps xmm15,xmm8,xmm12
+gs a32 vfnmadd321ps xmm15,xmm8,xmm7
+gs a32 vfnmadd321ps xmm15,xmm0,xmm13
+vfnmadd321ps xmm15,xmm0,xmm12
+a32 vfnmadd321ps xmm15,xmm0,xmm7
+vfnmadd321ps xmm15,xmm2,xmm13
+a32 vfnmadd321ps xmm15,xmm2,xmm12
+a32 gs vfnmadd321ps xmm15,xmm2,xmm7
+a32 gs vfnmadd321ps xmm11,xmm8,xmm13
+vfnmadd321ps xmm11,xmm8,xmm12
+a32 vfnmadd321ps xmm11,xmm8,xmm7
+gs vfnmadd321ps xmm11,xmm0,xmm13
+a32 vfnmadd321ps xmm11,xmm0,xmm12
+gs vfnmadd321ps xmm11,xmm0,xmm7
+gs vfnmadd321ps xmm11,xmm2,xmm13
+vfnmadd321ps xmm11,xmm2,xmm12
+gs a32 vfnmadd321ps xmm11,xmm2,xmm7
+a32 gs vfnmadd321ps xmm4,xmm8,xmm13
+vfnmadd321ps xmm4,xmm8,xmm12
+gs a32 vfnmadd321ps xmm4,xmm8,xmm7
+vfnmadd321ps xmm4,xmm0,xmm13
+a32 gs vfnmadd321ps xmm4,xmm0,xmm12
+gs a32 vfnmadd321ps xmm4,xmm0,xmm7
+gs vfnmadd321ps xmm4,xmm2,xmm13
+gs a32 vfnmadd321ps xmm4,xmm2,xmm12
+vfnmadd321ps xmm4,xmm2,xmm7
+vfnmadd321ps ymm8,ymm5,yword [r15 + 2 * rdi + 0x72]
+gs vfnmadd321ps ymm8,ymm5,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+vfnmadd321ps ymm8,ymm5,yword [r13]
+vfnmadd321ps ymm8,ymm14,yword [r15 + 2 * rdi + 0x72]
+vfnmadd321ps ymm8,ymm14,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+vfnmadd321ps ymm8,ymm14,yword [r13]
+gs vfnmadd321ps ymm8,ymm2,yword [r15 + 2 * rdi + 0x72]
+gs vfnmadd321ps ymm8,ymm2,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+vfnmadd321ps ymm8,ymm2,yword [r13]
+vfnmadd321ps ymm14,ymm5,yword [r15 + 2 * rdi + 0x72]
+gs vfnmadd321ps ymm14,ymm5,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfnmadd321ps ymm14,ymm5,yword [r13]
+vfnmadd321ps ymm14,ymm14,yword [r15 + 2 * rdi + 0x72]
+vfnmadd321ps ymm14,ymm14,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfnmadd321ps ymm14,ymm14,yword [r13]
+gs vfnmadd321ps ymm14,ymm2,yword [r15 + 2 * rdi + 0x72]
+vfnmadd321ps ymm14,ymm2,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfnmadd321ps ymm14,ymm2,yword [r13]
+vfnmadd321ps ymm3,ymm5,yword [r15 + 2 * rdi + 0x72]
+vfnmadd321ps ymm3,ymm5,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfnmadd321ps ymm3,ymm5,yword [r13]
+gs vfnmadd321ps ymm3,ymm14,yword [r15 + 2 * rdi + 0x72]
+gs vfnmadd321ps ymm3,ymm14,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfnmadd321ps ymm3,ymm14,yword [r13]
+gs vfnmadd321ps ymm3,ymm2,yword [r15 + 2 * rdi + 0x72]
+vfnmadd321ps ymm3,ymm2,yword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vfnmadd321ps ymm3,ymm2,yword [r13]
+a32 gs vfnmadd321ps ymm2,ymm6,yword [r15d + 2 * edi + 0x72]
+gs a32 vfnmadd321ps ymm2,ymm6,yword [esp]
+gs a32 vfnmadd321ps ymm2,ymm6,yword [esp + 1 * ebp]
+a32 vfnmadd321ps ymm2,ymm4,yword [r15d + 2 * edi + 0x72]
+a32 gs vfnmadd321ps ymm2,ymm4,yword [esp]
+gs vfnmadd321ps ymm2,ymm4,yword [esp + 1 * ebp]
+gs vfnmadd321ps ymm2,ymm7,yword [r15d + 2 * edi + 0x72]
+gs vfnmadd321ps ymm2,ymm7,yword [esp]
+a32 gs vfnmadd321ps ymm2,ymm7,yword [esp + 1 * ebp]
+vfnmadd321ps ymm8,ymm6,yword [r15d + 2 * edi + 0x72]
+gs vfnmadd321ps ymm8,ymm6,yword [esp]
+a32 vfnmadd321ps ymm8,ymm6,yword [esp + 1 * ebp]
+a32 vfnmadd321ps ymm8,ymm4,yword [r15d + 2 * edi + 0x72]
+a32 vfnmadd321ps ymm8,ymm4,yword [esp]
+a32 vfnmadd321ps ymm8,ymm4,yword [esp + 1 * ebp]
+vfnmadd321ps ymm8,ymm7,yword [r15d + 2 * edi + 0x72]
+gs a32 vfnmadd321ps ymm8,ymm7,yword [esp]
+vfnmadd321ps ymm8,ymm7,yword [esp + 1 * ebp]
+vfnmadd321ps ymm13,ymm6,yword [r15d + 2 * edi + 0x72]
+vfnmadd321ps ymm13,ymm6,yword [esp]
+gs a32 vfnmadd321ps ymm13,ymm6,yword [esp + 1 * ebp]
+gs vfnmadd321ps ymm13,ymm4,yword [r15d + 2 * edi + 0x72]
+vfnmadd321ps ymm13,ymm4,yword [esp]
+a32 gs vfnmadd321ps ymm13,ymm4,yword [esp + 1 * ebp]
+gs a32 vfnmadd321ps ymm13,ymm7,yword [r15d + 2 * edi + 0x72]
+vfnmadd321ps ymm13,ymm7,yword [esp]
+gs a32 vfnmadd321ps ymm13,ymm7,yword [esp + 1 * ebp]
+gs a32 vfnmadd321ps ymm0,ymm15,ymm13
+a32 vfnmadd321ps ymm0,ymm15,ymm7
+a32 vfnmadd321ps ymm0,ymm15,ymm4
+gs a32 vfnmadd321ps ymm0,ymm1,ymm13
+vfnmadd321ps ymm0,ymm1,ymm7
+vfnmadd321ps ymm0,ymm1,ymm4
+gs a32 vfnmadd321ps ymm0,ymm3,ymm13
+vfnmadd321ps ymm0,ymm3,ymm7
+a32 gs vfnmadd321ps ymm0,ymm3,ymm4
+gs vfnmadd321ps ymm15,ymm15,ymm13
+vfnmadd321ps ymm15,ymm15,ymm7
+a32 vfnmadd321ps ymm15,ymm15,ymm4
+gs a32 vfnmadd321ps ymm15,ymm1,ymm13
+gs a32 vfnmadd321ps ymm15,ymm1,ymm7
+a32 vfnmadd321ps ymm15,ymm1,ymm4
+a32 vfnmadd321ps ymm15,ymm3,ymm13
+a32 gs vfnmadd321ps ymm15,ymm3,ymm7
+vfnmadd321ps ymm15,ymm3,ymm4
+a32 gs vfnmadd321ps ymm11,ymm15,ymm13
+a32 vfnmadd321ps ymm11,ymm15,ymm7
+vfnmadd321ps ymm11,ymm15,ymm4
+gs a32 vfnmadd321ps ymm11,ymm1,ymm13
+vfnmadd321ps ymm11,ymm1,ymm7
+gs vfnmadd321ps ymm11,ymm1,ymm4
+gs vfnmadd321ps ymm11,ymm3,ymm13
+gs a32 vfnmadd321ps ymm11,ymm3,ymm7
+gs vfnmadd321ps ymm11,ymm3,ymm4

@@ -1,2 +1,2 @@
-gs popf 
-a32 popf 
+o16 popf 
+o16 gs popf 

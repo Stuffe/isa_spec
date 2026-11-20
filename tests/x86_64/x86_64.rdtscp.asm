@@ -1,2 +1,2 @@
-a32 o16 gs rdtscp 
-gs rdtscp 
+gs a32 rdtscp 
+a32 gs rdtscp 

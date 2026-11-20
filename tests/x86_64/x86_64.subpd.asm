@@ -1,54 +1,54 @@
-gs subpd xmm10,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs  subpd xmm10,oword [rax]
-gs  subpd xmm10,oword [r11 + r11 * 2 + 0x29d8afe8]
-subpd xmm3,oword [r14 + 1 * rdx + 0x7FFFFFFF]
- gs subpd xmm3,oword [rax]
-subpd xmm3,oword [r11 + r11 * 2 + 0x29d8afe8]
-subpd xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-subpd xmm15,oword [rax]
-gs subpd xmm15,oword [r11 + r11 * 2 + 0x29d8afe8]
-subpd xmm0,oword [ebx + 8 * edx]
-subpd xmm0,oword [r14d + 1 * edx + 0x7FFFFFFF]
- gs a32 subpd xmm0,oword [edx - 0x80000000]
-subpd xmm2,oword [ebx + 8 * edx]
-subpd xmm2,oword [r14d + 1 * edx + 0x7FFFFFFF]
-a32  gs subpd xmm2,oword [edx - 0x80000000]
-subpd xmm13,oword [ebx + 8 * edx]
-a32  subpd xmm13,oword [r14d + 1 * edx + 0x7FFFFFFF]
-gs subpd xmm13,oword [edx - 0x80000000]
-gs  subpd xmm0,oword [rbp]
-gs subpd xmm0,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs subpd xmm0,oword [rsp]
-gs subpd xmm13,oword [rbp]
- gs subpd xmm13,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs  subpd xmm13,oword [rsp]
-gs subpd xmm6,oword [rbp]
- gs subpd xmm6,oword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs  subpd xmm6,oword [rsp]
-gs  a32 subpd xmm11,oword [esp + 1 * ebp]
-gs a32  subpd xmm11,oword [r13d]
-gs a32  subpd xmm11,oword [edx - 0x80000000]
-gs subpd xmm3,oword [esp + 1 * ebp]
-gs  subpd xmm3,oword [r13d]
-a32  subpd xmm3,oword [edx - 0x80000000]
-subpd xmm0,oword [esp + 1 * ebp]
- a32 gs subpd xmm0,oword [r13d]
-a32  gs subpd xmm0,oword [edx - 0x80000000]
-a32  subpd xmm1,xmm2
-gs a32  subpd xmm1,xmm0
- gs subpd xmm1,xmm3
-a32  subpd xmm9,xmm2
- a32 gs subpd xmm9,xmm0
-a32 subpd xmm9,xmm3
- a32 gs subpd xmm15,xmm2
-subpd xmm15,xmm0
-gs a32 subpd xmm15,xmm3
- gs a32 subpd xmm2,xmm9
-a32 subpd xmm2,xmm15
-subpd xmm2,xmm0
-gs subpd xmm10,xmm9
-a32  subpd xmm10,xmm15
-a32  subpd xmm10,xmm0
-subpd xmm1,xmm9
-gs  subpd xmm1,xmm15
-gs subpd xmm1,xmm0
+ gs subpd xmm3,oword [rbp]
+ gs subpd xmm3,oword [r15 + 2 * rdi + 0x72]
+gs  subpd xmm3,oword [rsp + 1 * rbp]
+gs  subpd xmm14,oword [rbp]
+gs subpd xmm14,oword [r15 + 2 * rdi + 0x72]
+gs  subpd xmm14,oword [rsp + 1 * rbp]
+subpd xmm7,oword [rbp]
+ gs subpd xmm7,oword [r15 + 2 * rdi + 0x72]
+subpd xmm7,oword [rsp + 1 * rbp]
+subpd xmm15,oword [r13d]
+a32  subpd xmm15,oword [ebp]
+gs  a32 subpd xmm15,oword [eax]
+a32 subpd xmm8,oword [r13d]
+a32 subpd xmm8,oword [ebp]
+gs  subpd xmm8,oword [eax]
+a32 subpd xmm10,oword [r13d]
+ gs a32 subpd xmm10,oword [ebp]
+ gs subpd xmm10,oword [eax]
+subpd xmm7,oword [r12]
+ gs subpd xmm7,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs  subpd xmm7,oword [r13]
+gs subpd xmm9,oword [r12]
+subpd xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs subpd xmm9,oword [r13]
+gs  subpd xmm2,oword [r12]
+subpd xmm2,oword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs subpd xmm2,oword [r13]
+ gs a32 subpd xmm11,oword [edx - 0x80000000]
+ gs subpd xmm11,oword [esp]
+a32 gs  subpd xmm11,oword [eax]
+ a32 subpd xmm4,oword [edx - 0x80000000]
+a32  subpd xmm4,oword [esp]
+a32  gs subpd xmm4,oword [eax]
+ gs a32 subpd xmm7,oword [edx - 0x80000000]
+gs subpd xmm7,oword [esp]
+ a32 gs subpd xmm7,oword [eax]
+gs a32  subpd xmm2,xmm10
+ a32 subpd xmm2,xmm1
+gs a32  subpd xmm2,xmm15
+gs a32 subpd xmm9,xmm10
+a32  gs subpd xmm9,xmm1
+ a32 gs subpd xmm9,xmm15
+a32 subpd xmm11,xmm10
+a32  gs subpd xmm11,xmm1
+ a32 subpd xmm11,xmm15
+a32 gs  subpd xmm9,xmm14
+ gs a32 subpd xmm9,xmm9
+subpd xmm9,xmm6
+gs subpd xmm15,xmm14
+ gs subpd xmm15,xmm9
+gs  subpd xmm15,xmm6
+subpd xmm0,xmm14
+a32 gs subpd xmm0,xmm9
+a32  subpd xmm0,xmm6

@@ -1,162 +1,162 @@
-vcmpnle_ussd xmm6,xmm7,qword [r12]
-gs vcmpnle_ussd xmm6,xmm7,qword [r13]
-vcmpnle_ussd xmm6,xmm7,qword [r11 + r11 * 2 + 0x3e579106]
-vcmpnle_ussd xmm6,xmm2,qword [r12]
-gs vcmpnle_ussd xmm6,xmm2,qword [r13]
-vcmpnle_ussd xmm6,xmm2,qword [r11 + r11 * 2 + 0x3e579106]
-vcmpnle_ussd xmm6,xmm0,qword [r12]
-vcmpnle_ussd xmm6,xmm0,qword [r13]
-gs vcmpnle_ussd xmm6,xmm0,qword [r11 + r11 * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm0,xmm7,qword [r12]
-gs vcmpnle_ussd xmm0,xmm7,qword [r13]
-vcmpnle_ussd xmm0,xmm7,qword [r11 + r11 * 2 + 0x3e579106]
-vcmpnle_ussd xmm0,xmm2,qword [r12]
-vcmpnle_ussd xmm0,xmm2,qword [r13]
-gs vcmpnle_ussd xmm0,xmm2,qword [r11 + r11 * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm0,xmm0,qword [r12]
-vcmpnle_ussd xmm0,xmm0,qword [r13]
-vcmpnle_ussd xmm0,xmm0,qword [r11 + r11 * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm5,xmm7,qword [r12]
-vcmpnle_ussd xmm5,xmm7,qword [r13]
-vcmpnle_ussd xmm5,xmm7,qword [r11 + r11 * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm5,xmm2,qword [r12]
-gs vcmpnle_ussd xmm5,xmm2,qword [r13]
-gs vcmpnle_ussd xmm5,xmm2,qword [r11 + r11 * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm5,xmm0,qword [r12]
-vcmpnle_ussd xmm5,xmm0,qword [r13]
-gs vcmpnle_ussd xmm5,xmm0,qword [r11 + r11 * 2 + 0x3e579106]
-a32 gs vcmpnle_ussd xmm9,xmm5,qword [esp]
-gs vcmpnle_ussd xmm9,xmm5,qword [edx - 0x80000000]
-gs vcmpnle_ussd xmm9,xmm5,qword [r11d + r11d * 2 + 0x3e579106]
-vcmpnle_ussd xmm9,xmm8,qword [esp]
-a32 gs vcmpnle_ussd xmm9,xmm8,qword [edx - 0x80000000]
-gs a32 vcmpnle_ussd xmm9,xmm8,qword [r11d + r11d * 2 + 0x3e579106]
-vcmpnle_ussd xmm9,xmm4,qword [esp]
-a32 gs vcmpnle_ussd xmm9,xmm4,qword [edx - 0x80000000]
-a32 gs vcmpnle_ussd xmm9,xmm4,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm14,xmm5,qword [esp]
-gs vcmpnle_ussd xmm14,xmm5,qword [edx - 0x80000000]
-a32 gs vcmpnle_ussd xmm14,xmm5,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm14,xmm8,qword [esp]
-gs vcmpnle_ussd xmm14,xmm8,qword [edx - 0x80000000]
-a32 vcmpnle_ussd xmm14,xmm8,qword [r11d + r11d * 2 + 0x3e579106]
-vcmpnle_ussd xmm14,xmm4,qword [esp]
-a32 vcmpnle_ussd xmm14,xmm4,qword [edx - 0x80000000]
-a32 vcmpnle_ussd xmm14,xmm4,qword [r11d + r11d * 2 + 0x3e579106]
-a32 gs vcmpnle_ussd xmm13,xmm5,qword [esp]
-gs a32 vcmpnle_ussd xmm13,xmm5,qword [edx - 0x80000000]
-a32 gs vcmpnle_ussd xmm13,xmm5,qword [r11d + r11d * 2 + 0x3e579106]
-gs a32 vcmpnle_ussd xmm13,xmm8,qword [esp]
-gs a32 vcmpnle_ussd xmm13,xmm8,qword [edx - 0x80000000]
-vcmpnle_ussd xmm13,xmm8,qword [r11d + r11d * 2 + 0x3e579106]
-gs a32 vcmpnle_ussd xmm13,xmm4,qword [esp]
-a32 vcmpnle_ussd xmm13,xmm4,qword [edx - 0x80000000]
-a32 vcmpnle_ussd xmm13,xmm4,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm10,xmm5,qword [rbx + 8 * rdx]
-vcmpnle_ussd xmm10,xmm5,qword [rbp]
-gs vcmpnle_ussd xmm10,xmm5,qword [rsp]
-vcmpnle_ussd xmm10,xmm8,qword [rbx + 8 * rdx]
-gs vcmpnle_ussd xmm10,xmm8,qword [rbp]
-vcmpnle_ussd xmm10,xmm8,qword [rsp]
-gs vcmpnle_ussd xmm10,xmm15,qword [rbx + 8 * rdx]
-vcmpnle_ussd xmm10,xmm15,qword [rbp]
-gs vcmpnle_ussd xmm10,xmm15,qword [rsp]
-gs vcmpnle_ussd xmm5,xmm5,qword [rbx + 8 * rdx]
-gs vcmpnle_ussd xmm5,xmm5,qword [rbp]
-gs vcmpnle_ussd xmm5,xmm5,qword [rsp]
-gs vcmpnle_ussd xmm5,xmm8,qword [rbx + 8 * rdx]
-vcmpnle_ussd xmm5,xmm8,qword [rbp]
-vcmpnle_ussd xmm5,xmm8,qword [rsp]
-gs vcmpnle_ussd xmm5,xmm15,qword [rbx + 8 * rdx]
-vcmpnle_ussd xmm5,xmm15,qword [rbp]
-gs vcmpnle_ussd xmm5,xmm15,qword [rsp]
-vcmpnle_ussd xmm3,xmm5,qword [rbx + 8 * rdx]
-gs vcmpnle_ussd xmm3,xmm5,qword [rbp]
-gs vcmpnle_ussd xmm3,xmm5,qword [rsp]
-gs vcmpnle_ussd xmm3,xmm8,qword [rbx + 8 * rdx]
-vcmpnle_ussd xmm3,xmm8,qword [rbp]
-gs vcmpnle_ussd xmm3,xmm8,qword [rsp]
-gs vcmpnle_ussd xmm3,xmm15,qword [rbx + 8 * rdx]
-vcmpnle_ussd xmm3,xmm15,qword [rbp]
-vcmpnle_ussd xmm3,xmm15,qword [rsp]
-vcmpnle_ussd xmm2,xmm5,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm2,xmm5,qword [r13d]
-a32 gs vcmpnle_ussd xmm2,xmm5,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vcmpnle_ussd xmm2,xmm8,qword [r11d + r11d * 2 + 0x3e579106]
-gs a32 vcmpnle_ussd xmm2,xmm8,qword [r13d]
-vcmpnle_ussd xmm2,xmm8,qword [r14d + 1 * edx + 0x7FFFFFFF]
-vcmpnle_ussd xmm2,xmm0,qword [r11d + r11d * 2 + 0x3e579106]
-gs a32 vcmpnle_ussd xmm2,xmm0,qword [r13d]
-a32 gs vcmpnle_ussd xmm2,xmm0,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vcmpnle_ussd xmm0,xmm5,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm0,xmm5,qword [r13d]
-a32 vcmpnle_ussd xmm0,xmm5,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs vcmpnle_ussd xmm0,xmm8,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm0,xmm8,qword [r13d]
-a32 vcmpnle_ussd xmm0,xmm8,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs vcmpnle_ussd xmm0,xmm0,qword [r11d + r11d * 2 + 0x3e579106]
-a32 gs vcmpnle_ussd xmm0,xmm0,qword [r13d]
-gs a32 vcmpnle_ussd xmm0,xmm0,qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs vcmpnle_ussd xmm11,xmm5,qword [r11d + r11d * 2 + 0x3e579106]
-gs a32 vcmpnle_ussd xmm11,xmm5,qword [r13d]
-vcmpnle_ussd xmm11,xmm5,qword [r14d + 1 * edx + 0x7FFFFFFF]
-vcmpnle_ussd xmm11,xmm8,qword [r11d + r11d * 2 + 0x3e579106]
-gs vcmpnle_ussd xmm11,xmm8,qword [r13d]
-vcmpnle_ussd xmm11,xmm8,qword [r14d + 1 * edx + 0x7FFFFFFF]
-vcmpnle_ussd xmm11,xmm0,qword [r11d + r11d * 2 + 0x3e579106]
-gs a32 vcmpnle_ussd xmm11,xmm0,qword [r13d]
-gs a32 vcmpnle_ussd xmm11,xmm0,qword [r14d + 1 * edx + 0x7FFFFFFF]
-vcmpnle_ussd xmm0,xmm1,xmm13
-a32 gs vcmpnle_ussd xmm0,xmm1,xmm11
-gs a32 vcmpnle_ussd xmm0,xmm1,xmm5
-gs vcmpnle_ussd xmm0,xmm12,xmm13
-gs a32 vcmpnle_ussd xmm0,xmm12,xmm11
-gs a32 vcmpnle_ussd xmm0,xmm12,xmm5
-gs vcmpnle_ussd xmm0,xmm2,xmm13
-gs vcmpnle_ussd xmm0,xmm2,xmm11
-a32 vcmpnle_ussd xmm0,xmm2,xmm5
-a32 vcmpnle_ussd xmm14,xmm1,xmm13
-a32 vcmpnle_ussd xmm14,xmm1,xmm11
-a32 vcmpnle_ussd xmm14,xmm1,xmm5
-a32 vcmpnle_ussd xmm14,xmm12,xmm13
-a32 gs vcmpnle_ussd xmm14,xmm12,xmm11
-vcmpnle_ussd xmm14,xmm12,xmm5
-gs a32 vcmpnle_ussd xmm14,xmm2,xmm13
-gs a32 vcmpnle_ussd xmm14,xmm2,xmm11
-vcmpnle_ussd xmm14,xmm2,xmm5
-vcmpnle_ussd xmm3,xmm1,xmm13
-a32 vcmpnle_ussd xmm3,xmm1,xmm11
-a32 gs vcmpnle_ussd xmm3,xmm1,xmm5
-a32 vcmpnle_ussd xmm3,xmm12,xmm13
-gs a32 vcmpnle_ussd xmm3,xmm12,xmm11
-gs a32 vcmpnle_ussd xmm3,xmm12,xmm5
-gs vcmpnle_ussd xmm3,xmm2,xmm13
-a32 vcmpnle_ussd xmm3,xmm2,xmm11
-vcmpnle_ussd xmm3,xmm2,xmm5
-a32 gs vcmpnle_ussd xmm3,xmm15,xmm11
-a32 vcmpnle_ussd xmm3,xmm15,xmm0
-a32 vcmpnle_ussd xmm3,xmm15,xmm5
-a32 vcmpnle_ussd xmm3,xmm6,xmm11
-gs vcmpnle_ussd xmm3,xmm6,xmm0
-gs a32 vcmpnle_ussd xmm3,xmm6,xmm5
-gs vcmpnle_ussd xmm3,xmm11,xmm11
-gs vcmpnle_ussd xmm3,xmm11,xmm0
-a32 vcmpnle_ussd xmm3,xmm11,xmm5
-a32 gs vcmpnle_ussd xmm10,xmm15,xmm11
-a32 vcmpnle_ussd xmm10,xmm15,xmm0
-a32 vcmpnle_ussd xmm10,xmm15,xmm5
-a32 vcmpnle_ussd xmm10,xmm6,xmm11
-gs vcmpnle_ussd xmm10,xmm6,xmm0
-gs a32 vcmpnle_ussd xmm10,xmm6,xmm5
-gs a32 vcmpnle_ussd xmm10,xmm11,xmm11
-a32 gs vcmpnle_ussd xmm10,xmm11,xmm0
-a32 vcmpnle_ussd xmm10,xmm11,xmm5
-a32 gs vcmpnle_ussd xmm14,xmm15,xmm11
-a32 vcmpnle_ussd xmm14,xmm15,xmm0
-a32 vcmpnle_ussd xmm14,xmm15,xmm5
-gs vcmpnle_ussd xmm14,xmm6,xmm11
-gs vcmpnle_ussd xmm14,xmm6,xmm0
-gs vcmpnle_ussd xmm14,xmm6,xmm5
-gs a32 vcmpnle_ussd xmm14,xmm11,xmm11
-gs vcmpnle_ussd xmm14,xmm11,xmm0
-gs a32 vcmpnle_ussd xmm14,xmm11,xmm5
+gs vcmpnle_ussd xmm8,xmm13,qword [rsp + 1 * rbp]
+gs vcmpnle_ussd xmm8,xmm13,qword [rbx + 8 * rdx]
+gs vcmpnle_ussd xmm8,xmm13,qword [rax]
+gs vcmpnle_ussd xmm8,xmm6,qword [rsp + 1 * rbp]
+gs vcmpnle_ussd xmm8,xmm6,qword [rbx + 8 * rdx]
+vcmpnle_ussd xmm8,xmm6,qword [rax]
+gs vcmpnle_ussd xmm8,xmm14,qword [rsp + 1 * rbp]
+vcmpnle_ussd xmm8,xmm14,qword [rbx + 8 * rdx]
+gs vcmpnle_ussd xmm8,xmm14,qword [rax]
+gs vcmpnle_ussd xmm15,xmm13,qword [rsp + 1 * rbp]
+gs vcmpnle_ussd xmm15,xmm13,qword [rbx + 8 * rdx]
+gs vcmpnle_ussd xmm15,xmm13,qword [rax]
+vcmpnle_ussd xmm15,xmm6,qword [rsp + 1 * rbp]
+gs vcmpnle_ussd xmm15,xmm6,qword [rbx + 8 * rdx]
+gs vcmpnle_ussd xmm15,xmm6,qword [rax]
+vcmpnle_ussd xmm15,xmm14,qword [rsp + 1 * rbp]
+vcmpnle_ussd xmm15,xmm14,qword [rbx + 8 * rdx]
+vcmpnle_ussd xmm15,xmm14,qword [rax]
+gs vcmpnle_ussd xmm5,xmm13,qword [rsp + 1 * rbp]
+vcmpnle_ussd xmm5,xmm13,qword [rbx + 8 * rdx]
+vcmpnle_ussd xmm5,xmm13,qword [rax]
+gs vcmpnle_ussd xmm5,xmm6,qword [rsp + 1 * rbp]
+gs vcmpnle_ussd xmm5,xmm6,qword [rbx + 8 * rdx]
+vcmpnle_ussd xmm5,xmm6,qword [rax]
+vcmpnle_ussd xmm5,xmm14,qword [rsp + 1 * rbp]
+vcmpnle_ussd xmm5,xmm14,qword [rbx + 8 * rdx]
+gs vcmpnle_ussd xmm5,xmm14,qword [rax]
+a32 gs vcmpnle_ussd xmm7,xmm6,qword [esp + 1 * ebp]
+a32 gs vcmpnle_ussd xmm7,xmm6,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm7,xmm6,qword [r11d + r11d * 2 + 0x21f59f42]
+vcmpnle_ussd xmm7,xmm15,qword [esp + 1 * ebp]
+gs a32 vcmpnle_ussd xmm7,xmm15,qword [ebx + 8 * edx]
+gs a32 vcmpnle_ussd xmm7,xmm15,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm7,xmm1,qword [esp + 1 * ebp]
+vcmpnle_ussd xmm7,xmm1,qword [ebx + 8 * edx]
+vcmpnle_ussd xmm7,xmm1,qword [r11d + r11d * 2 + 0x21f59f42]
+vcmpnle_ussd xmm1,xmm6,qword [esp + 1 * ebp]
+vcmpnle_ussd xmm1,xmm6,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm1,xmm6,qword [r11d + r11d * 2 + 0x21f59f42]
+vcmpnle_ussd xmm1,xmm15,qword [esp + 1 * ebp]
+gs a32 vcmpnle_ussd xmm1,xmm15,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm1,xmm15,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm1,xmm1,qword [esp + 1 * ebp]
+vcmpnle_ussd xmm1,xmm1,qword [ebx + 8 * edx]
+gs a32 vcmpnle_ussd xmm1,xmm1,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm10,xmm6,qword [esp + 1 * ebp]
+gs vcmpnle_ussd xmm10,xmm6,qword [ebx + 8 * edx]
+vcmpnle_ussd xmm10,xmm6,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm10,xmm15,qword [esp + 1 * ebp]
+a32 vcmpnle_ussd xmm10,xmm15,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm10,xmm15,qword [r11d + r11d * 2 + 0x21f59f42]
+vcmpnle_ussd xmm10,xmm1,qword [esp + 1 * ebp]
+vcmpnle_ussd xmm10,xmm1,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm10,xmm1,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm14,xmm3,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnle_ussd xmm14,xmm3,qword [r11 + r11 * 2 + 0x21f59f42]
+vcmpnle_ussd xmm14,xmm3,qword [rbp]
+vcmpnle_ussd xmm14,xmm7,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnle_ussd xmm14,xmm7,qword [r11 + r11 * 2 + 0x21f59f42]
+vcmpnle_ussd xmm14,xmm7,qword [rbp]
+gs vcmpnle_ussd xmm14,xmm8,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnle_ussd xmm14,xmm8,qword [r11 + r11 * 2 + 0x21f59f42]
+vcmpnle_ussd xmm14,xmm8,qword [rbp]
+vcmpnle_ussd xmm5,xmm3,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnle_ussd xmm5,xmm3,qword [r11 + r11 * 2 + 0x21f59f42]
+vcmpnle_ussd xmm5,xmm3,qword [rbp]
+gs vcmpnle_ussd xmm5,xmm7,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnle_ussd xmm5,xmm7,qword [r11 + r11 * 2 + 0x21f59f42]
+vcmpnle_ussd xmm5,xmm7,qword [rbp]
+gs vcmpnle_ussd xmm5,xmm8,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+vcmpnle_ussd xmm5,xmm8,qword [r11 + r11 * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm5,xmm8,qword [rbp]
+vcmpnle_ussd xmm13,xmm3,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnle_ussd xmm13,xmm3,qword [r11 + r11 * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm13,xmm3,qword [rbp]
+gs vcmpnle_ussd xmm13,xmm7,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnle_ussd xmm13,xmm7,qword [r11 + r11 * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm13,xmm7,qword [rbp]
+gs vcmpnle_ussd xmm13,xmm8,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs vcmpnle_ussd xmm13,xmm8,qword [r11 + r11 * 2 + 0x21f59f42]
+vcmpnle_ussd xmm13,xmm8,qword [rbp]
+a32 vcmpnle_ussd xmm7,xmm4,qword [ebx + 8 * edx]
+a32 gs vcmpnle_ussd xmm7,xmm4,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm7,xmm4,qword [r15d + 2 * edi + 0x72]
+gs a32 vcmpnle_ussd xmm7,xmm7,qword [ebx + 8 * edx]
+a32 gs vcmpnle_ussd xmm7,xmm7,qword [r11d + r11d * 2 + 0x21f59f42]
+gs a32 vcmpnle_ussd xmm7,xmm7,qword [r15d + 2 * edi + 0x72]
+gs a32 vcmpnle_ussd xmm7,xmm15,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm7,xmm15,qword [r11d + r11d * 2 + 0x21f59f42]
+a32 vcmpnle_ussd xmm7,xmm15,qword [r15d + 2 * edi + 0x72]
+a32 vcmpnle_ussd xmm15,xmm4,qword [ebx + 8 * edx]
+gs vcmpnle_ussd xmm15,xmm4,qword [r11d + r11d * 2 + 0x21f59f42]
+a32 vcmpnle_ussd xmm15,xmm4,qword [r15d + 2 * edi + 0x72]
+vcmpnle_ussd xmm15,xmm7,qword [ebx + 8 * edx]
+a32 vcmpnle_ussd xmm15,xmm7,qword [r11d + r11d * 2 + 0x21f59f42]
+gs a32 vcmpnle_ussd xmm15,xmm7,qword [r15d + 2 * edi + 0x72]
+vcmpnle_ussd xmm15,xmm15,qword [ebx + 8 * edx]
+vcmpnle_ussd xmm15,xmm15,qword [r11d + r11d * 2 + 0x21f59f42]
+a32 gs vcmpnle_ussd xmm15,xmm15,qword [r15d + 2 * edi + 0x72]
+a32 gs vcmpnle_ussd xmm2,xmm4,qword [ebx + 8 * edx]
+vcmpnle_ussd xmm2,xmm4,qword [r11d + r11d * 2 + 0x21f59f42]
+gs a32 vcmpnle_ussd xmm2,xmm4,qword [r15d + 2 * edi + 0x72]
+a32 gs vcmpnle_ussd xmm2,xmm7,qword [ebx + 8 * edx]
+a32 vcmpnle_ussd xmm2,xmm7,qword [r11d + r11d * 2 + 0x21f59f42]
+gs vcmpnle_ussd xmm2,xmm7,qword [r15d + 2 * edi + 0x72]
+vcmpnle_ussd xmm2,xmm15,qword [ebx + 8 * edx]
+a32 gs vcmpnle_ussd xmm2,xmm15,qword [r11d + r11d * 2 + 0x21f59f42]
+gs a32 vcmpnle_ussd xmm2,xmm15,qword [r15d + 2 * edi + 0x72]
+vcmpnle_ussd xmm3,xmm14,xmm7
+vcmpnle_ussd xmm3,xmm14,xmm8
+a32 vcmpnle_ussd xmm3,xmm14,xmm6
+a32 gs vcmpnle_ussd xmm3,xmm9,xmm7
+a32 vcmpnle_ussd xmm3,xmm9,xmm8
+gs a32 vcmpnle_ussd xmm3,xmm9,xmm6
+gs a32 vcmpnle_ussd xmm3,xmm10,xmm7
+gs vcmpnle_ussd xmm3,xmm10,xmm8
+gs vcmpnle_ussd xmm3,xmm10,xmm6
+gs a32 vcmpnle_ussd xmm2,xmm14,xmm7
+gs vcmpnle_ussd xmm2,xmm14,xmm8
+a32 vcmpnle_ussd xmm2,xmm14,xmm6
+gs a32 vcmpnle_ussd xmm2,xmm9,xmm7
+a32 vcmpnle_ussd xmm2,xmm9,xmm8
+gs a32 vcmpnle_ussd xmm2,xmm9,xmm6
+gs vcmpnle_ussd xmm2,xmm10,xmm7
+gs a32 vcmpnle_ussd xmm2,xmm10,xmm8
+gs a32 vcmpnle_ussd xmm2,xmm10,xmm6
+vcmpnle_ussd xmm1,xmm14,xmm7
+vcmpnle_ussd xmm1,xmm14,xmm8
+gs a32 vcmpnle_ussd xmm1,xmm14,xmm6
+gs a32 vcmpnle_ussd xmm1,xmm9,xmm7
+gs vcmpnle_ussd xmm1,xmm9,xmm8
+vcmpnle_ussd xmm1,xmm9,xmm6
+gs a32 vcmpnle_ussd xmm1,xmm10,xmm7
+vcmpnle_ussd xmm1,xmm10,xmm8
+gs a32 vcmpnle_ussd xmm1,xmm10,xmm6
+a32 gs vcmpnle_ussd xmm4,xmm4,xmm10
+gs a32 vcmpnle_ussd xmm4,xmm4,xmm7
+a32 vcmpnle_ussd xmm4,xmm4,xmm1
+gs vcmpnle_ussd xmm4,xmm1,xmm10
+a32 vcmpnle_ussd xmm4,xmm1,xmm7
+vcmpnle_ussd xmm4,xmm1,xmm1
+gs a32 vcmpnle_ussd xmm4,xmm9,xmm10
+vcmpnle_ussd xmm4,xmm9,xmm7
+a32 gs vcmpnle_ussd xmm4,xmm9,xmm1
+gs vcmpnle_ussd xmm13,xmm4,xmm10
+a32 gs vcmpnle_ussd xmm13,xmm4,xmm7
+gs a32 vcmpnle_ussd xmm13,xmm4,xmm1
+gs a32 vcmpnle_ussd xmm13,xmm1,xmm10
+gs vcmpnle_ussd xmm13,xmm1,xmm7
+gs vcmpnle_ussd xmm13,xmm1,xmm1
+vcmpnle_ussd xmm13,xmm9,xmm10
+a32 vcmpnle_ussd xmm13,xmm9,xmm7
+a32 gs vcmpnle_ussd xmm13,xmm9,xmm1
+gs a32 vcmpnle_ussd xmm8,xmm4,xmm10
+gs a32 vcmpnle_ussd xmm8,xmm4,xmm7
+a32 vcmpnle_ussd xmm8,xmm4,xmm1
+a32 gs vcmpnle_ussd xmm8,xmm1,xmm10
+a32 gs vcmpnle_ussd xmm8,xmm1,xmm7
+gs a32 vcmpnle_ussd xmm8,xmm1,xmm1
+gs vcmpnle_ussd xmm8,xmm9,xmm10
+a32 vcmpnle_ussd xmm8,xmm9,xmm7
+a32 gs vcmpnle_ussd xmm8,xmm9,xmm1

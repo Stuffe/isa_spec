@@ -1,3 +1,3 @@
-gs rdrand r10
-o16 a32 rdrand r15
-o16 gs a32 rdrand r11
+rdrand rbp
+o16 rdrand r10
+o16 gs rdrand rsi

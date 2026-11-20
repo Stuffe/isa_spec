@@ -1,27 +1,27 @@
-vfrczsd xmm7,qword [rdx - 0x80000000]
-gs vfrczsd xmm7,qword [r15 + 2 * rdi + 0x72]
-gs vfrczsd xmm7,qword [rsp + 1 * rbp]
-vfrczsd xmm12,qword [rdx - 0x80000000]
-vfrczsd xmm12,qword [r15 + 2 * rdi + 0x72]
 gs vfrczsd xmm12,qword [rsp + 1 * rbp]
-gs vfrczsd xmm0,qword [rdx - 0x80000000]
-vfrczsd xmm0,qword [r15 + 2 * rdi + 0x72]
-gs vfrczsd xmm0,qword [rsp + 1 * rbp]
-a32 vfrczsd xmm11,qword [eax]
-a32 gs vfrczsd xmm11,qword [edx - 0x80000000]
-vfrczsd xmm11,qword [esp + 1 * ebp]
-vfrczsd xmm15,qword [eax]
-gs vfrczsd xmm15,qword [edx - 0x80000000]
-gs vfrczsd xmm15,qword [esp + 1 * ebp]
-gs vfrczsd xmm1,qword [eax]
-vfrczsd xmm1,qword [edx - 0x80000000]
-a32 vfrczsd xmm1,qword [esp + 1 * ebp]
-vfrczsd xmm11,xmm6
-a32 vfrczsd xmm11,xmm13
-a32 vfrczsd xmm11,xmm5
-vfrczsd xmm12,xmm6
-gs vfrczsd xmm12,xmm13
-gs a32 vfrczsd xmm12,xmm5
-vfrczsd xmm3,xmm6
-gs a32 vfrczsd xmm3,xmm13
-a32 gs vfrczsd xmm3,xmm5
+gs vfrczsd xmm12,qword [r12]
+gs vfrczsd xmm12,qword [rbx + 8 * rdx]
+gs vfrczsd xmm15,qword [rsp + 1 * rbp]
+vfrczsd xmm15,qword [r12]
+gs vfrczsd xmm15,qword [rbx + 8 * rdx]
+gs vfrczsd xmm3,qword [rsp + 1 * rbp]
+vfrczsd xmm3,qword [r12]
+gs vfrczsd xmm3,qword [rbx + 8 * rdx]
+a32 gs vfrczsd xmm6,qword [r15d + 2 * edi + 0x72]
+a32 vfrczsd xmm6,qword [esp + 1 * ebp]
+gs vfrczsd xmm6,qword [r14d + 1 * edx + 0x7FFFFFFF]
+vfrczsd xmm4,qword [r15d + 2 * edi + 0x72]
+gs a32 vfrczsd xmm4,qword [esp + 1 * ebp]
+gs a32 vfrczsd xmm4,qword [r14d + 1 * edx + 0x7FFFFFFF]
+vfrczsd xmm3,qword [r15d + 2 * edi + 0x72]
+vfrczsd xmm3,qword [esp + 1 * ebp]
+a32 gs vfrczsd xmm3,qword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 vfrczsd xmm7,xmm2
+a32 vfrczsd xmm7,xmm10
+gs vfrczsd xmm7,xmm6
+gs a32 vfrczsd xmm4,xmm2
+a32 gs vfrczsd xmm4,xmm10
+vfrczsd xmm4,xmm6
+a32 vfrczsd xmm12,xmm2
+a32 gs vfrczsd xmm12,xmm10
+a32 gs vfrczsd xmm12,xmm6

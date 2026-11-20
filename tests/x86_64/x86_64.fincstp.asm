@@ -1,2 +1,2 @@
-gs a32 o16 fincstp 
-gs o16 a32 fincstp 
+gs a32 fincstp 
+o16 a32 fincstp 

@@ -1,54 +1,48 @@
-bnd o16 a32 cs jmp 0
-a32 bnd o16 jmp 0
-cs a32 bnd o16 jmp 0
-o16 bnd cs jmp 0
-bnd cs a32 o16 jmp 0
-cs o16 bnd jmp 0
-bnd cs o16 jmp qword [r15 + 2 * rdi + 0x72]
-bnd cs o16 jmp qword [rbx + 8 * rdx]
-bnd cs o16 jmp qword [rdx - 0x80000000]
-a32 bnd o16 cs jmp qword [ebx + 8 * edx]
-bnd cs o16 a32 jmp qword [esp + 1 * ebp]
-bnd cs o16 jmp qword [edx - 0x80000000]
-cs jmp qword [rax]
+bnd cs jmp qword [r14 + 1 * rdx + 0x7FFFFFFF]
+cs bnd o16 jmp qword [r12]
 bnd jmp qword [rsp + 1 * rbp]
-bnd o16 jmp qword [rdx - 0x80000000]
-bnd o16 a32 jmp qword [esp]
-bnd cs o16 a32 jmp qword [r11d + r11d * 2 + 0x7b0c1e1f]
-o16 cs a32 jmp qword [r13d]
-cs a32 o16 jmp r12
-a32 o16 jmp r15
-bnd o16 cs a32 jmp rcx
-a32 o16 cs jmp r13
-a32 o16 bnd cs jmp rbp
-o16 a32 jmp r11
-cs jmp far qword [rsp]
-jmp far qword [r11 + r11 * 2 + 0x1abc3580]
-cs jmp far qword [rbp]
-cs jmp far qword [r14d + 1 * edx + 0x7FFFFFFF]
-cs jmp far qword [ebx + 8 * edx]
+a32 o16 jmp qword [r15d + 2 * edi + 0x72]
+cs jmp qword [esp + 1 * ebp]
+bnd o16 a32 cs jmp qword [r13d]
+bnd o16 cs jmp qword [rbp]
+bnd o16 cs jmp qword [r11 + r11 * 2 + 0x785ea675]
+bnd o16 jmp qword [r12]
+o16 a32 cs bnd jmp qword [ebx + 8 * edx]
+o16 bnd a32 cs jmp qword [edx - 0x80000000]
+cs bnd a32 jmp qword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 cs jmp rax
+cs bnd o16 a32 jmp rsi
+o16 a32 bnd cs jmp r10
+a32 bnd cs o16 jmp r9
+o16 bnd cs a32 jmp r15
+o16 jmp rcx
+jmp far qword [rbx + 8 * rdx]
+jmp far qword [r13]
+jmp far qword [rsp + 1 * rbp]
+a32 jmp far qword [ebp]
+cs a32 jmp far qword [esp]
 cs a32 jmp far qword [edx - 0x80000000]
-cs jmp far dword [r11 + r11 * 2 + 0x581371f5]
+cs jmp far dword [rax]
 jmp far dword [rbp]
-cs jmp far dword [rax]
-a32 cs jmp far dword [r11d + r11d * 2 + 0x581371f5]
-a32 cs jmp far dword [edx - 0x80000000]
-cs jmp far dword [esp]
-jmp far dword [r14 + 1 * rdx + 0x7FFFFFFF]
-jmp far dword [rbx + 8 * rdx]
-cs jmp far dword [rax]
-cs a32 jmp far dword [r11d + r11d * 2 + 0x581371f5]
-cs jmp far dword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 cs jmp far dword [edx - 0x80000000]
-jmp far word [r14 + 1 * rdx + 0x7FFFFFFF]
+jmp far dword [r11 + r11 * 2 + 0x6d8d65c4]
+cs jmp far dword [ebp]
+a32 jmp far dword [r12d]
+a32 jmp far dword [r15d + 2 * edi + 0x72]
+jmp far dword [rsp]
+cs jmp far dword [r12]
+jmp far dword [r15 + 2 * rdi + 0x72]
+a32 cs jmp far dword [r15d + 2 * edi + 0x72]
+cs jmp far dword [esp + 1 * ebp]
+cs jmp far dword [r12d]
+cs o16 jmp far word [r14 + 1 * rdx + 0x7FFFFFFF]
+jmp far word [rdx - 0x80000000]
 o16 cs jmp far word [rbp]
+jmp far word [esp + 1 * ebp]
+a32 cs jmp far word [r15d + 2 * edi + 0x72]
+a32 jmp far word [esp]
 o16 cs jmp far word [r15 + 2 * rdi + 0x72]
-o16 jmp far word [ebp]
-cs o16 jmp far word [esp]
-a32 jmp far word [r14d + 1 * edx + 0x7FFFFFFF]
-cs jmp far word [rsp + 1 * rbp]
-cs jmp far word [rax]
-cs jmp far word [r13]
-o16 a32 jmp far word [eax]
-a32 o16 cs jmp far word [r12d]
-cs a32 jmp far word [r11d + r11d * 2 + 0xdd92d0a]
+o16 cs jmp far word [r13]
+o16 cs jmp far word [rbx + 8 * rdx]
+cs a32 jmp far word [edx - 0x80000000]
+o16 cs a32 jmp far word [r13d]
+jmp far word [r11d + r11d * 2 + 0x48da549c]

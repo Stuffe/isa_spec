@@ -1,2 +1,2 @@
-a32 gs o16 fucompp 
-gs o16 fucompp 
+gs fucompp 
+o16 a32 gs fucompp 

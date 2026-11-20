@@ -1,2 +1,2 @@
-a32 gs o16 sysenter 
-o16 sysenter 
+sysenter 
+gs a32 o16 sysenter 

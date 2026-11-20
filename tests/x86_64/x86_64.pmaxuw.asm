@@ -1,54 +1,54 @@
-pmaxuw xmm14,oword [rsp]
-pmaxuw xmm14,oword [rsp + 1 * rbp]
-pmaxuw xmm14,oword [rax]
-gs pmaxuw xmm5,oword [rsp]
-pmaxuw xmm5,oword [rsp + 1 * rbp]
-pmaxuw xmm5,oword [rax]
- gs pmaxuw xmm0,oword [rsp]
-pmaxuw xmm0,oword [rsp + 1 * rbp]
+ gs pmaxuw xmm4,oword [rsp]
+gs  pmaxuw xmm4,oword [rax]
+gs  pmaxuw xmm4,oword [rbx + 8 * rdx]
+pmaxuw xmm6,oword [rsp]
+ gs pmaxuw xmm6,oword [rax]
+gs  pmaxuw xmm6,oword [rbx + 8 * rdx]
+pmaxuw xmm8,oword [rsp]
+gs  pmaxuw xmm8,oword [rax]
+gs  pmaxuw xmm8,oword [rbx + 8 * rdx]
+a32 pmaxuw xmm5,oword [eax]
+gs a32  pmaxuw xmm5,oword [r11d + r11d * 2 + 0x50dd124d]
+pmaxuw xmm5,oword [esp]
+ a32 pmaxuw xmm14,oword [eax]
+a32 pmaxuw xmm14,oword [r11d + r11d * 2 + 0x50dd124d]
+gs a32 pmaxuw xmm14,oword [esp]
+ a32 gs pmaxuw xmm11,oword [eax]
+a32 pmaxuw xmm11,oword [r11d + r11d * 2 + 0x50dd124d]
+a32  pmaxuw xmm11,oword [esp]
+gs pmaxuw xmm7,oword [rax]
+ gs pmaxuw xmm7,oword [rdx - 0x80000000]
+gs  pmaxuw xmm7,oword [r12]
  gs pmaxuw xmm0,oword [rax]
- gs pmaxuw xmm5,oword [ebx + 8 * edx]
-gs  pmaxuw xmm5,oword [esp + 1 * ebp]
-pmaxuw xmm5,oword [r12d]
-gs  pmaxuw xmm0,oword [ebx + 8 * edx]
-a32 pmaxuw xmm0,oword [esp + 1 * ebp]
-a32 gs pmaxuw xmm0,oword [r12d]
-gs a32  pmaxuw xmm10,oword [ebx + 8 * edx]
-pmaxuw xmm10,oword [esp + 1 * ebp]
-a32  pmaxuw xmm10,oword [r12d]
-pmaxuw xmm11,oword [r15 + 2 * rdi + 0x72]
-pmaxuw xmm11,oword [r11 + r11 * 2 + 0x7fc9959c]
-gs pmaxuw xmm11,oword [r12]
-pmaxuw xmm0,oword [r15 + 2 * rdi + 0x72]
-pmaxuw xmm0,oword [r11 + r11 * 2 + 0x7fc9959c]
-pmaxuw xmm0,oword [r12]
-gs pmaxuw xmm5,oword [r15 + 2 * rdi + 0x72]
-gs pmaxuw xmm5,oword [r11 + r11 * 2 + 0x7fc9959c]
+ gs pmaxuw xmm0,oword [rdx - 0x80000000]
+gs pmaxuw xmm0,oword [r12]
+gs pmaxuw xmm5,oword [rax]
+gs  pmaxuw xmm5,oword [rdx - 0x80000000]
 pmaxuw xmm5,oword [r12]
-gs  pmaxuw xmm11,oword [r13d]
-pmaxuw xmm11,oword [esp]
-pmaxuw xmm11,oword [r11d + r11d * 2 + 0x7fc9959c]
-pmaxuw xmm5,oword [r13d]
-a32 gs pmaxuw xmm5,oword [esp]
- a32 gs pmaxuw xmm5,oword [r11d + r11d * 2 + 0x7fc9959c]
-gs  pmaxuw xmm6,oword [r13d]
- a32 gs pmaxuw xmm6,oword [esp]
-a32 gs  pmaxuw xmm6,oword [r11d + r11d * 2 + 0x7fc9959c]
-gs a32 pmaxuw xmm7,xmm2
-gs pmaxuw xmm7,xmm7
-a32 pmaxuw xmm7,xmm9
-gs a32  pmaxuw xmm14,xmm2
-gs  pmaxuw xmm14,xmm7
-a32 pmaxuw xmm14,xmm9
-gs  pmaxuw xmm5,xmm2
-gs  pmaxuw xmm5,xmm7
- a32 gs pmaxuw xmm5,xmm9
- a32 pmaxuw xmm5,xmm1
-a32 pmaxuw xmm5,xmm3
-a32 gs pmaxuw xmm5,xmm10
-a32  gs pmaxuw xmm8,xmm1
-a32  pmaxuw xmm8,xmm3
-gs a32  pmaxuw xmm8,xmm10
-a32  gs pmaxuw xmm10,xmm1
- a32 pmaxuw xmm10,xmm3
-pmaxuw xmm10,xmm10
+a32  gs pmaxuw xmm5,oword [r13d]
+gs pmaxuw xmm5,oword [edx - 0x80000000]
+a32 gs  pmaxuw xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32  pmaxuw xmm15,oword [r13d]
+pmaxuw xmm15,oword [edx - 0x80000000]
+a32 pmaxuw xmm15,oword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 pmaxuw xmm7,oword [r13d]
+gs a32  pmaxuw xmm7,oword [edx - 0x80000000]
+a32  gs pmaxuw xmm7,oword [r14d + 1 * edx + 0x7FFFFFFF]
+ a32 pmaxuw xmm7,xmm1
+pmaxuw xmm7,xmm7
+ a32 pmaxuw xmm7,xmm9
+gs  a32 pmaxuw xmm3,xmm1
+pmaxuw xmm3,xmm7
+gs a32  pmaxuw xmm3,xmm9
+pmaxuw xmm13,xmm1
+pmaxuw xmm13,xmm7
+ gs pmaxuw xmm13,xmm9
+a32  pmaxuw xmm4,xmm0
+pmaxuw xmm4,xmm14
+gs pmaxuw xmm4,xmm12
+gs  pmaxuw xmm15,xmm0
+ a32 gs pmaxuw xmm15,xmm14
+gs  a32 pmaxuw xmm15,xmm12
+ a32 gs pmaxuw xmm2,xmm0
+ gs pmaxuw xmm2,xmm14
+a32 gs pmaxuw xmm2,xmm12

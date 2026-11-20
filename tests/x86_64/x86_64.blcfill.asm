@@ -1,54 +1,54 @@
-gs blcfill rsi,qword [rdx - 0x80000000]
-blcfill rsi,qword [rax]
-blcfill rsi,qword [rsp]
-gs blcfill rax,qword [rdx - 0x80000000]
-blcfill rax,qword [rax]
-gs blcfill rax,qword [rsp]
-gs blcfill rbp,qword [rdx - 0x80000000]
-blcfill rbp,qword [rax]
-blcfill rbp,qword [rsp]
-a32 gs blcfill r11,qword [esp + 1 * ebp]
-blcfill r11,qword [r11d + r11d * 2 + 0x36b6300]
-a32 blcfill r11,qword [r13d]
-a32 blcfill r14,qword [esp + 1 * ebp]
-gs blcfill r14,qword [r11d + r11d * 2 + 0x36b6300]
-gs blcfill r14,qword [r13d]
-a32 gs blcfill r8,qword [esp + 1 * ebp]
-gs blcfill r8,qword [r11d + r11d * 2 + 0x36b6300]
-blcfill r8,qword [r13d]
-gs a32 blcfill rdx,rbp
-gs blcfill rdx,rax
-a32 gs blcfill rdx,r14
-a32 gs blcfill rsi,rbp
-gs blcfill rsi,rax
-blcfill rsi,r14
-a32 blcfill r8,rbp
-a32 gs blcfill r8,rax
-blcfill r8,r14
-blcfill r15d,dword [rbx + 8 * rdx]
-gs blcfill r15d,dword [rax]
-gs blcfill r15d,dword [rsp + 1 * rbp]
-blcfill r13d,dword [rbx + 8 * rdx]
-gs blcfill r13d,dword [rax]
-gs blcfill r13d,dword [rsp + 1 * rbp]
-blcfill ecx,dword [rbx + 8 * rdx]
-blcfill ecx,dword [rax]
-gs blcfill ecx,dword [rsp + 1 * rbp]
-a32 blcfill r9d,dword [r13d]
-gs blcfill r9d,dword [edx - 0x80000000]
-a32 gs blcfill r9d,dword [eax]
-blcfill r13d,dword [r13d]
-gs blcfill r13d,dword [edx - 0x80000000]
-a32 blcfill r13d,dword [eax]
+blcfill rdi,qword [r11 + r11 * 2 + 0x54ffbd24]
+gs blcfill rdi,qword [rax]
+blcfill rdi,qword [r15 + 2 * rdi + 0x72]
+blcfill r13,qword [r11 + r11 * 2 + 0x54ffbd24]
+blcfill r13,qword [rax]
+blcfill r13,qword [r15 + 2 * rdi + 0x72]
+blcfill r11,qword [r11 + r11 * 2 + 0x54ffbd24]
+gs blcfill r11,qword [rax]
+gs blcfill r11,qword [r15 + 2 * rdi + 0x72]
+gs a32 blcfill r11,qword [edx - 0x80000000]
+a32 blcfill r11,qword [r15d + 2 * edi + 0x72]
+gs a32 blcfill r11,qword [r14d + 1 * edx + 0x7FFFFFFF]
+gs a32 blcfill r15,qword [edx - 0x80000000]
+a32 blcfill r15,qword [r15d + 2 * edi + 0x72]
+a32 blcfill r15,qword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 gs blcfill rbp,qword [edx - 0x80000000]
+blcfill rbp,qword [r15d + 2 * edi + 0x72]
+a32 blcfill rbp,qword [r14d + 1 * edx + 0x7FFFFFFF]
+a32 blcfill rax,rbx
+blcfill rax,r9
+a32 gs blcfill rax,r10
+gs blcfill rdi,rbx
+gs blcfill rdi,r9
+a32 gs blcfill rdi,r10
+blcfill r13,rbx
+a32 blcfill r13,r9
+gs a32 blcfill r13,r10
+gs blcfill esp,dword [rdx - 0x80000000]
+gs blcfill esp,dword [rsp + 1 * rbp]
+gs blcfill esp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs blcfill r12d,dword [rdx - 0x80000000]
+blcfill r12d,dword [rsp + 1 * rbp]
+blcfill r12d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs blcfill r10d,dword [rdx - 0x80000000]
+blcfill r10d,dword [rsp + 1 * rbp]
+gs blcfill r10d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+a32 gs blcfill edx,dword [edx - 0x80000000]
+a32 gs blcfill edx,dword [eax]
 blcfill edx,dword [r13d]
-gs a32 blcfill edx,dword [edx - 0x80000000]
-gs a32 blcfill edx,dword [eax]
-gs blcfill esi,r12d
-blcfill esi,esi
-a32 gs blcfill esi,r13d
-a32 gs blcfill r12d,r12d
-gs a32 blcfill r12d,esi
-gs a32 blcfill r12d,r13d
-a32 blcfill r11d,r12d
-a32 blcfill r11d,esi
-gs blcfill r11d,r13d
+a32 blcfill r9d,dword [edx - 0x80000000]
+gs blcfill r9d,dword [eax]
+a32 gs blcfill r9d,dword [r13d]
+blcfill esp,dword [edx - 0x80000000]
+a32 gs blcfill esp,dword [eax]
+gs a32 blcfill esp,dword [r13d]
+a32 blcfill esp,eax
+a32 gs blcfill esp,r12d
+a32 gs blcfill esp,r9d
+a32 blcfill r14d,eax
+blcfill r14d,r12d
+a32 gs blcfill r14d,r9d
+a32 blcfill edi,eax
+a32 gs blcfill edi,r12d
+blcfill edi,r9d

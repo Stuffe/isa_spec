@@ -1,6 +1,6 @@
-slwpcb r8
-gs slwpcb rdi
-a32 slwpcb r15
-a32 slwpcb r14d
-a32 gs slwpcb eax
-a32 slwpcb ecx
+gs slwpcb r15
+gs slwpcb r12
+slwpcb r13
+gs slwpcb r9d
+a32 slwpcb r11d
+gs slwpcb esp

@@ -1,54 +1,54 @@
-vpmovzxwd xmm13,qword [rbx + 8 * rdx]
-vpmovzxwd xmm13,qword [r12]
-gs vpmovzxwd xmm13,qword [rbp]
-vpmovzxwd xmm7,qword [rbx + 8 * rdx]
-vpmovzxwd xmm7,qword [r12]
-vpmovzxwd xmm7,qword [rbp]
-gs vpmovzxwd xmm12,qword [rbx + 8 * rdx]
-vpmovzxwd xmm12,qword [r12]
-vpmovzxwd xmm12,qword [rbp]
-gs a32 vpmovzxwd xmm7,qword [edx - 0x80000000]
-a32 vpmovzxwd xmm7,qword [r13d]
-a32 vpmovzxwd xmm7,qword [ebx + 8 * edx]
-a32 vpmovzxwd xmm5,qword [edx - 0x80000000]
-gs a32 vpmovzxwd xmm5,qword [r13d]
-a32 gs vpmovzxwd xmm5,qword [ebx + 8 * edx]
-vpmovzxwd xmm11,qword [edx - 0x80000000]
-gs vpmovzxwd xmm11,qword [r13d]
-a32 vpmovzxwd xmm11,qword [ebx + 8 * edx]
-gs vpmovzxwd ymm7,oword [rbp]
-gs vpmovzxwd ymm7,oword [rsp]
-gs vpmovzxwd ymm7,oword [r12]
-vpmovzxwd ymm13,oword [rbp]
-vpmovzxwd ymm13,oword [rsp]
-gs vpmovzxwd ymm13,oword [r12]
-vpmovzxwd ymm2,oword [rbp]
-vpmovzxwd ymm2,oword [rsp]
-vpmovzxwd ymm2,oword [r12]
-a32 gs vpmovzxwd ymm11,oword [r15d + 2 * edi + 0x72]
-gs vpmovzxwd ymm11,oword [ebx + 8 * edx]
-gs a32 vpmovzxwd ymm11,oword [r11d + r11d * 2 + 0x5b68df0e]
-a32 gs vpmovzxwd ymm10,oword [r15d + 2 * edi + 0x72]
-gs a32 vpmovzxwd ymm10,oword [ebx + 8 * edx]
-vpmovzxwd ymm10,oword [r11d + r11d * 2 + 0x5b68df0e]
-a32 vpmovzxwd ymm9,oword [r15d + 2 * edi + 0x72]
-a32 vpmovzxwd ymm9,oword [ebx + 8 * edx]
-a32 vpmovzxwd ymm9,oword [r11d + r11d * 2 + 0x5b68df0e]
-vpmovzxwd xmm7,xmm15
+gs vpmovzxwd xmm10,qword [rbp]
+vpmovzxwd xmm10,qword [r13]
+vpmovzxwd xmm10,qword [rsp]
+gs vpmovzxwd xmm6,qword [rbp]
+vpmovzxwd xmm6,qword [r13]
+vpmovzxwd xmm6,qword [rsp]
+vpmovzxwd xmm1,qword [rbp]
+vpmovzxwd xmm1,qword [r13]
+gs vpmovzxwd xmm1,qword [rsp]
+a32 gs vpmovzxwd xmm14,qword [r13d]
+vpmovzxwd xmm14,qword [r15d + 2 * edi + 0x72]
+a32 vpmovzxwd xmm14,qword [r12d]
+vpmovzxwd xmm8,qword [r13d]
+a32 vpmovzxwd xmm8,qword [r15d + 2 * edi + 0x72]
+a32 vpmovzxwd xmm8,qword [r12d]
+vpmovzxwd xmm10,qword [r13d]
+vpmovzxwd xmm10,qword [r15d + 2 * edi + 0x72]
+gs vpmovzxwd xmm10,qword [r12d]
+vpmovzxwd ymm1,oword [rdx - 0x80000000]
+vpmovzxwd ymm1,oword [r11 + r11 * 2 + 0x67b0342]
+vpmovzxwd ymm1,oword [rax]
+gs vpmovzxwd ymm4,oword [rdx - 0x80000000]
+gs vpmovzxwd ymm4,oword [r11 + r11 * 2 + 0x67b0342]
+vpmovzxwd ymm4,oword [rax]
+vpmovzxwd ymm13,oword [rdx - 0x80000000]
+vpmovzxwd ymm13,oword [r11 + r11 * 2 + 0x67b0342]
+vpmovzxwd ymm13,oword [rax]
+gs vpmovzxwd ymm12,oword [eax]
+vpmovzxwd ymm12,oword [ebp]
+gs a32 vpmovzxwd ymm12,oword [edx - 0x80000000]
+a32 gs vpmovzxwd ymm8,oword [eax]
+vpmovzxwd ymm8,oword [ebp]
+a32 vpmovzxwd ymm8,oword [edx - 0x80000000]
+a32 gs vpmovzxwd ymm5,oword [eax]
+a32 gs vpmovzxwd ymm5,oword [ebp]
+a32 vpmovzxwd ymm5,oword [edx - 0x80000000]
+vpmovzxwd xmm13,xmm7
+vpmovzxwd xmm13,xmm12
+gs a32 vpmovzxwd xmm13,xmm13
+a32 vpmovzxwd xmm7,xmm7
 a32 vpmovzxwd xmm7,xmm12
-vpmovzxwd xmm7,xmm6
-a32 vpmovzxwd xmm9,xmm15
-a32 gs vpmovzxwd xmm9,xmm12
-vpmovzxwd xmm9,xmm6
-gs a32 vpmovzxwd xmm11,xmm15
-vpmovzxwd xmm11,xmm12
-a32 vpmovzxwd xmm11,xmm6
-a32 vpmovzxwd ymm7,xmm14
-a32 vpmovzxwd ymm7,xmm2
-gs vpmovzxwd ymm7,xmm1
-a32 vpmovzxwd ymm8,xmm14
-gs a32 vpmovzxwd ymm8,xmm2
-vpmovzxwd ymm8,xmm1
-a32 gs vpmovzxwd ymm9,xmm14
-a32 gs vpmovzxwd ymm9,xmm2
-gs vpmovzxwd ymm9,xmm1
+vpmovzxwd xmm7,xmm13
+a32 vpmovzxwd xmm8,xmm7
+a32 gs vpmovzxwd xmm8,xmm12
+gs a32 vpmovzxwd xmm8,xmm13
+a32 vpmovzxwd ymm15,xmm6
+a32 gs vpmovzxwd ymm15,xmm3
+a32 vpmovzxwd ymm15,xmm15
+gs a32 vpmovzxwd ymm7,xmm6
+gs vpmovzxwd ymm7,xmm3
+gs a32 vpmovzxwd ymm7,xmm15
+a32 vpmovzxwd ymm8,xmm6
+vpmovzxwd ymm8,xmm3
+gs vpmovzxwd ymm8,xmm15

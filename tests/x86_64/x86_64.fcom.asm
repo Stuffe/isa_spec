@@ -1,32 +1,32 @@
 a32 gs o16 fcom 
-o16 gs fcom 
-o16 a32 gs fcom st0,st4
-a32 o16 gs fcom st0,st6
-a32 gs o16 fcom st0,st7
-o16 a32 fcom st2
-a32 o16 fcom st4
-a32 fcom st1
-o16 gs fcom dword [rsp + 1 * rbp]
-gs fcom dword [r14 + 1 * rdx + 0x7FFFFFFF]
-o16 gs fcom dword [rdx - 0x80000000]
-gs a32 fcom dword [r15d + 2 * edi + 0x72]
-fcom dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 fcom dword [esp + 1 * ebp]
-gs fcom dword [r12]
-fcom dword [rbx + 8 * rdx]
-o16 fcom dword [rbp]
-a32 gs o16 fcom dword [esp + 1 * ebp]
-gs fcom dword [ebx + 8 * edx]
-o16 a32 gs fcom dword [ebp]
-gs o16 fcom qword [rbp]
-o16 gs fcom qword [r11 + r11 * 2 + 0x1387c89d]
-o16 gs fcom qword [rsp]
-gs o16 a32 fcom qword [r12d]
-gs fcom qword [r13d]
-o16 gs a32 fcom qword [ebx + 8 * edx]
-gs o16 fcom qword [rbp]
-gs o16 fcom qword [r11 + r11 * 2 + 0x1387c89d]
+gs o16 a32 fcom 
+gs fcom st0,st1
+a32 o16 gs fcom st0,st4
+gs a32 fcom st0,st3
+o16 a32 gs fcom st7
+o16 gs fcom st5
+a32 o16 gs fcom st4
+gs fcom dword [r13]
+gs fcom dword [rbp]
+fcom dword [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs fcom dword [r14d + 1 * edx + 0x7FFFFFFF]
+o16 fcom dword [r11d + r11d * 2 + 0x615faded]
+o16 a32 fcom dword [r12d]
+o16 gs fcom dword [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs fcom dword [r13]
+o16 fcom dword [rsp]
+o16 gs fcom dword [r13d]
+o16 gs a32 fcom dword [esp + 1 * ebp]
+o16 gs a32 fcom dword [r14d + 1 * edx + 0x7FFFFFFF]
 gs fcom qword [r12]
-o16 gs a32 fcom qword [r13d]
-a32 gs o16 fcom qword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 fcom qword [esp]
+gs fcom qword [r11 + r11 * 2 + 0x62d30428]
+fcom qword [rsp]
+a32 o16 fcom qword [ebp]
+a32 fcom qword [esp]
+a32 o16 gs fcom qword [r13d]
+o16 gs fcom qword [rax]
+o16 gs fcom qword [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 gs fcom qword [r13]
+a32 o16 gs fcom qword [r12d]
+gs o16 fcom qword [ebp]
+o16 a32 fcom qword [eax]

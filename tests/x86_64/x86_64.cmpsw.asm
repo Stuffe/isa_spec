@@ -1,2 +1,2 @@
-a32 rep cmpsw 
-o16 rep cmpsw 
+o16 rep gs cmpsw 
+rep gs a32 o16 cmpsw 

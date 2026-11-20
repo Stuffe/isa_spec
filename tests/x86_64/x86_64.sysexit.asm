@@ -1,2 +1,2 @@
-a32 o64 gs sysexit 
-a32 sysexit 
+gs o64 a32 sysexit 
+o64 gs a32 sysexit 

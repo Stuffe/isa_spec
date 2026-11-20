@@ -1,4 +1,4 @@
-import std/[algorithm, options, parseutils, sets, sequtils, strutils, tables]
+import std/[algorithm, bitops, options, parseutils, sets, sequtils, strutils, tables]
 
 import expressions, parse, translations, types
 
@@ -35,66 +35,373 @@ template check[T](obj: WithError[T], err_mod: untyped): untyped =
       return
     ret
 
-func add_string_syntax(s: var StreamSlice, syntaxs: var seq[Syntax]) =
-  var syntax: Syntax
-  while peek(s) notin {'\0', '\n'}:
-    if peek(s) == '%':
-      if peek(s, 1) == '%':
-        skip(s, 2)
-        add_token(s, tk_mnenomic)
-        syntax.text.add('%')
-        continue
+# Assembly lexer
+const ASM_ID_FIRST = {'a' .. 'z', 'A' .. 'Z', '_'}
+const ASM_ID_NEXT = ASM_ID_FIRST + {'0' .. '9', '.'}
+const NUMBER_FIRST = {'0' .. '9'}
+const NON_SEPARATOR_FIRST = {'\0', '\n'} + ASM_ID_FIRST + NUMBER_FIRST + QUOTES
+
+func skip_asm_comment(
+    s: var StreamSlice,
+    line_comments: seq[string],
+    block_comments: seq[(string, string)],
+): (bool, int) {.discardable.} =
+  for (start_sym, end_sym) in block_comments:
+    if s.matches(start_sym):
+      var line_count = 0
+      while not finished(s) and not s.matches(end_sym):
+        if peek(s) == '\n':
+          line_count += 1
+        s.start += 1
+      add_token(s, tk_comment)
+      return (true, line_count)
+  for lc in line_comments:
+    if s.matches(lc):
+      while not finished(s) and peek(s) != '\n':
+        s.start += 1
+      add_token(s, tk_comment)
+      return (true, 0)
+
+func skip_asm_whitespaces(
+    s: var StreamSlice,
+    line_comments: seq[string],
+    block_comments: seq[(string, string)],
+): (bool, int) {.discardable.} =
+  while peek(s) in WHITESPACES:
+    result[0] = true
+    s.start += 1
+  add_token(s, tk_whitespace)
+
+  while true:
+    let (r, line_count) = skip_asm_comment(s, line_comments, block_comments)
+    if not r:
       break
 
-    let c = read(s)
-    if c in WHITESPACES:
-      add_token(s, tk_whitespace)
-      if syntax.text != "":
-        syntaxs.add(syntax)
-        syntax.text = ""
+    result[0] = true
+    result[1] += line_count
 
-      # One space means it's optional, two spaces means some whitespace seperation is required
-      if c == ' ' and syntaxs.len > 0:
-        case syntaxs[^1].kind
-        of sk_any_number_of_spaces:
-          syntaxs[^1].kind = sk_at_least_one_space
-        of sk_at_least_one_space:
-          discard
+    while peek(s) in WHITESPACES:
+      s.start += 1
+      result[0] = true
+    add_token(s, tk_whitespace)
+
+func parse_asm_identifier(s: var StreamSlice, tk = tk_identifier): StreamSlice =
+  result = s
+  result.finish = s.start
+
+  if peek(s) notin ASM_ID_FIRST:
+    return
+
+  s.start += 1
+  result.finish += 1
+
+  while peek(s) in ASM_ID_NEXT:
+    s.start += 1
+    result.finish += 1
+  add_token(s, tk)
+
+func parse_asm_separator(s: var StreamSlice, tk = tk_separator): StreamSlice =
+  result = s
+  result.finish = s.start
+
+  if peek(s) notin NON_SEPARATOR_FIRST:
+    s.start += 1
+    result.finish += 1
+    add_token(s, tk)
+
+const TK_BITS = 64 - countLeadingZeroBits(LexerTokenKind.high.ord)
+static:
+  assert TK_BITS == 3
+
+type TokenHash = tuple[hash: uint64, index: int]
+
+type PatternMetadata = object
+  name*: StreamSlice
+  parameter_names*: seq[StreamSlice]
+  field_parameters*: seq[bool]
+  hashes*: HashSet[TokenHash]
+
+func hash_instruction_syntax_identifer(
+    identifier: StreamSlice, mnemonics: HashSet[string]
+): TokenHash =
+  assert identifier.len > 0
+  result.hash = cast[uint64](ltk_identifier.ord)
+  result.index = 16
+
+  if $identifier notin mnemonics:
+    return
+
+  # Check for relative address
+  if identifier[0] == '.':
+    let (err, _) = parse_signed(identifier[1 ..^ 1])
+    if err == "":
+      return
+
+  let len_value = cast[uint64](identifier.len) and (uint64.high shr (64 - 16 + TK_BITS))
+  result.hash = result.hash xor (len_value shl TK_BITS)
+
+  for c in identifier:
+    result.hash = result.hash xor (cast[uint64](c.ord) shl result.index)
+    result.index = (result.index + 8) mod 64
+
+func hash_instruction_syntax_number(): TokenHash =
+  result.hash = cast[uint64](ltk_number.ord)
+  result.index = TK_BITS
+
+func hash_instruction_syntax_string(): TokenHash =
+  result.hash = cast[uint64](ltk_string.ord)
+  result.index = TK_BITS
+
+func hash_instruction_syntax_separator(separator: StreamSlice): TokenHash =
+  result.hash = cast[uint64](ltk_separator.ord)
+  result.index = TK_BITS + 8
+  for c in separator:
+    result.hash = result.hash xor (cast[uint64](c.ord) shl TK_BITS)
+
+  result.hash = result.hash
+
+func get_lexer_tokens*(
+    s: var StreamSlice,
+    mnemonics: HashSet[string],
+    line_comments: seq[string],
+    block_comments: seq[(string, string)],
+): (seq[LexerToken], uint64) =
+  var hash_index = 0
+
+  skip_asm_whitespaces(s, line_comments, block_comments)
+  while peek(s) notin {'\0', '\n'}:
+    var value: TokenHash
+    var token: LexerToken
+    block BLK_FIND_TOKEN:
+      let cp = checkpoint(s)
+      let identifier = parse_asm_identifier(s)
+      if identifier.len > 0:
+        value = hash_instruction_syntax_identifer(identifier, mnemonics)
+        token = LexerToken(kind: ltk_identifier, text: identifier)
+        break BLK_FIND_TOKEN
+
+      s.restore(cp)
+
+      let (_, number) = get_signed(s)
+      if number.len > 0:
+        value = hash_instruction_syntax_number()
+        token = LexerToken(kind: ltk_number, text: number)
+        break BLK_FIND_TOKEN
+
+      s.restore(cp)
+
+      let (err, str) = get_string(s)
+      if err == "":
+        value = hash_instruction_syntax_string()
+        token = LexerToken(kind: ltk_string, text: str)
+        break BLK_FIND_TOKEN
+
+      s.restore(cp)
+
+      let separator = parse_asm_separator(s)
+      if separator.len > 0:
+        value = hash_instruction_syntax_separator(separator)
+        token = LexerToken(kind: ltk_separator, text: separator)
+        break BLK_FIND_TOKEN
+
+      assert false, "Unexpected error while parsing ASM tokens: " & $s
+
+    result[0].add(token)
+    result[1] = result[1] xor value.hash.rotateLeftBits(hash_index)
+    hash_index = (hash_index + value.index) mod 64
+
+    skip_asm_whitespaces(s, line_comments, block_comments)
+
+func get_instruction_syntax_hashes(
+    syntax: seq[Syntax],
+    operands: seq[OperandType],
+    field_names: HashSet[string],
+    patterns: seq[PatternMetadata],
+): HashSet[TokenHash] =
+  var ret: HashSet[TokenHash]
+  ret.incl((0'u64, 0))
+
+  for syntax in syntax:
+    case syntax.kind
+    of sk_fixed_number:
+      let value = cast[uint64](ltk_number.ord)
+      ret = ret.map(
+        proc(hash: (uint64, int)): (uint64, int) =
+          (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + TK_BITS) mod 64)
+      )
+    of sk_fixed_string:
+      let value = cast[uint64](ltk_string.ord)
+      ret = ret.map(
+        proc(hash: (uint64, int)): (uint64, int) =
+          (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + TK_BITS) mod 64)
+      )
+    of sk_fixed_separator:
+      var value = cast[uint64](ltk_separator.ord)
+      for c in syntax.text:
+        value = value xor (cast[uint64](c.ord) shl TK_BITS)
+      ret = ret.map(
+        proc(hash: (uint64, int)): (uint64, int) =
+          (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + 8 + TK_BITS) mod 64)
+      )
+    of sk_fixed_identifier:
+      var value = cast[uint64](ltk_identifier.ord)
+      var index = 16
+      if syntax.text notin field_names:
+        let len_value =
+          cast[uint64](syntax.text.len) and (uint64.high shr (64 - 16 + TK_BITS))
+        value = value xor (len_value shl TK_BITS)
+
+        for c in syntax.text:
+          value = value xor (cast[uint64](c.ord) shl index)
+          index = (index + 8) mod 64
+
+      ret = ret.map(
+        proc(hash: (uint64, int)): (uint64, int) =
+          (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + index) mod 64)
+      )
+    of sk_field:
+      var can_be_number = false
+      var can_be_label = false
+      for option in operands[syntax.index].options:
+        case option
+        of fk_imm_0 .. fk_simm_64:
+          can_be_number = true
+        of fk_label:
+          can_be_label = true
         else:
-          syntaxs.add(Syntax(kind: sk_any_number_of_spaces))
-    else:
-      add_token(s, tk_mnenomic)
-      syntax.text.add(c)
+          discard
 
-  if syntax.text != "":
-    syntaxs.add(syntax)
+      let old_ret = ret
+      ret.clear()
 
-func get_syntax[T: InstructionUnbranched | InstructionDebranched](
+      let value = cast[uint64](ltk_identifier.ord)
+      for hash in old_ret:
+        ret.incl((hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + 16) mod 64))
+
+      if can_be_number:
+        let value = cast[uint64](ltk_number.ord)
+        for hash in old_ret:
+          ret.incl(
+            (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + TK_BITS) mod 64)
+          )
+
+      if can_be_label:
+        let value = cast[uint64](ltk_number.ord shl (TK_BITS + 8) or '.'.ord shl TK_BITS or
+          ltk_separator.ord)
+        for hash in old_ret:
+          ret.incl(
+            (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + TK_BITS + TK_BITS + 8) mod 64)
+          )
+    of sk_pattern:
+      let old_ret = ret
+      ret.clear()
+
+      let pattern_options = operands[syntax.index].patterns
+      for i in 0 ..< pattern_options.len:
+        let pattern_index = pattern_options[i].index
+        var hashes: HashSet[TokenHash]
+        if pattern_index != uint8.high:
+          hashes = patterns[pattern_index].hashes
+        else:
+          hashes.incl((0'u64, 0))
+
+        for (value, index) in hashes:
+          for hash in old_ret:
+            ret.incl(
+              (hash[0] xor value.rotateLeftBits(hash[1]), (hash[1] + index) mod 64)
+            )
+
+  return ret
+
+func parse_instruction_syntax[T: InstructionUnbranched | InstructionPattern](
     s: var StreamSlice,
     inst: var T,
-    is_patterns: var set[uint8],
-    is_labels: var set[uint8],
-    op_names: var seq[string],
     decoders: var Option[seq[InstructionDecoder]],
     isa_spec: IsaSpec,
-    pattern_index_bound: uint8 = uint8.high,
+    patterns: seq[PatternMetadata],
 ): WithError[Nothing] =
-  add_string_syntax(s, inst.syntax)
+  func parse_fixed_syntaxs(
+      s: var StreamSlice, syntaxs: var seq[Syntax], is_first_syntax: bool
+  ): WithError[bool] =
+    let old_s = s
+    skip_whitespaces(s)
 
-  while matches(s, '%'):
+    var has_trailing_ws = old_s != s
+    var was_identifier = not is_first_syntax
+    result[1] = has_trailing_ws or not was_identifier
+
+    if peek(s) in {'\0', '\n'}:
+      return
+
+    while peek(s) notin {'\0', '\n'}:
+      skip_whitespaces(s)
+
+      if peek(s) == '%':
+        # %a is the start of an operand, but %% is a literal %
+        if peek(s, 1) != '%':
+          break
+
+        skip(s)
+        add_token(s, tk_mnemonic)
+
+      block BLK_FIND_TOKEN:
+        was_identifier = false
+
+        let cp = checkpoint(s)
+
+        let identifier = parse_asm_identifier(s, tk = tk_mnemonic)
+        if identifier.len > 0:
+          if not result[1]:
+            result[0] = translate(
+              31337, "Expected whitespace between tokens in instruction definition"
+            )
+            return
+
+          was_identifier = true
+
+          syntaxs.add(Syntax(kind: sk_fixed_identifier, text: $identifier))
+          break BLK_FIND_TOKEN
+
+        s.restore(cp)
+
+        let (_, number) = get_signed(s)
+        if number.len > 0:
+          syntaxs.add(Syntax(kind: sk_fixed_number, text: $number))
+          break BLK_FIND_TOKEN
+
+        s.restore(cp)
+
+        let (err, str_s) = get_string(s)
+        if err == "":
+          syntaxs.add(Syntax(kind: sk_fixed_string, text: $str_s))
+          break BLK_FIND_TOKEN
+
+        s.restore(cp)
+
+        let separator = parse_asm_separator(s)
+        if separator.len > 0:
+          syntaxs.add(Syntax(kind: sk_fixed_separator, text: $separator))
+          break BLK_FIND_TOKEN
+
+        assert false, "Unreachable"
+
+      let old_s = s
+      skip_whitespaces(s)
+
+      has_trailing_ws = old_s != s
+      result[1] = has_trailing_ws or not was_identifier
+
+  func parse_operand_syntax[T: InstructionUnbranched | InstructionPattern](
+      s: var StreamSlice,
+      inst: var T,
+      decoders: var Option[seq[InstructionDecoder]],
+      isa_spec: IsaSpec,
+      patterns: seq[PatternMetadata],
+  ): WithError[Nothing] =
     let variable_name = $get_identifier(s)
     expect(
       variable_name.len > 0,
       translate(31337_64093416909416, "Expected an identifier after '%'"),
-    )
-
-    expect(
-      variable_name notin op_names,
-      translate(
-        31337_68533544457789,
-        "Operand {variable_name} on syntax line shadowed another operand",
-        ("variable_name", variable_name),
-      ),
     )
 
     var size_assertion = (MAX_FIELD_SIZE.uint64 + 1, false)
@@ -132,7 +439,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
 
         let expr = exp_op(
           exp_op_le_u,
-          [exp_op(expr_kind, [exp_var(cast[uint32](op_names.len))]), exp_num(size)],
+          [exp_op(expr_kind, [exp_var(cast[uint32](inst.operands.len))]), exp_num(size)],
         )
         inst.asserts.add(Assertion(exp: expr, msg: msg))
 
@@ -151,16 +458,14 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
           )
         decoders = none(seq[InstructionDecoder])
 
-      is_patterns.incl(cast[uint8](op_names.len))
-
-      var patterns: seq[OperandTypePattern]
+      var pattern_options: seq[OperandTypePattern]
       while true:
         if matches(s, ']', tk = tk_bracket):
-          patterns.add(OperandTypePattern(index: uint8.high))
+          pattern_options.add(OperandTypePattern(index: uint8.high))
           break
 
         if matches(s, '|', tk = tk_separator):
-          patterns.add(OperandTypePattern(index: uint8.high))
+          pattern_options.add(OperandTypePattern(index: uint8.high))
           skip_whitespaces(s)
           continue
 
@@ -169,10 +474,12 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         let pattern_name = get_identifier(s, tk = tk_pattern_name)
         expect(
           pattern_name.len > 0,
-          translate(31337_16564670893367, "Was expecting a pattern name here"),
+          translate(31337_16564670893367, "Expected a pattern name here"),
         )
 
-        var arguments: seq[string]
+        var is_fields: seq[bool]
+        var str_args: seq[string]
+        var field_args: seq[FieldKind]
 
         skip_whitespaces(s)
         expect(
@@ -187,7 +494,7 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
             break
 
           skip_whitespaces(s)
-          if arguments.len > 0:
+          if is_fields.len > 0:
             expect(
               s.matches(',', tk = tk_separator),
               translate(
@@ -196,30 +503,163 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
             )
             skip_whitespaces(s)
 
-          let argument = check(descape_string_content(check(get_string(s))))
-          arguments.add(argument)
+          let field_name = get_identifier(s, tk = tk_type_name)
+          if field_name.len == 0:
+            when T is InstructionPattern:
+              if matches(s, '{', tk = tk_bracket):
+                let parameter_name = get_identifier(s, tk = tk_pattern_variable_ref)
+                expect(
+                  parameter_name.len > 0,
+                  translate(31337, "Expected a parameter name after '{'"),
+                )
+                expect(
+                  matches(s, '}', tk = tk_bracket),
+                  translate(31337, "Expected a '}' after the parameter name"),
+                )
 
-        block BLK_FIND_PATTERN:
-          for i, pattern in isa_spec.patterns:
-            if pattern_name == pattern.name and arguments.len == pattern.parameter_count:
-              patterns.add(OperandTypePattern(index: i.uint8, args: arguments))
+                let parameter_index = patterns[^1].parameter_names.find(parameter_name)
+                expect(
+                  parameter_index != -1,
+                  translate(
+                    31337,
+                    "Parameter '{parameter_name}' not defined",
+                    ("parameter_name", parameter_name),
+                  ),
+                )
+
+                expect(
+                  patterns[^1].field_parameters[parameter_index],
+                  translate(
+                    31337,
+                    "Non-Field parameter '{parameter_name}' can only be interpolated inside a string",
+                    ("parameter_name", parameter_name),
+                  ),
+                )
+
+                var field_parameter_index = 0
+                for i in 0 ..< parameter_index:
+                  if patterns[^1].field_parameters[i]:
+                    field_parameter_index += 1
+
+                inst.field_extensions.add(
+                  (
+                    field_parameter_index, inst.operands.len, pattern_options.len,
+                    field_args.len,
+                  )
+                )
+
+                is_fields.add(true)
+                field_args.add(fk_var_0)
+                continue
+
+            is_fields.add(false)
+            when T is InstructionPattern:
+              str_args.add("")
+
+              let quote = read(s, tk = tk_string)
+
               expect(
-                cast[uint8](i) < pattern_index_bound,
+                quote in QUOTES,
                 translate(
-                  31337_33105996916812,
-                  "Patterns can only invoke those defined before them",
+                  31337, "Expected either a String or a Field for pattern argument"
                 ),
               )
-              break BLK_FIND_PATTERN
+              var text: string
+              var texts: seq[string]
+              var parameter_indexes: seq[int]
+              var was_escape = false
+              while was_escape or s.peek() notin {quote, '\0'}:
+                let cp = checkpoint(s)
+                if not was_escape and matches(s, '{', tk = tk_bracket):
+                  let name = get_identifier(s, tk = tk_pattern_variable_ref)
+                  let parameter_index = patterns[^1].parameter_names.find(name)
+                  if parameter_index != -1 and matches(s, '}', tk = tk_bracket):
+                    if not patterns[^1].field_parameters[parameter_index]:
+                      var str_parameter_index = 0
+                      for i in 0 ..< parameter_index:
+                        if not patterns[^1].field_parameters[i]:
+                          str_parameter_index += 1
+                      parameter_indexes.add(str_parameter_index)
+                      texts.add(text)
+                      text.set_len(0)
+                      continue
 
-          error(
-            translate(
-              31337_63957561177031,
-              "Pattern '{pattern_name}' with {argument_count} parameters not defined",
-              ("pattern_name", pattern_name),
-              ("argument_count", arguments.len),
+                  s.restore(cp)
+
+                text.add(read(s, tk = tk_string))
+                was_escape = text[^1] == '\\'
+
+              texts.add(text)
+
+              expect(
+                matches(s, quote, tk = tk_string),
+                translate(31337, "Expected a closing quote for String pattern argument"),
+              )
+
+              inst.string_interpolations.add((texts, parameter_indexes))
+            else:
+              let str_arg = check(descape_string_content(check(get_string(s))))
+              str_args.add(str_arg)
+            continue
+
+          block BLK_FIND_FIELD:
+            for field_kind, field in isa_spec.field_types:
+              if field_name != field.name:
+                continue
+
+              if field_kind in {fk_label, fk_imm_0 .. fk_simm_64}:
+                error(
+                  translate(
+                    31337, "Only user-defined fields are allowed as pattern argument."
+                  )
+                )
+
+              is_fields.add(true)
+              field_args.add(field_kind)
+              break BLK_FIND_FIELD
+
+            error(
+              translate(
+                31337_51752498682665,
+                "Field name '{field_name}' not defined",
+                ("field_name", field_name),
+              )
             )
-          )
+
+        block BLK_FIND_PATTERN:
+          for i, pattern in patterns:
+            if pattern_name == pattern.name and is_fields == pattern.field_parameters:
+              pattern_options.add(
+                OperandTypePattern(
+                  index: i.uint8, str_args: str_args, field_args: field_args
+                )
+              )
+              break BLK_FIND_PATTERN
+          when T is InstructionPattern:
+            error(
+              translate(
+                31337_33105996916812,
+                "Patterns can only invoke those defined before them",
+              )
+            )
+          else:
+            var paramater_signature: string
+            for is_field in is_fields:
+              if is_field:
+                paramater_signature &= "Field, "
+              else:
+                paramater_signature &= "String, "
+            if paramater_signature.len >= 2:
+              paramater_signature.set_len(paramater_signature.len - 2)
+
+            error(
+              translate(
+                31337,
+                "Pattern with {pattern_name}({paramater_signature}) signature not defined",
+                ("pattern_name", pattern_name),
+                ("paramater_signature", paramater_signature),
+              )
+            )
 
         skip_whitespaces(s)
         if s.matches(']', tk = tk_bracket):
@@ -236,53 +676,104 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
           )
         )
 
-      inst.syntax.add(Syntax(kind: sk_pattern, text: variable_name))
-      inst.operands.add(
-        OperandType(kind: otk_pattern, variable_name: variable_name, patterns: patterns)
+      inst.syntax.add(
+        Syntax(kind: sk_pattern, text: variable_name, index: inst.operands.len)
       )
-      op_names.add(variable_name)
+      inst.operands.add(
+        OperandType(
+          kind: otk_pattern, variable_name: variable_name, patterns: pattern_options
+        )
+      )
     elif matches(s, '(', tk = tk_bracket):
       skip_whitespaces(s)
 
       var options: seq[FieldKind]
       while true:
-        let field_name = get_identifier(s, tk = tk_type_name)
-        expect(
-          field_name.len > 0,
-          translate(
-            31337_78591996283483, "Was expecting a field name or a sized immediate here"
-          ),
-        )
+        block BLK_INNER:
+          when T is InstructionPattern:
+            if matches(s, '{', tk = tk_bracket):
+              let parameter_name = get_identifier(s, tk = tk_pattern_variable_ref)
+              expect(
+                parameter_name.len > 0,
+                translate(31337, "Expected a parameter name after '{'"),
+              )
+              expect(
+                matches(s, '}', tk = tk_bracket),
+                translate(31337, "Expected a '}' after the parameter name"),
+              )
 
-        block BLK_FIND_FIELD:
-          for field_kind, field in isa_spec.field_types:
-            if field_name == field.name:
+              let parameter_index = patterns[^1].parameter_names.find(parameter_name)
+              expect(
+                parameter_index != -1,
+                translate(
+                  31337,
+                  "Parameter '{parameter_name}' not defined",
+                  ("parameter_name", parameter_name),
+                ),
+              )
+
+              expect(
+                patterns[^1].field_parameters[parameter_index],
+                translate(
+                  31337,
+                  "Non-Field parameter '{parameter_name}' can only be interpolated inside a string",
+                  ("parameter_name", parameter_name),
+                ),
+              )
+
+              var field_parameter_index = 0
+              for i in 0 ..< parameter_index:
+                if patterns[^1].field_parameters[i]:
+                  field_parameter_index += 1
+
+              inst.field_extensions.add(
+                (field_parameter_index, inst.operands.len, options.len, 0)
+              )
+
+              options.add(fk_var_0)
+              break BLK_INNER
+
+          let field_name = get_identifier(s, tk = tk_type_name)
+          expect(
+            field_name.len > 0,
+            translate(
+              31337_78591996283483, "Expected a field name or a sized immediate here"
+            ),
+          )
+
+          block BLK_FIND_FIELD:
+            for field_kind, field in isa_spec.field_types:
+              if field_name != field.name:
+                continue
+
               options.add(field_kind)
-              if field_kind == fk_label:
-                is_labels.incl(cast[uint8](op_names.len))
-              elif field_kind == fk_imm_0:
-                if size_assertion[0] > MAX_FIELD_SIZE:
-                  error(
-                    translate(
-                      31337_90809893168338,
-                      "Immediate operand must have size constraint, e.g. %a:U8(immediate).",
-                    )
+
+              if field_kind != fk_imm_0:
+                break BLK_FIND_FIELD
+
+              if size_assertion[0] > MAX_FIELD_SIZE:
+                error(
+                  translate(
+                    31337_90809893168338,
+                    "Immediate operand must have size constraint, e.g. %a:U8(immediate).",
                   )
-                elif size_assertion[0] > 0:
-                  let imm_size = size_assertion[0] - 1
-                  if size_assertion[1]:
-                    options[^1] = fk_simm_1.succ(imm_size)
-                  else:
-                    options[^1] = fk_uimm_1.succ(imm_size)
+                )
+              elif size_assertion[0] > 0:
+                let imm_size = size_assertion[0] - 1
+                if size_assertion[1]:
+                  options[^1] = fk_simm_1.succ(imm_size)
+                else:
+                  options[^1] = fk_uimm_1.succ(imm_size)
+
               break BLK_FIND_FIELD
 
-          error(
-            translate(
-              31337_51752498682665,
-              "Field name '{field_name}' not defined",
-              ("field_name", field_name),
+            error(
+              translate(
+                31337_51752498682665,
+                "Field name '{field_name}' not defined",
+                ("field_name", field_name),
+              )
             )
-          )
 
         skip_whitespaces(s)
 
@@ -298,11 +789,12 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         ),
       )
 
-      inst.syntax.add(Syntax(kind: sk_field, text: variable_name))
+      inst.syntax.add(
+        Syntax(kind: sk_field, text: variable_name, index: inst.operands.len)
+      )
       inst.operands.add(
         OperandType(kind: otk_normal, variable_name: variable_name, options: options)
       )
-      op_names.add(variable_name)
     else:
       error(
         translate(
@@ -312,63 +804,183 @@ func get_syntax[T: InstructionUnbranched | InstructionDebranched](
         )
       )
 
-    add_string_syntax(s, inst.syntax)
+    for i in 0 ..< inst.operands.len - 1:
+      if variable_name == inst.operands[i].variable_name:
+        error(
+          translate(
+            31337_68533544457789,
+            "Operand {variable_name} on syntax line shadowed another operand",
+            ("variable_name", variable_name),
+          )
+        )
+
+  var has_trailing_ws = check(parse_fixed_syntaxs(s, inst.syntax, true))
+
+  while matches(s, '%'):
+    expect(
+      has_trailing_ws,
+      translate(31337, "Expected whitespace between tokens in instruction definition"),
+    )
+    check(parse_operand_syntax(s, inst, decoders, isa_spec, patterns))
+    has_trailing_ws = check(parse_fixed_syntaxs(s, inst.syntax, false))
 
   expect(
     matches(s, '\n', tk = tk_whitespace),
-    translate(
-      31337_52710717731997, "Was expecting a newline here after syntax declaration"
-    ),
+    translate(31337_52710717731997, "Expected a newline here after syntax declaration"),
   )
 
-# func get_uint64(s: var StreamSlice): WithError[uint64] =
-#   let s_idx = check(get_unsigned(s))
-#   result[1] = check(parse_unsigned(s_idx))
+func parse_section_pattern(
+    s: var StreamSlice, isa_spec: var IsaSpec
+): WithError[seq[PatternMetadata]] =
+  if not matches(s, "[patterns]", tk = tk_header):
+    return
 
-# func get_disassembly_exprs(
-#     s: var StreamSlice, inst: var Option[InstructionDecoder], op_names: var seq[string]
-# ): WithError[Nothing] =
-#   while true:
-#     skip_whitespaces(s)
-#     if peek(s) != '%':
-#       return
-#     skip(s)
+  if not skip_newlines(s):
+    error(translate(31337_45267257140327, "Expected newline after section header"))
 
-#     let variable_name = $get_identifier(s)
-#     expect(variable_name.len > 0, "Expected an identifier after '%'")
+  const KEYWORD_PATTERN = "pattern"
+  while not matches(s, '[', increment = false):
+    add_token(s, tk_new_instruction)
+    expect(
+      matches(s, KEYWORD_PATTERN, tk = tk_keyword),
+      translate(
+        31337_73627734748417, "Expected keyword 'pattern' before the pattern name"
+      ),
+    )
 
-#     skip_whitespaces(s)
-#     expect(matches(s, '=', tk = tk_operator), "Expected '=' after operand name")
+    skip_whitespaces(s)
 
-#     let expr = check(get_expression(s, op_names)):
-#       "Could not interpret disassembly expression %" & variable_name & ": " & err
+    let pattern_name = get_identifier(s, tk = tk_pattern_name)
+    expect(
+      pattern_name.len > 0,
+      translate(31337_72958581072457, "Expected a name for the pattern"),
+    )
 
-#     skip_whitespaces(s)
-#     expect(
-#       matches(s, {'\n', '\0'}, tk = tk_whitespace),
-#       "Expected newline after disassembly expression",
-#     )
+    var names: seq[StreamSlice]
+    var is_fields: seq[bool]
 
-#     if inst.is_some:
-#       inst.get.exprs.add(OperandTypeVirtual(variable_name: variable_name, expr: expr))
-#     op_names.add(variable_name)
+    skip_whitespaces(s)
+    expect(
+      matches(s, '(', tk = tk_bracket),
+      translate(
+        31337_61772889138477, "Expected a '(' before the pattern parameter list"
+      ),
+    )
 
-# func get_mask_expr_underlying_arguments(exp: ExpRef): WithError[(ExpRef, ExpRef)] =
-#   var exp = exp
-#   var parity = 0
-#   while exp.exp_kind == exp_op_not_boolean:
-#     exp = exp.args[0]
-#     parity += 1
+    # This is a parametrized pattern, parse and store the parameter list
+    while not matches(s, ')', tk = tk_bracket):
+      if peek(s) in {'\n', '\0'}:
+        error(
+          translate(
+            31337_42907704133778, "Expected a ')' after the pattern parameter list"
+          )
+        )
 
-#   if parity mod 2 == 0 and exp.exp_kind != exp_op_ne:
-#     result[0] = "Not an NE expression"
-#     return
-#   if parity mod 2 != 0 and exp.exp_kind != exp_op_eq:
-#     result[0] = "Not an NE expression"
-#     return
+      skip_whitespaces(s)
 
-#   discard eval(exp.args[0], @[], uint64.high, 0)
-#   return ("", exp.args[0], exp.args[1])
+      if names.len > 0:
+        expect(
+          matches(s, ',', tk = tk_separator),
+          translate(31337_47258389995911, "Expected ',' between pattern parameters"),
+        )
+        skip_whitespaces(s)
+
+      let parameter_name = get_identifier(s, tk = tk_pattern_variable)
+      expect(
+        parameter_name.len > 0,
+        translate(31337_75146029145419, "Expected a name for the pattern parameter"),
+      )
+
+      names.add(parameter_name)
+      is_fields.set_len(names.len)
+
+      skip_whitespaces(s)
+      if matches(s, ':', tk = tk_separator):
+        skip_whitespaces(s)
+
+        expect(
+          matches(s, "Field", tk = tk_keyword),
+          translate(31337, "Expected keyword Field after ':'"),
+        )
+
+        # This parameter is a field, to be used in the syntax line
+        is_fields[^1] = true
+
+        skip_whitespaces(s)
+
+    skip_whitespaces(s)
+    if not matches(s, '\n', tk = tk_whitespace):
+      error(translate(31337_63072912015761, "Expected newline before pattern body"))
+
+    result[1].add(
+      PatternMetadata(
+        name: pattern_name, parameter_names: names, field_parameters: is_fields
+      )
+    )
+
+    var inst: InstructionPattern
+    var decoders: Option[seq[InstructionDecoder]]
+    check(parse_instruction_syntax(s, inst, decoders, isa_spec, result[1]))
+    result[1][^1].hashes = get_instruction_syntax_hashes(
+      inst.syntax, inst.operands, isa_spec.field_names, result[1]
+    )
+
+    var text: string
+    var texts: seq[string]
+    var parameter_indexes: seq[int]
+    var last_index = s.start
+    while true:
+      while s.peek() notin {'\n', '\0'}:
+        if skip_comment(s)[0]:
+          continue
+
+        let curr_index = s.start
+        let cp = checkpoint(s)
+        if matches(s, '{', tk = tk_bracket):
+          let parameter_name = get_identifier(s, tk = tk_pattern_variable_ref)
+          if matches(s, '}', tk = tk_bracket) and parameter_name in names:
+            let parameter_index = names.find(parameter_name)
+            if is_fields[parameter_index]:
+              error(
+                translate(
+                  31337, "Field parameters cannot be used outside of the syntax line"
+                )
+              )
+
+            parameter_indexes.add(parameter_index)
+            texts.add(text)
+            text.set_len(0)
+            last_index = curr_index + parameter_name.len + 2 # 2 for the brackets
+            continue
+
+          s.restore(cp)
+
+        text.add(read(s, tk = tk_text))
+
+      if s.peek() == '\0':
+        error(translate(31337_43708359021513, "Pattern must have a body"))
+
+      text.add(read(s, tk = tk_whitespace))
+
+      if matches(s, KEYWORD_PATTERN, increment = false) or
+          matches(s, '[', increment = false):
+        texts.add(text)
+        break
+
+    isa_spec.patterns.add(
+      ParametrizedPattern(inst: inst, texts: texts, parameters: parameter_indexes)
+    )
+
+    if isa_spec.patterns.len >= uint8.high.int:
+      error(
+        translate(
+          31337_35053289858864,
+          "Too many patterns, at most {max_patterns} are allowed",
+          ("max_patterns", uint8.high),
+        )
+      )
+
+    skip_newlines(s)
 
 func get_auto_instruction_decoder(
     inst: InstructionDebranched, field_types: Table[FieldKind, FieldType]
@@ -1006,7 +1618,7 @@ func add_branch(
     else:
       decoders = none(seq[InstructionDecoder])
 
-func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
+func parse_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
     is_patterns: set[uint8],
     inst: var T,
@@ -1014,7 +1626,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
     allow_unaligned_bit_pattern: static[bool] = false,
 ): WithError[string] =
   let cp = checkpoint(s)
-  let start = get_index(s)
+  let start = s.start
 
   var bit_length_known = true
   var bit_length = 0
@@ -1218,12 +1830,10 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
 
   skip_whitespaces(s)
 
-  let finish = get_index(s)
+  let finish = s.start
   expect(
     matches(s, {'\n', '\0'}, tk = tk_whitespace),
-    translate(
-      31337_59388744207582, "Was expecting a newline at the end of the bit pattern"
-    ),
+    translate(31337_59388744207582, "Expected a newline at the end of the bit pattern"),
   )
 
   if (not allow_unaligned_bit_pattern and bit_length_known):
@@ -1243,7 +1853,7 @@ func get_bit_pattern[T: InstructionUnbranched | InstructionDebranched](
 
   result[1] = $s.get_slice(start, finish)
 
-func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
+func parse_virtual_operands[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
     inst: var T,
     op_names: var seq[string],
@@ -1303,7 +1913,7 @@ func get_virtuals[T: InstructionUnbranched | InstructionDebranched](
     )
     op_names.add(variable_name)
 
-func get_asserts[T: InstructionUnbranched | InstructionDebranched](
+func parse_assertions[T: InstructionUnbranched | InstructionDebranched](
     s: var StreamSlice,
     inst: var T,
     op_names: var seq[string],
@@ -1343,7 +1953,7 @@ func get_asserts[T: InstructionUnbranched | InstructionDebranched](
 
     inst.asserts.add(Assertion(exp: expr, msg: msg))
 
-func get_ifs(
+func parse_if_blocks(
     s: var StreamSlice,
     is_patterns: set[uint8],
     field_types: Table[FieldKind, FieldType],
@@ -1375,29 +1985,40 @@ func get_ifs(
       translate(31337_23037984432484, "Expected ':' after 'when'-condition"),
     )
 
-    let bit_pattern = check(get_bit_pattern(s, is_patterns, inst, op_names))
+    let bit_pattern = check(parse_bit_pattern(s, is_patterns, inst, op_names))
     check(add_branch(inst, field_types, decoders, expr, bit_pattern))
 
-func get_instruction*(
-    s: var StreamSlice, isa_spec: IsaSpec, pattern_index_bound: uint8
+func get_syntax_operand_names(
+    inst: InstructionUnbranched | InstructionDebranched
+): seq[string] =
+  for operand in inst.operands:
+    result.add(operand.variable_name)
+
+func get_syntax_operand_labels_n_patterns(
+    inst: InstructionUnbranched | InstructionDebranched
+): tuple[labels: set[uint8], patterns: set[uint8]] =
+  for idx, operand in inst.operands:
+    if operand.kind == otk_pattern:
+      result.patterns.incl(cast[uint8](idx))
+    elif operand.kind == otk_normal:
+      for option in operand.options:
+        if option == fk_label:
+          result.labels.incl(cast[uint8](idx))
+          break
+
+func parse_instruction_def*(
+    s: var StreamSlice, isa_spec: IsaSpec, inst: InstructionDebranched
 ): WithError[InstructionDebranched] =
-  var inst: InstructionDebranched
-  var decoders: Option[seq[InstructionDecoder]]
-  var op_names: seq[string]
-  var is_labels: set[uint8]
-  var is_patterns: set[uint8]
-  check(
-    get_syntax(
-      s, inst, is_patterns, is_labels, op_names, decoders, isa_spec, pattern_index_bound
-    )
-  )
+  var inst = inst
+  var op_names = get_syntax_operand_names(inst)
+  var (is_labels, is_patterns) = get_syntax_operand_labels_n_patterns(inst)
 
   block BLK_BIT_PATTERN:
-    check(get_virtuals(s, inst, op_names, is_labels))
+    check(parse_virtual_operands(s, inst, op_names, is_labels))
 
-    check(get_asserts(s, inst, op_names, is_labels))
+    check(parse_assertions(s, inst, op_names, is_labels))
 
-    inst.bit_pattern = check(get_bit_pattern(s, is_patterns, inst, op_names, true))
+    inst.bit_pattern = check(parse_bit_pattern(s, is_patterns, inst, op_names, true))
 
   skip_newlines(s)
 
@@ -1408,42 +2029,52 @@ func get_instruction*(
 
   result[1] = inst
 
-func get_instruction*(
-    s: var StreamSlice, isa_spec: var IsaSpec
-): WithError[InstructionUnbranched] =
-  var inst: InstructionUnbranched
-  var op_names: seq[string]
-  var is_labels: set[uint8]
-  var is_patterns: set[uint8]
+func parse_instruction_def(
+    s: var StreamSlice, isa_spec: var IsaSpec, patterns: seq[PatternMetadata]
+): WithError[Nothing] =
   let num_decoder_old =
     if isa_spec.instruction_decoders.is_some():
       isa_spec.instruction_decoders.get.len
     else:
       0
+
+  var inst: InstructionUnbranched
   check(
-    get_syntax(
-      s, inst, is_patterns, is_labels, op_names, isa_spec.instruction_decoders, isa_spec
-    )
+    parse_instruction_syntax(s, inst, isa_spec.instruction_decoders, isa_spec, patterns)
   )
 
+  var op_names = get_syntax_operand_names(inst)
+  var (is_labels, is_patterns) = get_syntax_operand_labels_n_patterns(inst)
+
+  let hashes = get_instruction_syntax_hashes(
+    inst.syntax, inst.operands, isa_spec.field_names, patterns
+  )
+  let inst_index = isa_spec.instructions.len
+  for hash in hashes:
+    let hash = hash.hash
+    if hash notin isa_spec.instruction_hashes:
+      isa_spec.instruction_hashes[hash] = @[inst_index]
+    elif isa_spec.instruction_hashes[hash][^1] != inst_index:
+      isa_spec.instruction_hashes[hash].add(inst_index)
+
   block BLK_BIT_PATTERN:
-    check(get_virtuals(s, inst, op_names, is_labels))
+    check(parse_virtual_operands(s, inst, op_names, is_labels))
     expect(
       inst.operands.len <= uint16.high.int,
       translate(31337_26426549472884, "Too many virtual operands"),
     )
 
-    check(get_asserts(s, inst, op_names, is_labels))
+    check(parse_assertions(s, inst, op_names, is_labels))
 
     check(
-      get_ifs(
+      parse_if_blocks(
         s, is_patterns, isa_spec.field_types, inst, isa_spec.instruction_decoders,
         op_names,
       )
     )
 
     let cp = checkpoint(s)
-    let (err, bit_pattern) = get_bit_pattern(s, is_patterns, inst, op_names)
+    let (err, bit_pattern) = parse_bit_pattern(s, is_patterns, inst, op_names)
 
     if err != "":
       expect(inst.chunks.len > 0, err)
@@ -1478,7 +2109,7 @@ func get_instruction*(
       for i in num_decoder_old ..< num_decoder_new:
         isa_spec.instruction_decoders.get()[i].description = description
 
-  result[1] = inst
+  isa_spec.instructions.add(inst)
 
 func parse_isa_spec_inner(
     s: var StreamSlice, with_disassembly: bool, with_tokens: bool
@@ -1622,30 +2253,15 @@ func parse_isa_spec_inner(
 
         skip_whitespaces(s)
 
-        let field_name =
-          if peek(s) in QUOTES:
-            let temp = check(
-              descape_string_content(
-                check(get_string(s, tk = tk_field_name, tk_quote = tk_string))
-              )
-            )
-            for c in temp:
-              if c in WHITESPACE:
-                error(
-                  translate(
-                    31337_67219559926029,
-                    "Field names can not contain whitespace characters",
-                  )
-                )
-            temp
-          else:
-            let temp = get_identifier(s, tk = tk_field_name)
-            if temp.len == 0:
-              if peek(s) == '\n':
-                break
-              error(translate(31337_68587613470552, "Expected a field value name"))
-            skip_whitespaces(s)
-            $temp
+        let field_name = get_identifier(s, tk = tk_field_name)
+        if field_name.len == 0:
+          if peek(s) == '\n':
+            break
+          error(translate(31337_68587613470552, "Expected a field value name"))
+
+        result[1].spec.field_names.incl($field_name)
+
+        skip_whitespaces(s)
 
         var bits: string
 
@@ -1705,125 +2321,10 @@ func parse_isa_spec_inner(
           )
         )
 
-  if matches(s, "[patterns]", tk = tk_header):
-    if not skip_newlines(s):
-      error(translate(31337_45267257140327, "Expected newline after section header"))
-
-    const KEYWORD_PATTERN = "pattern"
-    while not matches(s, '[', increment = false):
-      add_token(s, tk_new_instruction)
-      expect(
-        matches(s, KEYWORD_PATTERN, tk = tk_keyword),
-        translate(
-          31337_73627734748417, "Expected keyword 'pattern' before the pattern name"
-        ),
-      )
-
-      skip_whitespaces(s)
-
-      let pattern_name = get_identifier(s, tk = tk_pattern_name)
-      expect(
-        pattern_name.len > 0,
-        translate(31337_72958581072457, "Expected a name for the pattern"),
-      )
-
-      var parameters: seq[StreamSlice]
-
-      skip_whitespaces(s)
-      expect(
-        matches(s, '(', tk = tk_bracket),
-        translate(
-          31337_61772889138477, "Expected a '(' before the pattern parameter list"
-        ),
-      )
-
-      # This is a parametrized pattern, parse and store the parameter list
-      while not matches(s, ')', tk = tk_bracket):
-        if peek(s) in {'\n', '\0'}:
-          error(
-            translate(
-              31337_42907704133778, "Expected a ')' after the pattern parameter list"
-            )
-          )
-
-        skip_whitespaces(s)
-
-        if parameters.len > 0:
-          expect(
-            matches(s, ',', tk = tk_separator),
-            translate(31337_47258389995911, "Expected ',' between pattern parameters"),
-          )
-          skip_whitespaces(s)
-
-        let parameter_name = get_identifier(s, tk = tk_pattern_variable)
-        expect(
-          parameter_name.len > 0,
-          translate(31337_75146029145419, "Expected a name for the pattern parameter"),
-        )
-
-        parameters.add(parameter_name)
-
-      skip_whitespaces(s)
-      if not matches(s, '\n', tk = tk_whitespace):
-        error(translate(31337_63072912015761, "Expected newline before pattern body"))
-
-      var text: string
-      var texts: seq[string]
-      var parameter_indexes: seq[int]
-      var last_index = s.get_index()
-      while true:
-        while s.peek() notin {'\n', '\0'}:
-          if skip_comment(s)[0]:
-            continue
-
-          let curr_index = s.get_index()
-          let cp = checkpoint(s)
-          if matches(s, '{', tk = tk_bracket):
-            let parameter_name = get_identifier(s, tk = tk_pattern_variable_ref)
-            if matches(s, '}', tk = tk_bracket) and parameter_name in parameters:
-              parameter_indexes.add(parameters.find(parameter_name))
-              texts.add(text)
-              text.set_len(0)
-              last_index = curr_index + parameter_name.len + 2 # 2 for the brackets
-              continue
-
-            s.restore(cp)
-
-          text.add(read(s, tk = tk_text))
-
-        if s.peek() == '\0':
-          error(translate(31337_43708359021513, "Pattern must have a body"))
-
-        text.add(read(s, tk = tk_whitespace))
-
-        if matches(s, KEYWORD_PATTERN, increment = false) or
-            matches(s, '[', increment = false):
-          texts.add(text)
-          break
-
-      result[1].spec.patterns.add(
-        (
-          name: $pattern_name,
-          parameter_count: parameters.len,
-          pattern: ParametrizedPattern(texts: texts, parameters: parameter_indexes),
-        )
-      )
-
-      if result[1].spec.patterns.len >= uint8.high.int:
-        error(
-          translate(
-            31337_35053289858864,
-            "Too many patterns, at most {max_patterns} are allowed",
-            ("max_patterns", uint8.high),
-          )
-        )
-
-      skip_newlines(s)
+  let patterns = check(parse_section_pattern(s, result[1].spec))
 
   if not matches(s, "[instructions]", tk = tk_header):
-    error(
-      translate(31337_25123045290962, "Was expecting the [instructions] header here")
-    )
+    error(translate(31337_25123045290962, "Expected the [instructions] header here"))
 
   if not skip_newlines(s):
     error(translate(31337_62103010038950, "Expected newline after section header"))
@@ -1833,13 +2334,24 @@ func parse_isa_spec_inner(
 
   while peek(s) != '\0':
     add_token(s, tk_new_instruction)
-    var (error_message, inst) = get_instruction(s, result[1].spec)
+    let (error_message, _) = parse_instruction_def(s, result[1].spec, patterns)
     if error_message != "":
       error(error_message)
-    result[1].spec.instructions.add(inst)
 
     if not skip_newlines(s):
       error(translate(31337_29837913233106, "Expected newline between instructions"))
+
+  for inst in result[1].spec.instructions:
+    for syntax in inst.syntax:
+      if syntax.kind == sk_fixed_identifier and
+          syntax.text notin result[1].spec.field_names:
+        result[1].spec.mnemonics.incl(syntax.text)
+
+  for pattern in result[1].spec.patterns:
+    for syntax in pattern.inst.syntax:
+      if syntax.kind == sk_fixed_identifier and
+          syntax.text notin result[1].spec.field_names:
+        result[1].spec.mnemonics.incl(syntax.text)
 
   if with_tokens:
     result[1].tokens = collect_token_strings(s)

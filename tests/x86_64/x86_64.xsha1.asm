@@ -1,2 +1,2 @@
-a32 xsha1 
-gs xsha1 
+o16 gs xsha1 
+xsha1 

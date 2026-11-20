@@ -1,243 +1,243 @@
-vpmadcswd xmm8,xmm3,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm8,xmm3,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm8,xmm3,oword [rdx - 0x80000000],xmm14
-gs vpmadcswd xmm8,xmm3,oword [rsp],xmm3
-vpmadcswd xmm8,xmm3,oword [rsp],xmm7
-vpmadcswd xmm8,xmm3,oword [rsp],xmm14
-gs vpmadcswd xmm8,xmm3,oword [rsp + 1 * rbp],xmm3
-gs vpmadcswd xmm8,xmm3,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm8,xmm3,oword [rsp + 1 * rbp],xmm14
-vpmadcswd xmm8,xmm11,oword [rdx - 0x80000000],xmm3
-gs vpmadcswd xmm8,xmm11,oword [rdx - 0x80000000],xmm7
-vpmadcswd xmm8,xmm11,oword [rdx - 0x80000000],xmm14
-gs vpmadcswd xmm8,xmm11,oword [rsp],xmm3
-gs vpmadcswd xmm8,xmm11,oword [rsp],xmm7
-gs vpmadcswd xmm8,xmm11,oword [rsp],xmm14
-vpmadcswd xmm8,xmm11,oword [rsp + 1 * rbp],xmm3
-vpmadcswd xmm8,xmm11,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm8,xmm11,oword [rsp + 1 * rbp],xmm14
-vpmadcswd xmm8,xmm15,oword [rdx - 0x80000000],xmm3
-gs vpmadcswd xmm8,xmm15,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm8,xmm15,oword [rdx - 0x80000000],xmm14
-vpmadcswd xmm8,xmm15,oword [rsp],xmm3
-vpmadcswd xmm8,xmm15,oword [rsp],xmm7
-vpmadcswd xmm8,xmm15,oword [rsp],xmm14
-vpmadcswd xmm8,xmm15,oword [rsp + 1 * rbp],xmm3
-vpmadcswd xmm8,xmm15,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm8,xmm15,oword [rsp + 1 * rbp],xmm14
-gs vpmadcswd xmm5,xmm3,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm5,xmm3,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm5,xmm3,oword [rdx - 0x80000000],xmm14
-gs vpmadcswd xmm5,xmm3,oword [rsp],xmm3
-vpmadcswd xmm5,xmm3,oword [rsp],xmm7
-vpmadcswd xmm5,xmm3,oword [rsp],xmm14
-vpmadcswd xmm5,xmm3,oword [rsp + 1 * rbp],xmm3
-vpmadcswd xmm5,xmm3,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm5,xmm3,oword [rsp + 1 * rbp],xmm14
-vpmadcswd xmm5,xmm11,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm5,xmm11,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm5,xmm11,oword [rdx - 0x80000000],xmm14
-gs vpmadcswd xmm5,xmm11,oword [rsp],xmm3
-vpmadcswd xmm5,xmm11,oword [rsp],xmm7
-vpmadcswd xmm5,xmm11,oword [rsp],xmm14
-vpmadcswd xmm5,xmm11,oword [rsp + 1 * rbp],xmm3
-gs vpmadcswd xmm5,xmm11,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm5,xmm11,oword [rsp + 1 * rbp],xmm14
-gs vpmadcswd xmm5,xmm15,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm5,xmm15,oword [rdx - 0x80000000],xmm7
-vpmadcswd xmm5,xmm15,oword [rdx - 0x80000000],xmm14
-vpmadcswd xmm5,xmm15,oword [rsp],xmm3
-vpmadcswd xmm5,xmm15,oword [rsp],xmm7
-gs vpmadcswd xmm5,xmm15,oword [rsp],xmm14
-gs vpmadcswd xmm5,xmm15,oword [rsp + 1 * rbp],xmm3
-vpmadcswd xmm5,xmm15,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm5,xmm15,oword [rsp + 1 * rbp],xmm14
-vpmadcswd xmm10,xmm3,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm10,xmm3,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm10,xmm3,oword [rdx - 0x80000000],xmm14
-gs vpmadcswd xmm10,xmm3,oword [rsp],xmm3
-vpmadcswd xmm10,xmm3,oword [rsp],xmm7
-gs vpmadcswd xmm10,xmm3,oword [rsp],xmm14
-gs vpmadcswd xmm10,xmm3,oword [rsp + 1 * rbp],xmm3
-vpmadcswd xmm10,xmm3,oword [rsp + 1 * rbp],xmm7
-vpmadcswd xmm10,xmm3,oword [rsp + 1 * rbp],xmm14
-gs vpmadcswd xmm10,xmm11,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm10,xmm11,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm10,xmm11,oword [rdx - 0x80000000],xmm14
-vpmadcswd xmm10,xmm11,oword [rsp],xmm3
-gs vpmadcswd xmm10,xmm11,oword [rsp],xmm7
-gs vpmadcswd xmm10,xmm11,oword [rsp],xmm14
-vpmadcswd xmm10,xmm11,oword [rsp + 1 * rbp],xmm3
-gs vpmadcswd xmm10,xmm11,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm10,xmm11,oword [rsp + 1 * rbp],xmm14
-gs vpmadcswd xmm10,xmm15,oword [rdx - 0x80000000],xmm3
-vpmadcswd xmm10,xmm15,oword [rdx - 0x80000000],xmm7
-gs vpmadcswd xmm10,xmm15,oword [rdx - 0x80000000],xmm14
-gs vpmadcswd xmm10,xmm15,oword [rsp],xmm3
-gs vpmadcswd xmm10,xmm15,oword [rsp],xmm7
-vpmadcswd xmm10,xmm15,oword [rsp],xmm14
-gs vpmadcswd xmm10,xmm15,oword [rsp + 1 * rbp],xmm3
-gs vpmadcswd xmm10,xmm15,oword [rsp + 1 * rbp],xmm7
-gs vpmadcswd xmm10,xmm15,oword [rsp + 1 * rbp],xmm14
-a32 vpmadcswd xmm12,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-gs a32 vpmadcswd xmm12,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs a32 vpmadcswd xmm12,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-a32 gs vpmadcswd xmm12,xmm3,oword [esp + 1 * ebp],xmm0
-gs a32 vpmadcswd xmm12,xmm3,oword [esp + 1 * ebp],xmm9
-gs vpmadcswd xmm12,xmm3,oword [esp + 1 * ebp],xmm11
-a32 gs vpmadcswd xmm12,xmm3,oword [eax],xmm0
-vpmadcswd xmm12,xmm3,oword [eax],xmm9
-gs vpmadcswd xmm12,xmm3,oword [eax],xmm11
-a32 vpmadcswd xmm12,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-gs a32 vpmadcswd xmm12,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs a32 vpmadcswd xmm12,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-a32 vpmadcswd xmm12,xmm5,oword [esp + 1 * ebp],xmm0
-a32 gs vpmadcswd xmm12,xmm5,oword [esp + 1 * ebp],xmm9
-gs vpmadcswd xmm12,xmm5,oword [esp + 1 * ebp],xmm11
-gs vpmadcswd xmm12,xmm5,oword [eax],xmm0
-a32 vpmadcswd xmm12,xmm5,oword [eax],xmm9
-a32 gs vpmadcswd xmm12,xmm5,oword [eax],xmm11
-vpmadcswd xmm12,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-gs a32 vpmadcswd xmm12,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-a32 vpmadcswd xmm12,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-gs a32 vpmadcswd xmm12,xmm9,oword [esp + 1 * ebp],xmm0
-a32 gs vpmadcswd xmm12,xmm9,oword [esp + 1 * ebp],xmm9
-gs a32 vpmadcswd xmm12,xmm9,oword [esp + 1 * ebp],xmm11
-gs a32 vpmadcswd xmm12,xmm9,oword [eax],xmm0
-gs a32 vpmadcswd xmm12,xmm9,oword [eax],xmm9
-a32 gs vpmadcswd xmm12,xmm9,oword [eax],xmm11
-a32 gs vpmadcswd xmm10,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-a32 gs vpmadcswd xmm10,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-a32 gs vpmadcswd xmm10,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-a32 gs vpmadcswd xmm10,xmm3,oword [esp + 1 * ebp],xmm0
-a32 vpmadcswd xmm10,xmm3,oword [esp + 1 * ebp],xmm9
-gs vpmadcswd xmm10,xmm3,oword [esp + 1 * ebp],xmm11
-a32 vpmadcswd xmm10,xmm3,oword [eax],xmm0
-gs a32 vpmadcswd xmm10,xmm3,oword [eax],xmm9
-a32 gs vpmadcswd xmm10,xmm3,oword [eax],xmm11
-a32 vpmadcswd xmm10,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-a32 gs vpmadcswd xmm10,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs a32 vpmadcswd xmm10,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-a32 gs vpmadcswd xmm10,xmm5,oword [esp + 1 * ebp],xmm0
-gs vpmadcswd xmm10,xmm5,oword [esp + 1 * ebp],xmm9
-gs vpmadcswd xmm10,xmm5,oword [esp + 1 * ebp],xmm11
-a32 gs vpmadcswd xmm10,xmm5,oword [eax],xmm0
-vpmadcswd xmm10,xmm5,oword [eax],xmm9
-vpmadcswd xmm10,xmm5,oword [eax],xmm11
-a32 vpmadcswd xmm10,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-vpmadcswd xmm10,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs vpmadcswd xmm10,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-vpmadcswd xmm10,xmm9,oword [esp + 1 * ebp],xmm0
-gs a32 vpmadcswd xmm10,xmm9,oword [esp + 1 * ebp],xmm9
-gs a32 vpmadcswd xmm10,xmm9,oword [esp + 1 * ebp],xmm11
-vpmadcswd xmm10,xmm9,oword [eax],xmm0
-vpmadcswd xmm10,xmm9,oword [eax],xmm9
-gs vpmadcswd xmm10,xmm9,oword [eax],xmm11
-gs a32 vpmadcswd xmm8,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-vpmadcswd xmm8,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs vpmadcswd xmm8,xmm3,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-gs vpmadcswd xmm8,xmm3,oword [esp + 1 * ebp],xmm0
-gs a32 vpmadcswd xmm8,xmm3,oword [esp + 1 * ebp],xmm9
-a32 vpmadcswd xmm8,xmm3,oword [esp + 1 * ebp],xmm11
-gs a32 vpmadcswd xmm8,xmm3,oword [eax],xmm0
-vpmadcswd xmm8,xmm3,oword [eax],xmm9
-a32 gs vpmadcswd xmm8,xmm3,oword [eax],xmm11
-gs a32 vpmadcswd xmm8,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-vpmadcswd xmm8,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-gs vpmadcswd xmm8,xmm5,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-a32 gs vpmadcswd xmm8,xmm5,oword [esp + 1 * ebp],xmm0
-a32 gs vpmadcswd xmm8,xmm5,oword [esp + 1 * ebp],xmm9
-a32 vpmadcswd xmm8,xmm5,oword [esp + 1 * ebp],xmm11
-gs vpmadcswd xmm8,xmm5,oword [eax],xmm0
-gs vpmadcswd xmm8,xmm5,oword [eax],xmm9
-gs a32 vpmadcswd xmm8,xmm5,oword [eax],xmm11
-gs a32 vpmadcswd xmm8,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm0
-gs vpmadcswd xmm8,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm9
-a32 vpmadcswd xmm8,xmm9,oword [r14d + 1 * edx + 0x7FFFFFFF],xmm11
-vpmadcswd xmm8,xmm9,oword [esp + 1 * ebp],xmm0
-gs vpmadcswd xmm8,xmm9,oword [esp + 1 * ebp],xmm9
-gs vpmadcswd xmm8,xmm9,oword [esp + 1 * ebp],xmm11
-a32 gs vpmadcswd xmm8,xmm9,oword [eax],xmm0
-a32 gs vpmadcswd xmm8,xmm9,oword [eax],xmm9
-vpmadcswd xmm8,xmm9,oword [eax],xmm11
-a32 gs vpmadcswd xmm4,xmm2,xmm0,xmm4
-gs vpmadcswd xmm4,xmm2,xmm0,xmm9
-gs a32 vpmadcswd xmm4,xmm2,xmm0,xmm2
-gs a32 vpmadcswd xmm4,xmm2,xmm15,xmm4
-a32 gs vpmadcswd xmm4,xmm2,xmm15,xmm9
-gs a32 vpmadcswd xmm4,xmm2,xmm15,xmm2
-gs vpmadcswd xmm4,xmm2,xmm13,xmm4
-gs vpmadcswd xmm4,xmm2,xmm13,xmm9
-vpmadcswd xmm4,xmm2,xmm13,xmm2
-gs vpmadcswd xmm4,xmm11,xmm0,xmm4
-gs a32 vpmadcswd xmm4,xmm11,xmm0,xmm9
-a32 gs vpmadcswd xmm4,xmm11,xmm0,xmm2
-vpmadcswd xmm4,xmm11,xmm15,xmm4
-gs a32 vpmadcswd xmm4,xmm11,xmm15,xmm9
-vpmadcswd xmm4,xmm11,xmm15,xmm2
-vpmadcswd xmm4,xmm11,xmm13,xmm4
-a32 vpmadcswd xmm4,xmm11,xmm13,xmm9
-a32 gs vpmadcswd xmm4,xmm11,xmm13,xmm2
-a32 vpmadcswd xmm4,xmm13,xmm0,xmm4
-a32 vpmadcswd xmm4,xmm13,xmm0,xmm9
-gs a32 vpmadcswd xmm4,xmm13,xmm0,xmm2
-a32 gs vpmadcswd xmm4,xmm13,xmm15,xmm4
-vpmadcswd xmm4,xmm13,xmm15,xmm9
-gs vpmadcswd xmm4,xmm13,xmm15,xmm2
-gs vpmadcswd xmm4,xmm13,xmm13,xmm4
-a32 vpmadcswd xmm4,xmm13,xmm13,xmm9
-a32 gs vpmadcswd xmm4,xmm13,xmm13,xmm2
-a32 vpmadcswd xmm14,xmm2,xmm0,xmm4
-a32 vpmadcswd xmm14,xmm2,xmm0,xmm9
-a32 gs vpmadcswd xmm14,xmm2,xmm0,xmm2
-gs vpmadcswd xmm14,xmm2,xmm15,xmm4
-gs vpmadcswd xmm14,xmm2,xmm15,xmm9
-gs vpmadcswd xmm14,xmm2,xmm15,xmm2
-gs a32 vpmadcswd xmm14,xmm2,xmm13,xmm4
-vpmadcswd xmm14,xmm2,xmm13,xmm9
-a32 vpmadcswd xmm14,xmm2,xmm13,xmm2
-gs a32 vpmadcswd xmm14,xmm11,xmm0,xmm4
-a32 gs vpmadcswd xmm14,xmm11,xmm0,xmm9
-gs vpmadcswd xmm14,xmm11,xmm0,xmm2
-gs a32 vpmadcswd xmm14,xmm11,xmm15,xmm4
-a32 gs vpmadcswd xmm14,xmm11,xmm15,xmm9
-vpmadcswd xmm14,xmm11,xmm15,xmm2
-a32 vpmadcswd xmm14,xmm11,xmm13,xmm4
-gs vpmadcswd xmm14,xmm11,xmm13,xmm9
-gs a32 vpmadcswd xmm14,xmm11,xmm13,xmm2
-gs vpmadcswd xmm14,xmm13,xmm0,xmm4
-gs vpmadcswd xmm14,xmm13,xmm0,xmm9
-a32 vpmadcswd xmm14,xmm13,xmm0,xmm2
-a32 vpmadcswd xmm14,xmm13,xmm15,xmm4
-gs vpmadcswd xmm14,xmm13,xmm15,xmm9
-a32 gs vpmadcswd xmm14,xmm13,xmm15,xmm2
-vpmadcswd xmm14,xmm13,xmm13,xmm4
-a32 gs vpmadcswd xmm14,xmm13,xmm13,xmm9
-gs vpmadcswd xmm14,xmm13,xmm13,xmm2
-gs a32 vpmadcswd xmm12,xmm2,xmm0,xmm4
-gs vpmadcswd xmm12,xmm2,xmm0,xmm9
-gs vpmadcswd xmm12,xmm2,xmm0,xmm2
-a32 vpmadcswd xmm12,xmm2,xmm15,xmm4
-gs vpmadcswd xmm12,xmm2,xmm15,xmm9
-vpmadcswd xmm12,xmm2,xmm15,xmm2
-gs vpmadcswd xmm12,xmm2,xmm13,xmm4
-vpmadcswd xmm12,xmm2,xmm13,xmm9
-vpmadcswd xmm12,xmm2,xmm13,xmm2
-a32 gs vpmadcswd xmm12,xmm11,xmm0,xmm4
-a32 vpmadcswd xmm12,xmm11,xmm0,xmm9
-a32 vpmadcswd xmm12,xmm11,xmm0,xmm2
-a32 vpmadcswd xmm12,xmm11,xmm15,xmm4
-gs a32 vpmadcswd xmm12,xmm11,xmm15,xmm9
-a32 gs vpmadcswd xmm12,xmm11,xmm15,xmm2
-a32 vpmadcswd xmm12,xmm11,xmm13,xmm4
-gs a32 vpmadcswd xmm12,xmm11,xmm13,xmm9
-gs vpmadcswd xmm12,xmm11,xmm13,xmm2
-a32 gs vpmadcswd xmm12,xmm13,xmm0,xmm4
-a32 gs vpmadcswd xmm12,xmm13,xmm0,xmm9
-gs a32 vpmadcswd xmm12,xmm13,xmm0,xmm2
-a32 vpmadcswd xmm12,xmm13,xmm15,xmm4
-gs vpmadcswd xmm12,xmm13,xmm15,xmm9
-vpmadcswd xmm12,xmm13,xmm15,xmm2
-a32 vpmadcswd xmm12,xmm13,xmm13,xmm4
-gs a32 vpmadcswd xmm12,xmm13,xmm13,xmm9
-a32 vpmadcswd xmm12,xmm13,xmm13,xmm2
+gs vpmadcswd xmm11,xmm4,oword [r15 + 2 * rdi + 0x72],xmm7
+vpmadcswd xmm11,xmm4,oword [r15 + 2 * rdi + 0x72],xmm3
+gs vpmadcswd xmm11,xmm4,oword [r15 + 2 * rdi + 0x72],xmm1
+gs vpmadcswd xmm11,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+gs vpmadcswd xmm11,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+vpmadcswd xmm11,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+vpmadcswd xmm11,xmm4,oword [rdx - 0x80000000],xmm7
+vpmadcswd xmm11,xmm4,oword [rdx - 0x80000000],xmm3
+gs vpmadcswd xmm11,xmm4,oword [rdx - 0x80000000],xmm1
+vpmadcswd xmm11,xmm9,oword [r15 + 2 * rdi + 0x72],xmm7
+gs vpmadcswd xmm11,xmm9,oword [r15 + 2 * rdi + 0x72],xmm3
+gs vpmadcswd xmm11,xmm9,oword [r15 + 2 * rdi + 0x72],xmm1
+gs vpmadcswd xmm11,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+vpmadcswd xmm11,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+gs vpmadcswd xmm11,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+vpmadcswd xmm11,xmm9,oword [rdx - 0x80000000],xmm7
+vpmadcswd xmm11,xmm9,oword [rdx - 0x80000000],xmm3
+gs vpmadcswd xmm11,xmm9,oword [rdx - 0x80000000],xmm1
+gs vpmadcswd xmm11,xmm15,oword [r15 + 2 * rdi + 0x72],xmm7
+gs vpmadcswd xmm11,xmm15,oword [r15 + 2 * rdi + 0x72],xmm3
+vpmadcswd xmm11,xmm15,oword [r15 + 2 * rdi + 0x72],xmm1
+vpmadcswd xmm11,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+vpmadcswd xmm11,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+vpmadcswd xmm11,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+gs vpmadcswd xmm11,xmm15,oword [rdx - 0x80000000],xmm7
+gs vpmadcswd xmm11,xmm15,oword [rdx - 0x80000000],xmm3
+gs vpmadcswd xmm11,xmm15,oword [rdx - 0x80000000],xmm1
+vpmadcswd xmm14,xmm4,oword [r15 + 2 * rdi + 0x72],xmm7
+gs vpmadcswd xmm14,xmm4,oword [r15 + 2 * rdi + 0x72],xmm3
+vpmadcswd xmm14,xmm4,oword [r15 + 2 * rdi + 0x72],xmm1
+vpmadcswd xmm14,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+vpmadcswd xmm14,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+gs vpmadcswd xmm14,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+gs vpmadcswd xmm14,xmm4,oword [rdx - 0x80000000],xmm7
+vpmadcswd xmm14,xmm4,oword [rdx - 0x80000000],xmm3
+gs vpmadcswd xmm14,xmm4,oword [rdx - 0x80000000],xmm1
+gs vpmadcswd xmm14,xmm9,oword [r15 + 2 * rdi + 0x72],xmm7
+gs vpmadcswd xmm14,xmm9,oword [r15 + 2 * rdi + 0x72],xmm3
+gs vpmadcswd xmm14,xmm9,oword [r15 + 2 * rdi + 0x72],xmm1
+vpmadcswd xmm14,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+gs vpmadcswd xmm14,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+vpmadcswd xmm14,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+gs vpmadcswd xmm14,xmm9,oword [rdx - 0x80000000],xmm7
+vpmadcswd xmm14,xmm9,oword [rdx - 0x80000000],xmm3
+vpmadcswd xmm14,xmm9,oword [rdx - 0x80000000],xmm1
+vpmadcswd xmm14,xmm15,oword [r15 + 2 * rdi + 0x72],xmm7
+vpmadcswd xmm14,xmm15,oword [r15 + 2 * rdi + 0x72],xmm3
+gs vpmadcswd xmm14,xmm15,oword [r15 + 2 * rdi + 0x72],xmm1
+gs vpmadcswd xmm14,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+vpmadcswd xmm14,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+vpmadcswd xmm14,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+gs vpmadcswd xmm14,xmm15,oword [rdx - 0x80000000],xmm7
+gs vpmadcswd xmm14,xmm15,oword [rdx - 0x80000000],xmm3
+vpmadcswd xmm14,xmm15,oword [rdx - 0x80000000],xmm1
+gs vpmadcswd xmm5,xmm4,oword [r15 + 2 * rdi + 0x72],xmm7
+vpmadcswd xmm5,xmm4,oword [r15 + 2 * rdi + 0x72],xmm3
+gs vpmadcswd xmm5,xmm4,oword [r15 + 2 * rdi + 0x72],xmm1
+gs vpmadcswd xmm5,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+gs vpmadcswd xmm5,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+vpmadcswd xmm5,xmm4,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+vpmadcswd xmm5,xmm4,oword [rdx - 0x80000000],xmm7
+gs vpmadcswd xmm5,xmm4,oword [rdx - 0x80000000],xmm3
+vpmadcswd xmm5,xmm4,oword [rdx - 0x80000000],xmm1
+vpmadcswd xmm5,xmm9,oword [r15 + 2 * rdi + 0x72],xmm7
+vpmadcswd xmm5,xmm9,oword [r15 + 2 * rdi + 0x72],xmm3
+vpmadcswd xmm5,xmm9,oword [r15 + 2 * rdi + 0x72],xmm1
+gs vpmadcswd xmm5,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+vpmadcswd xmm5,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+vpmadcswd xmm5,xmm9,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+gs vpmadcswd xmm5,xmm9,oword [rdx - 0x80000000],xmm7
+gs vpmadcswd xmm5,xmm9,oword [rdx - 0x80000000],xmm3
+gs vpmadcswd xmm5,xmm9,oword [rdx - 0x80000000],xmm1
+gs vpmadcswd xmm5,xmm15,oword [r15 + 2 * rdi + 0x72],xmm7
+vpmadcswd xmm5,xmm15,oword [r15 + 2 * rdi + 0x72],xmm3
+vpmadcswd xmm5,xmm15,oword [r15 + 2 * rdi + 0x72],xmm1
+gs vpmadcswd xmm5,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm7
+vpmadcswd xmm5,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm3
+gs vpmadcswd xmm5,xmm15,oword [r14 + 1 * rdx + 0x7FFFFFFF],xmm1
+gs vpmadcswd xmm5,xmm15,oword [rdx - 0x80000000],xmm7
+vpmadcswd xmm5,xmm15,oword [rdx - 0x80000000],xmm3
+gs vpmadcswd xmm5,xmm15,oword [rdx - 0x80000000],xmm1
+vpmadcswd xmm14,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+gs vpmadcswd xmm14,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+gs a32 vpmadcswd xmm14,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+vpmadcswd xmm14,xmm7,oword [r13d],xmm10
+gs vpmadcswd xmm14,xmm7,oword [r13d],xmm6
+gs a32 vpmadcswd xmm14,xmm7,oword [r13d],xmm0
+a32 gs vpmadcswd xmm14,xmm7,oword [edx - 0x80000000],xmm10
+a32 vpmadcswd xmm14,xmm7,oword [edx - 0x80000000],xmm6
+a32 gs vpmadcswd xmm14,xmm7,oword [edx - 0x80000000],xmm0
+gs vpmadcswd xmm14,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+a32 vpmadcswd xmm14,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+gs a32 vpmadcswd xmm14,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+vpmadcswd xmm14,xmm13,oword [r13d],xmm10
+vpmadcswd xmm14,xmm13,oword [r13d],xmm6
+vpmadcswd xmm14,xmm13,oword [r13d],xmm0
+vpmadcswd xmm14,xmm13,oword [edx - 0x80000000],xmm10
+gs vpmadcswd xmm14,xmm13,oword [edx - 0x80000000],xmm6
+a32 gs vpmadcswd xmm14,xmm13,oword [edx - 0x80000000],xmm0
+a32 vpmadcswd xmm14,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+a32 vpmadcswd xmm14,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+gs a32 vpmadcswd xmm14,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+a32 gs vpmadcswd xmm14,xmm11,oword [r13d],xmm10
+a32 gs vpmadcswd xmm14,xmm11,oword [r13d],xmm6
+gs a32 vpmadcswd xmm14,xmm11,oword [r13d],xmm0
+gs a32 vpmadcswd xmm14,xmm11,oword [edx - 0x80000000],xmm10
+a32 gs vpmadcswd xmm14,xmm11,oword [edx - 0x80000000],xmm6
+a32 gs vpmadcswd xmm14,xmm11,oword [edx - 0x80000000],xmm0
+vpmadcswd xmm2,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+gs a32 vpmadcswd xmm2,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+a32 gs vpmadcswd xmm2,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+gs a32 vpmadcswd xmm2,xmm7,oword [r13d],xmm10
+a32 gs vpmadcswd xmm2,xmm7,oword [r13d],xmm6
+vpmadcswd xmm2,xmm7,oword [r13d],xmm0
+a32 gs vpmadcswd xmm2,xmm7,oword [edx - 0x80000000],xmm10
+gs a32 vpmadcswd xmm2,xmm7,oword [edx - 0x80000000],xmm6
+a32 vpmadcswd xmm2,xmm7,oword [edx - 0x80000000],xmm0
+gs vpmadcswd xmm2,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+gs a32 vpmadcswd xmm2,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+gs a32 vpmadcswd xmm2,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+a32 gs vpmadcswd xmm2,xmm13,oword [r13d],xmm10
+gs a32 vpmadcswd xmm2,xmm13,oword [r13d],xmm6
+a32 gs vpmadcswd xmm2,xmm13,oword [r13d],xmm0
+gs vpmadcswd xmm2,xmm13,oword [edx - 0x80000000],xmm10
+gs vpmadcswd xmm2,xmm13,oword [edx - 0x80000000],xmm6
+gs a32 vpmadcswd xmm2,xmm13,oword [edx - 0x80000000],xmm0
+a32 gs vpmadcswd xmm2,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+gs a32 vpmadcswd xmm2,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+gs a32 vpmadcswd xmm2,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+a32 vpmadcswd xmm2,xmm11,oword [r13d],xmm10
+vpmadcswd xmm2,xmm11,oword [r13d],xmm6
+gs a32 vpmadcswd xmm2,xmm11,oword [r13d],xmm0
+a32 gs vpmadcswd xmm2,xmm11,oword [edx - 0x80000000],xmm10
+a32 gs vpmadcswd xmm2,xmm11,oword [edx - 0x80000000],xmm6
+vpmadcswd xmm2,xmm11,oword [edx - 0x80000000],xmm0
+gs a32 vpmadcswd xmm0,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+vpmadcswd xmm0,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+a32 gs vpmadcswd xmm0,xmm7,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+vpmadcswd xmm0,xmm7,oword [r13d],xmm10
+gs a32 vpmadcswd xmm0,xmm7,oword [r13d],xmm6
+a32 gs vpmadcswd xmm0,xmm7,oword [r13d],xmm0
+gs a32 vpmadcswd xmm0,xmm7,oword [edx - 0x80000000],xmm10
+gs vpmadcswd xmm0,xmm7,oword [edx - 0x80000000],xmm6
+a32 gs vpmadcswd xmm0,xmm7,oword [edx - 0x80000000],xmm0
+a32 gs vpmadcswd xmm0,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+a32 gs vpmadcswd xmm0,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+vpmadcswd xmm0,xmm13,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+gs a32 vpmadcswd xmm0,xmm13,oword [r13d],xmm10
+a32 vpmadcswd xmm0,xmm13,oword [r13d],xmm6
+a32 gs vpmadcswd xmm0,xmm13,oword [r13d],xmm0
+gs vpmadcswd xmm0,xmm13,oword [edx - 0x80000000],xmm10
+gs a32 vpmadcswd xmm0,xmm13,oword [edx - 0x80000000],xmm6
+gs a32 vpmadcswd xmm0,xmm13,oword [edx - 0x80000000],xmm0
+a32 vpmadcswd xmm0,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm10
+a32 gs vpmadcswd xmm0,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm6
+a32 gs vpmadcswd xmm0,xmm11,oword [r11d + r11d * 2 + 0x6c71714c],xmm0
+a32 vpmadcswd xmm0,xmm11,oword [r13d],xmm10
+vpmadcswd xmm0,xmm11,oword [r13d],xmm6
+gs vpmadcswd xmm0,xmm11,oword [r13d],xmm0
+a32 gs vpmadcswd xmm0,xmm11,oword [edx - 0x80000000],xmm10
+gs a32 vpmadcswd xmm0,xmm11,oword [edx - 0x80000000],xmm6
+vpmadcswd xmm0,xmm11,oword [edx - 0x80000000],xmm0
+a32 vpmadcswd xmm1,xmm1,xmm11,xmm4
+gs a32 vpmadcswd xmm1,xmm1,xmm11,xmm13
+a32 vpmadcswd xmm1,xmm1,xmm11,xmm10
+a32 vpmadcswd xmm1,xmm1,xmm10,xmm4
+gs a32 vpmadcswd xmm1,xmm1,xmm10,xmm13
+gs vpmadcswd xmm1,xmm1,xmm10,xmm10
+gs vpmadcswd xmm1,xmm1,xmm15,xmm4
+gs vpmadcswd xmm1,xmm1,xmm15,xmm13
+vpmadcswd xmm1,xmm1,xmm15,xmm10
+vpmadcswd xmm1,xmm2,xmm11,xmm4
+a32 gs vpmadcswd xmm1,xmm2,xmm11,xmm13
+gs vpmadcswd xmm1,xmm2,xmm11,xmm10
+gs vpmadcswd xmm1,xmm2,xmm10,xmm4
+vpmadcswd xmm1,xmm2,xmm10,xmm13
+a32 vpmadcswd xmm1,xmm2,xmm10,xmm10
+gs vpmadcswd xmm1,xmm2,xmm15,xmm4
+a32 gs vpmadcswd xmm1,xmm2,xmm15,xmm13
+a32 gs vpmadcswd xmm1,xmm2,xmm15,xmm10
+gs a32 vpmadcswd xmm1,xmm14,xmm11,xmm4
+a32 gs vpmadcswd xmm1,xmm14,xmm11,xmm13
+a32 gs vpmadcswd xmm1,xmm14,xmm11,xmm10
+gs vpmadcswd xmm1,xmm14,xmm10,xmm4
+gs vpmadcswd xmm1,xmm14,xmm10,xmm13
+gs a32 vpmadcswd xmm1,xmm14,xmm10,xmm10
+gs vpmadcswd xmm1,xmm14,xmm15,xmm4
+gs a32 vpmadcswd xmm1,xmm14,xmm15,xmm13
+vpmadcswd xmm1,xmm14,xmm15,xmm10
+vpmadcswd xmm4,xmm1,xmm11,xmm4
+a32 gs vpmadcswd xmm4,xmm1,xmm11,xmm13
+a32 gs vpmadcswd xmm4,xmm1,xmm11,xmm10
+gs vpmadcswd xmm4,xmm1,xmm10,xmm4
+a32 vpmadcswd xmm4,xmm1,xmm10,xmm13
+a32 vpmadcswd xmm4,xmm1,xmm10,xmm10
+a32 vpmadcswd xmm4,xmm1,xmm15,xmm4
+gs a32 vpmadcswd xmm4,xmm1,xmm15,xmm13
+gs vpmadcswd xmm4,xmm1,xmm15,xmm10
+gs a32 vpmadcswd xmm4,xmm2,xmm11,xmm4
+gs a32 vpmadcswd xmm4,xmm2,xmm11,xmm13
+a32 gs vpmadcswd xmm4,xmm2,xmm11,xmm10
+a32 vpmadcswd xmm4,xmm2,xmm10,xmm4
+gs vpmadcswd xmm4,xmm2,xmm10,xmm13
+vpmadcswd xmm4,xmm2,xmm10,xmm10
+a32 gs vpmadcswd xmm4,xmm2,xmm15,xmm4
+gs vpmadcswd xmm4,xmm2,xmm15,xmm13
+a32 vpmadcswd xmm4,xmm2,xmm15,xmm10
+a32 vpmadcswd xmm4,xmm14,xmm11,xmm4
+gs a32 vpmadcswd xmm4,xmm14,xmm11,xmm13
+a32 gs vpmadcswd xmm4,xmm14,xmm11,xmm10
+a32 vpmadcswd xmm4,xmm14,xmm10,xmm4
+a32 gs vpmadcswd xmm4,xmm14,xmm10,xmm13
+a32 gs vpmadcswd xmm4,xmm14,xmm10,xmm10
+a32 vpmadcswd xmm4,xmm14,xmm15,xmm4
+a32 vpmadcswd xmm4,xmm14,xmm15,xmm13
+gs a32 vpmadcswd xmm4,xmm14,xmm15,xmm10
+a32 vpmadcswd xmm5,xmm1,xmm11,xmm4
+gs a32 vpmadcswd xmm5,xmm1,xmm11,xmm13
+a32 gs vpmadcswd xmm5,xmm1,xmm11,xmm10
+gs vpmadcswd xmm5,xmm1,xmm10,xmm4
+gs a32 vpmadcswd xmm5,xmm1,xmm10,xmm13
+gs a32 vpmadcswd xmm5,xmm1,xmm10,xmm10
+gs vpmadcswd xmm5,xmm1,xmm15,xmm4
+a32 gs vpmadcswd xmm5,xmm1,xmm15,xmm13
+a32 gs vpmadcswd xmm5,xmm1,xmm15,xmm10
+gs vpmadcswd xmm5,xmm2,xmm11,xmm4
+gs a32 vpmadcswd xmm5,xmm2,xmm11,xmm13
+a32 gs vpmadcswd xmm5,xmm2,xmm11,xmm10
+gs a32 vpmadcswd xmm5,xmm2,xmm10,xmm4
+gs a32 vpmadcswd xmm5,xmm2,xmm10,xmm13
+a32 gs vpmadcswd xmm5,xmm2,xmm10,xmm10
+gs a32 vpmadcswd xmm5,xmm2,xmm15,xmm4
+a32 vpmadcswd xmm5,xmm2,xmm15,xmm13
+a32 gs vpmadcswd xmm5,xmm2,xmm15,xmm10
+vpmadcswd xmm5,xmm14,xmm11,xmm4
+a32 vpmadcswd xmm5,xmm14,xmm11,xmm13
+a32 vpmadcswd xmm5,xmm14,xmm11,xmm10
+a32 vpmadcswd xmm5,xmm14,xmm10,xmm4
+vpmadcswd xmm5,xmm14,xmm10,xmm13
+a32 gs vpmadcswd xmm5,xmm14,xmm10,xmm10
+a32 vpmadcswd xmm5,xmm14,xmm15,xmm4
+a32 gs vpmadcswd xmm5,xmm14,xmm15,xmm13
+a32 vpmadcswd xmm5,xmm14,xmm15,xmm10

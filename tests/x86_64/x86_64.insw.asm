@@ -1,2 +1,2 @@
-repne o16 gs a32 insw 
-repne insw 
+o16 repne gs insw 
+o16 repne gs insw 

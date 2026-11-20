@@ -1,2 +1,2 @@
-fpatan 
-a32 gs o16 fpatan 
+gs fpatan 
+a32 o16 fpatan 

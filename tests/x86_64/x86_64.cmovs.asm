@@ -1,135 +1,135 @@
-gs cmovs rsp,qword [r12]
-gs cmovs rsp,qword [r13]
-gs cmovs rsp,qword [rsp + 1 * rbp]
-cmovs r14,qword [r12]
-gs cmovs r14,qword [r13]
-gs cmovs r14,qword [rsp + 1 * rbp]
-gs cmovs r12,qword [r12]
-cmovs r12,qword [r13]
-gs cmovs r12,qword [rsp + 1 * rbp]
-cmovs rax,qword [edx - 0x80000000]
-cmovs rax,qword [eax]
-cmovs rax,qword [ebp]
-a32 cmovs r12,qword [edx - 0x80000000]
-gs a32 cmovs r12,qword [eax]
-a32 gs cmovs r12,qword [ebp]
-a32 gs cmovs rbp,qword [edx - 0x80000000]
-gs a32 cmovs rbp,qword [eax]
-gs cmovs rbp,qword [ebp]
-gs a32 cmovs r9,rbx
-gs cmovs r9,r9
-gs a32 cmovs r9,r14
-a32 gs cmovs rdx,rbx
-gs a32 cmovs rdx,r9
-a32 gs cmovs rdx,r14
-a32 cmovs r14,rbx
-a32 cmovs r14,r9
-gs a32 cmovs r14,r14
-cmovs eax,dword [rbx + 8 * rdx]
-gs cmovs eax,dword [rbp]
-gs cmovs eax,dword [r12]
-cmovs edx,dword [rbx + 8 * rdx]
-gs cmovs edx,dword [rbp]
-gs cmovs edx,dword [r12]
-gs cmovs esi,dword [rbx + 8 * rdx]
-cmovs esi,dword [rbp]
-gs cmovs esi,dword [r12]
-cmovs r12d,dword [edx - 0x80000000]
-gs cmovs r12d,dword [ebx + 8 * edx]
-gs cmovs r12d,dword [ebp]
-gs cmovs edi,dword [edx - 0x80000000]
-a32 cmovs edi,dword [ebx + 8 * edx]
-a32 gs cmovs edi,dword [ebp]
-a32 cmovs r15d,dword [edx - 0x80000000]
-gs cmovs r15d,dword [ebx + 8 * edx]
-a32 gs cmovs r15d,dword [ebp]
-cmovs eax,dword [r11 + r11 * 2 + 0x1ebc845]
-gs cmovs eax,dword [rdx - 0x80000000]
-gs cmovs eax,dword [rsp + 1 * rbp]
-cmovs r9d,dword [r11 + r11 * 2 + 0x1ebc845]
-cmovs r9d,dword [rdx - 0x80000000]
-gs cmovs r9d,dword [rsp + 1 * rbp]
-cmovs ecx,dword [r11 + r11 * 2 + 0x1ebc845]
-cmovs ecx,dword [rdx - 0x80000000]
-gs cmovs ecx,dword [rsp + 1 * rbp]
-a32 gs cmovs r11d,dword [r11d + r11d * 2 + 0x1ebc845]
-gs cmovs r11d,dword [ebp]
-cmovs r11d,dword [esp + 1 * ebp]
-gs a32 cmovs r13d,dword [r11d + r11d * 2 + 0x1ebc845]
-cmovs r13d,dword [ebp]
-cmovs r13d,dword [esp + 1 * ebp]
-gs a32 cmovs ebp,dword [r11d + r11d * 2 + 0x1ebc845]
-gs a32 cmovs ebp,dword [ebp]
-gs cmovs ebp,dword [esp + 1 * ebp]
-a32 cmovs r8d,r8d
-a32 gs cmovs r8d,r14d
-gs cmovs r8d,edi
-gs cmovs r15d,r8d
-cmovs r15d,r14d
-a32 cmovs r15d,edi
-a32 cmovs r14d,r8d
-gs cmovs r14d,r14d
-gs a32 cmovs r14d,edi
-gs cmovs r13d,r13d
-gs a32 cmovs r13d,r8d
-a32 cmovs r13d,esi
-gs a32 cmovs r8d,r13d
-a32 gs cmovs r8d,r8d
-gs cmovs r8d,esi
-gs cmovs ebx,r13d
-cmovs ebx,r8d
-a32 gs cmovs ebx,esi
-gs o16 cmovs di,word [r15 + 2 * rdi + 0x72]
-gs cmovs di,word [rdx - 0x80000000]
-cmovs di,word [rax]
-o16 cmovs r15w,word [r15 + 2 * rdi + 0x72]
-cmovs r15w,word [rdx - 0x80000000]
-gs o16 cmovs r15w,word [rax]
-o16 cmovs r8w,word [r15 + 2 * rdi + 0x72]
-o16 gs cmovs r8w,word [rdx - 0x80000000]
-cmovs r8w,word [rax]
-gs o16 cmovs bx,word [edx - 0x80000000]
-cmovs bx,word [r12d]
-a32 o16 cmovs bx,word [r11d + r11d * 2 + 0x66537da5]
-a32 o16 gs cmovs ax,word [edx - 0x80000000]
-gs a32 cmovs ax,word [r12d]
-o16 a32 gs cmovs ax,word [r11d + r11d * 2 + 0x66537da5]
-o16 a32 gs cmovs r11w,word [edx - 0x80000000]
-a32 gs cmovs r11w,word [r12d]
-gs o16 a32 cmovs r11w,word [r11d + r11d * 2 + 0x66537da5]
-gs cmovs r10w,word [rax]
-gs cmovs r10w,word [rbx + 8 * rdx]
-o16 gs cmovs r10w,word [rbp]
-o16 gs cmovs bp,word [rax]
-o16 cmovs bp,word [rbx + 8 * rdx]
-gs o16 cmovs bp,word [rbp]
-gs cmovs r9w,word [rax]
-cmovs r9w,word [rbx + 8 * rdx]
-gs cmovs r9w,word [rbp]
-a32 o16 cmovs sp,word [ebp]
-a32 o16 gs cmovs sp,word [r11d + r11d * 2 + 0x66537da5]
-gs o16 cmovs sp,word [edx - 0x80000000]
-cmovs ax,word [ebp]
-gs a32 o16 cmovs ax,word [r11d + r11d * 2 + 0x66537da5]
-gs o16 a32 cmovs ax,word [edx - 0x80000000]
-o16 gs cmovs r9w,word [ebp]
-gs a32 o16 cmovs r9w,word [r11d + r11d * 2 + 0x66537da5]
-a32 gs cmovs r9w,word [edx - 0x80000000]
-o16 gs cmovs sp,ax
-gs cmovs sp,bx
-a32 cmovs sp,bp
-gs o16 a32 cmovs bx,ax
-a32 gs cmovs bx,bx
-o16 cmovs bx,bp
-gs o16 a32 cmovs r12w,ax
-gs cmovs r12w,bx
-a32 o16 gs cmovs r12w,bp
-gs cmovs bx,si
-a32 o16 cmovs bx,r10w
-gs o16 cmovs bx,r15w
-o16 gs cmovs r13w,si
-a32 cmovs r13w,r10w
-a32 gs cmovs r13w,r15w
-a32 o16 cmovs cx,si
-o16 cmovs cx,r10w
-gs o16 cmovs cx,r15w
+cmovs r10,qword [r12]
+cmovs r10,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovs r10,qword [rdx - 0x80000000]
+gs cmovs r15,qword [r12]
+cmovs r15,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovs r15,qword [rdx - 0x80000000]
+cmovs r12,qword [r12]
+cmovs r12,qword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovs r12,qword [rdx - 0x80000000]
+a32 gs cmovs r9,qword [edx - 0x80000000]
+gs cmovs r9,qword [r11d + r11d * 2 + 0x568fc6a]
+cmovs r9,qword [esp]
+gs a32 cmovs rbp,qword [edx - 0x80000000]
+a32 gs cmovs rbp,qword [r11d + r11d * 2 + 0x568fc6a]
+cmovs rbp,qword [esp]
+cmovs r15,qword [edx - 0x80000000]
+a32 gs cmovs r15,qword [r11d + r11d * 2 + 0x568fc6a]
+gs cmovs r15,qword [esp]
+gs a32 cmovs r9,rax
+gs cmovs r9,rsp
+cmovs r9,rdx
+a32 cmovs r10,rax
+gs a32 cmovs r10,rsp
+gs a32 cmovs r10,rdx
+gs cmovs rbp,rax
+gs a32 cmovs rbp,rsp
+gs a32 cmovs rbp,rdx
+cmovs ebx,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovs ebx,dword [rax]
+gs cmovs ebx,dword [r11 + r11 * 2 + 0x56dc04cc]
+gs cmovs ebp,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovs ebp,dword [rax]
+cmovs ebp,dword [r11 + r11 * 2 + 0x56dc04cc]
+cmovs r14d,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovs r14d,dword [rax]
+gs cmovs r14d,dword [r11 + r11 * 2 + 0x56dc04cc]
+gs cmovs r9d,dword [edx - 0x80000000]
+gs cmovs r9d,dword [r12d]
+a32 cmovs r9d,dword [esp]
+gs a32 cmovs r8d,dword [edx - 0x80000000]
+a32 gs cmovs r8d,dword [r12d]
+cmovs r8d,dword [esp]
+gs cmovs r13d,dword [edx - 0x80000000]
+gs cmovs r13d,dword [r12d]
+gs cmovs r13d,dword [esp]
+gs cmovs r9d,dword [rbp]
+cmovs r9d,dword [r13]
+gs cmovs r9d,dword [rdx - 0x80000000]
+gs cmovs r13d,dword [rbp]
+gs cmovs r13d,dword [r13]
+cmovs r13d,dword [rdx - 0x80000000]
+gs cmovs ecx,dword [rbp]
+gs cmovs ecx,dword [r13]
+gs cmovs ecx,dword [rdx - 0x80000000]
+a32 cmovs ecx,dword [edx - 0x80000000]
+a32 cmovs ecx,dword [ebp]
+cmovs ecx,dword [r15d + 2 * edi + 0x72]
+a32 gs cmovs r12d,dword [edx - 0x80000000]
+a32 cmovs r12d,dword [ebp]
+gs a32 cmovs r12d,dword [r15d + 2 * edi + 0x72]
+a32 cmovs r9d,dword [edx - 0x80000000]
+a32 cmovs r9d,dword [ebp]
+gs cmovs r9d,dword [r15d + 2 * edi + 0x72]
+gs cmovs ebp,r11d
+cmovs ebp,esi
+cmovs ebp,r12d
+gs a32 cmovs r12d,r11d
+cmovs r12d,esi
+cmovs r12d,r12d
+a32 cmovs r9d,r11d
+gs a32 cmovs r9d,esi
+gs a32 cmovs r9d,r12d
+gs a32 cmovs esp,r8d
+cmovs esp,eax
+a32 gs cmovs esp,esp
+cmovs ebp,r8d
+cmovs ebp,eax
+cmovs ebp,esp
+gs a32 cmovs edi,r8d
+gs cmovs edi,eax
+a32 cmovs edi,esp
+o16 cmovs r14w,word [rbp]
+o16 cmovs r14w,word [rdx - 0x80000000]
+gs o16 cmovs r14w,word [r13]
+gs o16 cmovs r8w,word [rbp]
+gs cmovs r8w,word [rdx - 0x80000000]
+gs cmovs r8w,word [r13]
+gs cmovs r11w,word [rbp]
+gs o16 cmovs r11w,word [rdx - 0x80000000]
+o16 cmovs r11w,word [r13]
+gs cmovs dx,word [r15d + 2 * edi + 0x72]
+gs cmovs dx,word [r13d]
+gs a32 o16 cmovs dx,word [esp]
+a32 o16 gs cmovs bx,word [r15d + 2 * edi + 0x72]
+o16 gs cmovs bx,word [r13d]
+o16 a32 gs cmovs bx,word [esp]
+o16 gs a32 cmovs r11w,word [r15d + 2 * edi + 0x72]
+a32 gs cmovs r11w,word [r13d]
+cmovs r11w,word [esp]
+gs cmovs cx,word [rbp]
+gs cmovs cx,word [r13]
+o16 cmovs cx,word [r14 + 1 * rdx + 0x7FFFFFFF]
+cmovs si,word [rbp]
+gs o16 cmovs si,word [r13]
+cmovs si,word [r14 + 1 * rdx + 0x7FFFFFFF]
+gs cmovs r15w,word [rbp]
+cmovs r15w,word [r13]
+gs o16 cmovs r15w,word [r14 + 1 * rdx + 0x7FFFFFFF]
+o16 a32 cmovs r12w,word [r13d]
+gs a32 o16 cmovs r12w,word [r12d]
+a32 gs cmovs r12w,word [esp]
+o16 a32 gs cmovs si,word [r13d]
+a32 o16 gs cmovs si,word [r12d]
+a32 o16 gs cmovs si,word [esp]
+o16 a32 gs cmovs bp,word [r13d]
+a32 gs o16 cmovs bp,word [r12d]
+a32 o16 gs cmovs bp,word [esp]
+gs o16 cmovs cx,dx
+o16 gs cmovs cx,r10w
+gs a32 o16 cmovs cx,r15w
+o16 cmovs r10w,dx
+a32 o16 cmovs r10w,r10w
+gs a32 o16 cmovs r10w,r15w
+o16 gs cmovs r12w,dx
+o16 gs cmovs r12w,r10w
+gs a32 o16 cmovs r12w,r15w
+o16 gs a32 cmovs bp,cx
+o16 a32 cmovs bp,di
+a32 cmovs bp,r11w
+gs o16 a32 cmovs r10w,cx
+a32 cmovs r10w,di
+a32 o16 cmovs r10w,r11w
+gs a32 o16 cmovs r9w,cx
+gs a32 cmovs r9w,di
+gs cmovs r9w,r11w

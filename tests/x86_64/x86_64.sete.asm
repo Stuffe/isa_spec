@@ -1,18 +1,18 @@
-gs o16 sete byte [rsp]
-gs o16 sete byte [rax]
-gs sete byte [rdx - 0x80000000]
-gs sete byte [esp]
+o16 sete byte [rax]
+sete byte [rbx + 8 * rdx]
+o16 gs sete byte [r15 + 2 * rdi + 0x72]
+a32 o16 gs sete byte [r11d + r11d * 2 + 0x2920e855]
 sete byte [edx - 0x80000000]
-gs a32 sete byte [r13d]
-o16 sete byte [rbx + 8 * rdx]
-o16 sete byte [r12]
-o16 sete byte [rdx - 0x80000000]
-gs a32 o16 sete byte [ebx + 8 * edx]
-gs sete byte [r13d]
-gs o16 a32 sete byte [eax]
-a32 o16 gs sete r10b
-o16 gs a32 sete r14b
-sete r15b
-gs sete bpl
-a32 gs o16 sete bl
-o16 gs sete r8b
+a32 o16 gs sete byte [ebx + 8 * edx]
+o16 gs sete byte [rsp + 1 * rbp]
+gs sete byte [r15 + 2 * rdi + 0x72]
+gs sete byte [r13]
+o16 gs sete byte [r14d + 1 * edx + 0x7FFFFFFF]
+a32 o16 sete byte [edx - 0x80000000]
+o16 a32 gs sete byte [ebx + 8 * edx]
+a32 o16 sete r15b
+o16 sete r14b
+a32 sete dl
+o16 sete r15b
+gs a32 sete sil
+sete r13b

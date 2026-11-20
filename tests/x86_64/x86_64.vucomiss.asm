@@ -1,54 +1,54 @@
-vucomiss xmm1,dword [r11 + r11 * 2 + 0x547bc814]
-gs vucomiss xmm1,dword [r15 + 2 * rdi + 0x72]
-vucomiss xmm1,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-vucomiss xmm7,dword [r11 + r11 * 2 + 0x547bc814]
-vucomiss xmm7,dword [r15 + 2 * rdi + 0x72]
-vucomiss xmm7,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-vucomiss xmm2,dword [r11 + r11 * 2 + 0x547bc814]
-gs vucomiss xmm2,dword [r15 + 2 * rdi + 0x72]
-vucomiss xmm2,dword [r14 + 1 * rdx + 0x7FFFFFFF]
-gs vucomiss xmm1,dword [ebx + 8 * edx]
-vucomiss xmm1,dword [esp]
-vucomiss xmm1,dword [r12d]
-gs vucomiss xmm9,dword [ebx + 8 * edx]
-gs vucomiss xmm9,dword [esp]
-a32 vucomiss xmm9,dword [r12d]
-gs a32 vucomiss xmm0,dword [ebx + 8 * edx]
-a32 gs vucomiss xmm0,dword [esp]
-gs a32 vucomiss xmm0,dword [r12d]
-gs vucomiss xmm6,dword [r15 + 2 * rdi + 0x72]
-vucomiss xmm6,dword [rbx + 8 * rdx]
-vucomiss xmm6,dword [rsp]
-vucomiss xmm9,dword [r15 + 2 * rdi + 0x72]
-gs vucomiss xmm9,dword [rbx + 8 * rdx]
-vucomiss xmm9,dword [rsp]
-vucomiss xmm11,dword [r15 + 2 * rdi + 0x72]
-gs vucomiss xmm11,dword [rbx + 8 * rdx]
-vucomiss xmm11,dword [rsp]
-gs vucomiss xmm3,dword [esp]
-a32 vucomiss xmm3,dword [ebp]
-a32 vucomiss xmm3,dword [r14d + 1 * edx + 0x7FFFFFFF]
-vucomiss xmm15,dword [esp]
-a32 vucomiss xmm15,dword [ebp]
-vucomiss xmm15,dword [r14d + 1 * edx + 0x7FFFFFFF]
-gs a32 vucomiss xmm10,dword [esp]
-gs vucomiss xmm10,dword [ebp]
-vucomiss xmm10,dword [r14d + 1 * edx + 0x7FFFFFFF]
-a32 gs vucomiss xmm15,xmm2
-a32 gs vucomiss xmm15,xmm0
-gs vucomiss xmm15,xmm15
-a32 vucomiss xmm3,xmm2
-gs vucomiss xmm3,xmm0
-gs vucomiss xmm3,xmm15
-vucomiss xmm4,xmm2
-a32 vucomiss xmm4,xmm0
-gs a32 vucomiss xmm4,xmm15
-a32 gs vucomiss xmm0,xmm14
-a32 vucomiss xmm0,xmm13
-a32 gs vucomiss xmm0,xmm10
-a32 gs vucomiss xmm4,xmm14
+vucomiss xmm4,dword [rbx + 8 * rdx]
+gs vucomiss xmm4,dword [r11 + r11 * 2 + 0x6ad192db]
+gs vucomiss xmm4,dword [rsp]
+vucomiss xmm10,dword [rbx + 8 * rdx]
+vucomiss xmm10,dword [r11 + r11 * 2 + 0x6ad192db]
+gs vucomiss xmm10,dword [rsp]
+gs vucomiss xmm3,dword [rbx + 8 * rdx]
+gs vucomiss xmm3,dword [r11 + r11 * 2 + 0x6ad192db]
+gs vucomiss xmm3,dword [rsp]
+vucomiss xmm14,dword [eax]
+gs a32 vucomiss xmm14,dword [r11d + r11d * 2 + 0x6ad192db]
+gs vucomiss xmm14,dword [r12d]
+vucomiss xmm11,dword [eax]
+a32 vucomiss xmm11,dword [r11d + r11d * 2 + 0x6ad192db]
+gs a32 vucomiss xmm11,dword [r12d]
+gs a32 vucomiss xmm4,dword [eax]
+a32 gs vucomiss xmm4,dword [r11d + r11d * 2 + 0x6ad192db]
+gs vucomiss xmm4,dword [r12d]
+vucomiss xmm0,dword [r11 + r11 * 2 + 0x6ad192db]
+vucomiss xmm0,dword [rax]
+vucomiss xmm0,dword [rbp]
+vucomiss xmm9,dword [r11 + r11 * 2 + 0x6ad192db]
+vucomiss xmm9,dword [rax]
+vucomiss xmm9,dword [rbp]
+vucomiss xmm8,dword [r11 + r11 * 2 + 0x6ad192db]
+vucomiss xmm8,dword [rax]
+vucomiss xmm8,dword [rbp]
+a32 vucomiss xmm13,dword [eax]
+gs a32 vucomiss xmm13,dword [esp]
+gs a32 vucomiss xmm13,dword [r13d]
+a32 vucomiss xmm11,dword [eax]
+gs a32 vucomiss xmm11,dword [esp]
+a32 vucomiss xmm11,dword [r13d]
+a32 vucomiss xmm15,dword [eax]
+a32 vucomiss xmm15,dword [esp]
+gs vucomiss xmm15,dword [r13d]
+a32 gs vucomiss xmm14,xmm12
+a32 vucomiss xmm14,xmm6
+gs vucomiss xmm14,xmm7
+gs vucomiss xmm11,xmm12
+a32 gs vucomiss xmm11,xmm6
+gs vucomiss xmm11,xmm7
+vucomiss xmm4,xmm12
+gs a32 vucomiss xmm4,xmm6
+vucomiss xmm4,xmm7
+gs a32 vucomiss xmm10,xmm9
+vucomiss xmm10,xmm1
+a32 vucomiss xmm10,xmm13
+a32 gs vucomiss xmm4,xmm9
+a32 gs vucomiss xmm4,xmm1
 a32 vucomiss xmm4,xmm13
-a32 gs vucomiss xmm4,xmm10
-vucomiss xmm15,xmm14
-gs vucomiss xmm15,xmm13
-vucomiss xmm15,xmm10
+vucomiss xmm12,xmm9
+a32 gs vucomiss xmm12,xmm1
+gs vucomiss xmm12,xmm13

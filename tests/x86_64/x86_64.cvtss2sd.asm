@@ -1,54 +1,54 @@
-gs o16 cvtss2sd xmm8,dword [rbx + 8 * rdx]
- gs cvtss2sd xmm8,dword [rsp]
-gs o16  cvtss2sd xmm8,dword [rbp]
-o16 gs  cvtss2sd xmm4,dword [rbx + 8 * rdx]
-o16  gs cvtss2sd xmm4,dword [rsp]
- o16 cvtss2sd xmm4,dword [rbp]
- gs cvtss2sd xmm10,dword [rbx + 8 * rdx]
-o16 gs cvtss2sd xmm10,dword [rsp]
-gs  o16 cvtss2sd xmm10,dword [rbp]
-gs o16 cvtss2sd xmm6,dword [r11d + r11d * 2 + 0x7bdfbd9c]
- a32 gs cvtss2sd xmm6,dword [edx - 0x80000000]
-a32 gs o16 cvtss2sd xmm6,dword [r12d]
-o16 a32 cvtss2sd xmm13,dword [r11d + r11d * 2 + 0x7bdfbd9c]
- a32 gs cvtss2sd xmm13,dword [edx - 0x80000000]
-o16  gs cvtss2sd xmm13,dword [r12d]
-gs o16 cvtss2sd xmm2,dword [r11d + r11d * 2 + 0x7bdfbd9c]
-gs cvtss2sd xmm2,dword [edx - 0x80000000]
-a32 o16 cvtss2sd xmm2,dword [r12d]
-gs  o16 cvtss2sd xmm9,dword [rdx - 0x80000000]
-gs  cvtss2sd xmm9,dword [r15 + 2 * rdi + 0x72]
-gs o16  cvtss2sd xmm9,dword [r12]
-o16 gs  cvtss2sd xmm15,dword [rdx - 0x80000000]
-cvtss2sd xmm15,dword [r15 + 2 * rdi + 0x72]
-gs cvtss2sd xmm15,dword [r12]
-o16 gs  cvtss2sd xmm8,dword [rdx - 0x80000000]
-cvtss2sd xmm8,dword [r15 + 2 * rdi + 0x72]
- gs cvtss2sd xmm8,dword [r12]
-a32  cvtss2sd xmm7,dword [r15d + 2 * edi + 0x72]
- o16 gs a32 cvtss2sd xmm7,dword [ebp]
-a32  o16 cvtss2sd xmm7,dword [ebx + 8 * edx]
-a32  o16 cvtss2sd xmm9,dword [r15d + 2 * edi + 0x72]
-gs  o16 cvtss2sd xmm9,dword [ebp]
-a32  cvtss2sd xmm9,dword [ebx + 8 * edx]
-gs  cvtss2sd xmm11,dword [r15d + 2 * edi + 0x72]
-gs o16 a32  cvtss2sd xmm11,dword [ebp]
-o16 a32  gs cvtss2sd xmm11,dword [ebx + 8 * edx]
-o16 gs a32  cvtss2sd xmm0,xmm3
-gs o16 a32 cvtss2sd xmm0,xmm12
-a32  gs o16 cvtss2sd xmm0,xmm7
-a32 o16  cvtss2sd xmm13,xmm3
-a32  o16 gs cvtss2sd xmm13,xmm12
-gs o16  cvtss2sd xmm13,xmm7
- o16 a32 cvtss2sd xmm7,xmm3
-a32 o16 gs  cvtss2sd xmm7,xmm12
-o16 gs  cvtss2sd xmm7,xmm7
-o16 gs a32 cvtss2sd xmm8,xmm5
-o16 gs  a32 cvtss2sd xmm8,xmm6
- o16 a32 cvtss2sd xmm8,xmm0
-o16 cvtss2sd xmm6,xmm5
-gs  o16 cvtss2sd xmm6,xmm6
-o16 a32 cvtss2sd xmm6,xmm0
-gs o16  a32 cvtss2sd xmm9,xmm5
- a32 gs o16 cvtss2sd xmm9,xmm6
-a32 gs cvtss2sd xmm9,xmm0
+gs o16  cvtss2sd xmm5,dword [rsp]
+ o16 gs cvtss2sd xmm5,dword [rbx + 8 * rdx]
+gs  o16 cvtss2sd xmm5,dword [r11 + r11 * 2 + 0x5bc9cc48]
+ gs o16 cvtss2sd xmm3,dword [rsp]
+gs o16  cvtss2sd xmm3,dword [rbx + 8 * rdx]
+gs  cvtss2sd xmm3,dword [r11 + r11 * 2 + 0x5bc9cc48]
+gs  o16 cvtss2sd xmm7,dword [rsp]
+ gs cvtss2sd xmm7,dword [rbx + 8 * rdx]
+o16 gs cvtss2sd xmm7,dword [r11 + r11 * 2 + 0x5bc9cc48]
+o16 a32 cvtss2sd xmm12,dword [eax]
+gs a32  o16 cvtss2sd xmm12,dword [r12d]
+o16  a32 gs cvtss2sd xmm12,dword [esp + 1 * ebp]
+ a32 gs cvtss2sd xmm3,dword [eax]
+ o16 a32 gs cvtss2sd xmm3,dword [r12d]
+ gs a32 cvtss2sd xmm3,dword [esp + 1 * ebp]
+a32  gs o16 cvtss2sd xmm2,dword [eax]
+gs a32 o16 cvtss2sd xmm2,dword [r12d]
+o16 a32 gs  cvtss2sd xmm2,dword [esp + 1 * ebp]
+o16  cvtss2sd xmm1,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+gs o16 cvtss2sd xmm1,dword [r11 + r11 * 2 + 0x5bc9cc48]
+ o16 cvtss2sd xmm1,dword [rdx - 0x80000000]
+ gs cvtss2sd xmm0,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+ gs cvtss2sd xmm0,dword [r11 + r11 * 2 + 0x5bc9cc48]
+gs o16 cvtss2sd xmm0,dword [rdx - 0x80000000]
+o16 gs  cvtss2sd xmm12,dword [r14 + 1 * rdx + 0x7FFFFFFF]
+cvtss2sd xmm12,dword [r11 + r11 * 2 + 0x5bc9cc48]
+cvtss2sd xmm12,dword [rdx - 0x80000000]
+o16 a32 gs  cvtss2sd xmm9,dword [esp]
+ o16 gs cvtss2sd xmm9,dword [esp + 1 * ebp]
+gs  a32 cvtss2sd xmm9,dword [ebp]
+o16  cvtss2sd xmm14,dword [esp]
+o16 a32 cvtss2sd xmm14,dword [esp + 1 * ebp]
+ a32 gs cvtss2sd xmm14,dword [ebp]
+o16 gs a32  cvtss2sd xmm3,dword [esp]
+o16 cvtss2sd xmm3,dword [esp + 1 * ebp]
+a32 gs  o16 cvtss2sd xmm3,dword [ebp]
+a32 cvtss2sd xmm3,xmm7
+o16  gs a32 cvtss2sd xmm3,xmm15
+a32 gs o16 cvtss2sd xmm3,xmm10
+gs  o16 a32 cvtss2sd xmm14,xmm7
+ a32 gs cvtss2sd xmm14,xmm15
+gs a32  o16 cvtss2sd xmm14,xmm10
+gs o16 cvtss2sd xmm15,xmm7
+ o16 a32 gs cvtss2sd xmm15,xmm15
+gs a32  o16 cvtss2sd xmm15,xmm10
+gs  a32 o16 cvtss2sd xmm6,xmm15
+o16  cvtss2sd xmm6,xmm14
+a32 gs o16 cvtss2sd xmm6,xmm13
+ a32 cvtss2sd xmm8,xmm15
+a32 gs o16 cvtss2sd xmm8,xmm14
+a32 gs  o16 cvtss2sd xmm8,xmm13
+gs  cvtss2sd xmm15,xmm15
+a32 cvtss2sd xmm15,xmm14
+a32  o16 cvtss2sd xmm15,xmm13
